@@ -1,0 +1,417 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOSkúška Dashboard</title><link rel="icon" href="data:,">
+
+
+
+
+  <style>
+    body {
+      font-variant-numeric: tabular-nums;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    /* Custom scrollbar for desktop app feel */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2A303C;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #6B7280;
+    }
+  </style>
+<style>*{box-sizing:border-box}body{margin:0;font:14px/1.5 Inter,"Noto Sans","Segoe UI",sans-serif}h1,h2,h3,p{margin:0}button,input{font:inherit;color:inherit}button,a,input{outline-offset:3px}button{cursor:pointer;background:transparent}button,a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #A78BFA}svg{width:1em;height:1em;flex-shrink:0;vertical-align:middle}input{min-width:0}.-left-\[25px\]{left:-25px}.-translate-y-1\/2{transform:translateY(-50%)}.absolute{position:absolute}.bg-accent{background:#8B5CF6}.bg-accent-hover{background:#A78BFA}.bg-border{background:#2A303C}.bg-cards{background:#181D27}.bg-elevated{background:#202633}.bg-nav-active{background:#211B35}.bg-primary-button{background:#6D28D9}.bg-secondary{background:#9CA3AF}.bg-sidebar{background:#11151C}.bg-success{background:#22C55E}.bg-window{background:#0D1117}.border{border:1px solid}.border-accent{border-color:#8B5CF6}.border-b{border-bottom:1px solid}.border-border{border-color:#2A303C}.border-l{border-left:1px solid}.border-r{border-right:1px solid}.border-t{border-top:1px solid}.border-transparent{border-color:transparent}.cursor-default{cursor:default}.cursor-pointer{cursor:pointer}.flex{display:flex}.flex-1{flex:1 1 0%;min-width:0}.flex-col{flex-direction:column}.focus\:border-accent:focus{border-color:#8B5CF6}.font-medium{font-weight:500}.font-normal{font-weight:400}.font-sans{font-family:Inter,"Noto Sans","Segoe UI",sans-serif}.font-semibold{font-weight:600}.gap-0\.5{gap:2px}.gap-1{gap:4px}.gap-1\.5{gap:6px}.gap-2{gap:8px}.gap-3{gap:12px}.gap-4{gap:16px}.gap-gap{gap:24px}.gap-panel{gap:12px}.grid{display:grid}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.group:hover .group-hover\:border-accent{border-color:#8B5CF6}.group:hover .group-hover\:text-foreground{color:#F3F4F6}.h-1\.5{height:6px}.h-12{height:48px}.h-2{height:8px}.h-4{height:16px}.h-5{height:20px}.h-8{height:32px}.h-\[1px\]{height:1px}.h-\[36px\]{height:36px}.h-\[40px\]{height:40px}.h-\[5px\]{height:5px}.h-\[6px\]{height:6px}.h-full{height:100%}.h-screen{height:100vh}.hidden{display:none}.hover\:bg-accent:hover{background:#8B5CF6}.hover\:bg-elevated:hover{background:#202633}.hover\:border-accent:hover{border-color:#8B5CF6}.hover\:border-accent-hover:hover{border-color:#A78BFA}.hover\:text-accent:hover{color:#8B5CF6}.hover\:text-accent-hover:hover{color:#A78BFA}.hover\:text-error:hover{color:#EF4444}.hover\:text-foreground:hover{color:#F3F4F6}.items-center{align-items:center}.items-end{align-items:flex-end}.justify-between{justify-content:space-between}.justify-center{justify-content:center}.leading-none{line-height:1}.leading-tight{line-height:1.25}.left-0{left:0px}.left-3{left:12px}@media(min-width:1250px){.lg\:block{display:block}}@media(min-width:1250px){.lg\:flex-row{flex-direction:row}}@media(min-width:1250px){.lg\:w-\[320px\]{width:320px}}.line-through{text-decoration:line-through}.max-w-\[1100px\]{max-width:1100px}.mb-0\.5{margin-bottom:2px}.mb-1{margin-bottom:4px}.mb-2{margin-bottom:8px}.mb-3{margin-bottom:12px}.mb-4{margin-bottom:16px}.mb-6{margin-bottom:24px}.mb-gap{margin-bottom:24px}@media(min-width:1100px){.md\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}}.min-w-\[700px\]{min-width:700px}.ml-3{margin-left:12px}.mt-auto{margin-top:auto}.mx-auto{margin-left:auto;margin-right:auto}.overflow-hidden{overflow:hidden}.overflow-x-hidden{overflow-x:hidden}.overflow-y-auto{overflow-y:auto}.p-1{padding:4px}.p-4{padding:16px}.p-card-pad{padding:16px}.p-content-pad{padding:32px}.pl-5{padding-left:20px}.pl-9{padding-left:36px}.placeholder-secondary::placeholder{color:#9CA3AF}.pr-12{padding-right:48px}.pt-4{padding-top:16px}.px-1\.5{padding-left:6px;padding-right:6px}.px-2{padding-left:8px;padding-right:8px}.px-3{padding-left:12px;padding-right:12px}.px-4{padding-left:16px;padding-right:16px}.px-5{padding-left:20px;padding-right:20px}.py-0\.5{padding-top:2px;padding-bottom:2px}.py-1{padding-top:4px;padding-bottom:4px}.relative{position:relative}.right-2{right:8px}.rounded{border-radius:4px}.rounded-controls{border-radius:8px}.rounded-full{border-radius:999px}.rounded-panels{border-radius:12px}.rounded-r-full{border-radius:0 999px 999px 0}.select-none{user-select:none}.shrink-0{flex-shrink:0}.space-y-1 > * + *{margin-top:4px}.space-y-3 > * + *{margin-top:12px}.space-y-6 > * + *{margin-top:24px}.text-\[10px\]{font-size:10px}.text-\[12px\]{font-size:12px}.text-\[14px\]{font-size:14px}.text-\[16px\]{font-size:16px}.text-\[20px\]{font-size:20px}.text-\[24px\]{font-size:24px}.text-accent{color:#8B5CF6}.text-accent-hover{color:#A78BFA}.text-body{font-size:14px;line-height:22px}.text-disabled{color:#6B7280}.text-foreground{color:#F3F4F6}.text-greeting{font-size:28px;line-height:36px}.text-metric{font-size:26px;line-height:32px}.text-secondary{color:#9CA3AF}.text-section-heading{font-size:16px;line-height:24px}.text-supporting{font-size:12px;line-height:18px}.text-warning{color:#F59E0B}.text-white{color:#fff}.top-1\.5{top:6px}.top-1\/2{top:50%}.tracking-wide{letter-spacing:.025em}.transition-colors{transition:background .12s,color .12s,border-color .12s}.uppercase{text-transform:uppercase}.w-1{width:4px}.w-1\.5{width:6px}.w-12{width:48px}.w-2{width:8px}.w-4{width:16px}.w-8{width:32px}.w-\[200px\]{width:200px}.w-\[230px\]{width:230px}.w-\[44\%\]{width:44%}.w-\[58\%\]{width:58%}.w-\[72\%\]{width:72%}.w-\[75\%\]{width:75%}.w-\[81\%\]{width:81%}.w-full{width:100%}.w-screen{width:100vw}.z-50{z-index:50}
+[data-sd-id]{outline:0}#sidebar{transition:width .15s}#sidebar.collapsed{width:64px}#sidebar.collapsed nav span,#sidebar.collapsed .sidebar-detail,#sidebar.collapsed .brand-name{display:none}#sidebar.collapsed nav a{justify-content:center;padding:0}#sidebar.collapsed .brand{padding:16px 8px;justify-content:center}#sidebar.collapsed .brand>div{display:none}.notice{font-size:12px;color:#9CA3AF;margin-top:20px}dialog{background:#181D27;color:#F3F4F6;border:1px solid #2A303C;border-radius:12px;padding:28px;width:440px;max-width:90vw}dialog::backdrop{background:#0009}dialog h2{font-size:22px;margin:8px 0}dialog p{color:#9CA3AF;margin:12px 0 24px}dialog button{border:1px solid #2A303C;border-radius:8px;padding:9px 16px;background:#202633}#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#202633;border:1px solid #2A303C;border-radius:8px;padding:12px 20px;z-index:99;max-width:80vw}#toast[hidden]{display:none}input[type=checkbox]{accent-color:#8B5CF6;width:16px;height:16px}.task-done{text-decoration:line-through;color:#9CA3AF}@media(max-width:1249px){header{flex-wrap:wrap;gap:16px}.workspace{min-width:0;padding:24px}.right-rail{display:grid;grid-template-columns:1fr 1fr}}@media(max-width:1050px){.right-rail{grid-template-columns:1fr}.workspace{padding:24px}#sidebar{width:200px}}
+button{border-style:solid}button:not(.border){border-width:0}.border-border{border-color:#2A303C}button:hover{filter:brightness(1.08)}@media(min-width:1250px){.right-rail{width:320px;flex-shrink:0}.right-rail+*{min-width:0}}[hidden]{display:none!important}</style></head>
+<body class="bg-window text-foreground h-screen w-screen overflow-hidden flex flex-col font-sans">
+
+  <!-- Title Bar -->
+  <div class="h-[36px] bg-sidebar border-b border-border flex items-center justify-between px-4 shrink-0 select-none cursor-default z-50">
+    <div class="flex items-center gap-2">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="text-secondary text-[14px]"><path d="M12 5v15M3 4c4-1 6 0 9 1 3-1 5-2 9-1v15c-4-1-6 0-9 1-3-1-5-2-9-1Z"/></svg>
+      <span class="text-supporting font-semibold text-secondary">SOSkúška</span>
+      <div class="flex items-center gap-1.5 ml-3 px-2 py-0.5 rounded-full bg-cards border border-border">
+        <div class="w-1.5 h-1.5 rounded-full bg-secondary"></div>
+        <span class="text-[10px] text-secondary tracking-wide uppercase">Offline</span>
+      </div>
+    </div>
+    <!-- Window Controls (Windows style) -->
+    <div class="flex items-center gap-4 text-secondary">
+      <button class="hover:text-foreground transition-colors p-1"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="text-[14px]"><path d="M5 12h14"/></svg></button>
+      <button class="hover:text-foreground transition-colors p-1"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="text-[12px]"><path d="M5 5h14v14H5z"/></svg></button>
+      <button class="hover:text-error transition-colors p-1"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="text-[14px]"><path d="m6 6 12 12M6 18 18 6"/></svg></button>
+    </div>
+  </div>
+
+  <div class="flex flex-1 overflow-hidden">
+    <!-- Sidebar -->
+    <div id="sidebar" class="w-[230px] bg-sidebar border-r border-border flex flex-col shrink-0 overflow-y-auto">
+      <div class="brand p-4 flex items-center justify-between mb-2">
+        <div class="flex items-center gap-2 text-foreground font-semibold">
+           <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="text-accent"><path d="M4 4h15v16H4zM7 4v16"/></svg>
+           <span class="brand-name">SOSkúška</span>
+        </div>
+        <button id="collapse" aria-label="Collapse sidebar" aria-expanded="true" class="text-secondary hover:text-foreground transition-colors">
+           <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="text-[16px]"><path d="M3 4h18v16H3zM9 4v16m7-12-4 4 4 4"/></svg>
+        </button>
+      </div>
+
+      <nav class="flex-1 px-3 space-y-1">
+        <a href="#" id="nav-dashboard" class="flex items-center gap-3 h-[40px] px-3 bg-nav-active text-foreground rounded-controls relative group">
+          <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-accent-hover rounded-r-full"></div>
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="text-[16px] text-accent-hover"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/></svg>
+          <span class="text-body font-semibold">Dashboard</span>
+        </a>
+        <a href="#" id="nav-subjects" class="flex items-center gap-3 h-[40px] px-3 text-secondary hover:text-foreground hover:bg-elevated rounded-controls transition-colors">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="text-[16px]"><path d="M4 4v16M9 4v16M14 4l5 16"/></svg>
+          <span class="text-body">My Subjects</span>
+        </a>
+        <a href="#" id="nav-flashcards" class="flex items-center gap-3 h-[40px] px-3 text-secondary hover:text-foreground hover:bg-elevated rounded-controls transition-colors">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="text-[16px]"><path d="m3 8 9-5 9 5-9 5zM3 13l9 5 9-5M3 18l9 5 9-5"/></svg>
+          <span class="text-body">Flashcards</span>
+        </a>
+        <a href="#" id="nav-tests" class="flex items-center gap-3 h-[40px] px-3 text-secondary hover:text-foreground hover:bg-elevated rounded-controls transition-colors">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="text-[16px]"><path d="M5 3h10l4 4v14H5zM9 11h6M9 15h6"/></svg>
+          <span class="text-body">Practice Tests</span>
+        </a>
+        <a href="#" id="nav-ai" class="flex items-center gap-3 h-[40px] px-3 text-secondary hover:text-foreground hover:bg-elevated rounded-controls transition-colors">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="text-[16px]"><path d="M5 8h14v12H5zM12 8V4M9 13v2M15 13v2M2 12v5M22 12v5"/></svg>
+          <span class="text-body">AI Tutor</span>
+        </a>
+        <a href="#" id="nav-stats" class="flex items-center gap-3 h-[40px] px-3 text-secondary hover:text-foreground hover:bg-elevated rounded-controls transition-colors">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="text-[16px]"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>
+          <span class="text-body">Statistics</span>
+        </a>
+      </nav>
+
+      <div class="mt-auto sidebar-detail">
+         <nav class="px-3 mb-4">
+            <a href="#" id="nav-settings" class="flex items-center gap-3 h-[40px] px-3 text-secondary hover:text-foreground hover:bg-elevated rounded-controls transition-colors">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="text-[16px]"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0"/></svg>
+              <span class="text-body">Settings</span>
+            </a>
+         </nav>
+         <div class="border-t border-border p-4">
+           <div class="flex items-center gap-3 mb-4">
+             <div class="w-8 h-8 rounded-full bg-elevated flex items-center justify-center text-secondary border border-border">
+                AM
+             </div>
+             <div class="flex flex-col">
+               <span class="text-body font-semibold leading-tight">Alex Morgan</span>
+               <span class="text-supporting text-secondary leading-tight">Local workspace</span>
+             </div>
+           </div>
+           <div class="border-t border-border pt-4 flex flex-col gap-1">
+             <div class="flex items-center gap-2 text-supporting">
+                <div class="w-2 h-2 rounded-full bg-success"></div>
+                <span class="text-secondary">AI status · Demo</span>
+             </div>
+             <div class="text-[10px] text-disabled px-4">
+               Qwen3 4B · Sample<br>
+               v0.1.0
+             </div>
+           </div>
+         </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 bg-window overflow-y-auto overflow-x-hidden">
+      <div class="workspace max-w-[1100px] mx-auto p-content-pad min-w-[700px]">
+
+        <!-- Header -->
+        <header class="flex justify-between items-end mb-gap">
+          <div>
+            <div class="text-secondary text-body mb-1">Tuesday, November 10, 2026</div>
+            <h1 class="text-greeting font-semibold mb-1">Ready to make progress?</h1>
+            <p class="text-secondary text-body">A little focus today goes a long way.</p>
+          </div>
+          <div class="flex items-center gap-4">
+             <div class="relative hidden lg:block">
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="absolute left-3 top-1/2 -translate-y-1/2 text-secondary"><path d="M16 10a6 6 0 1 1-12 0 6 6 0 0 1 12 0M15 15l6 6"/></svg>
+                <input type="text" aria-label="Search subjects" placeholder="Search subjects..." class="bg-sidebar border border-border rounded-controls h-[36px] pl-9 pr-12 py-1 text-body focus:outline-none focus:border-accent w-[200px] text-foreground placeholder-secondary">
+                <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-0.5 text-[10px] text-disabled font-medium px-1.5 py-0.5 bg-elevated rounded border border-border">
+                   Ctrl+K
+                </div>
+             </div>
+             <button id="start" class="h-[40px] bg-primary-button hover:bg-accent hover:border-accent-hover border border-transparent text-white px-5 rounded-controls font-semibold text-body flex items-center gap-2 transition-colors">
+               Start Studying
+               <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class=""><path d="M4 12h16m-6-6 6 6-6 6"/></svg>
+             </button>
+          </div>
+        </header>
+
+        <!-- Overview Metrics -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-panel mb-gap">
+          <div class="bg-cards border border-border rounded-panels p-card-pad">
+            <div class="flex items-center gap-2 text-secondary text-supporting mb-2">
+               <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class=""><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0M12 6v6l4 2"/></svg>
+               Total study time
+            </div>
+            <div class="text-metric font-semibold">24h 35m</div>
+          </div>
+          <div class="bg-cards border border-border rounded-panels p-card-pad">
+            <div class="flex items-center gap-2 text-secondary text-supporting mb-2">
+               <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class=""><path d="M21 12a9 9 0 1 1-5-8M8 11l4 4L22 3"/></svg>
+               Questions answered
+            </div>
+            <div class="text-metric font-semibold">1,248</div>
+          </div>
+          <div class="bg-cards border border-border rounded-panels p-card-pad">
+            <div class="flex items-center gap-2 text-secondary text-supporting mb-2">
+               <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class=""><path d="M12 2c3 5-1 6 3 9l2-4c7 9 1 15-5 15S2 15 7 9l2 3c3-4 1-6 3-10Z"/></svg>
+               Current streak
+            </div>
+            <div class="text-metric font-semibold">7 <span class="text-body text-secondary font-normal">days</span></div>
+          </div>
+          <div class="bg-cards border border-border rounded-panels p-card-pad">
+            <div class="flex items-center gap-2 text-secondary text-supporting mb-2">
+               <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class=""><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0"/></svg>
+               Overall accuracy
+            </div>
+            <div class="text-metric font-semibold">86%</div>
+          </div>
+        </div>
+
+        <!-- Two Column Layout -->
+        <div class="flex flex-col lg:flex-row gap-gap">
+
+          <!-- Main Column -->
+          <div class="flex-1 flex flex-col gap-gap">
+
+             <!-- Today's Focus -->
+             <section>
+               <h2 class="text-section-heading font-semibold mb-4">Today's focus</h2>
+               <div class="bg-cards border border-border rounded-panels p-card-pad">
+                 <div class="flex justify-between items-end mb-3">
+                    <div>
+                      <div class="text-secondary text-supporting mb-1">Daily goal</div>
+                      <div class="text-[20px] font-semibold leading-none">45 <span class="text-secondary text-body font-normal">/ 60 min</span></div>
+                    </div>
+                    <div class="text-supporting text-secondary">15 minutes to your daily goal</div>
+                 </div>
+                 <div class="h-[6px] bg-elevated rounded-full mb-6 overflow-hidden">
+                    <div class="h-full bg-accent w-[75%] rounded-full"></div>
+                 </div>
+
+                 <div class="space-y-3">
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                      <input type="checkbox" checked aria-label="Review 20 overdue flashcards">
+                      <span class="text-body text-secondary line-through group-hover:text-foreground transition-colors">Review 20 overdue flashcards</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                      <input type="checkbox" aria-label="Complete 1 practice test (Mathematics)">
+                      <span class="text-body text-foreground">Complete 1 practice test (Mathematics)</span>
+                    </label>
+                 </div>
+               </div>
+             </section>
+
+             <!-- Continue Studying -->
+             <section>
+               <h2 class="text-section-heading font-semibold mb-4">Continue studying</h2>
+               <div class="bg-cards border border-border rounded-panels p-card-pad flex items-center justify-between hover:bg-elevated transition-colors cursor-default">
+                 <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-controls bg-elevated border border-border flex items-center justify-center text-accent">
+                       <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="text-[24px]"><path d="M5 3h14v18H5zM8 7h8M8 12h1M15 12h1M8 17h1M15 17h1"/></svg>
+                    </div>
+                    <div>
+                      <div class="text-supporting text-secondary mb-0.5">Last session yesterday</div>
+                      <h3 class="text-body font-semibold">Mathematics</h3>
+                      <p class="text-supporting text-secondary">Calculus · Derivatives</p>
+                    </div>
+                 </div>
+                 <button id="resume" class="h-[36px] bg-elevated border border-border hover:border-accent hover:text-accent px-4 rounded-controls text-body font-medium transition-colors">
+                    Resume session
+                 </button>
+               </div>
+             </section>
+
+             <!-- Subject Progress -->
+             <section>
+               <div class="flex justify-between items-center mb-4">
+                  <h2 class="text-section-heading font-semibold">Subject progress</h2>
+                  <button class="text-supporting text-accent hover:text-accent-hover font-medium">View all</button>
+               </div>
+               <div class="grid grid-cols-2 gap-panel">
+                  <div class="bg-cards border border-border rounded-panels p-card-pad">
+                    <div class="flex items-center gap-3 mb-4">
+                       <div class="w-8 h-8 rounded-controls bg-elevated border border-border flex items-center justify-center text-secondary">
+                          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class=""><path d="M5 3h14v18H5zM8 7h8M8 12h1M15 12h1M8 17h1M15 17h1"/></svg>
+                       </div>
+                       <div>
+                         <div class="text-body font-semibold leading-tight">Mathematics</div>
+                         <div class="text-supporting text-secondary">340 questions</div>
+                       </div>
+                    </div>
+                    <div class="flex justify-between text-supporting mb-2">
+                       <span class="text-secondary">Progress</span>
+                       <span class="font-medium">72%</span>
+                    </div>
+                    <div class="h-[5px] bg-elevated rounded-full overflow-hidden">
+                       <div class="h-full bg-accent w-[72%] rounded-full"></div>
+                    </div>
+                  </div>
+
+                  <div class="bg-cards border border-border rounded-panels p-card-pad">
+                    <div class="flex items-center gap-3 mb-4">
+                       <div class="w-8 h-8 rounded-controls bg-elevated border border-border flex items-center justify-center text-secondary">
+                          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class=""><path d="m4 6 5 6-5 6M12 18h8"/></svg>
+                       </div>
+                       <div>
+                         <div class="text-body font-semibold leading-tight">Computer Science</div>
+                         <div class="text-supporting text-secondary">215 questions</div>
+                       </div>
+                    </div>
+                    <div class="flex justify-between text-supporting mb-2">
+                       <span class="text-secondary">Progress</span>
+                       <span class="font-medium">58%</span>
+                    </div>
+                    <div class="h-[5px] bg-elevated rounded-full overflow-hidden">
+                       <div class="h-full bg-accent w-[58%] rounded-full"></div>
+                    </div>
+                  </div>
+
+                  <div class="bg-cards border border-border rounded-panels p-card-pad">
+                    <div class="flex items-center gap-3 mb-4">
+                       <div class="w-8 h-8 rounded-controls bg-elevated border border-border flex items-center justify-center text-secondary">
+                          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class=""><path d="M3 12c0-5 18-5 18 0s-18 5-18 0M8 3c5-3 13 13 8 18S3 6 8 3M16 3c5 3-3 21-8 18S11 0 16 3"/></svg>
+                       </div>
+                       <div>
+                         <div class="text-body font-semibold leading-tight">Physics</div>
+                         <div class="text-supporting text-secondary">180 questions</div>
+                       </div>
+                    </div>
+                    <div class="flex justify-between text-supporting mb-2">
+                       <span class="text-secondary">Progress</span>
+                       <span class="font-medium">44%</span>
+                    </div>
+                    <div class="h-[5px] bg-elevated rounded-full overflow-hidden">
+                       <div class="h-full bg-accent w-[44%] rounded-full"></div>
+                    </div>
+                  </div>
+
+                  <div class="bg-cards border border-border rounded-panels p-card-pad">
+                    <div class="flex items-center gap-3 mb-4">
+                       <div class="w-8 h-8 rounded-controls bg-elevated border border-border flex items-center justify-center text-secondary">
+                          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class=""><path d="M12 5v15M3 4c4-1 6 0 9 1 3-1 5-2 9-1v15c-4-1-6 0-9 1-3-1-5-2-9-1Z"/></svg>
+                       </div>
+                       <div>
+                         <div class="text-body font-semibold leading-tight">English</div>
+                         <div class="text-supporting text-secondary">420 questions</div>
+                       </div>
+                    </div>
+                    <div class="flex justify-between text-supporting mb-2">
+                       <span class="text-secondary">Progress</span>
+                       <span class="font-medium">81%</span>
+                    </div>
+                    <div class="h-[5px] bg-elevated rounded-full overflow-hidden">
+                       <div class="h-full bg-accent w-[81%] rounded-full"></div>
+                    </div>
+                  </div>
+               </div>
+             </section>
+
+          </div>
+
+          <!-- Right Rail -->
+          <div class="right-rail w-full lg:w-[320px] flex flex-col gap-gap shrink-0">
+
+             <!-- Upcoming Exams -->
+             <section>
+               <h2 class="text-section-heading font-semibold mb-4">Upcoming exams</h2>
+               <div class="bg-cards border border-border rounded-panels p-card-pad flex flex-col gap-4">
+                  <div class="flex items-center justify-between">
+                     <div>
+                        <div class="text-body font-medium">Mathematics</div>
+                        <div class="text-supporting text-secondary">Nov 14</div>
+                     </div>
+                     <div class="text-supporting font-medium px-2 py-1 bg-elevated border border-border rounded text-warning">
+                        4 days
+                     </div>
+                  </div>
+                  <div class="h-[1px] bg-border w-full"></div>
+                  <div class="flex items-center justify-between">
+                     <div>
+                        <div class="text-body font-medium">Physics</div>
+                        <div class="text-supporting text-secondary">Nov 18</div>
+                     </div>
+                     <div class="text-supporting font-medium px-2 py-1 bg-elevated border border-border rounded text-foreground">
+                        8 days
+                     </div>
+                  </div>
+                  <div class="h-[1px] bg-border w-full"></div>
+                  <div class="flex items-center justify-between">
+                     <div>
+                        <div class="text-body font-medium">Computer Science</div>
+                        <div class="text-supporting text-secondary">Nov 23</div>
+                     </div>
+                     <div class="text-supporting font-medium px-2 py-1 bg-elevated border border-border rounded text-foreground">
+                        13 days
+                     </div>
+                  </div>
+               </div>
+             </section>
+
+             <!-- Recent Activity -->
+             <section>
+               <h2 class="text-section-heading font-semibold mb-4">Recent activity</h2>
+               <div class="bg-cards border border-border rounded-panels p-card-pad">
+                  <div class="relative border-l border-border ml-3 pl-5 py-1 space-y-6">
+
+                     <div class="relative">
+                        <div class="absolute w-2 h-2 bg-accent rounded-full -left-[25px] top-1.5 ring-4 ring-cards"></div>
+                        <div class="text-supporting text-secondary mb-1">2 hours ago</div>
+                        <div class="text-body font-medium">Completed Practice Test</div>
+                        <div class="text-supporting text-secondary">Mathematics · Score: 85%</div>
+                     </div>
+
+                     <div class="relative">
+                        <div class="absolute w-2 h-2 bg-border rounded-full -left-[25px] top-1.5 ring-4 ring-cards"></div>
+                        <div class="text-supporting text-secondary mb-1">Yesterday, 14:30</div>
+                        <div class="text-body font-medium">AI Tutor Session</div>
+                        <div class="text-supporting text-secondary">Discussed derivatives concepts</div>
+                     </div>
+
+                     <div class="relative">
+                        <div class="absolute w-2 h-2 bg-border rounded-full -left-[25px] top-1.5 ring-4 ring-cards"></div>
+                        <div class="text-supporting text-secondary mb-1">Yesterday, 10:15</div>
+                        <div class="text-body font-medium">Reviewed Flashcards</div>
+                        <div class="text-supporting text-secondary">English · 45 cards</div>
+                     </div>
+
+                  </div>
+               </div>
+             </section>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+<dialog id="study"><span style="font-size:12px;color:#A78BFA">STUDY SESSION · PREVIEW</span><h2>Pick up where you left off</h2><p>Mathematics / Calculus<br>Continue reviewing derivatives in your next study session. This local prototype demonstrates the Dashboard; study screens come after design approval.</p><button id="close-dialog">Back to Dashboard</button></dialog><div id="toast" role="status" hidden></div>
+<script>
+const toast=document.querySelector('#toast');let timer;
+function notify(text){toast.textContent=text;toast.hidden=false;clearTimeout(timer);timer=setTimeout(()=>toast.hidden=true,4500)}
+const dialog=document.querySelector('#study');document.querySelector('#start').onclick=()=>dialog.showModal();document.querySelector('#resume').onclick=()=>dialog.showModal();document.querySelector('#close-dialog').onclick=()=>dialog.close();
+document.querySelector('#collapse').onclick=()=>{const collapsed=document.querySelector('#sidebar').classList.toggle('collapsed');document.querySelector('#collapse').setAttribute('aria-expanded',String(!collapsed));document.querySelector('#collapse').setAttribute('aria-label',collapsed?'Expand sidebar':'Collapse sidebar')};
+document.querySelectorAll('nav a').forEach(a=>{a.title=a.textContent.trim();a.onclick=e=>{e.preventDefault();if(a.id!=='nav-dashboard')notify(a.textContent.trim()+' — planned for the next design phase.')}});
+document.querySelector('#nav-dashboard').setAttribute('aria-current','page');
+const search=document.querySelector('input[type=text]');document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();search.focus()}if(e.key==='Escape'){search.value='';search.dispatchEvent(new Event('input'));toast.hidden=true}});
+const cards=[...document.querySelectorAll('section')].find(s=>s.textContent.includes('Subject progress')).querySelector('.grid').children;
+search.oninput=()=>{[...cards].forEach(c=>c.hidden=!c.textContent.toLowerCase().includes(search.value.toLowerCase()))};
+document.querySelectorAll('input[type=checkbox]').forEach(c=>{c.nextElementSibling.classList.toggle('task-done',c.checked);c.nextElementSibling.classList.remove('line-through');c.onchange=()=>{c.nextElementSibling.classList.toggle('task-done',c.checked);notify(c.checked?'Task marked complete.':'Task reopened.')}});
+document.querySelectorAll('button').forEach(b=>{if(!b.textContent.trim()&&!b.getAttribute('aria-label')){b.setAttribute('aria-label','Window control preview');b.onclick=()=>notify('Window controls are decorative in this browser preview.')}if(b.textContent.trim()==='View all')b.onclick=()=>notify('My Subjects — planned for the next design phase.')});
+</script></body></html>
