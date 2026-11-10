@@ -6,6 +6,17 @@ Lokální desktopový studijní asistent v Pythonu a CustomTkinteru. Aktuálně 
 
 **Stav: funkční prototyp Dashboardu.** Předměty, zkoušky, profil a část statistik jsou ukázkové. AI Tutor, testy a kartičky zatím neexistují. Běh nevyžaduje Superdesign, placené API ani internet.
 
+## Klonování a první instalace
+
+Repozitář je soukromý; potřebuješ Git a účet s přístupem. V terminálu přejdi do složky, kam chceš projekt uložit:
+
+```sh
+git clone https://github.com/turcinv/SOSkuska.git
+cd SOSkuska
+```
+
+Klon neobsahuje Python prostředí ani databázi. Pokračuj podle [instalace pro svůj systém](docs/DEVELOPMENT.md). Instalaci Gitu, přihlášení, aktualizace a práci s větvemi popisuje [Git krok za krokem](docs/GIT_GUIDE.md).
+
 ## Rychlé spuštění na tomto Macu
 
 Z kořenové složky projektu:
@@ -28,6 +39,9 @@ Jazykové verze: **Čeština** (tento rozcestník) · [Slovenčina](docs/sk/READ
 | [Současná architektura](docs/CURRENT_ARCHITECTURE.md) | Skutečné moduly, datové toky, databáze a omezení |
 | [Plánovaná architektura](docs/PLANNED_ARCHITECTURE.md) | Budoucí členění, Ollama a etapy rozvoje |
 | [Vývoj a spuštění](docs/DEVELOPMENT.md) | Instalace, příkazy, kontroly a řešení problémů |
+| [Práce s Gitem](docs/GIT_GUIDE.md) | Klonování, přihlášení, větve, commity a aktualizace |
+| [Přispívání](CONTRIBUTING.md) | Kontroly, pull requesty a hlášení chyb |
+| [Historie změn](CHANGELOG.md) | Přehled změn prototypu |
 | [Pokyny pro asistenty](AGENTS.md) | AGENTS.md pro další vývoj aplikace |
 
 ## Složky

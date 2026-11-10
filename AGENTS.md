@@ -9,6 +9,8 @@ These instructions apply to the entire standalone SOSkuska repository. Product n
 3. Check the user's latest message for their current language and requested scope. Do not assume access to other chats or decisions not recorded in this workspace.
 4. For users with a clean Windows machine, use `docs/WINDOWS_FIRST_RUN.md` or its Slovak/Russian equivalent. These guides cover installing Python, obtaining/extracting sources, creating a Windows-local environment, installing dependencies, and launching the app. Never assume a Mac virtual environment can be copied to Windows or that the user has access to a private repository.
 
+5. Read `CONTRIBUTING.md` for contribution checks and `docs/GIT_GUIDE.md` (or its Slovak/Russian version) for cloning and repository workflow. Keep the language versions aligned.
+
 ## Conversation languages
 
 - The user may write instructions, answers, corrections, and follow-up messages in **Czech, Slovak, English, or Russian**, and may switch languages between messages. Treat all four languages as supported conversation languages.

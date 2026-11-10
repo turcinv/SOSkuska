@@ -8,11 +8,25 @@ Lokálny desktopový študijný asistent v Pythone a CustomTkinteri. Dnes je imp
 
 **Nemáš na Windows nič nainštalované?** Začni návodom [Windows od nuly — krok za krokom](WINDOWS_FIRST_RUN.md).
 
+- [Práca s Gitom](GIT_GUIDE.md)
+- [Prispievanie](CONTRIBUTING.md)
+- [História zmien](CHANGELOG.md)
 - [Jednoduché vysvetlenie](HOW_IT_WORKS.md)
 - [Súčasná architektúra](CURRENT_ARCHITECTURE.md)
 - [Plánovaná architektúra](PLANNED_ARCHITECTURE.md)
 - [Vývoj a spustenie na macOS, Windows a Linuxe](DEVELOPMENT.md)
 - [Pokyny pre vývojových asistentov — anglicky](../../AGENTS.md)
+
+## Klonovanie a prvá inštalácia
+
+Repozitár je súkromný; potrebuješ Git a účet s prístupom. V termináli prejdi do priečinka, kam chceš projekt uložiť:
+
+```sh
+git clone https://github.com/turcinv/SOSkuska.git
+cd SOSkuska
+```
+
+Klon neobsahuje prostredie Pythonu ani databázu. Pokračuj podľa [inštalácie pre svoj systém](DEVELOPMENT.md). Inštaláciu Gitu, prihlásenie, aktualizácie a prácu s vetvami opisuje [Git krok za krokom](GIT_GUIDE.md).
 
 ## Rýchle spustenie na tomto Macu
 

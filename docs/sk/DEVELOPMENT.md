@@ -1,5 +1,7 @@
 # Vývoj a spustenie
 
+Projekt ešte nemáš? Začni [klonovaním a základmi Gitu](GIT_GUIDE.md). Pravidlá pre zmeny sú v [CONTRIBUTING](CONTRIBUTING.md).
+
 Príkazy spúšťaj z koreňa projektu. Dnešná aplikácia používa skripty v `soskuska/`, nie inštalovateľný balík.
 
 ## Tento Mac — najrýchlejšia cesta
