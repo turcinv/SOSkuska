@@ -4,9 +4,12 @@
 
 ## Unreleased
 
+- Oprava súbežného spúšťania pri migrácii a prepínania stĺpcov My Subjects.
+- Regresná kontrola automatického ukladania časovača po chybe a obnovenia zoznamu úloh cez polnoc.
+
 - Správa predmetov a termínov skúšok, prázdny stav, validácia Unicode a história pri vymazaní.
 - Skutočné metriky Dashboardu a prepojenie časovača s predmetom; odstránenie ukážkových štatistík.
-- Transakčné migrácie SQLite na verziu 2 so zachovaním pôvodných údajov; 16 testov a rozšírená natívna kontrola.
+- Transakčné migrácie SQLite na verziu 2 so zachovaním pôvodných údajov; 17 testov a rozšírená natívna kontrola.
 
 - Návod na klonovanie, autentifikáciu, vetvy, commity, aktualizácie a pull requesty.
 - Pokyny na prispievanie, šablóny chýb/návrhov a pull requestu, nastavenie editora.

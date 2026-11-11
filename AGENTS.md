@@ -67,5 +67,5 @@ If `.codegraph/` exists at the repository root, use `codegraph_explore` or `code
 ## Branch and pull-request policy
 
 - For implementation work, create a feature branch and open a pull request for review.
-- Never commit or push directly to `main`, and do not merge the pull request. The user explicitly requires branch-based changes.
-- Current subject-management work belongs to `feature/subject-management`.
+- Never commit or push directly to `main`. Merge through a pull request only after the user explicitly authorizes merging that PR and its review findings are resolved and validated. Passing tests alone is not merge authorization.
+- Keep review fixes on the existing feature branch. Start a new feature branch for subsequent work after a PR is merged.

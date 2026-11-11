@@ -2,9 +2,12 @@
 import sqlite3
 import sys
 import tempfile
+import threading
 import unittest
+from concurrent.futures import ThreadPoolExecutor
 from datetime import date, timedelta
 from pathlib import Path
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "soskuska"))
 from storage import SCHEMA_VERSION, Store
@@ -117,6 +120,54 @@ class SubjectTests(unittest.TestCase):
 
 
 class MigrationTests(unittest.TestCase):
+    def test_overlapping_starts_read_version_inside_the_lock(self):
+        for legacy in (False, True):
+            with self.subTest(legacy=legacy), tempfile.TemporaryDirectory() as folder:
+                path = Path(folder) / "concurrent.sqlite3"
+                if legacy:
+                    db = sqlite3.connect(path)
+                    db.executescript("""
+                        CREATE TABLE tasks(day TEXT NOT NULL,name TEXT NOT NULL,done INTEGER NOT NULL,PRIMARY KEY(day,name));
+                        CREATE TABLE sessions(id INTEGER PRIMARY KEY,day TEXT NOT NULL,seconds INTEGER NOT NULL CHECK(seconds>=0));
+                        INSERT INTO tasks VALUES ('2026-11-10','cards',1);
+                        INSERT INTO sessions VALUES (7,'2026-11-10',95);
+                    """)
+                    db.close()
+                real_connect = sqlite3.connect
+                barrier = threading.Barrier(2, timeout=5)
+
+                def synchronized_connect(*args, **kwargs):
+                    db = real_connect(*args, **kwargs)
+
+                    def trace(statement):
+                        # Align both starts before SQLite acquires the writer lock.
+                        # The old implementation had already cached version 0 here.
+                        if statement.strip().upper() == "BEGIN IMMEDIATE":
+                            barrier.wait()
+
+                    db.set_trace_callback(trace)
+                    return db
+
+                def open_store():
+                    store = Store(path)
+                    try:
+                        return store.db.execute("PRAGMA user_version").fetchone()[0]
+                    finally:
+                        store.close()
+
+                with patch("storage.sqlite3.connect", synchronized_connect):
+                    with ThreadPoolExecutor(max_workers=2) as pool:
+                        futures = [pool.submit(open_store) for _ in range(2)]
+                        self.assertEqual([f.result(timeout=10) for f in futures], [SCHEMA_VERSION, SCHEMA_VERSION])
+                store = Store(path)
+                try:
+                    self.assertEqual(store.seconds(), 95 if legacy else 0)
+                    self.assertEqual(store.subjects(), [])
+                    if legacy:
+                        self.assertEqual(tuple(store.db.execute("SELECT * FROM tasks").fetchone()), ("2026-11-10", "cards", 1))
+                finally:
+                    store.close()
+
     def test_unversioned_original_database_preserves_all_records(self):
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / "old.sqlite3"

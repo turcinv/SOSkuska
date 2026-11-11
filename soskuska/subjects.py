@@ -68,11 +68,11 @@ class SubjectPage(ctk.CTkFrame):
         self.render()
 
     def _resize(self, event):
-        if event.widget is self:
-            columns = 2 if event.width >= 850 else 1
-            if columns != self.card_columns:
-                self.card_columns = columns
-                self.render()
+        # CTkFrame.bind forwards Configure events from its internal canvas.
+        columns = 2 if event.width >= 850 else 1
+        if columns != self.card_columns:
+            self.card_columns = columns
+            self.render()
 
     def show_form(self, subject_id=None):
         self.cancel_delete()

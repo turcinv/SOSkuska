@@ -107,3 +107,6 @@ Kontrola úložiště bez GUI (včetně zachování dat původní aplikace):
 
 
 Nová integrační kontrola také vytváří a upravuje předmět přes UI, ověřuje prázdnou databázi bez vzorových metrik, termín zkoušky, vazbu sezení a smazání předmětu se zachováním historie. Migraci původních tabulek a validaci předmětů ověřují `tests/test_subjects.py`. Vše používá dočasná data.
+
+
+Integrační kontrola nově ověřuje také skutečné přepnutí sloupců při změně šířky, pokračování plánování časovače po chybě automatického uložení a obnovení checklistu při změně dne. Test souběžných migrací používá pouze dočasné databáze.

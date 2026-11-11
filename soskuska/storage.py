@@ -47,12 +47,13 @@ class Store:
             raise
 
     def _migrate(self):
-        version = self.db.execute("PRAGMA user_version").fetchone()[0]
-        if version > SCHEMA_VERSION:
-            raise ValueError("This database was created by a newer SOSkúška version.")
         # Avoid executescript: it commits implicitly and would split the migration.
         with self.db:
             self.db.execute("BEGIN IMMEDIATE")
+            # Another process may have migrated while this connection waited.
+            version = self.db.execute("PRAGMA user_version").fetchone()[0]
+            if version > SCHEMA_VERSION:
+                raise ValueError("This database was created by a newer SOSkúška version.")
             if version < 1:
                 self.db.execute("""CREATE TABLE IF NOT EXISTS tasks (
                     day TEXT NOT NULL, name TEXT NOT NULL, done INTEGER NOT NULL,

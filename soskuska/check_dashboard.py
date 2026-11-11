@@ -84,6 +84,25 @@ def check_subject_search():
     page = app.subject_page
     assert len(page.cards.winfo_children()) == 1
     page.query.set("")
+    next_step(check_wide_subject_layout)
+
+
+def check_wide_subject_layout():
+    page = app.subject_page
+    assert page.winfo_width() >= 850
+    assert page.card_columns == 2
+    positions = [(int(card.grid_info()["row"]), int(card.grid_info()["column"]))
+                 for card in page.cards.winfo_children()]
+    assert positions == [(0, 0), (0, 1), (1, 0), (1, 1)], positions
+    app.geometry("1024x700")
+    next_step(check_compact_subject_layout, 400)
+
+
+def check_compact_subject_layout():
+    page = app.subject_page
+    assert page.winfo_width() < 850
+    assert page.card_columns == 1
+    assert [int(card.grid_info()["column"]) for card in page.cards.winfo_children()] == [0, 0, 0, 0]
     app.navigate("Dashboard")
     assert app.metric_values[3].cget("text") == "4"
     assert len(app.store.upcoming_exams()) == 1
@@ -144,6 +163,30 @@ def check_compact():
     assert app.store.recent_sessions()[0]["subject_id"] == subject_id
     assert app.metric_values[0].cget("text") == "0h 01m"
     assert app.metric_values[1].cget("text") == "1"
+    # An automatic save failure must not stop the tick loop.
+    app.start_focus(subject_id)
+    app.running_since -= 901
+    with patch.object(app.store, "add_session", side_effect=sqlite3.OperationalError("database is locked")), patch.object(app, "after") as after:
+        app.tick()
+        after.assert_called_once_with(250, app.tick)
+    assert app.session_open and app.running_since is None
+    assert app.store.seconds() == 95
+    assert app.finish_focus()
+    assert app.store.seconds() == 995
+    # Yesterday's checkbox values must be replaced when the local day changes.
+    app.store.set_task("review_subject", True)
+    app.task_vars["review_subject"].set(True)
+    tomorrow = date.today() + timedelta(days=1)
+    with patch("app.date", wraps=date) as app_date, patch("storage.date", wraps=date) as storage_date, patch.object(app, "after") as after:
+        app_date.today.return_value = tomorrow
+        storage_date.today.return_value = tomorrow
+        app.tick()
+        after.assert_called_once_with(250, app.tick)
+        assert app.active_day == tomorrow
+        assert not app.task_vars["review_subject"].get()
+    app.active_day = date.today()
+    for key, variable in app.task_vars.items():
+        variable.set(app.store.task(key))
     app.navigate("My Subjects")
     app.subject_page.ask_delete(subject_id)
     next_step(check_delete)
@@ -153,7 +196,7 @@ def check_delete():
     assert app.subject_page.delete_panel.winfo_ismapped()
     app.subject_page.delete_button.invoke()
     assert app.store.subject(subject_id) is None
-    assert app.store.seconds() == 95
+    assert app.store.seconds() == 995
     assert app.store.recent_sessions()[0]["subject_id"] is None
     assert app.store.recent_sessions()[0]["subject_name"] == "Mathematics – skúška"
     assert app.store.upcoming_exams() == []
@@ -175,9 +218,9 @@ finally:
 if not errors:
     reopened = Store(path)
     assert len(reopened.subjects()) == 3
-    assert reopened.seconds() == 95
+    assert reopened.seconds() == 995
     assert reopened.task("focus")
     reopened.close()
-    print("PASS: empty state, subject create/edit/delete/search, real metrics, resize, scrolling, timer linkage, retained history and reopen", flush=True)
+    print("PASS: subject CRUD, wide/compact layouts, search, scrolling, timer save/retry and scheduling, midnight checklist, retained history and reopen", flush=True)
 temp.cleanup()
 raise SystemExit(1 if errors else 0)
