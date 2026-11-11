@@ -22,8 +22,8 @@ These instructions apply to the entire standalone SOSkuska repository. Product n
 ## Scope and implementation
 
 - This is a native Python/CustomTkinter desktop application. HTML in `soskuska-local/` is a visual reference, not its runtime implementation. Do not convert it into a website without an explicit request.
-- Only Dashboard exists. Other navigation entries display an availability message. AI Tutor, tests, flashcards, subject management, and real analytics are not implemented yet.
-- Entry point: `soskuska/app.py`. UI and timer logic live there; SQLite operations are in `soskuska/storage.py`; scroll compatibility is isolated in `soskuska/scrolling.py`. Storage regression tests live in `tests/test_storage.py` and run with `python -m unittest discover -s tests -v`.
+- Dashboard and My Subjects exist. Subject CRUD, optional exam dates and subject-linked focus sessions use real SQLite data. New databases start empty; no sample statistics are added. AI Tutor, questions, practice tests, flashcards and the Statistics/Settings screens remain unimplemented.
+- Entry point: `soskuska/app.py`. Dashboard and timer logic live there; the subject-management screen is in `soskuska/subjects.py`; SQLite operations and transactional schema migrations (user_version 2) are in `soskuska/storage.py`; scroll compatibility is isolated in `soskuska/scrolling.py`. Storage regression tests live in `tests/test_storage.py` and run with `python -m unittest discover -s tests -v`.
 - Keep sample data distinct from user records. Do not present sample metrics as actual user statistics or invent records in the user's database.
 
 ## Environment and data
@@ -40,7 +40,7 @@ Commands below are relative to the project root:
 - Prefer project-local environments over global installation changes. Never commit environments, caches, or local databases.
 - Use temporary databases in automated checks. Use `--data` for isolated development; without it, the app opens the normal user database.
 - Fresh installations use a `SOSkuska` data folder. If it does not contain a database but the legacy `ExamPrep` database exists, continue using the legacy file without copying, moving or overwriting it. Document this compatibility behavior.
-- Preserve user data. Plan migrations before changing the schema; `CREATE TABLE IF NOT EXISTS` is not schema versioning.
+- Preserve user data. Version migrations through `PRAGMA user_version` and keep changes transactional. Deleting a subject must retain historical session time and its stored name snapshot. Legacy sessions remain unassigned; never infer a subject for them.
 - Operate Tk widgets only on the main thread. Future network and long-running work must not block the UI event loop. Do not share SQLite connections between threads without an explicit design.
 
 ## UI and compatibility
@@ -63,3 +63,9 @@ Commands below are relative to the project root:
 ## CodeGraph
 
 If `.codegraph/` exists at the repository root, use `codegraph_explore` or `codegraph explore "<symbols or question>"` before searching or reading source to understand code. Without an index, skip CodeGraph; do not create an index unless requested by the user.
+
+## Branch and pull-request policy
+
+- For implementation work, create a feature branch and open a pull request for review.
+- Never commit or push directly to `main`, and do not merge the pull request. The user explicitly requires branch-based changes.
+- Current subject-management work belongs to `feature/subject-management`.

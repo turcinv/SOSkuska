@@ -1,95 +1,92 @@
 # Současná architektura
 
-Stav k 10. listopadu 2026. Tento dokument popisuje existující kód. Budoucí návrh je v [plánované architektuře](PLANNED_ARCHITECTURE.md).
+Stav k 11. listopadu 2026. Implementované jsou Dashboard a My Subjects; další kroky popisuje [plánovaná architektura](PLANNED_ARCHITECTURE.md).
 
-## Technologie a moduly
+## Technologie a soubory
 
-Python, CustomTkinter 5.2.2 a Pillow podle `soskuska/requirements.txt`; SQLite přes standardní modul `sqlite3`. Jeden proces, jedno vlákno, nativní smyčka událostí Tk. Bez síťových požadavků, Ollama klienta, cloudového účtu a webového serveru.
+Python, CustomTkinter 5.2.2, Pillow a standardní SQLite. Jeden proces a hlavní vlákno Tk; bez síťových požadavků a Ollama klienta. Vstup je `python soskuska/app.py`; instalovatelný balíček zatím není.
 
 | Soubor | Odpovědnost |
 | --- | --- |
-| `soskuska/app.py` | Vstupní bod, `Dashboard`, UI, události, časovač, ukázkové metriky, cesta databáze a CLI |
-| `soskuska/storage.py` | `Store`, otevření SQLite, založení tabulek, denní úkoly a součty sezení |
-| `soskuska/scrolling.py` | `DashboardScrollFrame`, obsluha kolečka a přesných trackpadových událostí |
-| `soskuska/check_dashboard.py` | Krátká nativní kontrola s dočasnou databází |
-| `soskuska/run-macos.command` | Spuštění přes `.venv-macos` |
-| `soskuska-local/index.html` | Starší samostatný vizuální návrh, není součást běhu aplikace |
-
-Projekt zatím nemá `pyproject.toml`, instalovatelný balíček ani příkaz `soskuska`. Platný vstup je `python soskuska/app.py`.
+| `soskuska/app.py` | Dashboard, navigace dvou obrazovek, metriky, časovač, volba databáze a CLI |
+| `soskuska/subjects.py` | My Subjects, inline formulář, validace a potvrzení smazání |
+| `soskuska/storage.py` | Verze schématu, migrace, CRUD předmětů, úkoly, sezení a přehledy |
+| `soskuska/scrolling.py` | Kompatibilita kolečka a trackpadu Tk 9 |
+| `tests/test_storage.py`, `tests/test_subjects.py` | Úložiště, kompatibilita původní databáze, migrace a pravidla předmětů |
+| `soskuska/check_dashboard.py` | Nativní integrační kontrola s dočasnými daty |
+| `soskuska-local/index.html` | Historický vizuální návrh; není součástí běhu aplikace |
 
 ## Datový tok
 
 ```mermaid
 flowchart LR
-    User[Uživatel] --> UI[Dashboard / app.py]
-    UI --> Widgets[CustomTkinter a Tk]
-    Widgets --> Scroll[scrolling.py]
-    UI --> Store[Store / storage.py]
-    Store --> DB[(Lokální SQLite)]
-    Samples[Ukázková data v app.py] --> UI
-    Clock[time.monotonic] --> UI
+    User[Uživatel] --> Dashboard[Dashboard / app.py]
+    User --> Subjects[SubjectPage / subjects.py]
+    Subjects --> Store[Store / storage.py]
+    Dashboard --> Store
+    Store --> DB[(SQLite)]
+    Clock[time.monotonic] --> Dashboard
 ```
 
-`Dashboard` přímo vytváří a volá `Store`. Samostatná servisní vrstva, model obrazovky ani router zatím neexistují. Barvy, fonty, rozložení a ukázkové předměty jsou převážně v `app.py`.
+Obě obrazovky volají `Store` přímo. Samostatná servisní/doménová vrstva a sdílený modul tématu zůstávají plánované. `SubjectPage` využívá stávající stylovací pomocné metody aplikace.
 
-Při startu skript na macOS odmítne Tk starší než 8.6 ještě před vytvořením okna. Pak nastaví tmavý režim, otevře databázi, vytvoří widgety a spustí `mainloop()`.
+## Schéma a migrace
 
-## SQLite
+`PRAGMA user_version` nyní označuje verzi **2**. Otevření původní databáze verze 0 vytvoří/uzná původní tabulky a v jedné transakci doplní předměty a vazby. Databáze s novější verzí se odmítne otevřít místo pokusu o downgrade. Cizí klíče jsou zapnuté pro každé připojení.
 
 ```sql
 CREATE TABLE tasks (
-    day TEXT NOT NULL,
-    name TEXT NOT NULL,
-    done INTEGER NOT NULL,
+    day TEXT NOT NULL, name TEXT NOT NULL, done INTEGER NOT NULL,
     PRIMARY KEY (day, name)
 );
-
-CREATE TABLE sessions (
-    id INTEGER PRIMARY KEY,
-    day TEXT NOT NULL,
-    seconds INTEGER NOT NULL CHECK(seconds >= 0)
+CREATE TABLE subjects (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL, name_key TEXT NOT NULL UNIQUE,
+    description TEXT NOT NULL DEFAULT '', exam_date TEXT,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE sessions (
+    id INTEGER PRIMARY KEY, day TEXT NOT NULL,
+    seconds INTEGER NOT NULL CHECK(seconds >= 0),
+    subject_id INTEGER REFERENCES subjects(id) ON DELETE SET NULL,
+    subject_name TEXT
+);
+CREATE INDEX sessions_subject ON sessions(subject_id);
 ```
 
-Tabulky se vytvářejí přes `CREATE TABLE IF NOT EXISTS`. Verze schématu a migrace zatím chybí. Jediné připojení používá hlavní vlákno. Datum je místní den ve formátu ISO `YYYY-MM-DD`.
+Staré úkoly a sezení se zachovají. Původní sezení nemají vymyšlený předmět: nové sloupce jsou `NULL`, UI je označí jako Unassigned session. Při smazání předmětu se zachová čas i název předmětu uložený u nového sezení; cizí klíč se nastaví na `NULL`. ID předmětu se znovu nepoužívá.
 
-Úkoly mají klíče `cards` a `test`; jejich popisy jsou v kódu. Zaškrtnutí volá `save_task → Store.set_task → INSERT OR REPLACE`. Výchozí ukázkový stav `cards` je zaškrtnutý, `test` nezaškrtnutý.
+Název předmětu má 1–120 znaků; mezery se sjednotí, unikátní klíč používá Unicode NFKC a `casefold()`. Popis má nejvýše 1 000 znaků. Datum je volitelné, musí přesně odpovídat platnému `YYYY-MM-DD`. Minulé datum lze uložit, ale nezobrazí se mezi nadcházejícími zkouškami.
 
-| Platforma | Výchozí soubor |
+## Ukládání a časovač
+
+| Platforma | Výchozí databáze |
 | --- | --- |
 | macOS | `~/Library/Application Support/SOSkuska/dashboard.sqlite3` |
 | Windows | `%LOCALAPPDATA%\SOSkuska\dashboard.sqlite3`; náhradní základ `~/AppData/Local` |
 | Linux | `$XDG_DATA_HOME/SOSkuska/dashboard.sqlite3`; náhradní základ `~/.local/share` |
 
-`--data` přepíše cestu. Relativní cesta se vyhodnocuje vůči pracovnímu adresáři. Data nejsou aplikací šifrovaná, zálohovaná ani synchronizovaná.
+Pokud nová databáze není a existuje původní `ExamPrep/dashboard.sqlite3`, použije se původní soubor bez přesunu nebo přepisu. `--data` má přednost. Data se nešifrují, nezálohují ani nesynchronizují. Zápisy běží na hlavním vlákně.
 
-## Časovač
+Časovač vyžaduje existující předmět. Po dobu sezení drží jeho ID a kopii názvu; přejmenování nemění historii. Má limit 900 sekund, měření přes `time.monotonic()`, aktualizaci přes `after(250, tick)`, pauzu a dokončení. Mazání aktivního předmětu UI zablokuje do dokončení sezení. Finish, dosažení limitu a běžné zavření ukládají čas. Při chybě zápisu se sezení pozastaví a lze zkusit Finish znovu; okno se nezavře s neuloženým sezením.
 
-- Pevný limit je 900 sekund. Start Studying a Resume session spouštějí tutéž funkci, nejde o obnovu dřívějšího učiva.
-- `time.monotonic()` měří uplynulou dobu. `running_since` drží začátek běžícího úseku; `session_seconds` již uplynulý čas před pauzou.
-- `after(250, tick)` aktualizuje text přibližně každých 250 ms. Měření nezávisí na počtu těchto volání.
-- Pauza mění pouze stav v paměti. Finish, vypršení limitu nebo běžné zavření uloží celé sekundy, maximálně 900.
-- Záznam sezení nemá předmět ani přesný čas začátku. Připíše se ke dni uložení; přes půlnoc se nerozděluje.
-- Po uložení se obnoví minutové přehledy. Výchozí ukázkové hodnoty jsou 24 h 35 min celkem a 45 min dnes; ostatní metriky zůstávají pevné.
-- Při pádu může rozpracované sezení zmizet. Stav časovače se po restartu neobnoví.
+Čas není průběžně ukládaný a po pádu se nemusí obnovit. Sezení se připisuje ke dni uložení a nerozděluje se přes půlnoc. Změna dne za běhu obnoví přehled a dnešní checklist. Nový checklist používá klíče `review_subject` a `focus`; staré řádky zůstávají v databázi, ale nejsou mapované na nové úkoly.
 
-## Rozložení, vyhledávání a scrolling
+## Skutečný Dashboard
 
-Počáteční okno 1440 × 900, minimum 1024 × 700; titulek poskytuje systém. Sidebar má 230 px, sbalený 72 px. Široké rozložení se zapne při alespoň 1100 px po odečtení sidebaru: čtyři metriky vedle sebe a pravý přehled široký nejméně 300 px. V kompaktním režimu jsou metriky 2 × 2 a pravý přehled pod hlavním obsahem. Předměty zůstávají ve dvou sloupcích. Resize se zpracovává s odkladem 120 ms.
+Pevné vzorové předměty, procenta, profil, termíny i základy 24 h 35 min / 45 min byly odstraněné. Nová databáze je prázdná. Metriky jsou celkový čas, počet uložených sezení, série studijních dní a počet předmětů. Série může končit dnes nebo včera; starší přerušená série ukáže nulu. Cíl zůstává 60 minut denně; karta ukazuje uložené minuty, bar má přesnost na sekundy.
 
-Vyhledávání porovnává podřetězec názvu pomocí `casefold()`. Hledá jen ve čtyřech vzorových předmětech, nikoli v databázi. Ctrl+K a na macOS Cmd+K zaměří hledání, Escape smaže dotaz. Všechny zkratky ještě nejsou ověřené na všech platformách.
+Karty ukazují počet sezení a uložený čas předmětu, ne smyšlený učební pokrok. Zkoušky pocházejí z uložených termínů, nedávná aktivita z posledních uložených sezení. Neexistující data mají prázdné stavy. AI, otázky, testy, kartičky, statistická obrazovka a nastavení zatím nejsou implementované.
 
-`scrolling.py` doplňuje Tk 9 událost `TouchpadScroll`, rozbaluje podepsané 16bitové X/Y delty a nastavuje canvas krok na 1 px. Kolečko normalizuje přibližně na 40 px na krok; pro starší macOS a Linux/X11 má samostatné obsluhy. Posouvá pouze obsah pod cílovým widgetem; gesto nad sidebarem obsah neposune a čistě horizontální gesto ignoruje.
+## Rozložení a ovládání
 
-Adapter používá interní členy CustomTkinteru `_parent_canvas`, `_scrollbar`, `_shift_pressed`; při upgradu je nutná kontrola kompatibility. Formát události definuje [Tk TIP 684](https://core.tcl-lang.org/tips/doc/main/tip/684.md).
+Okno 1440 × 900, minimum 1024 × 700. Sidebar 230 px / sbalený 72 px; při zbylé šířce pod 1100 px se Dashboard přeuspořádá na metriky 2 × 2 a pravý panel pod obsah. My Subjects přepíná mezi jedním a dvěma sloupci při šířce 850 px. Dlouhé názvy se na kartách zalamují.
 
-## Ověření a známé limity
+Obě obrazovky mají nezávislé vyhledávání přes `casefold()`. Ctrl+K / Cmd+K zaměří hledání aktivní obrazovky; Escape vymaže dotaz. Formuláře pro nový/upravený předmět i potvrzení smazání jsou inline. Podpora `TouchpadScroll`, kolečka a staršího Linux/X11 zůstává v adaptéru využívajícím privátní členy CustomTkinteru; při upgradu jej znovu ověřit.
 
-Nativní kontrola prošla na macOS, Python 3.12.13 / Tk 9.0: mapované widgety, hledání, prázdný výsledek, sidebar, kompaktní režim, syntetické události kolečka/trackpadu, časovač a uložení času. Syntetické události nenahrazují ruční test gest na zařízení. Windows/Linux ani instalátor nejsou ověřené.
+## Ověření a zbývající omezení
 
-Předměty, procenta pokroku, profil, zkoušky, aktivita, streak, počet otázek a úspěšnost jsou ukázkové. Zkoušky se při startu generují relativně k dnešku. AI je odpojená a žádné připojení se nezkouší. Ostatní navigace pouze zobrazí oznámení.
+16 testů úložiště prošlo; integrační skript prošel na macOS s Pythonem 3.12.13 / Tk 9.0 a dočasnou databází. Ověřil CRUD přes formulář, Unicode, hledání, prázdné stavy, navázání časovače, zachování historie, opětovné otevření, kompaktní režim a syntetické posouvání. Nenahrazuje ruční vizuální/hardwarové ověření; Windows/Linux nejsou ověřené.
 
-Chybí automatické ošetření změny dne za běhu, obnova sezení po pádu, uživatelské chybové stavy pro zápis do databáze, migrace, import/export, zálohy, lokalizace, přepínání motivu, kompletní logování a distribuční balíčky.
-
-
-Kompatibilita s původním názvem: pokud nová databáze v `SOSkuska` neexistuje a původní `ExamPrep/dashboard.sqlite3` existuje, aplikace použije tento původní soubor. Nic automaticky nekopíruje, nepřesouvá ani nepřepisuje. Explicitní `--data` má vždy přednost.
+Zbývá správa témat/otázek, testy, kartičky, Ollama, překlady UI, nastavování cíle, úplná obnova po pádu, zálohy, balíčky a komplexní logování. První databázové operace mají chybová hlášení, ale úplné zpracování chyb při každém čtení ještě chybí.

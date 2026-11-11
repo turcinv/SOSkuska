@@ -90,7 +90,7 @@ Počkej na úspěšné dokončení instalace. Knihovny se instalují do projektu
 
 Má se otevřít tmavé okno **SOSkúška** s Dashboardem a levou navigací. PowerShell nech otevřený; dokud aplikace běží, nevrátí se nový příkazový řádek. Aplikaci běžně ukonči křížkem jejího okna.
 
-Zatím funguje Dashboard, checklist, vyhledávání a časovač. Další obrazovky jsou plánované; většina zobrazených studijních údajů je demonstrace.
+Fungují Dashboard, My Subjects, checklist, vyhledávání a časovač pro konkrétní předmět. Přidej svůj první předmět; nová databáze je prázdná a přehled ukazuje skutečně uložená data. Ostatní studijní obrazovky zůstávají plánované.
 
 ## 8. Jak spouštět příště
 

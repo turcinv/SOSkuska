@@ -4,6 +4,10 @@
 
 ## Unreleased
 
+- Správa předmětů a termínů zkoušek, prázdný stav, validace Unicode a historie při smazání.
+- Skutečné metriky Dashboardu a propojení časovače s předmětem; odstranění ukázkových statistik.
+- Transakční migrace SQLite na verzi 2 se zachováním původních dat; 16 testů a rozšířená nativní kontrola.
+
 - Návod ke klonování, autentizaci, větvím, commitům, aktualizacím a pull requestům.
 - Pokyny k přispívání, šablony chyb/návrhů a pull requestu, nastavení editoru.
 

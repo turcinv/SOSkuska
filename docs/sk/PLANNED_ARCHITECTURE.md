@@ -2,6 +2,8 @@
 
 **Budúci návrh, nie dnešná implementácia.** Uvedené moduly a tabuľky zatiaľ neexistujú, ak ich nepotvrdzuje [súčasná architektúra](CURRENT_ARCHITECTURE.md). Tento plán sám osebe neznamená začatie implementácie všetkých funkcií.
 
+**Aktuálny postup (11. novembra 2026):** základný CRUD predmetov, termíny skúšok, migrácie a skutočný Dashboard sú hotové vo feature vetve. Témy, otázky, precvičovanie, kartičky a AI naďalej patria do plánu. Neznamená to implementáciu samostatnej servisnej vrstvy alebo inštalátora.
+
 ## Smer
 
 Zachovať Python + CustomTkinter, miestnu SQLite a voliteľnú AI cez Ollamu. Primárne platformy Windows/Linux, ponechať funkčný vývoj na macOS. Bežné štúdium nesmie vyžadovať cloudový účet, platené API ani spustenú AI. Vizuálny jazyk ďalej rozvíjať z dnešného Dashboardu.
@@ -75,7 +77,7 @@ Konkrétne schémy musia doplniť cudzie kľúče, pravidlá mazania, indexy a t
 
 ## Funkčné celky
 
-**Predmety a skutočný Dashboard:** CRUD predmetov a tém, uložené skúšky a prehľad z odpovedí/relácií. Pri prechode na skutočné údaje odstrániť základy 24 h 35 min / 45 min. Prázdna databáza zobrazí užitočný prázdny stav; demo údaje môžu byť iba výslovnou voľbou.
+**Predmety a skutočný Dashboard:** CRUD predmetov, termíny a skutočné súčty relácií sú implementované. Ďalším krokom je správa tém a otázok; úspešnosť odpovedí možno pridať až s ich ukladaním. Nové databázy sú prázdne, bez automatických demo údajov.
 
 **Kartičky:** balíčky, otočenie otázky na odpoveď, Again / Hard / Good / Easy. Plánovanie opakovania oddeliť do čistého modulu a testovať. Konkrétny algoritmus ešte treba vybrať; dnešná aplikácia žiadny nemá.
 

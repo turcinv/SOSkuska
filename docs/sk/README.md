@@ -1,8 +1,8 @@
 # SOSkúška — slovenská dokumentácia
 
-Lokálny desktopový študijný asistent v Pythone a CustomTkinteri. Dnes je implementovaný Dashboard s denným zoznamom úloh, vyhľadávaním predmetov a časovačom. Úlohy a odštudovaný čas sa ukladajú do SQLite na zariadení používateľa.
+Lokálny desktopový študijný asistent v Pythone a CustomTkinteri. Implementované sú Dashboard a My Subjects: správa predmetov a termínov skúšok, denný zoznam úloh, vyhľadávanie a časovač prepojený s predmetom. Úlohy a odštudovaný čas sa ukladajú do SQLite na zariadení používateľa.
 
-**Stav: funkčný prototyp Dashboardu.** Predmety, skúšky, profil a časť štatistík sú ukážkové. AI Tutor, testy a kartičky zatiaľ nie sú implementované. Beh nevyžaduje Superdesign, platené API ani internet.
+**Stav: funkčný prototyp so skutočnými lokálnymi údajmi.** Predmety možno vytvárať, upravovať a mazať; prehľad používa uložené časy a termíny. Nová databáza začína prázdna. AI Tutor, otázky, testy a kartičky zatiaľ nie sú implementované. Beh nevyžaduje Superdesign, platené API ani internet.
 
 ## Dokumenty
 

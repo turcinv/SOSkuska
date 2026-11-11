@@ -2,9 +2,9 @@
 
 Název aplikace je **SOSkúška**. Repozitář a kořenová složka jsou **SOSkuska**, zdrojový adresář `soskuska/`; technické názvy používají podobu bez diakritiky.
 
-Lokální desktopový studijní asistent v Pythonu a CustomTkinteru. Aktuálně je implementovaný Dashboard s denním checklistem, vyhledáváním předmětů a časovačem. Úkoly a odstudovaný čas ukládá do SQLite na zařízení uživatele.
+Lokální desktopový studijní asistent v Pythonu a CustomTkinteru. Implementované jsou Dashboard a My Subjects: správa předmětů a termínů zkoušek, denní checklist, vyhledávání a časovač propojený s předmětem. Úkoly a odstudovaný čas ukládá do SQLite na zařízení uživatele.
 
-**Stav: funkční prototyp Dashboardu.** Předměty, zkoušky, profil a část statistik jsou ukázkové. AI Tutor, testy a kartičky zatím neexistují. Běh nevyžaduje Superdesign, placené API ani internet.
+**Stav: funkční prototyp se skutečnými lokálními daty.** Předměty lze vytvářet, upravovat a mazat; přehled používá uložené časy a termíny. Nová databáze začíná prázdná. AI Tutor, otázky, testy a kartičky zatím nejsou implementované. Běh nevyžaduje Superdesign, placené API ani internet.
 
 ## Klonování a první instalace
 

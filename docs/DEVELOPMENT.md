@@ -76,7 +76,7 @@ Nativní kontrola funkčnosti s vlastní dočasnou databází:
 
 Na Windows/Linux zaměň interpret za cestu ze svého prostředí. Skript krátce otevře okno, ověří mapované widgety, hledání/prázdný stav, sidebar, kompaktní rozložení, kolečko, v Tk 9 trackpad, časovač a uložení času. Při úspěchu vypíše `PASS` a okno zavře. Nepoužívá běžnou databázi.
 
-Má 10sekundovou pojistku přes Tk; nejde o tvrdý limit procesu při zamrznutí GUI smyčky. V takovém případě ukonči proces přes Ctrl+C. Syntaxe ani syntetické události nejsou ruční vizuální kontrola nebo test fyzického trackpadu.
+Má 12sekundovou pojistku přes Tk; nejde o tvrdý limit procesu při zamrznutí GUI smyčky. V takovém případě ukonči proces přes Ctrl+C. Syntaxe ani syntetické události nejsou ruční vizuální kontrola nebo test fyzického trackpadu.
 
 Po změně UI ručně ověř 1440 × 900 i 1024 × 700, dosažení spodního obsahu, skutečné gesto/kolečko, sidebar, hledání, Ctrl+K / Cmd+K a Escape. Po změně ukládání změň checklist a dokonči krátké sezení; restartuj a zkontroluj data. Automatické přenačítání kódu není implementované — aplikaci je nutné restartovat.
 
@@ -104,3 +104,6 @@ Kontrola úložiště bez GUI (včetně zachování dat původní aplikace):
 ```sh
 .venv-macos/bin/python -m unittest discover -s tests -v
 ```
+
+
+Nová integrační kontrola také vytváří a upravuje předmět přes UI, ověřuje prázdnou databázi bez vzorových metrik, termín zkoušky, vazbu sezení a smazání předmětu se zachováním historie. Migraci původních tabulek a validaci předmětů ověřují `tests/test_subjects.py`. Vše používá dočasná data.

@@ -27,4 +27,4 @@ První instalace na Windows: [Česky](../docs/WINDOWS_FIRST_RUN.md) · [Slovensk
 - [Plánovaná architektura](../docs/PLANNED_ARCHITECTURE.md)
 - [Pokyny pro další vývoj](../AGENTS.md)
 
-Zatím je implementovaný pouze Dashboard. Předměty a většina metrik jsou ukázkové; další obrazovky a Ollama jsou plánované.
+Implementované jsou Dashboard a My Subjects se skutečnými předměty, termíny a studijním časem. Nová databáze je prázdná. Otázky, testy, kartičky, Ollama a ostatní obrazovky zůstávají plánované.
