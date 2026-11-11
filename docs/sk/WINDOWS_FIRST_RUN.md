@@ -90,7 +90,7 @@ Počkaj na úspešné dokončenie inštalácie. Knižnice sa inštalujú do proj
 
 Má sa otvoriť tmavé okno **SOSkúška** s Dashboardom a ľavou navigáciou. PowerShell nechaj otvorený; kým aplikácia beží, nezobrazí sa nový príkazový riadok. Aplikáciu bežne ukonči krížikom jej okna.
 
-Zatiaľ funguje Dashboard, zoznam úloh, vyhľadávanie a časovač. Ďalšie obrazovky sú plánované; väčšina zobrazených študijných údajov je demonštračná.
+Fungujú Dashboard, My Subjects, zoznam úloh, vyhľadávanie a časovač pre konkrétny predmet. Pridaj svoj prvý predmet; nová databáza je prázdna a prehľad ukazuje skutočne uložené údaje. Ostatné študijné obrazovky zostávajú plánované.
 
 ## 8. Ako spúšťať nabudúce
 

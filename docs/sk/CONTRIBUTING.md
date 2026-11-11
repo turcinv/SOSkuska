@@ -6,7 +6,7 @@
 
 Prečítaj [README](README.md), [prácu s Gitom](GIT_GUIDE.md), [vývojový návod](DEVELOPMENT.md) a [súčasnú architektúru](CURRENT_ARCHITECTURE.md). Vývojoví asistenti majú navyše pokyny v [AGENTS.md](../../AGENTS.md).
 
-Pracuj v novej vetve z aktuálneho `main`. Jedna zmena má riešiť jeden zrozumiteľný problém. Existuje iba Dashboard; plánované obrazovky a demo údaje neprezentuj ako hotové funkcie. Používaj samostatnú vývojovú databázu cez `--data .local-data/dev.sqlite3`.
+Pracuj v novej vetve z aktuálneho `main`. Jedna zmena má riešiť jeden zrozumiteľný problém. Existujú Dashboard a My Subjects; ďalšie plánované obrazovky neprezentuj ako hotové funkcie. Nová databáza musí zostať prázdna, kým používateľ nezadá vlastné údaje. Používaj samostatnú vývojovú databázu cez `--data .local-data/dev.sqlite3`.
 
 ## Pred odoslaním
 

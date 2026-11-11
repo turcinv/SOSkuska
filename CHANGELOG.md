@@ -4,6 +4,13 @@
 
 ## Unreleased
 
+- Oprava souběžného spouštění při migraci a přepínání sloupců My Subjects.
+- Regresní kontrola automatického ukládání časovače po chybě a obnovení checklistu přes půlnoc.
+
+- Správa předmětů a termínů zkoušek, prázdný stav, validace Unicode a historie při smazání.
+- Skutečné metriky Dashboardu a propojení časovače s předmětem; odstranění ukázkových statistik.
+- Transakční migrace SQLite na verzi 2 se zachováním původních dat; 17 testů a rozšířená nativní kontrola.
+
 - Návod ke klonování, autentizaci, větvím, commitům, aktualizacím a pull requestům.
 - Pokyny k přispívání, šablony chyb/návrhů a pull requestu, nastavení editoru.
 

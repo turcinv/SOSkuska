@@ -1,35 +1,32 @@
 # Jak to funguje — jednoduše
 
-SOSkuska je desktopová aplikace. Python pomocí CustomTkinteru vytvoří okno a jeho ovládací prvky. Prohlížeč ani webový server k tomu nepotřebuješ. HTML ve složce `soskuska-local/` je jen samostatný návrh vzhledu.
+SOSkúška je desktopová aplikace. Python a CustomTkinter vytvářejí okno; SQLite ukládá údaje do souboru na tvém počítači. Prohlížeč, cloud ani spuštěnou AI k tomu nepotřebuješ. HTML ve složce `soskuska-local/` je historický návrh, nikoli běžící aplikace.
 
-## Od spuštění k uloženým datům
+## První vlastní předmět
 
-1. **Spuštění:** aplikace vytvoří okno a otevře místní SQLite databázi. Když ještě neexistuje, založí ji.
-2. **Checklist:** zaškrtneš úkol a změna se ihned uloží pro dnešní datum. Po dalším spuštění ve stejný den zůstane zachovaná.
-3. **Vyhledávání:** zadáš například `Physics`. Aplikace přefiltruje čtyři ukázkové předměty v paměti; nic neposílá na internet.
-4. **Studium:** Start Studying i Resume session spouští nový 15minutový časovač. Ten můžeš pozastavit a znovu rozběhnout.
-5. **Dokončení:** Finish uloží skutečně uplynulé sekundy. Po 15 minutách se sezení dokončí automaticky. Běžné zavření okna také uloží dosavadní čas.
+1. Otevři **My Subjects** a klikni na **New subject**.
+2. Vyplň název, případně popis a termín zkoušky ve formátu `YYYY-MM-DD`.
+3. Klikni na **Save subject**. Předmět se uloží a objeví také na Dashboardu.
+4. **Edit** upraví stejný předmět. Prázdné, příliš dlouhé či duplicitní názvy a neplatná data aplikace odmítne přímo ve formuláři.
 
-Časovač se mezi spuštěními neobnovuje. Při násilném ukončení nebo pádu může rozpracovaný čas zmizet, protože se zatím průběžně neukládá.
+Nová instalace je prázdná. Názvy, termíny ani studijní statistiky nejsou automaticky vymyšlené. Vyhledávání na obou obrazovkách filtruje názvy tvých předmětů.
 
-## Skutečné funkce a ukázková data
+## Studium a ukládání
 
-| Skutečně funguje | Zatím pouze ukázka |
-| --- | --- |
-| Denní checklist a jeho uložení | Profil Alex Morgan |
-| Měření a uložení studijního času | Streak, počet otázek a úspěšnost |
-| Filtrování, posouvání a změna rozložení | Předměty a procenta pokroku |
-| Pauza a dokončení časovače | Termíny zkoušek a nedávná aktivita |
+Na Dashboardu zvol předmět a klikni na **Start Studying**, nebo použij **Study** na kartě předmětu. Spustí se 15minutový časovač, který můžeš pozastavit a obnovit. **Finish** uloží skutečně uplynulé sekundy k vybranému předmětu; po 15 minutách se dokončí automaticky. I běžné zavření okna uloží rozpracovaný čas.
 
-Přehled začíná na ukázkových **24 h 35 min celkem** a **45 min dnes**. Skutečně uložený čas se k těmto základům přičítá. Nejde ještě o kompletní statistiku tvého studia.
+Dashboard pak ukáže skutečně uložený čas, počet sezení, sérii studijních dní a počet předmětů. Denní cíl je zatím pevně 60 minut. Nedávná aktivita obsahuje uložená sezení; nadcházející zkoušky tvoje uložené termíny. Procenta zvládnutého učiva či úspěšnost testů se zatím nepočítají.
 
-Na Macu je databáze standardně v `~/Library/Application Support/SOSkuska/dashboard.sqlite3`. Nikam se automaticky nesynchronizuje. Aplikace ji sama nešifruje.
+Denní seznam úkolů se také ukládá. Review a subject označuješ ručně; Complete a focus session se po uložení nenulového času označí automaticky. Po opětovném spuštění ve stejný den se stav obnoví.
 
-## Co přijde později
+## Co se stane při smazání
 
-Přidáš vlastní předměty, otázky a kartičky. Procvičování začne zapisovat odpovědi a přehled bude počítat skutečný pokrok. AI Tutor se připojí k místní Ollamě, která provozuje jazykový model. Běžné studium má zůstat použitelné i bez AI.
+**Delete** nejdříve zobrazí potvrzení na stránce. Smazání odstraní předmět a jeho termín zkoušky, ale zachová uložený studijní čas a historii se jménem platným při sezení. Aktivní předmět nelze smazat před dokončením časovače.
 
-To je budoucí plán, nikoli dnešní funkce. Další obrazovky v navigaci zatím jen zobrazují oznámení o jejich budoucí dostupnosti.
+## Kde jsou data a jaká jsou omezení
 
+Na Macu je výchozí soubor `~/Library/Application Support/SOSkuska/dashboard.sqlite3`. Pokud aplikace najde původní databázi v `ExamPrep/dashboard.sqlite3` a nová ještě neexistuje, pokračuje v původním souboru. Původní záznamy zachová a doplní nové tabulky/sloupce pomocí migrace. Starým sezením nepřiřazuje vymyšlené předměty.
 
-Kompatibilita s původním názvem: pokud nová databáze v `SOSkuska` neexistuje a původní `ExamPrep/dashboard.sqlite3` existuje, aplikace použije tento původní soubor. Nic automaticky nekopíruje, nepřesouvá ani nepřepisuje. Explicitní `--data` má vždy přednost.
+Parametr `--data` umožňuje vlastní cestu. Údaje se automaticky nesynchronizují, nezálohují ani nešifrují. Během časovače se čas průběžně neukládá: při pádu může rozpracované sezení zmizet a po restartu se neobnoví. Sezení přes půlnoc se zatím připíše ke dni dokončení.
+
+AI Tutor, témata, otázky, testy a kartičky jsou další plánované funkce. Jejich položky v navigaci zatím zobrazují oznámení.
