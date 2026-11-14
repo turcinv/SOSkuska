@@ -113,8 +113,18 @@ Integrační kontrola nově ověřuje také skutečné přepnutí sloupců při 
 
 ## Banka témat a otázek
 
-Kontrolu banky otázek spustíš příkazem níže. Používá dočasnou databázi a krátce otevře okno. Ověřuje CRUD, validaci, kombinované filtry, kompaktní editor a posouvání, izolaci předmětů, mazání a opětovné otevření. `tests/test_questions.py` navíc ověřuje migraci ze schématu 2, Unicode a konzistenci počtů. Celkem je 30 testů bez GUI a dvě nativní kontroly. Obě prošly na macOS; Windows/Linux a fyzický trackpad nejsou tímto ověřené.
+Kontrolu banky otázek spustíš příkazem níže. Používá dočasnou databázi a krátce otevře okno. Ověřuje CRUD, validaci, kombinované filtry, kompaktní editor a posouvání, izolaci předmětů, mazání a opětovné otevření. `tests/test_questions.py` navíc ověřuje migraci ze schématu 2, Unicode a konzistenci počtů. Celkem je 32 testů bez GUI a tři nativní kontroly. Všechny prošly na macOS; Windows/Linux a fyzický trackpad nejsou tímto ověřené.
 
 ```sh
 .venv-macos/bin/python soskuska/check_question_bank.py
 ```
+
+## Opravy po kontrole hlavní větve
+
+Nová kontrola `check_review_fixes.py` používá dočasné databáze a ověřuje zrušení starého potvrzení, změnu obsahu z druhého připojení, skutečný exkluzivní SQLite zámek při půlnoci, opakování obnovy, datum, dokončení časovače a syntetické posouvání v dlouhém i krátkém poli. Na macOS navíc v odděleném procesu vyvolá skutečnou položku Quit, ověří zachování sezení při chybě zápisu a uložení při opakování. Celkem je 32 testů bez GUI a tři nativní kontroly. Prošly na macOS; Windows/Linux a fyzický trackpad nejsou tímto ověřené.
+
+```sh
+.venv-macos/bin/python soskuska/check_review_fixes.py
+```
+
+Kontrola navíc ověřuje současné selhání uložení sezení a půlnočního čtení, zachování pokynu k ručnímu uložení po obnově, skutečný SQLite zámek až po úspěšném zápisu sezení během stejného dne, automatickou obnovu metrik/výběru bez duplicitního záznamu a syntetická gesta nad posuvníkem i okrajem editoru.

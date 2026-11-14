@@ -146,11 +146,27 @@ class Store:
         except sqlite3.IntegrityError:
             raise ValueError("A subject with this name already exists.") from None
 
-    def delete_subject(self, subject_id):
+    def subject_deletion_state(self, subject_id):
+        """The name and content counts shown in the destructive-action warning."""
+        row = self.db.execute("""SELECT name,
+            (SELECT COUNT(*) FROM topics WHERE subject_id=subjects.id),
+            (SELECT COUNT(*) FROM questions WHERE subject_id=subjects.id)
+            FROM subjects WHERE id=?""", (subject_id,)).fetchone()
+        return tuple(row) if row else None
+
+    def delete_subject(self, subject_id, expected_state=None):
+        """Return False when the confirmation is stale; delete atomically otherwise."""
         with self.db:
+            if expected_state is not None:
+                # Keep other connections from changing content between check/delete.
+                self.db.execute("BEGIN IMMEDIATE")
+                current = self.subject_deletion_state(subject_id)
+                if current is not None and current != expected_state:
+                    return False
             cursor = self.db.execute("DELETE FROM subjects WHERE id=?", (subject_id,))
             if cursor.rowcount == 0:
                 raise ValueError("This subject no longer exists.")
+        return True
 
     def topics(self, subject_id):
         return [dict(row) for row in self.db.execute("""SELECT t.*, COUNT(q.id) AS question_count

@@ -38,6 +38,19 @@ class DashboardScrollFrame(ctk.CTkScrollableFrame):
             widget = getattr(widget, "master", None)
         return False
 
+    def _scrollable_text(self, widget):
+        """Find the native text behind an editor's writing area, border or scrollbar."""
+        while widget is not None:
+            if isinstance(widget, (tkinter.Text, ctk.CTkTextbox)):
+                first, last = widget.yview()
+                if last - first < 1:
+                    if isinstance(widget, tkinter.Text):
+                        return widget
+                    return next((child for child in widget.winfo_children()
+                                 if isinstance(child, tkinter.Text)), None)
+            widget = getattr(widget, "master", None)
+        return None
+
     def _scroll_pixels(self, pixels):
         self._wheel_remainder += pixels
         whole_pixels = int(self._wheel_remainder)
@@ -48,6 +61,8 @@ class DashboardScrollFrame(ctk.CTkScrollableFrame):
     def _mouse_wheel_all(self, event):
         if not self._owns_event(event.widget) or self._shift_pressed:
             return
+        if self._scrollable_text(event.widget) is not None:
+            return  # Native Text/CTkScrollbar wheel bindings already scroll the editor.
         # Tk 9 normalizes conventional wheels to 120 per notch on every OS.
         # Earlier Aqua versions use small deltas rather than multiples of 120.
         scale = 8 if sys.platform == "darwin" and tkinter.TkVersion < 9 else 40 / 120
@@ -57,12 +72,19 @@ class DashboardScrollFrame(ctk.CTkScrollableFrame):
     def _touchpad_scroll(self, event):
         if not self._owns_event(event.widget):
             return
+        text = self._scrollable_text(event.widget)
+        if text is not None:
+            # Canvas borders/scrollbars lack Tk's Text touchpad binding. Forward
+            # to Text once; events originating there were already handled by Tk.
+            if event.widget is not text:
+                text.event_generate("<TouchpadScroll>", delta=event.delta)
+            return "break"
         _, delta_y = touchpad_deltas(event.delta)
         if delta_y:
             self._scroll_pixels(-delta_y)
             return "break"
 
     def _legacy_wheel(self, event):
-        if self._owns_event(event.widget):
+        if self._owns_event(event.widget) and self._scrollable_text(event.widget) is None:
             self._scroll_pixels(-40 if event.num == 4 else 40)
             return "break"

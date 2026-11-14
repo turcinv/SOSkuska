@@ -10,6 +10,7 @@ class SubjectPage(ctk.CTkFrame):
         self.app = app
         self.editing_id = None
         self.deleting_id = None
+        self.deleting_state = None
         self.card_columns = 1
         self.grid_columnconfigure(0, weight=1)
         header = app.frame(self)
@@ -118,22 +119,24 @@ class SubjectPage(ctk.CTkFrame):
         if self.app.session_open and self.app.session_subject_id == subject_id:
             self.status.configure(text="Finish the active focus session before deleting its subject.")
             return
-        subject = self.app.store.subject(subject_id)
-        if subject is None:
+        state = self.app.store.subject_deletion_state(subject_id)
+        if state is None:
+            self.cancel_delete()
             self.render()
             return
         self.hide_form()
         self.deleting_id = subject_id
-        topics = len(self.app.store.topics(subject_id))
-        questions = len(self.app.store.questions(subject_id))
+        self.deleting_state = state
+        name, topics, questions = state
         content_warning = f" This permanently deletes {topics} topics and {questions} questions." if topics or questions else ""
-        self.delete_label.configure(text=f'Delete “{subject["name"]}”?{content_warning} Saved study time and session history will be kept.')
+        self.delete_label.configure(text=f'Delete “{name}”?{content_warning} Saved study time and session history will be kept.')
         self.delete_panel.grid()
         self.app.scroll._parent_canvas.yview_moveto(0)
 
     def cancel_delete(self):
         self.delete_panel.grid_remove()
         self.deleting_id = None
+        self.deleting_state = None
 
     def confirm_delete(self):
         if self.deleting_id is None:
@@ -142,7 +145,10 @@ class SubjectPage(ctk.CTkFrame):
             self.status.configure(text="Finish the active focus session before deleting its subject.")
             return
         try:
-            self.app.store.delete_subject(self.deleting_id)
+            if not self.app.store.delete_subject(self.deleting_id, self.deleting_state):
+                self.ask_delete(self.deleting_id)
+                self.status.configure(text="This subject changed. Review the updated warning before deleting it.")
+                return
         except (ValueError, sqlite3.Error) as exc:
             self.status.configure(text=str(exc) if isinstance(exc, ValueError) else "Could not delete the subject. Please try again.")
             return
