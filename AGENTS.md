@@ -22,8 +22,8 @@ These instructions apply to the entire standalone SOSkuska repository. Product n
 ## Scope and implementation
 
 - This is a native Python/CustomTkinter desktop application. HTML in `soskuska-local/` is a visual reference, not its runtime implementation. Do not convert it into a website without an explicit request.
-- Dashboard and My Subjects exist. Subject CRUD, optional exam dates and subject-linked focus sessions use real SQLite data. New databases start empty; no sample statistics are added. AI Tutor, questions, practice tests, flashcards and the Statistics/Settings screens remain unimplemented.
-- Entry point: `soskuska/app.py`. Dashboard and timer logic live there; the subject-management screen is in `soskuska/subjects.py`; SQLite operations and transactional schema migrations (user_version 2) are in `soskuska/storage.py`; scroll compatibility is isolated in `soskuska/scrolling.py`. Storage regression tests live in `tests/test_storage.py` and run with `python -m unittest discover -s tests -v`.
+- Dashboard and My Subjects exist. Subject/topic/question CRUD, optional exam dates and subject-linked focus sessions use real SQLite data. New databases start empty; no sample statistics are added. AI Tutor, practice tests, flashcards and the Statistics/Settings screens remain unimplemented.
+- Entry point: `soskuska/app.py`. Dashboard and timer logic live there; the subject-management screen is in `soskuska/subjects.py`; SQLite operations and transactional schema migrations (user_version 3) are in `soskuska/storage.py`; question authoring lives in `soskuska/question_bank.py` with pure validation in `soskuska/content.py`; scroll compatibility is isolated in `soskuska/scrolling.py`. Storage regression tests live in `tests/test_storage.py` and run with `python -m unittest discover -s tests -v`.
 - Keep sample data distinct from user records. Do not present sample metrics as actual user statistics or invent records in the user's database.
 
 ## Environment and data
@@ -34,6 +34,7 @@ Commands below are relative to the project root:
 .venv-macos/bin/python soskuska/app.py --data .local-data/dev.sqlite3
 .venv-macos/bin/python -m compileall -q soskuska
 .venv-macos/bin/python soskuska/check_dashboard.py
+.venv-macos/bin/python soskuska/check_question_bank.py
 ```
 
 - On this Mac use `.venv-macos`, verified with Python 3.12.13 / Tk 9.0. `.venv-desktop` uses Apple Tk 8.5, which produced an empty window. Suppressing its warning is not a fix. The default Homebrew Python also lacked `_tkinter` when checked.
@@ -69,3 +70,7 @@ If `.codegraph/` exists at the repository root, use `codegraph_explore` or `code
 - For implementation work, create a feature branch and open a pull request for review.
 - Never commit or push directly to `main`. Merge through a pull request only after the user explicitly authorizes merging that PR and its review findings are resolved and validated. Passing tests alone is not merge authorization.
 - Keep review fixes on the existing feature branch. Start a new feature branch for subsequent work after a PR is merged.
+
+## Question bank
+
+Open Questions from a subject card. Questions have four distinct answers, one correct answer (0–3), difficulty and optional explanation/topic. Topics are unique within a subject. Deleting a topic keeps its questions unassigned; deleting a subject explicitly warns and cascades its content while retaining session history. Schema 3 migrates existing data transactionally. Use `tests/test_questions.py` and `check_question_bank.py` for verification; all automated checks use disposable data. Practice execution and scoring remain planned.

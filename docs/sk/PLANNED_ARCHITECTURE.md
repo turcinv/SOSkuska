@@ -2,7 +2,7 @@
 
 **Budúci návrh, nie dnešná implementácia.** Uvedené moduly a tabuľky zatiaľ neexistujú, ak ich nepotvrdzuje [súčasná architektúra](CURRENT_ARCHITECTURE.md). Tento plán sám osebe neznamená začatie implementácie všetkých funkcií.
 
-**Aktuálny postup (11. novembra 2026):** základný CRUD predmetov, termíny skúšok, migrácie a skutočný Dashboard sú hotové vo feature vetve. Témy, otázky, precvičovanie, kartičky a AI naďalej patria do plánu. Neznamená to implementáciu samostatnej servisnej vrstvy alebo inštalátora.
+**Aktuálny postup (14. novembra 2026):** predmety, termíny, skutočný Dashboard a banka tém/otázok sú implementované. Precvičovanie s vyhodnotením, kartičky a AI sú ďalšie etapy. Samostatná servisná vrstva a inštalátor zostávajú plánované.
 
 ## Smer
 
@@ -77,7 +77,7 @@ Konkrétne schémy musia doplniť cudzie kľúče, pravidlá mazania, indexy a t
 
 ## Funkčné celky
 
-**Predmety a skutočný Dashboard:** CRUD predmetov, termíny a skutočné súčty relácií sú implementované. Ďalším krokom je správa tém a otázok; úspešnosť odpovedí možno pridať až s ich ukladaním. Nové databázy sú prázdne, bez automatických demo údajov.
+**Predmety a skutočný Dashboard:** CRUD predmetov, termíny a skutočné súčty relácií sú implementované. Správa tém a otázok je implementovaná; ďalším krokom sú cvičné testy; úspešnosť odpovedí možno pridať až s ich ukladaním. Nové databázy sú prázdne, bez automatických demo údajov.
 
 **Kartičky:** balíčky, otočenie otázky na odpoveď, Again / Hard / Good / Easy. Plánovanie opakovania oddeliť do čistého modulu a testovať. Konkrétny algoritmus ešte treba vybrať; dnešná aplikácia žiadny nemá.
 

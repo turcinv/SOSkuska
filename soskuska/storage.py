@@ -1,10 +1,11 @@
-"""Versioned local storage for subjects, focus sessions and daily tasks."""
+"""Versioned local storage for subjects, topics, questions, focus sessions and daily tasks."""
 import sqlite3
 import unicodedata
 from datetime import date, timedelta
 from pathlib import Path
+from content import question_fields, topic_fields
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 
 
 def default_database(base):
@@ -71,6 +72,33 @@ class Store:
                 self.db.execute("ALTER TABLE sessions ADD COLUMN subject_id INTEGER REFERENCES subjects(id) ON DELETE SET NULL")
                 self.db.execute("ALTER TABLE sessions ADD COLUMN subject_name TEXT")
                 self.db.execute("CREATE INDEX sessions_subject ON sessions(subject_id)")
+            if version < 3:
+                self.db.execute("""CREATE TABLE topics (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    subject_id INTEGER NOT NULL REFERENCES subjects(id) ON DELETE CASCADE,
+                    name TEXT NOT NULL, name_key TEXT NOT NULL,
+                    UNIQUE(subject_id, name_key))""")
+                self.db.execute("""CREATE TABLE questions (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    subject_id INTEGER NOT NULL REFERENCES subjects(id) ON DELETE CASCADE,
+                    topic_id INTEGER REFERENCES topics(id) ON DELETE SET NULL,
+                    prompt TEXT NOT NULL, option_a TEXT NOT NULL, option_b TEXT NOT NULL,
+                    option_c TEXT NOT NULL, option_d TEXT NOT NULL,
+                    correct_option INTEGER NOT NULL CHECK(correct_option BETWEEN 0 AND 3),
+                    difficulty TEXT NOT NULL CHECK(difficulty IN ('Easy','Medium','Hard')),
+                    explanation TEXT NOT NULL DEFAULT '',
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)""")
+                self.db.execute("CREATE INDEX questions_subject ON questions(subject_id)")
+                self.db.execute("CREATE INDEX questions_topic ON questions(topic_id)")
+                # Enforce topic ownership even for direct SQL writes.
+                for operation in ("INSERT", "UPDATE OF topic_id, subject_id"):
+                    suffix = "insert" if operation == "INSERT" else "update"
+                    self.db.execute(f"""CREATE TRIGGER questions_topic_{suffix}
+                        BEFORE {operation} ON questions
+                        WHEN NEW.topic_id IS NOT NULL AND NOT EXISTS (
+                            SELECT 1 FROM topics WHERE id=NEW.topic_id AND subject_id=NEW.subject_id)
+                        BEGIN SELECT RAISE(ABORT, 'Topic must belong to the question subject'); END""")
             self.db.execute(f"PRAGMA user_version = {SCHEMA_VERSION}")
 
     def task(self, name, default=False):
@@ -86,7 +114,9 @@ class Store:
     def subjects(self):
         return [dict(row) for row in self.db.execute("""
             SELECT s.*, COUNT(x.id) AS session_count,
-                   COALESCE(SUM(x.seconds), 0) AS study_seconds
+                   COALESCE(SUM(x.seconds), 0) AS study_seconds,
+                   (SELECT COUNT(*) FROM topics t WHERE t.subject_id=s.id) AS topic_count,
+                   (SELECT COUNT(*) FROM questions q WHERE q.subject_id=s.id) AS question_count
             FROM subjects s LEFT JOIN sessions x ON x.subject_id=s.id
             GROUP BY s.id ORDER BY s.name_key, s.id
         """)]
@@ -121,6 +151,87 @@ class Store:
             cursor = self.db.execute("DELETE FROM subjects WHERE id=?", (subject_id,))
             if cursor.rowcount == 0:
                 raise ValueError("This subject no longer exists.")
+
+    def topics(self, subject_id):
+        return [dict(row) for row in self.db.execute("""SELECT t.*, COUNT(q.id) AS question_count
+            FROM topics t LEFT JOIN questions q ON q.topic_id=t.id
+            WHERE t.subject_id=? GROUP BY t.id ORDER BY t.name_key,t.id""", (subject_id,))]
+
+    def topic(self, topic_id):
+        row = self.db.execute("SELECT * FROM topics WHERE id=?", (topic_id,)).fetchone()
+        return dict(row) if row else None
+
+    def create_topic(self, subject_id, name):
+        name, key = topic_fields(name)
+        if self.subject(subject_id) is None:
+            raise ValueError("This subject no longer exists.")
+        try:
+            with self.db:
+                cursor = self.db.execute("INSERT INTO topics(subject_id,name,name_key) VALUES (?,?,?)", (subject_id, name, key))
+            return cursor.lastrowid
+        except sqlite3.IntegrityError:
+            raise ValueError("A topic with this name already exists in this subject.") from None
+
+    def update_topic(self, topic_id, name):
+        name, key = topic_fields(name)
+        try:
+            with self.db:
+                cursor = self.db.execute("UPDATE topics SET name=?,name_key=? WHERE id=?", (name, key, topic_id))
+                if cursor.rowcount == 0:
+                    raise ValueError("This topic no longer exists.")
+        except sqlite3.IntegrityError:
+            raise ValueError("A topic with this name already exists in this subject.") from None
+
+    def delete_topic(self, topic_id):
+        with self.db:
+            cursor = self.db.execute("DELETE FROM topics WHERE id=?", (topic_id,))
+            if cursor.rowcount == 0:
+                raise ValueError("This topic no longer exists.")
+
+    def questions(self, subject_id):
+        return [dict(row) for row in self.db.execute("""SELECT q.*, t.name AS topic_name
+            FROM questions q LEFT JOIN topics t ON t.id=q.topic_id
+            WHERE q.subject_id=? ORDER BY q.id DESC""", (subject_id,))]
+
+    def question(self, question_id):
+        row = self.db.execute("SELECT * FROM questions WHERE id=?", (question_id,)).fetchone()
+        return dict(row) if row else None
+
+    def _validate_question_topic(self, subject_id, topic_id):
+        if self.subject(subject_id) is None:
+            raise ValueError("This subject no longer exists.")
+        if topic_id is not None:
+            topic = self.topic(topic_id)
+            if topic is None or topic["subject_id"] != subject_id:
+                raise ValueError("Choose a topic belonging to this subject.")
+
+    def create_question(self, subject_id, prompt, options, correct_option, difficulty="Medium", topic_id=None, explanation=""):
+        fields = question_fields(prompt, options, correct_option, difficulty, explanation)
+        self._validate_question_topic(subject_id, topic_id)
+        with self.db:
+            cursor = self.db.execute("""INSERT INTO questions(
+                subject_id,topic_id,prompt,option_a,option_b,option_c,option_d,correct_option,difficulty,explanation)
+                VALUES (?,?,?,?,?,?,?,?,?,?)""", (subject_id, topic_id, *fields))
+        return cursor.lastrowid
+
+    def update_question(self, question_id, prompt, options, correct_option, difficulty="Medium", topic_id=None, explanation=""):
+        fields = question_fields(prompt, options, correct_option, difficulty, explanation)
+        question = self.question(question_id)
+        if question is None:
+            raise ValueError("This question no longer exists.")
+        self._validate_question_topic(question["subject_id"], topic_id)
+        with self.db:
+            cursor = self.db.execute("""UPDATE questions SET topic_id=?,prompt=?,option_a=?,option_b=?,
+                option_c=?,option_d=?,correct_option=?,difficulty=?,explanation=?,updated_at=CURRENT_TIMESTAMP
+                WHERE id=?""", (topic_id, *fields, question_id))
+            if cursor.rowcount == 0:
+                raise ValueError("This question no longer exists.")
+
+    def delete_question(self, question_id):
+        with self.db:
+            cursor = self.db.execute("DELETE FROM questions WHERE id=?", (question_id,))
+            if cursor.rowcount == 0:
+                raise ValueError("This question no longer exists.")
 
     def add_session(self, seconds, subject_id=None, subject_name=None):
         if not isinstance(seconds, int) or isinstance(seconds, bool) or seconds < 0:

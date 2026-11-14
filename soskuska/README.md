@@ -12,6 +12,7 @@ Bez `--data` se použije běžná uživatelská databáze. Nativní kontrola s v
 
 ```sh
 .venv-macos/bin/python soskuska/check_dashboard.py
+.venv-macos/bin/python soskuska/check_question_bank.py
 ```
 
 Úplná dokumentace:
@@ -27,4 +28,4 @@ První instalace na Windows: [Česky](../docs/WINDOWS_FIRST_RUN.md) · [Slovensk
 - [Plánovaná architektura](../docs/PLANNED_ARCHITECTURE.md)
 - [Pokyny pro další vývoj](../AGENTS.md)
 
-Implementované jsou Dashboard a My Subjects se skutečnými předměty, termíny a studijním časem. Nová databáze je prázdná. Otázky, testy, kartičky, Ollama a ostatní obrazovky zůstávají plánované.
+Implementované jsou Dashboard a My Subjects se skutečnými předměty, termíny a studijním časem. V My Subjects otevři Questions pro správu témat a otázek. Nová databáze je prázdná. Testy, kartičky, Ollama a ostatní obrazovky zůstávají plánované.
