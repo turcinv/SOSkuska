@@ -79,6 +79,9 @@ class Dashboard(ctk.CTk):
         self.bind("<Command-k>", self.focus_search)
         self.bind("<Escape>", self.clear_search)
         self.protocol("WM_DELETE_WINDOW", self.close)
+        if self.tk.call("tk", "windowingsystem") == "aqua":
+            # The native application-menu Quit does not send WM_DELETE_WINDOW.
+            self.createcommand("::tk::mac::Quit", self.close)
         self.refresh_data()
         self.after(100, self.reflow)
         self.after(250, self.tick)
@@ -152,7 +155,8 @@ class Dashboard(ctk.CTk):
         head = self.frame(self.content)
         head.grid(row=0, column=0, sticky="ew", pady=(0, 24))
         head.grid_columnconfigure(0, weight=1)
-        self.label(head, date.today().strftime("%A, %B %d, %Y"), 12, "secondary").grid(row=0, column=0, sticky="w")
+        self.date_label = self.label(head, date.today().strftime("%A, %B %d, %Y"), 12, "secondary")
+        self.date_label.grid(row=0, column=0, sticky="w")
         self.label(head, "Ready to make progress?", 28, bold=True).grid(row=1, column=0, sticky="w", pady=(4, 2))
         self.label(head, "A little focus today goes a long way.", 14, "secondary").grid(row=2, column=0, sticky="w")
         self.start_button = self.button(head, "Start Studying  →", self.start_focus, primary=True, width=160)
@@ -307,6 +311,7 @@ class Dashboard(ctk.CTk):
         if name not in ("Dashboard", "My Subjects"):
             self.show_notice(f"{name} will be available in a later version.")
             return
+        self.subject_page.cancel_delete()
         self.current_page = name
         self.question_bank.grid_remove()
         if name == "My Subjects":
@@ -327,6 +332,7 @@ class Dashboard(ctk.CTk):
             self.navigate("My Subjects")
             self.show_notice("This subject no longer exists.")
             return
+        self.subject_page.cancel_delete()
         self.content.grid_remove()
         self.subject_page.grid_remove()
         self.question_bank.load_subject(subject_id)
@@ -488,17 +494,26 @@ class Dashboard(ctk.CTk):
         self.goal_bar.set(min(summary["today_seconds"] / 3600, 1))
 
     def tick(self):
-        if self.session_open:
-            remaining = max(0, self.focus_target - int(self.elapsed()))
-            self.timer_label.configure(text=f"{remaining // 60:02d}:{remaining % 60:02d} · {'Paused' if self.running_since is None else 'Focus'}")
-            if remaining == 0 and self.running_since is not None:
-                self.finish_focus()
-        if date.today() != self.active_day:
-            self.active_day = date.today()
-            for key, variable in self.task_vars.items():
-                variable.set(self.store.task(key))
-            self.refresh_data()
-        self.after(250, self.tick)
+        try:
+            if self.session_open:
+                remaining = max(0, self.focus_target - int(self.elapsed()))
+                self.timer_label.configure(text=f"{remaining // 60:02d}:{remaining % 60:02d} · {'Paused' if self.running_since is None else 'Focus'}")
+                if remaining == 0 and self.running_since is not None:
+                    self.finish_focus()
+            today = date.today()
+            if today != self.active_day:
+                # Read everything before replacing checklist values. A failed refresh
+                # must leave the old day active so the next tick retries it.
+                tasks = {key: self.store.task(key) for key in self.task_vars}
+                self.refresh_data()
+                for key, value in tasks.items():
+                    self.task_vars[key].set(value)
+                self.date_label.configure(text=today.strftime("%A, %B %d, %Y"))
+                self.active_day = today
+        except sqlite3.Error:
+            self.show_notice("Could not refresh today's data. Retrying automatically.")
+        finally:
+            self.after(250, self.tick)
 
     def close(self):
         if self.session_open and not self.finish_focus():

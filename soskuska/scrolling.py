@@ -33,6 +33,13 @@ class DashboardScrollFrame(ctk.CTkScrollableFrame):
 
     def _owns_event(self, widget):
         while widget is not None:
+            if isinstance(widget, (tkinter.Text, ctk.CTkTextbox)):
+                first, last = widget.yview()
+                if last - first < 1:
+                    # Text class bindings already handle this gesture. Contain it
+                    # in the editor, including at its boundaries, to avoid moving
+                    # both the text and the enclosing page with one event.
+                    return False
             if widget in (self._parent_canvas, self._scrollbar):
                 return True
             widget = getattr(widget, "master", None)

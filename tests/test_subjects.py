@@ -75,6 +75,30 @@ class SubjectTests(unittest.TestCase):
         self.assertNotEqual(sid, other)
         self.assertEqual(self.store.subjects()[0]["study_seconds"], 0)
 
+    def test_stale_deletion_confirmation_preserves_new_content(self):
+        sid = self.store.create_subject("Calculus")
+        state = self.store.subject_deletion_state(sid)
+        other = Store(self.path)
+        try:
+            tid = other.create_topic(sid, "Derivatives")
+            qid = other.create_question(sid, "Derivative of x?", ["0", "1", "x", "2x"], 1, topic_id=tid)
+        finally:
+            other.close()
+        self.assertFalse(self.store.delete_subject(sid, state))
+        self.assertIsNotNone(self.store.subject(sid))
+        self.assertIsNotNone(self.store.question(qid))
+        updated = self.store.subject_deletion_state(sid)
+        self.assertEqual(updated, ("Calculus", 1, 1))
+        self.assertTrue(self.store.delete_subject(sid, updated))
+        self.assertIsNone(self.store.question(qid))
+
+    def test_renamed_subject_requires_an_updated_deletion_warning(self):
+        sid = self.store.create_subject("Old name")
+        state = self.store.subject_deletion_state(sid)
+        self.store.update_subject(sid, "New name")
+        self.assertFalse(self.store.delete_subject(sid, state))
+        self.assertEqual(self.store.subject(sid)["name"], "New name")
+
     def test_explicit_session_snapshot_survives_external_delete(self):
         sid = self.store.create_subject("History")
         self.store.delete_subject(sid)

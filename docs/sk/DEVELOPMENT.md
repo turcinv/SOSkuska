@@ -113,8 +113,16 @@ Integračná kontrola po novom overuje aj skutočné prepnutie stĺpcov pri zmen
 
 ## Banka tém a otázok
 
-Kontrolu banky otázok spustíš príkazom nižšie. Používa dočasnú databázu a krátko otvorí okno. Overuje CRUD, validáciu, kombinované filtre, kompaktný editor a posúvanie, izoláciu predmetov, mazanie a opätovné otvorenie. `tests/test_questions.py` navyše overuje migráciu zo schémy 2, Unicode a konzistenciu počtov. Spolu je 30 testov bez GUI a dve natívne kontroly. Obe prešli na macOS; Windows/Linux a fyzický trackpad týmto nie sú overené.
+Kontrolu banky otázok spustíš príkazom nižšie. Používa dočasnú databázu a krátko otvorí okno. Overuje CRUD, validáciu, kombinované filtre, kompaktný editor a posúvanie, izoláciu predmetov, mazanie a opätovné otvorenie. `tests/test_questions.py` navyše overuje migráciu zo schémy 2, Unicode a konzistenciu počtov. Spolu je 32 testov bez GUI a tri natívne kontroly. Všetky prešli na macOS; Windows/Linux a fyzický trackpad týmto nie sú overené.
 
 ```sh
 .venv-macos/bin/python soskuska/check_question_bank.py
+```
+
+## Opravy po kontrole hlavnej vetvy
+
+Nová kontrola `check_review_fixes.py` používa dočasné databázy a overuje zrušenie starého potvrdenia, zmenu obsahu z druhého pripojenia, skutočný exkluzívny SQLite zámok pri polnoci, opakovanie obnovy, dátum, dokončenie časovača a syntetické posúvanie v dlhom aj krátkom poli. Na macOS navyše v oddelenom procese vyvolá skutočnú položku Quit, overí zachovanie relácie pri chybe zápisu a uloženie pri opakovaní. Spolu je 32 testov bez GUI a tri natívne kontroly. Prešli na macOS; Windows/Linux a fyzický trackpad týmto nie sú overené.
+
+```sh
+.venv-macos/bin/python soskuska/check_review_fixes.py
 ```

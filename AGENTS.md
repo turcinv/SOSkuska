@@ -35,6 +35,7 @@ Commands below are relative to the project root:
 .venv-macos/bin/python -m compileall -q soskuska
 .venv-macos/bin/python soskuska/check_dashboard.py
 .venv-macos/bin/python soskuska/check_question_bank.py
+.venv-macos/bin/python soskuska/check_review_fixes.py
 ```
 
 - On this Mac use `.venv-macos`, verified with Python 3.12.13 / Tk 9.0. `.venv-desktop` uses Apple Tk 8.5, which produced an empty window. Suppressing its warning is not a fix. The default Homebrew Python also lacked `_tkinter` when checked.
@@ -74,3 +75,11 @@ If `.codegraph/` exists at the repository root, use `codegraph_explore` or `code
 ## Question bank
 
 Open Questions from a subject card. Questions have four distinct answers, one correct answer (0–3), difficulty and optional explanation/topic. Topics are unique within a subject. Deleting a topic keeps its questions unassigned; deleting a subject explicitly warns and cascades its content while retaining session history. Schema 3 migrates existing data transactionally. Use `tests/test_questions.py` and `check_question_bank.py` for verification; all automated checks use disposable data. Practice execution and scoring remain planned.
+
+## Reviewed lifecycle safeguards
+
+- Keep Aqua `::tk::mac::Quit` routed to the same save/retry handler as window close. Native application-menu Quit must preserve an unsaved session when saving fails.
+- Dismiss subject deletion confirmations on navigation. Compare the displayed name/content counts under the SQLite write lock before deleting; changed content requires a refreshed warning and a second confirmation.
+- Always re-arm the timer tick after SQLite refresh errors. Commit `active_day` and update the header only after a successful daily refresh, so a failed refresh can retry.
+- Contain scrolling in scrollable text editors, including at their boundaries; short editors still allow outer-page scrolling. Use public Text/CTkTextbox APIs in the scrolling adapter.
+- `check_review_fixes.py` verifies these failures with disposable databases; the native macOS Quit probe runs in a bounded child process. Existing storage unit tests now include stale deletion protection.

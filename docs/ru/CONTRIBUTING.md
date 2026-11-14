@@ -22,6 +22,7 @@
 ```sh
 .venv-macos/bin/python soskuska/check_dashboard.py
 .venv-macos/bin/python soskuska/check_question_bank.py
+.venv-macos/bin/python soskuska/check_review_fixes.py
 ```
 
 GUI-проверка открывает окно и требует графического сеанса. Для изменения только документации обычно достаточно проверить ссылки, команды и форматирование; запускать весь UI ради неё не нужно.
