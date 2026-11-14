@@ -126,3 +126,5 @@ Nová kontrola `check_review_fixes.py` používa dočasné databázy a overuje z
 ```sh
 .venv-macos/bin/python soskuska/check_review_fixes.py
 ```
+
+Kontrola navyše overuje súčasné zlyhanie uloženia relácie a polnočného čítania, zachovanie pokynu na ručné uloženie po obnove, skutočný SQLite zámok až po úspešnom zápise relácie počas rovnakého dňa, automatickú obnovu metrík/výberu bez duplicitného záznamu a syntetické gestá nad posuvníkom aj okrajom editora.

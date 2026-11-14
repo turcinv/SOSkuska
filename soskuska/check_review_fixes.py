@@ -108,6 +108,76 @@ def check_workflows(path):
             app.tick()
             after.assert_called_once_with(250, app.tick)
         assert not app.session_open and app.store.seconds() == 900
+        later(failed_save_at_midnight)
+
+    def failed_save_at_midnight():
+        app.start_focus(timer_subject)
+        app.running_since -= 901
+        today = date.today()
+        tomorrow = today + timedelta(days=1)
+        blocker = sqlite3.connect(path)
+        app.store.db.execute("PRAGMA busy_timeout=30")
+        try:
+            blocker.execute("BEGIN EXCLUSIVE")
+            with patch("app.date", wraps=date) as app_date, patch("storage.date", wraps=date) as storage_date, patch.object(app, "after") as after:
+                app_date.today.return_value = tomorrow
+                storage_date.today.return_value = tomorrow
+                app.tick()
+                after.assert_called_once_with(250, app.tick)
+                assert app.session_open and app.running_since is None
+                assert "Press Finish" in app.notice.cget("text")
+                assert "automatically" not in app.notice.cget("text")
+        finally:
+            blocker.rollback()
+            blocker.close()
+            app.store.db.execute("PRAGMA busy_timeout=5000")
+        with patch("app.date", wraps=date) as app_date, patch("storage.date", wraps=date) as storage_date, patch.object(app, "after"):
+            app_date.today.return_value = tomorrow
+            storage_date.today.return_value = tomorrow
+            app.tick()
+            app.tick()
+            assert app.active_day == tomorrow and not app.refresh_pending
+            assert app.session_open and app.store.seconds() == 900
+            assert "Press Finish" in app.notice.cget("text")
+            assert app.finish_focus()
+            assert not app.session_save_failed and app.store.seconds() == 1800
+        with patch.object(app, "after"):
+            app.tick()  # Restore the real day after the simulated rollover.
+        later(post_save_refresh)
+
+    def post_save_refresh():
+        app.start_focus(timer_subject)
+        app.running_since -= 901
+        blocker = sqlite3.connect(path)
+        subjects = app.store.subjects
+        app.store.db.execute("PRAGMA busy_timeout=30")
+
+        def locked_subjects():
+            if not blocker.in_transaction:
+                blocker.execute("BEGIN EXCLUSIVE")
+            return subjects()
+
+        try:
+            # The lock starts only after add_session and set_task committed.
+            with patch.object(app.store, "subjects", side_effect=locked_subjects), patch.object(app, "after") as after:
+                app.tick()
+                after.assert_called_once_with(250, app.tick)
+            assert not app.session_open and app.refresh_pending
+            assert app.metric_values[1].cget("text") == "2"
+            assert app.subject_picker.cget("state") == "disabled"
+        finally:
+            blocker.rollback()
+            blocker.close()
+            app.store.db.execute("PRAGMA busy_timeout=5000")
+        assert app.store.seconds() == 2700
+        with patch.object(app, "after"):
+            app.tick()
+            app.tick()
+        assert not app.refresh_pending
+        assert app.metric_values[1].cget("text") == "3"
+        assert app.subject_picker.cget("state") == "normal"
+        assert "Retrying" not in app.notice.cget("text")
+        assert len(app.store.recent_sessions()) == 3  # Refresh retries never save twice.
         app.open_question_bank(sid)
         bank.show_question_form()
         bank.prompt_entry.insert("1.0", "\n".join(f"Question line {i}" for i in range(75)))
@@ -136,6 +206,24 @@ def check_workflows(path):
             before = canvas.yview()
             text.event_generate(event, **({"delta": delta} if delta is not None else {}))
             assert canvas.yview() == before  # Contain gestures at editor boundaries too.
+        if tkinter.TkVersion >= 9:
+            # Exercise canvas surfaces without a native Text class binding.
+            surfaces = [child for child in bank.prompt_entry.winfo_children()
+                        if isinstance(child, tkinter.Canvas)]
+            for child in bank.prompt_entry.winfo_children():
+                if isinstance(child, ctk.CTkScrollbar):
+                    surfaces.extend(w for w in child.winfo_children() if isinstance(w, tkinter.Canvas))
+            assert len(surfaces) >= 2, surfaces
+            for surface in surfaces:
+                text.yview_moveto(0)
+                canvas.yview_moveto(0)
+                before = canvas.yview()
+                surface.event_generate("<TouchpadScroll>", delta=-12 & 0xFFFF)
+                assert text.yview()[0] > 0, (surface, text.yview())
+                assert canvas.yview() == before, (surface, canvas.yview(), before)
+                text.yview_moveto(1)
+                surface.event_generate("<TouchpadScroll>", delta=-12 & 0xFFFF)
+                assert canvas.yview() == before
         bank.prompt_entry.delete("1.0", "end")
         bank.prompt_entry.insert("1.0", "Short question")
         later(short_text_scroll)
@@ -164,7 +252,7 @@ def check_workflows(path):
     finally:
         app.store.close()
     assert not errors, errors
-    print("PASS: stale deletion warnings, locked midnight retry, header rollover, timer recovery and nested scrolling", flush=True)
+    print("PASS: stale deletion warnings, locked midnight retry, header rollover, timer recovery, unsaved-session instructions, same-day refresh retry and nested scrolling including editor canvas surfaces", flush=True)
 
 
 def native_quit(app):

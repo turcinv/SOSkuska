@@ -28,6 +28,9 @@ from question_bank import QuestionBankPage
 C = dict(bg="#0D1117", sidebar="#11151C", card="#181D27", raised="#202633",
          border="#2A303C", accent="#8B5CF6", hover="#A78BFA", primary="#6D28D9",
          text="#F3F4F6", secondary="#9CA3AF", green="#22C55E", warning="#F59E0B")
+SAVE_RETRY_NOTICE = "This session could not be saved. Press Finish to retry saving it."
+REFRESH_RETRY_NOTICE = "Could not refresh the Dashboard. Retrying automatically."
+
 NAV = [("Dashboard", "▦"), ("My Subjects", "▤"), ("Flashcards", "▱"),
        ("Practice Tests", "☑"), ("AI Tutor", "◇"), ("Statistics", "▥")]
 
@@ -54,6 +57,8 @@ class Dashboard(ctk.CTk):
         self.running_since = None
         self.session_seconds = 0.0
         self.session_open = False
+        self.session_save_failed = False
+        self.refresh_pending = False
         self.session_subject_id = None
         self.session_subject_name = None
         self.current_page = "Dashboard"
@@ -463,11 +468,13 @@ class Dashboard(ctk.CTk):
             self.session_seconds = self.elapsed()
             self.running_since = None
             self.pause_button.configure(text="Resume")
-            self.show_notice("Could not save this session. It is paused; free disk space and press Finish to retry.")
+            self.session_save_failed = True
+            self.show_notice(SAVE_RETRY_NOTICE)
             return False
         self.running_since = None
         self.session_seconds = 0.0
         self.session_open = False
+        self.session_save_failed = False
         self.session_subject_id = None
         self.session_subject_name = None
         self.timer_frame.grid_remove()
@@ -478,9 +485,19 @@ class Dashboard(ctk.CTk):
                 self.task_vars["focus"].set(True)
             except sqlite3.Error:
                 pass  # The session itself has already been committed successfully.
-        self.refresh_data()
         self.show_notice(f"Session saved · {elapsed // 60}m {elapsed % 60:02d}s of focused study.")
+        try:
+            self.refresh_data()
+        except sqlite3.Error:
+            self.defer_refresh()
+        else:
+            self.refresh_pending = False
         return True
+
+    def defer_refresh(self):
+        self.refresh_pending = True
+        # A refresh retry must never obscure an unsaved session's required action.
+        self.show_notice(SAVE_RETRY_NOTICE if self.session_save_failed else REFRESH_RETRY_NOTICE)
 
     def update_metrics(self):
         summary = self.store.summary()
@@ -501,17 +518,22 @@ class Dashboard(ctk.CTk):
                 if remaining == 0 and self.running_since is not None:
                     self.finish_focus()
             today = date.today()
-            if today != self.active_day:
-                # Read everything before replacing checklist values. A failed refresh
-                # must leave the old day active so the next tick retries it.
-                tasks = {key: self.store.task(key) for key in self.task_vars}
+            day_changed = today != self.active_day
+            if day_changed or self.refresh_pending:
+                # Daily state changes only after successful reads. Post-save refresh
+                # retries are independent of the date and never repeat the write.
+                retrying = self.refresh_pending
+                tasks = {key: self.store.task(key) for key in self.task_vars} if day_changed else {}
                 self.refresh_data()
                 for key, value in tasks.items():
                     self.task_vars[key].set(value)
                 self.date_label.configure(text=today.strftime("%A, %B %d, %Y"))
                 self.active_day = today
+                self.refresh_pending = False
+                if retrying and not self.session_save_failed:
+                    self.show_notice("Dashboard refreshed.")
         except sqlite3.Error:
-            self.show_notice("Could not refresh today's data. Retrying automatically.")
+            self.defer_refresh()
         finally:
             self.after(250, self.tick)
 

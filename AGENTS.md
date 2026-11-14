@@ -80,6 +80,6 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 
 - Keep Aqua `::tk::mac::Quit` routed to the same save/retry handler as window close. Native application-menu Quit must preserve an unsaved session when saving fails.
 - Dismiss subject deletion confirmations on navigation. Compare the displayed name/content counts under the SQLite write lock before deleting; changed content requires a refreshed warning and a second confirmation.
-- Always re-arm the timer tick after SQLite refresh errors. Commit `active_day` and update the header only after a successful daily refresh, so a failed refresh can retry.
-- Contain scrolling in scrollable text editors, including at their boundaries; short editors still allow outer-page scrolling. Use public Text/CTkTextbox APIs in the scrolling adapter.
+- Retry pending Dashboard reads independently of date rollover, including reads that fail after a session commit; retries must never duplicate the session. Preserve the manual Finish instruction while a session is unsaved. Clear refresh-retry notices after recovery. Always re-arm the timer tick after SQLite refresh errors. Commit `active_day` and update the header only after a successful daily refresh, so a failed refresh can retry.
+- Contain scrolling in scrollable text editors, including at their boundaries; short editors still allow outer-page scrolling. Forward Tk 9 touchpad gestures from editor scrollbar/border canvases to the native Text widget exactly once. Use public Text/CTkTextbox APIs in the scrolling adapter.
 - `check_review_fixes.py` verifies these failures with disposable databases; the native macOS Quit probe runs in a bounded child process. Existing storage unit tests now include stale deletion protection.
