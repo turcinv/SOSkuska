@@ -29,4 +29,12 @@ Na Macu je výchozí soubor `~/Library/Application Support/SOSkuska/dashboard.sq
 
 Parametr `--data` umožňuje vlastní cestu. Údaje se automaticky nesynchronizují, nezálohují ani nešifrují. Během časovače se čas průběžně neukládá: při pádu může rozpracované sezení zmizet a po restartu se neobnoví. Sezení přes půlnoc se zatím připíše ke dni dokončení.
 
-AI Tutor, témata, otázky, testy a kartičky jsou další plánované funkce. Jejich položky v navigaci zatím zobrazují oznámení.
+AI Tutor, testy a kartičky jsou další plánované funkce. Jejich položky v navigaci zatím zobrazují oznámení.
+
+## Banka témat a otázek
+
+V My Subjects zvol u předmětu **Questions**. Přidej téma přes New topic a otázku přes New question. Každá otázka má čtyři různé povinné odpovědi A–D, právě jednu správnou odpověď, obtížnost Easy/Medium/Hard a volitelné vysvětlení. Téma je volitelné. Formulář zachová rozepsaný obsah při chybě validace nebo zápisu.
+
+Témata lze přejmenovat a smazat; vyber téma ve filtru a použij Rename selected topic nebo Delete selected topic. Otázky lze upravovat a mazat. Hledání v textu otázky se kombinuje s filtrem tématu a obtížnosti. Počty na kartách předmětů vycházejí z uloženého obsahu. Smazání tématu ponechá jeho otázky v No topic. Smazání předmětu po výslovném upozornění odstraní jeho témata a otázky, ale zachová čas i historii studia.
+
+Jde o editor obsahu: správná odpověď je viditelná. Spouštění a hodnocení procvičovacích testů, import a obrázky zatím nejsou implementované.

@@ -110,3 +110,11 @@ Nová integračná kontrola tiež vytvára a upravuje predmet cez UI, overuje pr
 
 
 Integračná kontrola po novom overuje aj skutočné prepnutie stĺpcov pri zmene šírky, pokračovanie plánovania časovača po chybe automatického uloženia a obnovenie zoznamu úloh pri zmene dňa. Test súbežných migrácií používa iba dočasné databázy.
+
+## Banka tém a otázok
+
+Kontrolu banky otázok spustíš príkazom nižšie. Používa dočasnú databázu a krátko otvorí okno. Overuje CRUD, validáciu, kombinované filtre, kompaktný editor a posúvanie, izoláciu predmetov, mazanie a opätovné otvorenie. `tests/test_questions.py` navyše overuje migráciu zo schémy 2, Unicode a konzistenciu počtov. Spolu je 30 testov bez GUI a dve natívne kontroly. Obe prešli na macOS; Windows/Linux a fyzický trackpad týmto nie sú overené.
+
+```sh
+.venv-macos/bin/python soskuska/check_question_bank.py
+```

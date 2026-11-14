@@ -1,5 +1,13 @@
 # Historie změn
 
+## Banka témat a otázek — 2026-11-14
+
+V My Subjects zvol u předmětu **Questions**. Přidej téma přes New topic a otázku přes New question. Každá otázka má čtyři různé povinné odpovědi A–D, právě jednu správnou odpověď, obtížnost Easy/Medium/Hard a volitelné vysvětlení. Téma je volitelné. Formulář zachová rozepsaný obsah při chybě validace nebo zápisu.
+
+Témata lze přejmenovat a smazat; vyber téma ve filtru a použij Rename selected topic nebo Delete selected topic. Otázky lze upravovat a mazat. Hledání v textu otázky se kombinuje s filtrem tématu a obtížnosti. Počty na kartách předmětů vycházejí z uloženého obsahu. Smazání tématu ponechá jeho otázky v No topic. Smazání předmětu po výslovném upozornění odstraní jeho témata a otázky, ale zachová čas i historii studia.
+
+Jde o editor obsahu: správná odpověď je viditelná. Spouštění a hodnocení procvičovacích testů, import a obrázky zatím nejsou implementované.
+
 [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
 ## Unreleased
@@ -9,7 +17,7 @@
 
 - Správa předmětů a termínů zkoušek, prázdný stav, validace Unicode a historie při smazání.
 - Skutečné metriky Dashboardu a propojení časovače s předmětem; odstranění ukázkových statistik.
-- Transakční migrace SQLite na verzi 2 se zachováním původních dat; 17 testů a rozšířená nativní kontrola.
+- Transakční migrace SQLite na verzi 2 se zachováním původních dat; 30 testů a rozšířená nativní kontrola.
 
 - Návod ke klonování, autentizaci, větvím, commitům, aktualizacím a pull requestům.
 - Pokyny k přispívání, šablony chyb/návrhů a pull requestu, nastavení editoru.

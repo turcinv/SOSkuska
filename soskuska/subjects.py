@@ -124,7 +124,10 @@ class SubjectPage(ctk.CTkFrame):
             return
         self.hide_form()
         self.deleting_id = subject_id
-        self.delete_label.configure(text=f'Delete “{subject["name"]}”? Saved study time and session history will be kept.')
+        topics = len(self.app.store.topics(subject_id))
+        questions = len(self.app.store.questions(subject_id))
+        content_warning = f" This permanently deletes {topics} topics and {questions} questions." if topics or questions else ""
+        self.delete_label.configure(text=f'Delete “{subject["name"]}”?{content_warning} Saved study time and session history will be kept.')
         self.delete_panel.grid()
         self.app.scroll._parent_canvas.yview_moveto(0)
 
@@ -173,10 +176,11 @@ class SubjectPage(ctk.CTkFrame):
             card.bind("<Configure>", resize_labels, add="+")
             exam = f'Exam: {subject["exam_date"]}' if subject["exam_date"] else "No exam date set"
             self.app.label(card, exam, 12, "secondary").grid(row=2, column=0, sticky="w", padx=18)
-            self.app.label(card, f'{subject["session_count"]} sessions · {subject["study_seconds"] // 60} min studied', 12, "secondary").grid(row=3, column=0, sticky="w", padx=18, pady=(4, 12))
+            self.app.label(card, f'{subject["topic_count"]} topics · {subject["question_count"]} questions · {subject["study_seconds"] // 60} min studied', 12, "secondary").grid(row=3, column=0, sticky="w", padx=18, pady=(4, 12))
             actions = self.app.frame(card)
             actions.grid(row=4, column=0, sticky="w", padx=18, pady=(0, 16))
-            for text, callback in [("Study", lambda sid=subject["id"]: self.app.start_focus(sid)),
+            for text, callback in [("Questions", lambda sid=subject["id"]: self.app.open_question_bank(sid)),
+                                   ("Study", lambda sid=subject["id"]: self.app.start_focus(sid)),
                                    ("Edit", lambda sid=subject["id"]: self.show_form(sid)),
                                    ("Delete", lambda sid=subject["id"]: self.ask_delete(sid))]:
                 self.app.button(actions, text, callback, width=78, primary=text == "Study").pack(side="left", padx=(0, 6))

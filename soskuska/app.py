@@ -23,6 +23,7 @@ import customtkinter as ctk
 from storage import Store, default_database
 from scrolling import DashboardScrollFrame
 from subjects import SubjectPage
+from question_bank import QuestionBankPage
 
 C = dict(bg="#0D1117", sidebar="#11151C", card="#181D27", raised="#202633",
          border="#2A303C", accent="#8B5CF6", hover="#A78BFA", primary="#6D28D9",
@@ -70,6 +71,9 @@ class Dashboard(ctk.CTk):
         self.subject_page = SubjectPage(self.scroll, self)
         self.subject_page.grid(row=0, column=0, sticky="ew", padx=28, pady=28)
         self.subject_page.grid_remove()
+        self.question_bank = QuestionBankPage(self.scroll, self)
+        self.question_bank.grid(row=0, column=0, sticky="ew", padx=28, pady=28)
+        self.question_bank.grid_remove()
         self.bind("<Configure>", self.on_resize)
         self.bind("<Control-k>", self.focus_search)
         self.bind("<Command-k>", self.focus_search)
@@ -134,7 +138,7 @@ class Dashboard(ctk.CTk):
         self.label(self.footer, "Local student", bold=True).pack(anchor="w")
         self.label(self.footer, "Offline · Stored on this device", 12, "secondary").pack(anchor="w", pady=(2, 18))
         self.label(self.footer, "○  AI not connected", 12, "secondary").pack(anchor="w")
-        self.label(self.footer, "Study workspace · v0.2.0", 11, "secondary").pack(anchor="w", pady=(6, 0))
+        self.label(self.footer, "Study workspace · v0.3.0", 11, "secondary").pack(anchor="w", pady=(6, 0))
 
     def build_content(self):
         self.scroll = DashboardScrollFrame(self, fg_color=C["bg"], corner_radius=0,
@@ -304,6 +308,7 @@ class Dashboard(ctk.CTk):
             self.show_notice(f"{name} will be available in a later version.")
             return
         self.current_page = name
+        self.question_bank.grid_remove()
         if name == "My Subjects":
             self.content.grid_remove()
             self.subject_page.grid()
@@ -317,10 +322,28 @@ class Dashboard(ctk.CTk):
             button.configure(fg_color="#211B35" if item == name else "transparent",
                              text_color=C["hover"] if item == name else C["secondary"])
 
+    def open_question_bank(self, subject_id):
+        if self.store.subject(subject_id) is None:
+            self.navigate("My Subjects")
+            self.show_notice("This subject no longer exists.")
+            return
+        self.content.grid_remove()
+        self.subject_page.grid_remove()
+        self.question_bank.load_subject(subject_id)
+        self.question_bank.grid()
+        self.current_page = "Question Bank"
+        for button, (item, _) in zip(self.nav_buttons, NAV):
+            active = item == "My Subjects"
+            button.configure(fg_color="#211B35" if active else "transparent",
+                             text_color=C["hover"] if active else C["secondary"])
+        self.scroll._parent_canvas.yview_moveto(0)
+
     def show_notice(self, text):
         self.notice.configure(text=text, text_color=C["hover"])
         if hasattr(self, "subject_page"):
             self.subject_page.status.configure(text=text)
+        if hasattr(self, "question_bank"):
+            self.question_bank.status.configure(text=text)
 
     def save_task(self, key, value):
         try:
@@ -346,7 +369,11 @@ class Dashboard(ctk.CTk):
             title.grid(row=0, column=0, sticky="ew", padx=16, pady=(14, 4))
             card.bind("<Configure>", lambda event, title=title: title.configure(wraplength=max(150, event.width-32)), add="+")
             self.label(card, f'{subject["session_count"]} sessions · {subject["study_seconds"] // 60} min', 12, "secondary").grid(row=1, column=0, sticky="w", padx=16, pady=(0, 10))
-            self.button(card, "Study", lambda sid=subject["id"]: self.start_focus(sid), primary=True, width=90).grid(row=2, column=0, sticky="w", padx=16, pady=(0, 14))
+            self.label(card, f'{subject["topic_count"]} topics · {subject["question_count"]} questions', 12, "secondary").grid(row=2, column=0, sticky="w", padx=16, pady=(0, 10))
+            actions = self.frame(card)
+            actions.grid(row=3, column=0, sticky="w", padx=16, pady=(0, 14))
+            self.button(actions, "Study", lambda sid=subject["id"]: self.start_focus(sid), primary=True, width=85).pack(side="left", padx=(0, 8))
+            self.button(actions, "Questions", lambda sid=subject["id"]: self.open_question_bank(sid), width=95).pack(side="left")
             card.grid(row=i//2, column=i%2, sticky="nsew", padx=(0, 6) if i%2 == 0 else (6, 0), pady=(0, 12))
             self.subject_cards.append((subject["name"], card))
         if not visible:
@@ -372,11 +399,17 @@ class Dashboard(ctk.CTk):
         self.selected_subject_id = self.subject_ids.get(name)
 
     def focus_search(self, _event=None):
-        (self.subject_page.search if self.current_page == "My Subjects" else self.search).focus_set()
+        if self.current_page == "Question Bank":
+            self.question_bank.search.focus_set()
+        else:
+            (self.subject_page.search if self.current_page == "My Subjects" else self.search).focus_set()
         return "break"
 
     def clear_search(self, _event=None):
-        (self.subject_page.query if self.current_page == "My Subjects" else self.query).set("")
+        if self.current_page == "Question Bank":
+            self.question_bank.query.set("")
+        else:
+            (self.subject_page.query if self.current_page == "My Subjects" else self.query).set("")
 
     def elapsed(self):
         return self.session_seconds + (time.monotonic() - self.running_since if self.running_since is not None else 0)

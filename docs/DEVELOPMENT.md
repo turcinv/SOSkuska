@@ -110,3 +110,11 @@ Nová integrační kontrola také vytváří a upravuje předmět přes UI, ově
 
 
 Integrační kontrola nově ověřuje také skutečné přepnutí sloupců při změně šířky, pokračování plánování časovače po chybě automatického uložení a obnovení checklistu při změně dne. Test souběžných migrací používá pouze dočasné databáze.
+
+## Banka témat a otázek
+
+Kontrolu banky otázek spustíš příkazem níže. Používá dočasnou databázi a krátce otevře okno. Ověřuje CRUD, validaci, kombinované filtry, kompaktní editor a posouvání, izolaci předmětů, mazání a opětovné otevření. `tests/test_questions.py` navíc ověřuje migraci ze schématu 2, Unicode a konzistenci počtů. Celkem je 30 testů bez GUI a dvě nativní kontroly. Obě prošly na macOS; Windows/Linux a fyzický trackpad nejsou tímto ověřené.
+
+```sh
+.venv-macos/bin/python soskuska/check_question_bank.py
+```
