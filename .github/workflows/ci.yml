@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  unit-tests:
+    name: Unit tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest, macos-latest]
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: soskuska/requirements.txt
+      - name: Install dependencies
+        run: python -m pip install -r soskuska/requirements.txt
+      - name: Check dependency compatibility
+        run: python -m pip check
+      - name: Check Python syntax
+        run: python -m compileall -q soskuska tests
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+
+  gui-tests:
+    name: GUI smoke tests (Linux)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: soskuska/requirements.txt
+      - name: Install virtual display and Tk libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes xvfb xauth python3-tk fonts-noto-core
+      - name: Install dependencies
+        run: python -m pip install -r soskuska/requirements.txt
+      - name: Show Tk version
+        run: python -c "import sys, tkinter; print(sys.version); print('Tk', tkinter.TkVersion)"
+      - name: Run native GUI checks with process timeouts
+        run: |
+          xvfb-run --auto-servernum --server-args='-screen 0 1920x1080x24' python -u - <<'PY'
+          import subprocess
+          import sys
+
+          for script in (
+              'check_dashboard.py',
+              'check_question_bank.py',
+              'check_review_fixes.py',
+              'check_practice.py',
+          ):
+              print(f'Running {script}', flush=True)
+              subprocess.run([sys.executable, '-u', f'soskuska/{script}'], check=True, timeout=60)
+          PY

@@ -35,3 +35,7 @@ Skontroluj `git diff --check` a obsah commitu. Nepridávaj virtuálne prostredia
 Odošli svoju vetvu a otvor pull request do `main`. Opíš problém, nové správanie a skutočne vykonané kontroly vrátane OS, Pythonu a Tk. Snímku obrazovky pridaj, ak pomáha posúdiť zmenu UI. Neoznačuj nevykonané kontroly ako úspešné; syntetické udalosti nedokazujú overenie fyzického trackpadu.
 
 Chybu nahlás cez šablónu v Issues: postup opakovania, očakávané/skutočné správanie, prostredie a úplný relevantný výpis. Návrh funkcie má opísať potrebu používateľa a očakávané správanie. Neprikladaj súkromnú databázu ani prístupové údaje. V Issues a pull requestoch môžeš písať česky, slovensky, anglicky alebo rusky.
+
+## Priebežná integrácia (CI)
+
+CI: Python 3.12, jednotkové testy na troch systémoch a štyri GUI kontroly na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
