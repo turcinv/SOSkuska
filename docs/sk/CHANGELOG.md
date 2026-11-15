@@ -2,6 +2,10 @@
 
 [Čeština](../../CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
+## Nevydané
+
+CI: Python 3.12, jednotkové testy na troch systémoch a štyri GUI kontroly na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
+
 ## 0.4.0 — 2026-11-15
 
 Practice Tests — precvičovanie

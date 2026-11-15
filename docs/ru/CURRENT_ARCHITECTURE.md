@@ -174,3 +174,11 @@ CREATE INDEX practice_items_question ON practice_items(question_id);
 CREATE UNIQUE INDEX practice_one_active
                     ON practice_attempts(status) WHERE status='in_progress';
 ```
+
+## Непрерывная интеграция (CI)
+
+GitHub Actions проверяет pull request в main, новые коммиты в main и ручной запуск. Workflow `.github/workflows/ci.yml` устанавливает зависимости, проверяет их совместимость, синтаксис Python и все модульные тесты с Python 3.12 на Ubuntu, Windows и macOS. Отдельная задача запускает четыре нативных проверочных скрипта на Ubuntu под виртуальным дисплеем Xvfb; каждый процесс ограничен 60 секундами. Вся задача ограничена 10 минутами. Новый запуск той же ветки отменяет предыдущий. Токен имеет только право чтения содержимого; workflow ничего не развёртывает и не выпускает.
+
+Результаты и логи доступны в [Actions](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml) и проверках PR. Открой красный статус и прочитай первый неуспешный шаг. После исправления отправь коммит в ту же ветку, и проверки запустятся снова. Ручной Run workflow доступен после слияния workflow в ветку по умолчанию. Защита ветки этим не включается.
+
+Автоматические тесты не заменяют ручную проверку Windows/macOS/Linux и физического трекпада. Linux CI не проверяет настоящее меню Quit в macOS и жесты Tk 9; их нужно продолжать проверять на Mac.

@@ -95,3 +95,10 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 - Run `tests/test_practice.py` and `check_practice.py` with temporary data. The native check covers fresh-process resume, write errors and timed completion, in addition to the existing three native checks.
 
 - Background practice completion must not reset the shared scroll canvas or affect another screen's editing draft. Only reset practice scrolling when Practice Tests is active.
+
+## Continuous integration
+
+- `.github/workflows/ci.yml` runs for PRs targeting main, pushes to main and manual dispatch. Python 3.12 unit tests/syntax/dependency checks run on Linux, Windows and macOS; four GUI checks run under Xvfb on Ubuntu.
+- Keep action references pinned to verified release commit SHAs, contents permission read-only, and process/job timeouts. CI does not publish releases or deploy. Avoid duplicate feature-branch push and PR runs.
+- CI results are automated coverage, not manual platform or hardware verification. Native Aqua Quit and Tk 9 trackpad behavior still require the Mac checks. Do not claim those are tested by the Linux GUI job.
+- Read failed job logs, fix the cause and keep fixes on the same PR branch. Do not disable a meaningful failing check to obtain a green status. Branch protection is not configured by this workflow.
