@@ -2,9 +2,11 @@
 
 [Čeština](../../CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
-## Nevydané
+## 0.4.1 — 2026-11-15
 
 CI: Python 3.12, jednotkové testy na troch systémoch a štyri GUI kontroly na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
+
+CI overuje 45 jednotkových testov, syntax a kompatibilitu závislostí na Ubuntu, Windows a macOS s Pythonom 3.12. Štyri GUI kontroly bežia na Ubuntu/Xvfb (Tk 8.6). Prvý hostovaný beh všetkých úloh prešiel. Workflow používa pripnuté verzie akcií, token iba na čítanie, časové limity a rušenie nahradených behov. Pridaná dokumentácia v češtine, slovenčine a ruštine. Študijné funkcie aj schéma databázy zostávajú rovnaké ako vo v0.4.0; nejde o nové vydanie inštalátora.
 
 ## 0.4.0 — 2026-11-15
 

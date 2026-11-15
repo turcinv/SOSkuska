@@ -1,6 +1,6 @@
 # SOSkúška — slovenská dokumentácia
 
-**Vydanie: [v0.4.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.4.0)** — zdrojový kód funkčného prototypu. Prehľad funkcií a opráv je v [histórii zmien](CHANGELOG.md). Inštalátor zatiaľ nie je súčasťou vydania.
+**Vydanie: [v0.4.1](https://github.com/turcinv/SOSkuska/releases/tag/v0.4.1)** — zdrojový kód funkčného prototypu. Prehľad funkcií a opráv je v [histórii zmien](CHANGELOG.md). Inštalátor zatiaľ nie je súčasťou vydania.
 
 Lokálny desktopový študijný asistent v Pythone a CustomTkinteri. Implementované sú Dashboard a My Subjects: správa predmetov a termínov skúšok, denný zoznam úloh, vyhľadávanie a časovač prepojený s predmetom. Úlohy a odštudovaný čas sa ukladajú do SQLite na zariadení používateľa.
 
@@ -48,7 +48,7 @@ soskuska-local/    Starší samostatný HTML návrh; vizuálna referencia
 docs/             Česká dokumentácia; sk/ slovenská, ru/ ruská
 ```
 
-Primárne cieľové platformy sú Windows/Linux; macOS je aj súčasné vývojové prostredie. Natívna kontrola prešla na macOS, Windows/Linux ešte nie sú overené. Inštalátor zatiaľ nie je vytvorený. Samostatný repozitár: [turcinv/SOSkuska](https://github.com/turcinv/SOSkuska). Repozitár je súkromný; prístup vyžaduje oprávnenie.
+Primárne cieľové platformy sú Windows/Linux; macOS je aj súčasné vývojové prostredie. Natívne kontroly prešli na macOS; CI overuje jednotkové testy na troch systémoch a GUI na Linuxe. Ručné overenie Windows/Linux a fyzických gest zatiaľ chýba. Inštalátor zatiaľ nie je vytvorený. Samostatný repozitár: [turcinv/SOSkuska](https://github.com/turcinv/SOSkuska). Repozitár je súkromný; prístup vyžaduje oprávnenie.
 
 [Česká verzia](../../README.md) · [Русская версия](../ru/README.md)
 

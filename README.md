@@ -1,6 +1,6 @@
 # SOSkúška
 
-**Vydání: [v0.4.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.4.0)** — zdrojový kód funkčního prototypu. Přehled funkcí a oprav je v [historii změn](CHANGELOG.md). Instalátor zatím není součástí vydání.
+**Vydání: [v0.4.1](https://github.com/turcinv/SOSkuska/releases/tag/v0.4.1)** — zdrojový kód funkčního prototypu. Přehled funkcí a oprav je v [historii změn](CHANGELOG.md). Instalátor zatím není součástí vydání.
 
 Název aplikace je **SOSkúška**. Repozitář a kořenová složka jsou **SOSkuska**, zdrojový adresář `soskuska/`; technické názvy používají podobu bez diakritiky.
 
@@ -54,7 +54,7 @@ soskuska-local/    Starší samostatný HTML návrh; vizuální reference
 docs/             Dokumentace
 ```
 
-Primární cílové platformy jsou Windows/Linux; macOS je také aktuální vývojové prostředí. Nativní kontrola prošla na macOS, Windows/Linux ještě ověřené nejsou. Instalátor zatím není vytvořený. Samostatný repozitář: [turcinv/SOSkuska](https://github.com/turcinv/SOSkuska). Repozitář je soukromý; přístup vyžaduje oprávnění.
+Primární cílové platformy jsou Windows/Linux; macOS je také aktuální vývojové prostředí. Nativní kontroly prošly na macOS; CI ověřuje jednotkové testy na třech systémech a GUI na Linuxu. Ruční ověření Windows/Linux a fyzických gest zatím chybí. Instalátor zatím není vytvořený. Samostatný repozitář: [turcinv/SOSkuska](https://github.com/turcinv/SOSkuska). Repozitář je soukromý; přístup vyžaduje oprávnění.
 
 ## Banka témat a otázek
 
