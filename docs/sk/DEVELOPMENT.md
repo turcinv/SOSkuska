@@ -113,7 +113,7 @@ Integračná kontrola po novom overuje aj skutočné prepnutie stĺpcov pri zmen
 
 ## Banka tém a otázok
 
-Kontrolu banky otázok spustíš príkazom nižšie. Používa dočasnú databázu a krátko otvorí okno. Overuje CRUD, validáciu, kombinované filtre, kompaktný editor a posúvanie, izoláciu predmetov, mazanie a opätovné otvorenie. `tests/test_questions.py` navyše overuje migráciu zo schémy 2, Unicode a konzistenciu počtov. Spolu je 32 testov bez GUI a tri natívne kontroly. Všetky prešli na macOS; Windows/Linux a fyzický trackpad týmto nie sú overené.
+Kontrolu banky otázok spustíš príkazom nižšie. Používa dočasnú databázu a krátko otvorí okno. Overuje CRUD, validáciu, kombinované filtre, kompaktný editor a posúvanie, izoláciu predmetov, mazanie a opätovné otvorenie. `tests/test_questions.py` navyše overuje migráciu zo schémy 2, Unicode a konzistenciu počtov. Spolu je 45 testov bez GUI a štyri natívne kontroly. Všetky prešli na macOS; Windows/Linux a fyzický trackpad týmto nie sú overené.
 
 ```sh
 .venv-macos/bin/python soskuska/check_question_bank.py
@@ -121,10 +121,20 @@ Kontrolu banky otázok spustíš príkazom nižšie. Používa dočasnú databá
 
 ## Opravy po kontrole hlavnej vetvy
 
-Nová kontrola `check_review_fixes.py` používa dočasné databázy a overuje zrušenie starého potvrdenia, zmenu obsahu z druhého pripojenia, skutočný exkluzívny SQLite zámok pri polnoci, opakovanie obnovy, dátum, dokončenie časovača a syntetické posúvanie v dlhom aj krátkom poli. Na macOS navyše v oddelenom procese vyvolá skutočnú položku Quit, overí zachovanie relácie pri chybe zápisu a uloženie pri opakovaní. Spolu je 32 testov bez GUI a tri natívne kontroly. Prešli na macOS; Windows/Linux a fyzický trackpad týmto nie sú overené.
+Nová kontrola `check_review_fixes.py` používa dočasné databázy a overuje zrušenie starého potvrdenia, zmenu obsahu z druhého pripojenia, skutočný exkluzívny SQLite zámok pri polnoci, opakovanie obnovy, dátum, dokončenie časovača a syntetické posúvanie v dlhom aj krátkom poli. Na macOS navyše v oddelenom procese vyvolá skutočnú položku Quit, overí zachovanie relácie pri chybe zápisu a uloženie pri opakovaní. Spolu je 45 testov bez GUI a štyri natívne kontroly. Prešli na macOS; Windows/Linux a fyzický trackpad týmto nie sú overené.
 
 ```sh
 .venv-macos/bin/python soskuska/check_review_fixes.py
 ```
 
 Kontrola navyše overuje súčasné zlyhanie uloženia relácie a polnočného čítania, zachovanie pokynu na ručné uloženie po obnove, skutočný SQLite zámok až po úspešnom zápise relácie počas rovnakého dňa, automatickú obnovu metrík/výberu bez duplicitného záznamu a syntetické gestá nad posuvníkom aj okrajom editora.
+
+## Practice Tests — precvičovanie (v0.4.0)
+
+Nová kontrola check_practice.py overuje konfiguráciu, filtre, ukladanie odpovedí vrátane chyby zápisu, potvrdenie/opakovanie dokončenia, nemennú históriu, automatické dokončenie po limite, kompaktné okno a pokračovanie v novom procese. test_practice.py overuje migráciu schémy 3, uchovanie obsahu, skóre, idempotenciu, termíny, validáciu a rollback. Spolu je 45 testov a štyri natívne kontroly. Zmena je overená na macOS; Windows/Linux a fyzické gestá nie sú prakticky overené.
+
+```sh
+.venv-macos/bin/python soskuska/check_practice.py
+```
+
+Kontrola tiež overuje, že dokončenie testu na pozadí neposunie otvorenú banku otázok a nezmení rozpísaný text.
