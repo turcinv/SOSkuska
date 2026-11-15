@@ -31,6 +31,9 @@ class DashboardScrollFrame(ctk.CTkScrollableFrame):
             root.bind("<Button-4>", self._legacy_wheel, add="+")
             root.bind("<Button-5>", self._legacy_wheel, add="+")
 
+    def scroll_to_top(self):
+        self._parent_canvas.yview_moveto(0)
+
     def _owns_event(self, widget):
         while widget is not None:
             if widget in (self._parent_canvas, self._scrollbar):

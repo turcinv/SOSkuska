@@ -2,7 +2,7 @@
 
 **Budúci návrh, nie dnešná implementácia.** Uvedené moduly a tabuľky zatiaľ neexistujú, ak ich nepotvrdzuje [súčasná architektúra](CURRENT_ARCHITECTURE.md). Tento plán sám osebe neznamená začatie implementácie všetkých funkcií.
 
-**Aktuálny postup (14. novembra 2026):** predmety, termíny, skutočný Dashboard a banka tém/otázok sú implementované. Precvičovanie s vyhodnotením, kartičky a AI sú ďalšie etapy. Samostatná servisná vrstva a inštalátor zostávajú plánované.
+**Aktuálny postup (15. novembra 2026):** predmety, termíny, skutočný Dashboard, banka otázok a cvičné testy s uloženými odpoveďami/výsledkami sú implementované od v0.4.0. Ďalším krokom sú kartičky a opakovanie; AI, celkové štatistiky a inštalátory zostávajú plánované.
 
 ## Smer
 
@@ -77,11 +77,11 @@ Konkrétne schémy musia doplniť cudzie kľúče, pravidlá mazania, indexy a t
 
 ## Funkčné celky
 
-**Predmety a skutočný Dashboard:** CRUD predmetov, termíny a skutočné súčty relácií sú implementované. Správa tém a otázok je implementovaná; ďalším krokom sú cvičné testy; úspešnosť odpovedí možno pridať až s ich ukladaním. Nové databázy sú prázdne, bez automatických demo údajov.
+**Predmety a skutočný Dashboard:** správa predmetov, tém/otázok a skutočné súčty relácií sú implementované. Úspešnosť jednotlivých pokusov je v Practice Tests; celkové štatistiky zostávajú plánované. Nová databáza je prázdna.
 
 **Kartičky:** balíčky, otočenie otázky na odpoveď, Again / Hard / Good / Easy. Plánovanie opakovania oddeliť do čistého modulu a testovať. Konkrétny algoritmus ešte treba vybrať; dnešná aplikácia žiadny nemá.
 
-**Testy:** nastavenie tém, počtu otázok, náročnosti a času; rozpracovaný pokus, vyhodnotenie a kontrola chýb. Odpovede a dokončenie pokusu ukladať transakčne, aby bolo možné spätne overiť výsledky.
+**Testy:** výber témy, náročnosti, počtu a času; uložený pokus, skóre a rozbor odpovedí sú implementované. Ďalšie rozšírenia: import, bohatšia história a celkové štatistiky.
 
 **AI Tutor:** samostatný klient Ollama s časovým limitom, zoznamom dostupných modelov, priebežným prijímaním odpovede a zrušením generovania. Predvolené spojenie miestne, adresa nastaviteľná a viditeľná; žiadny automatický prechod na cloud. Modely načítať z Ollamy, nevyžadovať jeden pevný model.
 

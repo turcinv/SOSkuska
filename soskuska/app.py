@@ -24,6 +24,7 @@ from storage import Store, default_database
 from scrolling import DashboardScrollFrame
 from subjects import SubjectPage
 from question_bank import QuestionBankPage
+from practice_page import PracticePage
 
 C = dict(bg="#0D1117", sidebar="#11151C", card="#181D27", raised="#202633",
          border="#2A303C", accent="#8B5CF6", hover="#A78BFA", primary="#6D28D9",
@@ -79,6 +80,9 @@ class Dashboard(ctk.CTk):
         self.question_bank = QuestionBankPage(self.scroll, self)
         self.question_bank.grid(row=0, column=0, sticky="ew", padx=28, pady=28)
         self.question_bank.grid_remove()
+        self.practice_page = PracticePage(self.scroll, self)
+        self.practice_page.grid(row=0, column=0, sticky="ew", padx=28, pady=28)
+        self.practice_page.grid_remove()
         self.bind("<Configure>", self.on_resize)
         self.bind("<Control-k>", self.focus_search)
         self.bind("<Command-k>", self.focus_search)
@@ -146,7 +150,7 @@ class Dashboard(ctk.CTk):
         self.label(self.footer, "Local student", bold=True).pack(anchor="w")
         self.label(self.footer, "Offline · Stored on this device", 12, "secondary").pack(anchor="w", pady=(2, 18))
         self.label(self.footer, "○  AI not connected", 12, "secondary").pack(anchor="w")
-        self.label(self.footer, "Study workspace · v0.3.0", 11, "secondary").pack(anchor="w", pady=(6, 0))
+        self.label(self.footer, "Study workspace · v0.4.0", 11, "secondary").pack(anchor="w", pady=(6, 0))
 
     def build_content(self):
         self.scroll = DashboardScrollFrame(self, fg_color=C["bg"], corner_radius=0,
@@ -313,13 +317,19 @@ class Dashboard(ctk.CTk):
         self.reflow()
 
     def navigate(self, name):
-        if name not in ("Dashboard", "My Subjects"):
+        if name not in ("Dashboard", "My Subjects", "Practice Tests"):
             self.show_notice(f"{name} will be available in a later version.")
             return
         self.subject_page.cancel_delete()
         self.current_page = name
         self.question_bank.grid_remove()
-        if name == "My Subjects":
+        self.practice_page.grid_remove()
+        if name == "Practice Tests":
+            self.content.grid_remove()
+            self.subject_page.grid_remove()
+            self.practice_page.load()
+            self.practice_page.grid()
+        elif name == "My Subjects":
             self.content.grid_remove()
             self.subject_page.grid()
             self.subject_page.render()
@@ -340,6 +350,7 @@ class Dashboard(ctk.CTk):
         self.subject_page.cancel_delete()
         self.content.grid_remove()
         self.subject_page.grid_remove()
+        self.practice_page.grid_remove()
         self.question_bank.load_subject(subject_id)
         self.question_bank.grid()
         self.current_page = "Question Bank"
@@ -410,6 +421,8 @@ class Dashboard(ctk.CTk):
         self.selected_subject_id = self.subject_ids.get(name)
 
     def focus_search(self, _event=None):
+        if self.current_page == "Practice Tests":
+            return "break"
         if self.current_page == "Question Bank":
             self.question_bank.search.focus_set()
         else:
@@ -417,6 +430,8 @@ class Dashboard(ctk.CTk):
         return "break"
 
     def clear_search(self, _event=None):
+        if self.current_page == "Practice Tests":
+            return
         if self.current_page == "Question Bank":
             self.question_bank.query.set("")
         else:

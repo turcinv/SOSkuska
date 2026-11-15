@@ -1,6 +1,6 @@
 # Současná architektura
 
-Stav k 14. listopadu 2026. Implementované jsou Dashboard a My Subjects; další kroky popisuje [plánovaná architektura](PLANNED_ARCHITECTURE.md).
+Stav k 15. listopadu 2026. Implementované jsou Dashboard, My Subjects a Practice Tests; další kroky popisuje [plánovaná architektura](PLANNED_ARCHITECTURE.md).
 
 ## Technologie a soubory
 
@@ -26,6 +26,9 @@ flowchart LR
     User --> Questions[QuestionBankPage / question_bank.py]
     Questions --> Validation[content.py]
     Questions --> Store
+    User --> Practice[PracticePage / practice_page.py]
+    Practice --> Rules[practice.py]
+    Practice --> Store
     Dashboard --> Store
     Store --> DB[(SQLite)]
     Clock[time.monotonic] --> Dashboard
@@ -35,7 +38,7 @@ Obrazovky volají `Store` přímo. Samostatná servisní/doménová vrstva a sd�
 
 ## Schéma a migrace
 
-`PRAGMA user_version` nyní označuje verzi **3**. Otevření původní databáze verze 0 vytvoří/uzná původní tabulky a v jedné transakci doplní předměty a vazby. Databáze s novější verzí se odmítne otevřít místo pokusu o downgrade. Cizí klíče jsou zapnuté pro každé připojení.
+`PRAGMA user_version` nyní označuje verzi **4**. Otevření původní databáze verze 0 vytvoří/uzná původní tabulky a v jedné transakci doplní předměty a vazby. Databáze s novější verzí se odmítne otevřít místo pokusu o downgrade. Cizí klíče jsou zapnuté pro každé připojení.
 
 ```sql
 CREATE TABLE tasks (
@@ -101,7 +104,7 @@ Pokud nová databáze není a existuje původní `ExamPrep/dashboard.sqlite3`, p
 
 Pevné vzorové předměty, procenta, profil, termíny i základy 24 h 35 min / 45 min byly odstraněné. Nová databáze je prázdná. Metriky jsou celkový čas, počet uložených sezení, série studijních dní a počet předmětů. Série může končit dnes nebo včera; starší přerušená série ukáže nulu. Cíl zůstává 60 minut denně; karta ukazuje uložené minuty, bar má přesnost na sekundy.
 
-Karty ukazují počet sezení a uložený čas předmětu, ne smyšlený učební pokrok. Zkoušky pocházejí z uložených termínů, nedávná aktivita z posledních uložených sezení. Neexistující data mají prázdné stavy. AI, testy, kartičky, statistická obrazovka a nastavení zatím nejsou implementované.
+Karty ukazují počet sezení a uložený čas předmětu, ne smyšlený učební pokrok. Zkoušky pocházejí z uložených termínů, nedávná aktivita z posledních uložených sezení. Neexistující data mají prázdné stavy. AI, kartičky, statistická obrazovka a nastavení zatím nejsou implementované.
 
 ## Rozložení a ovládání
 
@@ -111,9 +114,9 @@ Obrazovky mají nezávislé vyhledávání přes `casefold()`. Ctrl+K / Cmd+K za
 
 ## Ověření a zbývající omezení
 
-32 testů úložiště prošlo; integrační skript prošel na macOS s Pythonem 3.12.13 / Tk 9.0 a dočasnou databází. Ověřil CRUD přes formulář, Unicode, hledání, prázdné stavy, navázání časovače, zachování historie, opětovné otevření, kompaktní režim a syntetické posouvání. Nenahrazuje ruční vizuální/hardwarové ověření; Windows/Linux nejsou ověřené.
+45 testů úložiště prošlo; integrační skript prošel na macOS s Pythonem 3.12.13 / Tk 9.0 a dočasnou databází. Ověřil CRUD přes formulář, Unicode, hledání, prázdné stavy, navázání časovače, zachování historie, opětovné otevření, kompaktní režim a syntetické posouvání. Nenahrazuje ruční vizuální/hardwarové ověření; Windows/Linux nejsou ověřené.
 
-Zbývají testy, kartičky, Ollama, překlady UI, nastavování cíle, úplná obnova po pádu, zálohy, balíčky a komplexní logování. První databázové operace mají chybová hlášení, ale úplné zpracování chyb při každém čtení ještě chybí.
+Zbývají kartičky, Ollama, překlady UI, nastavování cíle, úplná obnova po pádu, zálohy, balíčky a komplexní logování. První databázové operace mají chybová hlášení, ale úplné zpracování chyb při každém čtení ještě chybí.
 
 
 Verze schématu se čte až po získání `BEGIN IMMEDIATE`, aby souběžné starty nepoužily zastaralou hodnotu. Rozložení My Subjects zpracovává skutečné Configure události CustomTkinteru; integrační kontrola ověřuje dva sloupce ve velkém okně a jeden v kompaktním.
@@ -128,7 +131,7 @@ V My Subjects zvol u předmětu **Questions**. Přidej téma přes New topic a o
 
 Témata lze přejmenovat a smazat; vyber téma ve filtru a použij Rename selected topic nebo Delete selected topic. Otázky lze upravovat a mazat. Hledání v textu otázky se kombinuje s filtrem tématu a obtížnosti. Počty na kartách předmětů vycházejí z uloženého obsahu. Smazání tématu ponechá jeho otázky v No topic. Smazání předmětu po výslovném upozornění odstraní jeho témata a otázky, ale zachová čas i historii studia.
 
-Jde o editor obsahu: správná odpověď je viditelná. Spouštění a hodnocení procvičovacích testů, import a obrázky zatím nejsou implementované.
+Jde o editor obsahu: správná odpověď je viditelná. Procvičování a hodnocení najdeš v Practice Tests. Import a obrázky zatím nejsou implementované.
 
 ## Opravy po kontrole hlavní větve
 
@@ -139,3 +142,35 @@ Opuštění obrazovky My Subjects zruší rozpracované potvrzení smazání př
 Při změně dne se aktualizuje i datum v záhlaví. Chyba čtení při obnově checklistu nebo přehledu nezastaví plánování časovače; obnova se opakuje a nový den se potvrdí až po úspěchu. Posouvání uvnitř dlouhého textového pole zůstává v tomto poli, včetně jeho krajů; stránku posuneš nad jinou částí okna. Krátké pole bez vlastního posuvu dál umožňuje posouvání stránky.
 
 Pokud se sezení uložilo, ale následné načtení přehledu selže, aplikace opakuje pouze načtení i během stejného dne; záznam sezení znovu neukládá. Po úspěchu obnoví metriky i výběr předmětu a odstraní oznámení o opakování. Pokud se naopak sezení neuložilo, pokyn Press Finish zůstane viditelný i při chybě či úspěšné obnově denního přehledu. Gesta trackpadu nad posuvníkem a okrajem dlouhého editoru se předají jeho textovému poli.
+
+## Practice Tests — procvičování (v0.4.0)
+
+`practice_page.py` obsahuje obrazovku a vlastní neblokující Tk callback; `practice.py` čistou validaci a UTC časová pravidla. Schéma 4 přidává practice_attempts a practice_items v transakční migraci z verze 3 i starších verzí. Rozpracovaný pokus je v databázi nejvýše jeden (částečný unikátní index). Start, změny odpovědí, pozice a dokončení používají transakce; po termínu nelze odpověď uložit. Dokončení je idempotentní, takže opakování po chybě čtení výsledku nepřidá druhý výsledek. Chyba zápisu odpovědi vrátí výběr na poslední uloženou hodnotu.
+
+practice_items ukládá text, všechny čtyři možnosti, správnou odpověď, obtížnost, název tématu a vysvětlení jako kopie. Odkazy na původní předmět/otázku používají ON DELETE SET NULL. Mazání předmětu ponechá dokončené i rozpracované pokusy; zahodit lze jen rozpracovaný pokus a jeho položky se smažou kaskádou. Časové údaje jsou UTC ISO 8601, v UI se dokončení převádí do místního času. Skóre se počítá ze snímků: každá otázka má stejnou váhu, bez penalizace, nevyplněná odpověď má nulu. Časový limit používá systémové UTC hodiny; ruční změna času může změnit zbývající dobu. Ctrl+K / Cmd+K a Escape na obrazovce testů nemění skryté hledání jiné obrazovky.
+
+```sql
+CREATE TABLE practice_attempts (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    subject_id INTEGER REFERENCES subjects(id) ON DELETE SET NULL,
+                    subject_name TEXT NOT NULL,
+                    topic_name TEXT NOT NULL, difficulty TEXT,
+                    status TEXT NOT NULL DEFAULT 'in_progress' CHECK(status IN ('in_progress','completed')),
+                    question_count INTEGER NOT NULL CHECK(question_count BETWEEN 1 AND 100),
+                    current_index INTEGER NOT NULL DEFAULT 0 CHECK(current_index >= 0 AND current_index < question_count),
+                    time_limit_minutes INTEGER CHECK(time_limit_minutes BETWEEN 1 AND 180),
+                    started_at TEXT NOT NULL, deadline_at TEXT, completed_at TEXT);
+CREATE TABLE practice_items (
+                    attempt_id INTEGER NOT NULL REFERENCES practice_attempts(id) ON DELETE CASCADE,
+                    position INTEGER NOT NULL CHECK(position >= 0),
+                    question_id INTEGER REFERENCES questions(id) ON DELETE SET NULL,
+                    prompt TEXT NOT NULL, option_a TEXT NOT NULL, option_b TEXT NOT NULL,
+                    option_c TEXT NOT NULL, option_d TEXT NOT NULL,
+                    correct_option INTEGER NOT NULL CHECK(correct_option BETWEEN 0 AND 3),
+                    selected_option INTEGER CHECK(selected_option BETWEEN 0 AND 3),
+                    explanation TEXT NOT NULL, difficulty TEXT NOT NULL, topic_name TEXT,
+                    PRIMARY KEY(attempt_id, position));
+CREATE INDEX practice_items_question ON practice_items(question_id);
+CREATE UNIQUE INDEX practice_one_active
+                    ON practice_attempts(status) WHERE status='in_progress';
+```

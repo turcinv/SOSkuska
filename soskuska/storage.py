@@ -1,11 +1,13 @@
 """Versioned local storage for subjects, topics, questions, focus sessions and daily tasks."""
+import random
 import sqlite3
 import unicodedata
 from datetime import date, timedelta
 from pathlib import Path
 from content import question_fields, topic_fields
+from practice import expired, practice_settings, utc_now
 
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 
 
 def default_database(base):
@@ -99,6 +101,30 @@ class Store:
                         WHEN NEW.topic_id IS NOT NULL AND NOT EXISTS (
                             SELECT 1 FROM topics WHERE id=NEW.topic_id AND subject_id=NEW.subject_id)
                         BEGIN SELECT RAISE(ABORT, 'Topic must belong to the question subject'); END""")
+            if version < 4:
+                self.db.execute("""CREATE TABLE practice_attempts (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    subject_id INTEGER REFERENCES subjects(id) ON DELETE SET NULL,
+                    subject_name TEXT NOT NULL,
+                    topic_name TEXT NOT NULL, difficulty TEXT,
+                    status TEXT NOT NULL DEFAULT 'in_progress' CHECK(status IN ('in_progress','completed')),
+                    question_count INTEGER NOT NULL CHECK(question_count BETWEEN 1 AND 100),
+                    current_index INTEGER NOT NULL DEFAULT 0 CHECK(current_index >= 0 AND current_index < question_count),
+                    time_limit_minutes INTEGER CHECK(time_limit_minutes BETWEEN 1 AND 180),
+                    started_at TEXT NOT NULL, deadline_at TEXT, completed_at TEXT)""")
+                self.db.execute("""CREATE UNIQUE INDEX practice_one_active
+                    ON practice_attempts(status) WHERE status='in_progress'""")
+                self.db.execute("""CREATE TABLE practice_items (
+                    attempt_id INTEGER NOT NULL REFERENCES practice_attempts(id) ON DELETE CASCADE,
+                    position INTEGER NOT NULL CHECK(position >= 0),
+                    question_id INTEGER REFERENCES questions(id) ON DELETE SET NULL,
+                    prompt TEXT NOT NULL, option_a TEXT NOT NULL, option_b TEXT NOT NULL,
+                    option_c TEXT NOT NULL, option_d TEXT NOT NULL,
+                    correct_option INTEGER NOT NULL CHECK(correct_option BETWEEN 0 AND 3),
+                    selected_option INTEGER CHECK(selected_option BETWEEN 0 AND 3),
+                    explanation TEXT NOT NULL, difficulty TEXT NOT NULL, topic_name TEXT,
+                    PRIMARY KEY(attempt_id, position))""")
+                self.db.execute("CREATE INDEX practice_items_question ON practice_items(question_id)")
             self.db.execute(f"PRAGMA user_version = {SCHEMA_VERSION}")
 
     def task(self, name, default=False):
@@ -248,6 +274,107 @@ class Store:
             cursor = self.db.execute("DELETE FROM questions WHERE id=?", (question_id,))
             if cursor.rowcount == 0:
                 raise ValueError("This question no longer exists.")
+
+    def practice_pool(self, subject_id, topic="all", difficulty=None):
+        practice_settings(1, None, difficulty)
+        if self.subject(subject_id) is None:
+            raise ValueError("Choose an existing subject.")
+        if topic != "all" and topic is not None:
+            if type(topic) is not int:
+                raise ValueError("Choose a topic from this subject.")
+            self._validate_question_topic(subject_id, topic)
+        return [q for q in self.questions(subject_id)
+                if (topic == "all" or q["topic_id"] == topic)
+                and (difficulty is None or q["difficulty"] == difficulty)]
+
+    def start_practice(self, subject_id, count, topic="all", difficulty=None, minutes=None):
+        practice_settings(count, minutes, difficulty)
+        with self.db:
+            self.db.execute("BEGIN IMMEDIATE")
+            if self.active_practice() is not None:
+                raise ValueError("Finish or discard the current test before starting another.")
+            pool = self.practice_pool(subject_id, topic, difficulty)
+            if count > len(pool):
+                raise ValueError(f"Only {len(pool)} questions match these settings. Choose fewer questions.")
+            subject = self.subject(subject_id)
+            topic_name = "All topics" if topic == "all" else ("No topic" if topic is None else self.topic(topic)["name"])
+            now = utc_now()
+            deadline = (now + timedelta(minutes=minutes)).isoformat() if minutes is not None else None
+            cursor = self.db.execute("""INSERT INTO practice_attempts(
+                subject_id,subject_name,topic_name,difficulty,question_count,time_limit_minutes,started_at,deadline_at)
+                VALUES (?,?,?,?,?,?,?,?)""", (subject_id, subject["name"], topic_name, difficulty, count, minutes, now.isoformat(), deadline))
+            attempt_id = cursor.lastrowid
+            for position, question in enumerate(random.sample(pool, count)):
+                self.db.execute("""INSERT INTO practice_items(
+                    attempt_id,position,question_id,prompt,option_a,option_b,option_c,option_d,correct_option,explanation,difficulty,topic_name)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""", (attempt_id, position, question["id"],
+                    *(question[key] for key in ["prompt", "option_a", "option_b", "option_c", "option_d", "correct_option", "explanation", "difficulty", "topic_name"])))
+        return attempt_id
+
+    def practice_attempt(self, attempt_id):
+        row = self.db.execute("""SELECT a.*,
+            (SELECT COUNT(*) FROM practice_items WHERE attempt_id=a.id AND selected_option IS NOT NULL) AS answered,
+            (SELECT COUNT(*) FROM practice_items WHERE attempt_id=a.id AND selected_option=correct_option) AS correct
+            FROM practice_attempts a WHERE a.id=?""", (attempt_id,)).fetchone()
+        return dict(row) if row else None
+
+    def active_practice(self):
+        row = self.db.execute("SELECT id FROM practice_attempts WHERE status='in_progress'").fetchone()
+        return self.practice_attempt(row[0]) if row else None
+
+    def practice_items(self, attempt_id):
+        return [dict(row) for row in self.db.execute(
+            "SELECT * FROM practice_items WHERE attempt_id=? ORDER BY position", (attempt_id,))]
+
+    def practice_history(self, limit=20):
+        ids = self.db.execute("SELECT id FROM practice_attempts WHERE status='completed' ORDER BY id DESC LIMIT ?", (limit,)).fetchall()
+        return [self.practice_attempt(row[0]) for row in ids]
+
+    def _editable_practice(self, attempt_id):
+        attempt = self.practice_attempt(attempt_id)
+        if attempt is None or attempt["status"] != "in_progress":
+            raise ValueError("This test is no longer in progress.")
+        if expired(attempt["deadline_at"], utc_now()):
+            raise ValueError("Time is up. Finish the test to view your results.")
+        return attempt
+
+    def save_practice_answer(self, attempt_id, position, selected):
+        if type(position) is not int or position < 0:
+            raise ValueError("Choose an existing question.")
+        if selected is not None and (type(selected) is not int or selected not in range(4)):
+            raise ValueError("Choose answer A, B, C or D.")
+        with self.db:
+            self.db.execute("BEGIN IMMEDIATE")
+            self._editable_practice(attempt_id)
+            cursor = self.db.execute("UPDATE practice_items SET selected_option=? WHERE attempt_id=? AND position=?", (selected, attempt_id, position))
+            if cursor.rowcount == 0:
+                raise ValueError("This question does not belong to this test.")
+
+    def set_practice_position(self, attempt_id, position):
+        with self.db:
+            self.db.execute("BEGIN IMMEDIATE")
+            attempt = self._editable_practice(attempt_id)
+            if type(position) is not int or not 0 <= position < attempt["question_count"]:
+                raise ValueError("Choose an existing question.")
+            self.db.execute("UPDATE practice_attempts SET current_index=? WHERE id=?", (position, attempt_id))
+
+    def complete_practice(self, attempt_id):
+        with self.db:
+            self.db.execute("BEGIN IMMEDIATE")
+            attempt = self.practice_attempt(attempt_id)
+            if attempt is None:
+                raise ValueError("This test no longer exists.")
+            if attempt["status"] == "in_progress":
+                now = utc_now()
+                finished = attempt["deadline_at"] if expired(attempt["deadline_at"], now) else now.isoformat()
+                self.db.execute("UPDATE practice_attempts SET status='completed',completed_at=? WHERE id=?", (finished, attempt_id))
+        return self.practice_attempt(attempt_id)
+
+    def discard_practice(self, attempt_id):
+        with self.db:
+            cursor = self.db.execute("DELETE FROM practice_attempts WHERE id=? AND status='in_progress'", (attempt_id,))
+            if cursor.rowcount == 0:
+                raise ValueError("Only an in-progress test can be discarded.")
 
     def add_session(self, seconds, subject_id=None, subject_name=None):
         if not isinstance(seconds, int) or isinstance(seconds, bool) or seconds < 0:
