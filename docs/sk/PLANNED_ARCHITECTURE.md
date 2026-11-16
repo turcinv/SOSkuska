@@ -2,7 +2,7 @@
 
 **Budúci návrh, nie dnešná implementácia.** Uvedené moduly a tabuľky zatiaľ neexistujú, ak ich nepotvrdzuje [súčasná architektúra](CURRENT_ARCHITECTURE.md). Tento plán sám osebe neznamená začatie implementácie všetkých funkcií.
 
-**Aktuálny postup (15. novembra 2026):** predmety, termíny, skutočný Dashboard, banka otázok a cvičné testy s uloženými odpoveďami/výsledkami sú implementované od v0.4.0. Ďalším krokom sú kartičky a opakovanie; AI, celkové štatistiky a inštalátory zostávajú plánované.
+**Aktuálny postup (16. novembra 2026):** predmety, otázky a cvičné testy existujú. Kartičky s balíčkami, vlastným plánovaním a históriou sú hotové v pracovnej vetve. Ďalším krokom je voliteľný AI Tutor alebo celkové štatistiky; import a inštalátory zostávajú plánované.
 
 ## Smer
 
@@ -79,7 +79,7 @@ Konkrétne schémy musia doplniť cudzie kľúče, pravidlá mazania, indexy a t
 
 **Predmety a skutočný Dashboard:** správa predmetov, tém/otázok a skutočné súčty relácií sú implementované. Úspešnosť jednotlivých pokusov je v Practice Tests; celkové štatistiky zostávajú plánované. Nová databáza je prázdna.
 
-**Kartičky:** balíčky, otočenie otázky na odpoveď, Again / Hard / Good / Easy. Plánovanie opakovania oddeliť do čistého modulu a testovať. Konkrétny algoritmus ešte treba vybrať; dnešná aplikácia žiadny nemá.
+**Kartičky:** balíčky, editor, odhalenie odpovede, Again / Hard / Good / Easy, uložený termín a história sú implementované. Pravidlá sú v repetition.py a dokumente FLASHCARDS.md; nejde o SM-2 ani FSRS. Import a pokročilejšie plánovanie sú ďalšie možnosti.
 
 **Testy:** výber témy, náročnosti, počtu a času; uložený pokus, skóre a rozbor odpovedí sú implementované. Ďalšie rozšírenia: import, bohatšia história a celkové štatistiky.
 

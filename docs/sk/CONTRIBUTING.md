@@ -6,7 +6,7 @@
 
 Prečítaj [README](README.md), [prácu s Gitom](GIT_GUIDE.md), [vývojový návod](DEVELOPMENT.md) a [súčasnú architektúru](CURRENT_ARCHITECTURE.md). Vývojoví asistenti majú navyše pokyny v [AGENTS.md](../../AGENTS.md).
 
-Pracuj v novej vetve z aktuálneho `main`. Jedna zmena má riešiť jeden zrozumiteľný problém. Existujú Dashboard, My Subjects, Question bank a Practice Tests; ďalšie plánované obrazovky neprezentuj ako hotové funkcie. Nová databáza musí zostať prázdna, kým používateľ nezadá vlastné údaje. Používaj samostatnú vývojovú databázu cez `--data .local-data/dev.sqlite3`.
+Pracuj v novej vetve z aktuálneho `main`. Jedna zmena má riešiť jeden zrozumiteľný problém. Existujú Dashboard, My Subjects, Question bank, Practice Tests a Flashcards; ďalšie plánované obrazovky neprezentuj ako hotové funkcie. Nová databáza musí zostať prázdna, kým používateľ nezadá vlastné údaje. Používaj samostatnú vývojovú databázu cez `--data .local-data/dev.sqlite3`.
 
 ## Pred odoslaním
 
@@ -24,6 +24,7 @@ Na Windows/Linux použi zodpovedajúcu cestu k Pythonu svojho prostredia. Pri zm
 .venv-macos/bin/python soskuska/check_question_bank.py
 .venv-macos/bin/python soskuska/check_review_fixes.py
 .venv-macos/bin/python soskuska/check_practice.py
+.venv-macos/bin/python soskuska/check_flashcards.py
 ```
 
 Kontrola GUI otvára okno a potrebuje grafickú reláciu. Zmena samotnej dokumentácie zvyčajne vyžaduje kontrolu odkazov, príkazov a formátovania; netreba kvôli nej spúšťať celé UI.
@@ -38,4 +39,4 @@ Chybu nahlás cez šablónu v Issues: postup opakovania, očakávané/skutočné
 
 ## Priebežná integrácia (CI)
 
-CI: Python 3.12, jednotkové testy na troch systémoch a štyri GUI kontroly na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
+CI: Python 3.12, jednotkové testy na troch systémoch a päť GUI kontroly na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).

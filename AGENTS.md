@@ -22,8 +22,8 @@ These instructions apply to the entire standalone SOSkuska repository. Product n
 ## Scope and implementation
 
 - This is a native Python/CustomTkinter desktop application. HTML in `soskuska-local/` is a visual reference, not its runtime implementation. Do not convert it into a website without an explicit request.
-- Dashboard, My Subjects, Question bank and Practice Tests exist. Subject/topic/question CRUD, optional exam dates and subject-linked focus sessions use real SQLite data. New databases start empty; no sample statistics are added. AI Tutor, flashcards and the Statistics/Settings screens remain unimplemented.
-- Entry point: `soskuska/app.py`. Dashboard and timer logic live there; the subject-management screen is in `soskuska/subjects.py`; SQLite operations and transactional schema migrations (user_version 4) are in `soskuska/storage.py`; question authoring lives in `soskuska/question_bank.py` with pure validation in `soskuska/content.py`; scroll compatibility is isolated in `soskuska/scrolling.py`. Storage regression tests live in `tests/test_storage.py` and run with `python -m unittest discover -s tests -v`.
+- Dashboard, My Subjects, Question bank, Practice Tests and Flashcards exist. Subject/topic/question CRUD, optional exam dates and subject-linked focus sessions use real SQLite data. New databases start empty; no sample statistics are added. AI Tutor and the Statistics/Settings screens remain unimplemented.
+- Entry point: `soskuska/app.py`. Dashboard and timer logic live there; the subject-management screen is in `soskuska/subjects.py`; SQLite operations and transactional schema migrations (user_version 5) are in `soskuska/storage.py`; question authoring lives in `soskuska/question_bank.py` with pure validation in `soskuska/content.py`; scroll compatibility is isolated in `soskuska/scrolling.py`. Storage regression tests live in `tests/test_storage.py` and run with `python -m unittest discover -s tests -v`.
 - Keep sample data distinct from user records. Do not present sample metrics as actual user statistics or invent records in the user's database.
 
 ## Environment and data
@@ -37,6 +37,7 @@ Commands below are relative to the project root:
 .venv-macos/bin/python soskuska/check_question_bank.py
 .venv-macos/bin/python soskuska/check_review_fixes.py
 .venv-macos/bin/python soskuska/check_practice.py
+.venv-macos/bin/python soskuska/check_flashcards.py
 ```
 
 - On this Mac use `.venv-macos`, verified with Python 3.12.13 / Tk 9.0. `.venv-desktop` uses Apple Tk 8.5, which produced an empty window. Suppressing its warning is not a fix. The default Homebrew Python also lacked `_tkinter` when checked.
@@ -75,7 +76,7 @@ If `.codegraph/` exists at the repository root, use `codegraph_explore` or `code
 
 ## Question bank
 
-Open Questions from a subject card. Questions have four distinct answers, one correct answer (0–3), difficulty and optional explanation/topic. Topics are unique within a subject. Deleting a topic keeps its questions unassigned; deleting a subject explicitly warns and cascades its content while retaining session history. Schema 3 migrates existing data transactionally. Use `tests/test_questions.py` and `check_question_bank.py` for verification; all automated checks use disposable data. Practice execution, saved answers, resume, deadlines and snapshot scoring are implemented in `practice_page.py`, `practice.py` and Store; flashcards and AI remain planned.
+Open Questions from a subject card. Questions have four distinct answers, one correct answer (0–3), difficulty and optional explanation/topic. Topics are unique within a subject. Deleting a topic keeps its questions unassigned; deleting a subject explicitly warns and cascades its content while retaining session history. Schema 3 migrates existing data transactionally. Use `tests/test_questions.py` and `check_question_bank.py` for verification; all automated checks use disposable data. Practice execution, saved answers, resume, deadlines and snapshot scoring are implemented in `practice_page.py`, `practice.py` and Store; flashcards are implemented in flashcard_page.py with pure rules in repetition.py; AI remains planned.
 
 ## Reviewed lifecycle safeguards
 
@@ -92,13 +93,22 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 - Save each answer and navigation position transactionally. On failed answer writes restore the last saved choice. Deadline checks occur after obtaining the write lock. Completion is idempotent; failed result reads may retry without creating another result.
 - UTC deadlines continue while away or closed. On reopening, expired tests complete and reject late answers. System-clock changes can affect remaining time. Discard requires confirmation and applies only to an unfinished attempt.
 - Practice results do not count as focus-session time. History shows the latest 20 results; older rows remain stored. Schema 4 migration preserves all existing content/history.
-- Run `tests/test_practice.py` and `check_practice.py` with temporary data. The native check covers fresh-process resume, write errors and timed completion, in addition to the existing three native checks.
+- Run `tests/test_practice.py` and `check_practice.py` with temporary data. The native check covers fresh-process resume, write errors and timed completion, in addition to the existing native checks.
 
 - Background practice completion must not reset the shared scroll canvas or affect another screen's editing draft. Only reset practice scrolling when Practice Tests is active.
 
 ## Continuous integration
 
-- `.github/workflows/ci.yml` runs for PRs targeting main, pushes to main and manual dispatch. Python 3.12 unit tests/syntax/dependency checks run on Linux, Windows and macOS; four GUI checks run under Xvfb on Ubuntu.
+- `.github/workflows/ci.yml` runs for PRs targeting main, pushes to main and manual dispatch. Python 3.12 unit tests/syntax/dependency checks run on Linux, Windows and macOS; five GUI checks run under Xvfb on Ubuntu.
 - Keep action references pinned to verified release commit SHAs, contents permission read-only, and process/job timeouts. CI does not publish releases or deploy. Avoid duplicate feature-branch push and PR runs.
 - CI results are automated coverage, not manual platform or hardware verification. Native Aqua Quit and Tk 9 trackpad behavior still require the Mac checks. Do not claim those are tested by the Linux GUI job.
 - Read failed job logs, fix the cause and keep fixes on the same PR branch. Do not disable a meaningful failing check to obtain a green status. Branch protection is not configured by this workflow.
+
+## Flashcard safeguards
+
+- Schema 5 adds decks, flashcards and immutable review_events. Deck names are globally Unicode-normalized unique. Subject deletion keeps decks/cards, card/deck deletion keeps review snapshots; communicate this in confirmation text.
+- Custom deterministic scheduling in repetition.py: Again 10m/reset, new Hard 1h, new Good 1d, new Easy 4d; mature Hard/Good/Easy multiply days by 1.2/2.5/3.5 and round up, capped365d. Do not label it SM-2/FSRS or claim measured mastery. Ratings are self-assessments.
+- Reveal before enabling rating. Compare card revision and due time under the write lock, commit schedule and review snapshot together. Advance UI only after commit. A stale callback cannot rate the next card or a hidden page. Failed writes keep revealed content/drafts for retry.
+- Editing resets due/interval but keeps historical reviews. Study at most100 due cards per batch; history shows20, older rows remain stored. UTC system-clock changes can affect due status.
+- Avoid binding a persistent StringVar to repeatedly recreated CTkEntry widgets in CTk5.2.2; destroyed entries retain traces. Flashcard search copies text through public entry APIs instead.
+- Run tests/test_flashcards.py (including historical schema4 fixture) and check_flashcards.py. CI includes the fifth native check. This feature is unreleased until a separate merge/release is authorized.
