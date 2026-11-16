@@ -21,4 +21,4 @@ Maximum je 365 dní. Termíny sú UTC; v aplikácii sa zobrazujú v miestnom ča
 
 Review history zobrazuje posledných 20 hodnotení s kópiami oboch strán, názvu balíčka, predmetu a termínov. Staršie riadky zostávajú uložené. Vymazanie predmetu ponechá jeho balíčky a kartičky s pôvodným názvom predmetu. Vymazanie kartičky alebo balíčka vyžaduje potvrdenie a ponechá históriu hodnotení. Zmenený počet kartičiek alebo názov balíčka vyžaduje nové potvrdenie vymazania. Zastaraná úprava alebo hodnotenie kartičky sa odmietne namiesto prepísania novšej verzie. Pri chybe zápisu sa obsah formulára a odhalená odpoveď zachovajú na opakovanie.
 
-Táto funkcia je v pracovnej vetve a nie je súčasťou vydanej v0.4.1. Import, prevod z otázok, AI a súhrnná štatistická obrazovka zostávajú plánované.
+Táto funkcia je zatiaľ nevydaná a nie je súčasťou vydanej v0.4.1. Import, prevod z otázok, AI a súhrnná štatistická obrazovka zostávajú plánované.

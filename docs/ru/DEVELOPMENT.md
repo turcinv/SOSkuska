@@ -156,3 +156,5 @@ check_flashcards.py проверяет формы, повторный поиск
 ```sh
 .venv-macos/bin/python soskuska/check_flashcards.py
 ```
+
+Модульные тесты macOS используют стандартный образ macos-15-intel вместо macos-latest, где Arm-запуски ожидали свободных ресурсов. Ручная проверка Tk 9 и настоящего меню Quit на локальном Mac остаётся отдельной.

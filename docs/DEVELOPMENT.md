@@ -156,3 +156,5 @@ check_flashcards.py ověřuje formuláře, opakované hledání, zachování roz
 ```sh
 .venv-macos/bin/python soskuska/check_flashcards.py
 ```
+
+macOS jednotkové testy používají standardní obraz macos-15-intel místo macos-latest, jehož Arm běhy čekaly na kapacitu. Ruční kontrola Tk 9 a nativní nabídky Quit na místním Macu zůstává samostatná.
