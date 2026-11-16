@@ -1,6 +1,6 @@
 # SOSkúška
 
-**Vydání: [v0.4.1](https://github.com/turcinv/SOSkuska/releases/tag/v0.4.1)** — zdrojový kód funkčního prototypu. Přehled funkcí a oprav je v [historii změn](CHANGELOG.md). Instalátor zatím není součástí vydání.
+**Vydání: [v0.5.1](https://github.com/turcinv/SOSkuska/releases/tag/v0.5.1)** — zdrojový kód funkčního prototypu. Přehled funkcí a oprav je v [historii změn](CHANGELOG.md). Instalátor zatím není součástí vydání.
 
 Název aplikace je **SOSkúška**. Repozitář a kořenová složka jsou **SOSkuska**, zdrojový adresář `soskuska/`; technické názvy používají podobu bez diakritiky.
 
@@ -78,7 +78,7 @@ Procvičování je dostupné od v0.4.0. Procvičování nepřidává smyšlený 
 
 CI: Python 3.12, jednotkové testy na třech systémech a pět GUI kontroly na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
 
-## Kartičky a opakování (nevydáno)
+## Kartičky a opakování (v0.5.0)
 
 V postranní nabídce otevři **Flashcards**. New deck vytvoří balíček pro existující předmět; název musí být jedinečný mezi všemi balíčky. Předmět balíčku se potom nemění, název a popis ano. Open deck umožní přidat a upravovat kartičky. Přední strana má 1–2000 znaků, zadní 1–4000; Search hledá v obou stranách. Seznam zobrazuje nejvýše 100 výsledků, další najdeš užším hledáním.
 

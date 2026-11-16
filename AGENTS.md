@@ -111,4 +111,4 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 - Reveal before enabling rating. Compare card revision and due time under the write lock, commit schedule and review snapshot together. Advance UI only after commit. A stale callback cannot rate the next card or a hidden page. Failed writes keep revealed content/drafts for retry.
 - Editing resets due/interval but keeps historical reviews. Study at most100 due cards per batch; history shows20, older rows remain stored. UTC system-clock changes can affect due status.
 - Avoid binding a persistent StringVar to repeatedly recreated CTkEntry widgets in CTk5.2.2; destroyed entries retain traces. Flashcard search copies text through public entry APIs instead.
-- Run tests/test_flashcards.py (including historical schema4 fixture) and check_flashcards.py. CI includes the fifth native check. This feature is unreleased until a separate merge/release is authorized.
+- Run tests/test_flashcards.py (including historical schema4 fixture) and check_flashcards.py. CI includes the fifth native check. Flashcards were released in v0.5.0.

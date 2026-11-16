@@ -59,7 +59,7 @@ Finish test po potvrdení uloží výsledok; nevyplnené otázky sa počítajú 
 
 Precvičovanie je dostupné od v0.4.0. Precvičovanie nepridáva vymyslený čas do súčtov časovača. AI, import a celková štatistická obrazovka zostávajú plánované.
 
-## Kartičky a opakovanie (nevydané)
+## Kartičky a opakovanie (v0.5.0)
 
 V bočnej ponuke otvor **Flashcards**. New deck vytvorí balíček pre existujúci predmet; názov musí byť jedinečný medzi všetkými balíčkami. Predmet balíčka sa potom nemení, názov a popis áno. Open deck umožní pridať a upravovať kartičky. Predná strana má 1–2000 znakov, zadná 1–4000; Search hľadá v oboch stranách. Zoznam zobrazuje najviac 100 výsledkov, ďalšie nájdeš užším hľadaním.
 

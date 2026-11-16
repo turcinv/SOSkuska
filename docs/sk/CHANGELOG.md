@@ -2,7 +2,15 @@
 
 [Čeština](../../CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
-## Nevydané
+## 0.5.1 — 2026-11-16
+
+Opravené označenie verzie v aplikácii a odkazy na aktuálne vydanie. História zmien, stav kartičiek a návody sú zjednotené v češtine, slovenčine a ruštine s vydanou v0.5.0. Študijné funkcie a databázová schéma sa nemenia; zdrojové vydanie bez inštalátora.
+
+## 0.5.0 — 2026-11-16
+
+Nová obrazovka **Flashcards**: správa balíčkov a kartičiek, hľadanie na oboch stranách, odhalenie odpovede a hodnotenie Again / Hard / Good / Easy. Vlastné deterministické plánovanie ukladá ďalší termín; nejde o SM-2 ani FSRS. Úprava kartičky obnoví splatnosť a zachová históriu. Zmazanie predmetu ponechá balíčky aj kartičky; zmazanie kartičky či balíčka zachová historické snímky. Formuláre zachovávajú rozpísaný obsah a neúspešný zápis možno zopakovať.
+
+Overenie: 60 jednotkových testov na Ubuntu, Windows a macOS v CI; päť GUI kontrol na Ubuntu/Xvfb aj lokálne na macOS. Dokumentácia je samostatne česky, slovensky a rusky. Ide o zdrojové vydanie bez inštalátora. [Návod a pravidlá](FLASHCARDS.md).
 
 `flashcard_page.py` obsahuje obrazovku, `repetition.py` čistú validáciu a pravidlá. Schéma 5 pridáva decks, flashcards a review_events. Termín a interval sú priamo pri kartičke. Zápis hodnotenia, snímky oboch strán a ďalšieho termínu je jedna transakcia; kontrola revízie aj splatnosti prebieha pod zápisovým zámkom. Opakované hodnotenie rovnakej revízie nevytvorí ďalší záznam. Odkazy z histórie majú ON DELETE SET NULL, kópie obsahu zostávajú. Balíčky majú k predmetu ON DELETE SET NULL, kartičky k balíčku ON DELETE CASCADE. Migrácia z verzie 4 a starších zachová existujúce údaje a výsledky testov.
 

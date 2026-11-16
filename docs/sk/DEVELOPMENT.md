@@ -147,7 +147,7 @@ Výsledky a logy sú v [Actions](https://github.com/turcinv/SOSkuska/actions/wor
 
 Automatické testy nie sú ručným overením Windows/macOS/Linux ani fyzického trackpadu. Linuxový CI beh neoveruje natívnu ponuku Quit v macOS ani Tk 9 gestá; tie treba naďalej kontrolovať na Macu.
 
-## Kartičky a opakovanie (nevydané)
+## Kartičky a opakovanie (v0.5.0)
 
 check_flashcards.py overuje formuláre, opakované hľadanie, zachovanie rozpísaného textu pri navigácii, odhalenie pred hodnotením, odmietnutie zastaraného hodnotenia, opakovanie po chybe zápisu, termíny, uchovanie histórie a nové spustenie procesu. test_flashcards.py a historický fixtures/schema_v4.sql overujú migráciu a transakcie. Spolu je 60 jednotkových testov a päť natívnych kontrol; CI spúšťa testy na troch systémoch a GUI na Ubuntu/Xvfb.
 
