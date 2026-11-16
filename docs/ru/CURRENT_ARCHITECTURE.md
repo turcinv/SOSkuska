@@ -1,6 +1,6 @@
 # Текущая архитектура
 
-Состояние на 15 ноября 2026 года. Реализованы Dashboard, My Subjects и Practice Tests; следующие шаги описаны в [планируемой архитектуре](PLANNED_ARCHITECTURE.md).
+Состояние на 16 ноября 2026 года. Реализованы Dashboard, My Subjects и Practice Tests; следующие шаги описаны в [планируемой архитектуре](PLANNED_ARCHITECTURE.md).
 
 ## Технологии и файлы
 
@@ -29,6 +29,9 @@ flowchart LR
     User --> Practice[PracticePage / practice_page.py]
     Practice --> Rules[practice.py]
     Practice --> Store
+    User --> Flashcards[FlashcardPage / flashcard_page.py]
+    Flashcards --> Repetition[repetition.py]
+    Flashcards --> Store
     Dashboard --> Store
     Store --> DB[(SQLite)]
     Clock[time.monotonic] --> Dashboard
@@ -38,7 +41,7 @@ flowchart LR
 
 ## Схема и миграции
 
-`PRAGMA user_version` теперь обозначает версию **4**. Открытие прежней базы версии 0 создаёт/распознаёт прежние таблицы и в одной транзакции добавляет предметы и связи. База более новой версии не открывается вместо попытки понижения версии. Внешние ключи включены для каждого соединения.
+`PRAGMA user_version` теперь обозначает версию **5**. Открытие прежней базы версии 0 создаёт/распознаёт прежние таблицы и в одной транзакции добавляет предметы и связи. База более новой версии не открывается вместо попытки понижения версии. Внешние ключи включены для каждого соединения.
 
 ```sql
 CREATE TABLE tasks (
@@ -104,7 +107,7 @@ CREATE INDEX questions_topic ON questions(topic_id);
 
 Фиксированные примеры предметов, процентов, профиля, дат и исходные 24 ч 35 мин / 45 мин удалены. Новая база пустая. Метрики — общее время, число сохранённых занятий, серия учебных дней и число предметов. Серия может заканчиваться сегодня или вчера; более старая прерванная серия показывает ноль. Цель пока 60 минут в день; карточка показывает сохранённые минуты, полоса учитывает секунды.
 
-Карточки показывают количество занятий и сохранённое время предмета, а не выдуманный учебный прогресс. Экзамены берутся из сохранённых дат, недавняя активность — из последних занятий. Для отсутствующих данных предусмотрены пустые состояния. AI, карточки, экран статистики и настройки пока не реализованы.
+Карточки показывают количество занятий и сохранённое время предмета, а не выдуманный учебный прогресс. Экзамены берутся из сохранённых дат, недавняя активность — из последних занятий. Для отсутствующих данных предусмотрены пустые состояния. AI, экран статистики и настройки пока не реализованы.
 
 ## Расположение и управление
 
@@ -114,9 +117,9 @@ CREATE INDEX questions_topic ON questions(topic_id);
 
 ## Проверки и оставшиеся ограничения
 
-45 тестов хранилища прошли; интеграционный скрипт прошёл на macOS с Python 3.12.13 / Tk 9.0 и временной базой. Проверены CRUD через форму, Unicode, поиск, пустые состояния, связь таймера, сохранение истории, повторное открытие, компактный режим и синтетическая прокрутка. Это не заменяет ручную визуальную/аппаратную проверку; Windows/Linux не проверены.
+60 тестов хранилища прошли; интеграционный скрипт прошёл на macOS с Python 3.12.13 / Tk 9.0 и временной базой. Проверены CRUD через форму, Unicode, поиск, пустые состояния, связь таймера, сохранение истории, повторное открытие, компактный режим и синтетическая прокрутка. Это не заменяет ручную визуальную/аппаратную проверку; Windows/Linux не проверены.
 
-Остаются карточки, Ollama, переводы UI, настройка цели, полное восстановление после сбоя, резервные копии, дистрибутивы и полноценное журналирование. Основные операции записи имеют сообщения об ошибках, но полная обработка ошибок при каждом чтении ещё не реализована.
+Остаётся Ollama, переводы UI, настройка цели, полное восстановление после сбоя, резервные копии, дистрибутивы и полноценное журналирование. Основные операции записи имеют сообщения об ошибках, но полная обработка ошибок при каждом чтении ещё не реализована.
 
 
 Версия схемы читается только после получения блокировки через `BEGIN IMMEDIATE`, чтобы одновременные запуски не использовали устаревшее значение. My Subjects обрабатывает реальные события Configure от CustomTkinter; интеграционная проверка подтверждает два столбца в широком окне и один в компактном.
@@ -177,8 +180,42 @@ CREATE UNIQUE INDEX practice_one_active
 
 ## Непрерывная интеграция (CI)
 
-GitHub Actions проверяет pull request в main, новые коммиты в main и ручной запуск. Workflow `.github/workflows/ci.yml` устанавливает зависимости, проверяет их совместимость, синтаксис Python и все модульные тесты с Python 3.12 на Ubuntu, Windows и macOS. Отдельная задача запускает четыре нативных проверочных скрипта на Ubuntu под виртуальным дисплеем Xvfb; каждый процесс ограничен 60 секундами. Вся задача ограничена 10 минутами. Новый запуск той же ветки отменяет предыдущий. Токен имеет только право чтения содержимого; workflow ничего не развёртывает и не выпускает.
+GitHub Actions проверяет pull request в main, новые коммиты в main и ручной запуск. Workflow `.github/workflows/ci.yml` устанавливает зависимости, проверяет их совместимость, синтаксис Python и все модульные тесты с Python 3.12 на Ubuntu, Windows и macOS. Отдельная задача запускает пять нативных проверочных скриптов на Ubuntu под виртуальным дисплеем Xvfb; каждый процесс ограничен 60 секундами. Вся задача ограничена 10 минутами. Новый запуск той же ветки отменяет предыдущий. Токен имеет только право чтения содержимого; workflow ничего не развёртывает и не выпускает.
 
 Результаты и логи доступны в [Actions](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml) и проверках PR. Открой красный статус и прочитай первый неуспешный шаг. После исправления отправь коммит в ту же ветку, и проверки запустятся снова. Ручной Run workflow доступен после слияния workflow в ветку по умолчанию. Защита ветки этим не включается.
 
 Автоматические тесты не заменяют ручную проверку Windows/macOS/Linux и физического трекпада. Linux CI не проверяет настоящее меню Quit в macOS и жесты Tk 9; их нужно продолжать проверять на Mac.
+
+## Карточки и повторение (не выпущено)
+
+`flashcard_page.py` содержит экран, `repetition.py` — чистую валидацию и правила. Схема 5 добавляет decks, flashcards и review_events. Срок и интервал хранятся прямо у карточки. Запись оценки, снимка обеих сторон и следующего срока — одна транзакция; ревизия и доступность проверяются под блокировкой записи. Повторная оценка той же ревизии не создаёт вторую запись. Ссылки из истории используют ON DELETE SET NULL, копии содержимого остаются. Связь колоды с предметом использует ON DELETE SET NULL, карточки с колодой — ON DELETE CASCADE. Миграция с версии 4 и более ранних версий сохраняет существующие данные и результаты тестов.
+
+[Подробная инструкция и правила](FLASHCARDS.md).
+
+```sql
+CREATE TABLE decks (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    subject_id INTEGER REFERENCES subjects(id) ON DELETE SET NULL,
+                    subject_name TEXT NOT NULL, name TEXT NOT NULL,
+                    name_key TEXT NOT NULL UNIQUE, description TEXT NOT NULL DEFAULT '');
+CREATE TABLE flashcards (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    deck_id INTEGER NOT NULL REFERENCES decks(id) ON DELETE CASCADE,
+                    front TEXT NOT NULL, back TEXT NOT NULL, due_at TEXT NOT NULL,
+                    interval_days INTEGER NOT NULL DEFAULT 0 CHECK(interval_days BETWEEN 0 AND 365),
+                    revision INTEGER NOT NULL DEFAULT 0 CHECK(revision >= 0),
+                    review_count INTEGER NOT NULL DEFAULT 0 CHECK(review_count >= 0));
+CREATE TABLE review_events (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    card_id INTEGER REFERENCES flashcards(id) ON DELETE SET NULL,
+                    deck_id INTEGER REFERENCES decks(id) ON DELETE SET NULL,
+                    card_revision INTEGER NOT NULL,
+                    deck_name TEXT NOT NULL, subject_name TEXT NOT NULL,
+                    front TEXT NOT NULL, back TEXT NOT NULL,
+                    rating TEXT NOT NULL CHECK(rating IN ('Again','Hard','Good','Easy')),
+                    reviewed_at TEXT NOT NULL, previous_due_at TEXT NOT NULL,
+                    due_at TEXT NOT NULL, interval_days INTEGER NOT NULL,
+                    UNIQUE(card_id,card_revision));
+CREATE INDEX flashcards_due ON flashcards(deck_id,due_at,id);
+CREATE INDEX review_events_deck ON review_events(deck_id,id);
+```

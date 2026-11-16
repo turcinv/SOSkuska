@@ -6,8 +6,9 @@ from datetime import date, timedelta
 from pathlib import Path
 from content import question_fields, topic_fields
 from practice import expired, practice_settings, utc_now
+from repetition import card_fields, deck_fields, next_review
 
-SCHEMA_VERSION = 4
+SCHEMA_VERSION = 5
 
 
 def default_database(base):
@@ -125,6 +126,32 @@ class Store:
                     explanation TEXT NOT NULL, difficulty TEXT NOT NULL, topic_name TEXT,
                     PRIMARY KEY(attempt_id, position))""")
                 self.db.execute("CREATE INDEX practice_items_question ON practice_items(question_id)")
+            if version < 5:
+                self.db.execute("""CREATE TABLE decks (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    subject_id INTEGER REFERENCES subjects(id) ON DELETE SET NULL,
+                    subject_name TEXT NOT NULL, name TEXT NOT NULL,
+                    name_key TEXT NOT NULL UNIQUE, description TEXT NOT NULL DEFAULT '')""")
+                self.db.execute("""CREATE TABLE flashcards (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    deck_id INTEGER NOT NULL REFERENCES decks(id) ON DELETE CASCADE,
+                    front TEXT NOT NULL, back TEXT NOT NULL, due_at TEXT NOT NULL,
+                    interval_days INTEGER NOT NULL DEFAULT 0 CHECK(interval_days BETWEEN 0 AND 365),
+                    revision INTEGER NOT NULL DEFAULT 0 CHECK(revision >= 0),
+                    review_count INTEGER NOT NULL DEFAULT 0 CHECK(review_count >= 0))""")
+                self.db.execute("CREATE INDEX flashcards_due ON flashcards(deck_id,due_at,id)")
+                self.db.execute("""CREATE TABLE review_events (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    card_id INTEGER REFERENCES flashcards(id) ON DELETE SET NULL,
+                    deck_id INTEGER REFERENCES decks(id) ON DELETE SET NULL,
+                    card_revision INTEGER NOT NULL,
+                    deck_name TEXT NOT NULL, subject_name TEXT NOT NULL,
+                    front TEXT NOT NULL, back TEXT NOT NULL,
+                    rating TEXT NOT NULL CHECK(rating IN ('Again','Hard','Good','Easy')),
+                    reviewed_at TEXT NOT NULL, previous_due_at TEXT NOT NULL,
+                    due_at TEXT NOT NULL, interval_days INTEGER NOT NULL,
+                    UNIQUE(card_id,card_revision))""")
+                self.db.execute("CREATE INDEX review_events_deck ON review_events(deck_id,id)")
             self.db.execute(f"PRAGMA user_version = {SCHEMA_VERSION}")
 
     def task(self, name, default=False):
@@ -375,6 +402,134 @@ class Store:
             cursor = self.db.execute("DELETE FROM practice_attempts WHERE id=? AND status='in_progress'", (attempt_id,))
             if cursor.rowcount == 0:
                 raise ValueError("Only an in-progress test can be discarded.")
+
+    def decks(self):
+        return [dict(row) for row in self.db.execute("""SELECT d.*,s.name AS current_subject_name,
+            (SELECT COUNT(*) FROM flashcards WHERE deck_id=d.id) AS card_count,
+            (SELECT COUNT(*) FROM flashcards WHERE deck_id=d.id AND due_at<=?) AS due_count
+            FROM decks d LEFT JOIN subjects s ON s.id=d.subject_id ORDER BY d.name_key,d.id""", (utc_now().isoformat(),))]
+
+    def deck(self, deck_id):
+        row = self.db.execute("""SELECT d.*,s.name AS current_subject_name FROM decks d
+            LEFT JOIN subjects s ON s.id=d.subject_id WHERE d.id=?""", (deck_id,)).fetchone()
+        return dict(row) if row else None
+
+    def create_deck(self, subject_id, name, description=""):
+        name, key, description = deck_fields(name, description)
+        with self.db:
+            self.db.execute("BEGIN IMMEDIATE")
+            subject = self.subject(subject_id)
+            if subject is None:
+                raise ValueError("Choose an existing subject.")
+            try:
+                cursor = self.db.execute("INSERT INTO decks(subject_id,subject_name,name,name_key,description) VALUES (?,?,?,?,?)",
+                                         (subject_id, subject["name"], name, key, description))
+            except sqlite3.IntegrityError:
+                raise ValueError("A deck with this name already exists.") from None
+        return cursor.lastrowid
+
+    def update_deck(self, deck_id, name, description=""):
+        name, key, description = deck_fields(name, description)
+        with self.db:
+            try:
+                cursor = self.db.execute("UPDATE decks SET name=?,name_key=?,description=? WHERE id=?", (name, key, description, deck_id))
+            except sqlite3.IntegrityError:
+                raise ValueError("A deck with this name already exists.") from None
+            if cursor.rowcount == 0:
+                raise ValueError("This deck no longer exists.")
+
+    def deck_deletion_state(self, deck_id):
+        row = self.db.execute("""SELECT name,(SELECT COUNT(*) FROM flashcards WHERE deck_id=decks.id)
+            FROM decks WHERE id=?""", (deck_id,)).fetchone()
+        return tuple(row) if row else None
+
+    def delete_deck(self, deck_id, expected_state=None):
+        with self.db:
+            self.db.execute("BEGIN IMMEDIATE")
+            state = self.deck_deletion_state(deck_id)
+            if state is None:
+                raise ValueError("This deck no longer exists.")
+            if expected_state is not None and state != expected_state:
+                return False
+            self.db.execute("DELETE FROM decks WHERE id=?", (deck_id,))
+        return True
+
+    def flashcards(self, deck_id, query=""):
+        key = unicodedata.normalize("NFKC", query.strip()).casefold()
+        rows = self.db.execute("SELECT * FROM flashcards WHERE deck_id=? ORDER BY id", (deck_id,))
+        return [dict(row) for row in rows if not key or key in unicodedata.normalize("NFKC", row["front"] + "\n" + row["back"]).casefold()]
+
+    def flashcard(self, card_id):
+        row = self.db.execute("SELECT * FROM flashcards WHERE id=?", (card_id,)).fetchone()
+        return dict(row) if row else None
+
+    def create_flashcard(self, deck_id, front, back):
+        front, back = card_fields(front, back)
+        with self.db:
+            self.db.execute("BEGIN IMMEDIATE")
+            if self.deck(deck_id) is None:
+                raise ValueError("This deck no longer exists.")
+            cursor = self.db.execute("INSERT INTO flashcards(deck_id,front,back,due_at) VALUES (?,?,?,?)", (deck_id, front, back, utc_now().isoformat()))
+        return cursor.lastrowid
+
+    def update_flashcard(self, card_id, front, back, expected_revision):
+        front, back = card_fields(front, back)
+        with self.db:
+            self.db.execute("BEGIN IMMEDIATE")
+            card = self.flashcard(card_id)
+            if card is None:
+                raise ValueError("This card no longer exists.")
+            if type(expected_revision) is not int or card["revision"] != expected_revision:
+                raise ValueError("This card changed. Reopen it before editing; your draft has been kept.")
+            self.db.execute("""UPDATE flashcards SET front=?,back=?,due_at=?,interval_days=0,revision=revision+1
+                WHERE id=?""", (front, back, utc_now().isoformat(), card_id))
+
+    def delete_flashcard(self, card_id, expected_revision=None):
+        with self.db:
+            self.db.execute("BEGIN IMMEDIATE")
+            card = self.flashcard(card_id)
+            if card is None:
+                raise ValueError("This card no longer exists.")
+            if expected_revision is not None and card["revision"] != expected_revision:
+                return False
+            self.db.execute("DELETE FROM flashcards WHERE id=?", (card_id,))
+        return True
+
+    def due_flashcards(self, deck_id, limit=100):
+        return [dict(row) for row in self.db.execute("SELECT * FROM flashcards WHERE deck_id=? AND due_at<=? ORDER BY due_at,id LIMIT ?",
+                                                   (deck_id, utc_now().isoformat(), limit))]
+
+    def rate_flashcard(self, card_id, rating, expected_revision):
+        with self.db:
+            self.db.execute("BEGIN IMMEDIATE")
+            card = self.flashcard(card_id)
+            if card is None:
+                raise ValueError("This card no longer exists.")
+            if type(expected_revision) is not int or card["revision"] != expected_revision:
+                raise ValueError("This card changed. Reveal its current answer before rating it.")
+            now = utc_now()
+            if card["due_at"] > now.isoformat():
+                raise ValueError("This card is not due yet.")
+            due, interval, _label = next_review(card["interval_days"], rating, now)
+            deck = self.deck(card["deck_id"])
+            subject_name = deck["current_subject_name"] or deck["subject_name"]
+            cursor = self.db.execute("""INSERT INTO review_events(
+                card_id,deck_id,card_revision,deck_name,subject_name,front,back,rating,reviewed_at,previous_due_at,due_at,interval_days)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""", (card_id, card["deck_id"], card["revision"], deck["name"], subject_name,
+                    card["front"], card["back"], rating, now.isoformat(), card["due_at"], due.isoformat(), interval))
+            self.db.execute("""UPDATE flashcards SET due_at=?,interval_days=?,revision=revision+1,review_count=review_count+1
+                WHERE id=?""", (due.isoformat(), interval, card_id))
+            result = {"id": cursor.lastrowid, "due_at": due.isoformat(), "interval_days": interval}
+        # No post-commit read: a failed UI refresh must not repeat this rating.
+        return result
+
+    def flashcard_history(self, deck_id=None, limit=20):
+        query = "SELECT * FROM review_events"
+        parameters = []
+        if deck_id is not None:
+            query += " WHERE deck_id=?"
+            parameters.append(deck_id)
+        return [dict(row) for row in self.db.execute(query + " ORDER BY id DESC LIMIT ?", (*parameters, limit))]
 
     def add_session(self, seconds, subject_id=None, subject_name=None):
         if not isinstance(seconds, int) or isinstance(seconds, bool) or seconds < 0:

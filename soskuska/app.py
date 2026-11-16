@@ -25,6 +25,7 @@ from scrolling import DashboardScrollFrame
 from subjects import SubjectPage
 from question_bank import QuestionBankPage
 from practice_page import PracticePage
+from flashcard_page import FlashcardPage
 
 C = dict(bg="#0D1117", sidebar="#11151C", card="#181D27", raised="#202633",
          border="#2A303C", accent="#8B5CF6", hover="#A78BFA", primary="#6D28D9",
@@ -83,6 +84,9 @@ class Dashboard(ctk.CTk):
         self.practice_page = PracticePage(self.scroll, self)
         self.practice_page.grid(row=0, column=0, sticky="ew", padx=28, pady=28)
         self.practice_page.grid_remove()
+        self.flashcard_page = FlashcardPage(self.scroll, self)
+        self.flashcard_page.grid(row=0, column=0, sticky="ew", padx=28, pady=28)
+        self.flashcard_page.grid_remove()
         self.bind("<Configure>", self.on_resize)
         self.bind("<Control-k>", self.focus_search)
         self.bind("<Command-k>", self.focus_search)
@@ -317,14 +321,20 @@ class Dashboard(ctk.CTk):
         self.reflow()
 
     def navigate(self, name):
-        if name not in ("Dashboard", "My Subjects", "Practice Tests"):
+        if name not in ("Dashboard", "My Subjects", "Practice Tests", "Flashcards"):
             self.show_notice(f"{name} will be available in a later version.")
             return
         self.subject_page.cancel_delete()
         self.current_page = name
         self.question_bank.grid_remove()
         self.practice_page.grid_remove()
-        if name == "Practice Tests":
+        self.flashcard_page.grid_remove()
+        if name == "Flashcards":
+            self.content.grid_remove()
+            self.subject_page.grid_remove()
+            self.flashcard_page.load()
+            self.flashcard_page.grid()
+        elif name == "Practice Tests":
             self.content.grid_remove()
             self.subject_page.grid_remove()
             self.practice_page.load()
@@ -351,6 +361,7 @@ class Dashboard(ctk.CTk):
         self.content.grid_remove()
         self.subject_page.grid_remove()
         self.practice_page.grid_remove()
+        self.flashcard_page.grid_remove()
         self.question_bank.load_subject(subject_id)
         self.question_bank.grid()
         self.current_page = "Question Bank"
@@ -421,7 +432,7 @@ class Dashboard(ctk.CTk):
         self.selected_subject_id = self.subject_ids.get(name)
 
     def focus_search(self, _event=None):
-        if self.current_page == "Practice Tests":
+        if self.current_page in ("Practice Tests", "Flashcards"):
             return "break"
         if self.current_page == "Question Bank":
             self.question_bank.search.focus_set()
@@ -430,7 +441,7 @@ class Dashboard(ctk.CTk):
         return "break"
 
     def clear_search(self, _event=None):
-        if self.current_page == "Practice Tests":
+        if self.current_page in ("Practice Tests", "Flashcards"):
             return
         if self.current_page == "Question Bank":
             self.question_bank.query.set("")

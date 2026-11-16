@@ -6,7 +6,7 @@
 
 Прочитай [README](README.md), [основы Git](GIT_GUIDE.md), [руководство разработчика](DEVELOPMENT.md) и [текущую архитектуру](CURRENT_ARCHITECTURE.md). Дополнительные инструкции для ассистентов-разработчиков находятся в [AGENTS.md](../../AGENTS.md).
 
-Работай в новой ветке от актуального `main`. Одно изменение должно решать одну понятную задачу. Реализованы Dashboard, My Subjects, Question bank и Practice Tests; не представляй остальные будущие экраны как готовые функции. Новая база должна оставаться пустой, пока пользователь не добавит свои данные. Используй отдельную базу для разработки через `--data .local-data/dev.sqlite3`.
+Работай в новой ветке от актуального `main`. Одно изменение должно решать одну понятную задачу. Реализованы Dashboard, My Subjects, Question bank, Practice Tests и Flashcards; не представляй остальные будущие экраны как готовые функции. Новая база должна оставаться пустой, пока пользователь не добавит свои данные. Используй отдельную базу для разработки через `--data .local-data/dev.sqlite3`.
 
 ## Перед отправкой
 
@@ -24,6 +24,7 @@
 .venv-macos/bin/python soskuska/check_question_bank.py
 .venv-macos/bin/python soskuska/check_review_fixes.py
 .venv-macos/bin/python soskuska/check_practice.py
+.venv-macos/bin/python soskuska/check_flashcards.py
 ```
 
 GUI-проверка открывает окно и требует графического сеанса. Для изменения только документации обычно достаточно проверить ссылки, команды и форматирование; запускать весь UI ради неё не нужно.
@@ -38,4 +39,4 @@ GUI-проверка открывает окно и требует графич�
 
 ## Непрерывная интеграция (CI)
 
-CI: Python 3.12, модульные тесты на трёх системах и четыре GUI-проверки на Ubuntu/Xvfb. [Результаты](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
+CI: Python 3.12, модульные тесты на трёх системах и пять GUI-проверки на Ubuntu/Xvfb. [Результаты](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).

@@ -31,3 +31,5 @@ První instalace na Windows: [Česky](../docs/WINDOWS_FIRST_RUN.md) · [Slovensk
 Implementované jsou Dashboard a My Subjects se skutečnými předměty, termíny a studijním časem. V My Subjects otevři Questions pro správu témat a otázek. Nová databáze je prázdná. Kartičky, Ollama a ostatní obrazovky zůstávají plánované.
 
 Practice Tests používá otázky ze zvoleného předmětu, ukládá odpovědi a výsledky a umožňuje pokračování po restartu. Nativní kontrola: `.venv-macos/bin/python soskuska/check_practice.py`. Dostupné od v0.4.0.
+
+Flashcards: balíčky, vlastní kartičky, odhalení odpovědi a ukládané termíny opakování. [Návod](../docs/FLASHCARDS.md). Kontrola: `.venv-macos/bin/python soskuska/check_flashcards.py`. Zatím nevydané.

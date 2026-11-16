@@ -1,6 +1,6 @@
 # Současná architektura
 
-Stav k 15. listopadu 2026. Implementované jsou Dashboard, My Subjects a Practice Tests; další kroky popisuje [plánovaná architektura](PLANNED_ARCHITECTURE.md).
+Stav k 16. listopadu 2026. Implementované jsou Dashboard, My Subjects a Practice Tests; další kroky popisuje [plánovaná architektura](PLANNED_ARCHITECTURE.md).
 
 ## Technologie a soubory
 
@@ -29,6 +29,9 @@ flowchart LR
     User --> Practice[PracticePage / practice_page.py]
     Practice --> Rules[practice.py]
     Practice --> Store
+    User --> Flashcards[FlashcardPage / flashcard_page.py]
+    Flashcards --> Repetition[repetition.py]
+    Flashcards --> Store
     Dashboard --> Store
     Store --> DB[(SQLite)]
     Clock[time.monotonic] --> Dashboard
@@ -38,7 +41,7 @@ Obrazovky volají `Store` přímo. Samostatná servisní/doménová vrstva a sd�
 
 ## Schéma a migrace
 
-`PRAGMA user_version` nyní označuje verzi **4**. Otevření původní databáze verze 0 vytvoří/uzná původní tabulky a v jedné transakci doplní předměty a vazby. Databáze s novější verzí se odmítne otevřít místo pokusu o downgrade. Cizí klíče jsou zapnuté pro každé připojení.
+`PRAGMA user_version` nyní označuje verzi **5**. Otevření původní databáze verze 0 vytvoří/uzná původní tabulky a v jedné transakci doplní předměty a vazby. Databáze s novější verzí se odmítne otevřít místo pokusu o downgrade. Cizí klíče jsou zapnuté pro každé připojení.
 
 ```sql
 CREATE TABLE tasks (
@@ -104,7 +107,7 @@ Pokud nová databáze není a existuje původní `ExamPrep/dashboard.sqlite3`, p
 
 Pevné vzorové předměty, procenta, profil, termíny i základy 24 h 35 min / 45 min byly odstraněné. Nová databáze je prázdná. Metriky jsou celkový čas, počet uložených sezení, série studijních dní a počet předmětů. Série může končit dnes nebo včera; starší přerušená série ukáže nulu. Cíl zůstává 60 minut denně; karta ukazuje uložené minuty, bar má přesnost na sekundy.
 
-Karty ukazují počet sezení a uložený čas předmětu, ne smyšlený učební pokrok. Zkoušky pocházejí z uložených termínů, nedávná aktivita z posledních uložených sezení. Neexistující data mají prázdné stavy. AI, kartičky, statistická obrazovka a nastavení zatím nejsou implementované.
+Karty ukazují počet sezení a uložený čas předmětu, ne smyšlený učební pokrok. Zkoušky pocházejí z uložených termínů, nedávná aktivita z posledních uložených sezení. Neexistující data mají prázdné stavy. AI, statistická obrazovka a nastavení zatím nejsou implementované.
 
 ## Rozložení a ovládání
 
@@ -114,9 +117,9 @@ Obrazovky mají nezávislé vyhledávání přes `casefold()`. Ctrl+K / Cmd+K za
 
 ## Ověření a zbývající omezení
 
-45 testů úložiště prošlo; integrační skript prošel na macOS s Pythonem 3.12.13 / Tk 9.0 a dočasnou databází. Ověřil CRUD přes formulář, Unicode, hledání, prázdné stavy, navázání časovače, zachování historie, opětovné otevření, kompaktní režim a syntetické posouvání. Nenahrazuje ruční vizuální/hardwarové ověření; Windows/Linux nejsou ověřené.
+60 testů úložiště prošlo; integrační skript prošel na macOS s Pythonem 3.12.13 / Tk 9.0 a dočasnou databází. Ověřil CRUD přes formulář, Unicode, hledání, prázdné stavy, navázání časovače, zachování historie, opětovné otevření, kompaktní režim a syntetické posouvání. Nenahrazuje ruční vizuální/hardwarové ověření; Windows/Linux nejsou ověřené.
 
-Zbývají kartičky, Ollama, překlady UI, nastavování cíle, úplná obnova po pádu, zálohy, balíčky a komplexní logování. První databázové operace mají chybová hlášení, ale úplné zpracování chyb při každém čtení ještě chybí.
+Zbývá Ollama, překlady UI, nastavování cíle, úplná obnova po pádu, zálohy, balíčky a komplexní logování. První databázové operace mají chybová hlášení, ale úplné zpracování chyb při každém čtení ještě chybí.
 
 
 Verze schématu se čte až po získání `BEGIN IMMEDIATE`, aby souběžné starty nepoužily zastaralou hodnotu. Rozložení My Subjects zpracovává skutečné Configure události CustomTkinteru; integrační kontrola ověřuje dva sloupce ve velkém okně a jeden v kompaktním.
@@ -177,8 +180,42 @@ CREATE UNIQUE INDEX practice_one_active
 
 ## Průběžná integrace (CI)
 
-GitHub Actions kontroluje pull requesty do main, nové commity na main a ruční spuštění. Workflow `.github/workflows/ci.yml` instaluje závislosti, ověřuje jejich kompatibilitu, syntaxi Pythonu a všechny jednotkové testy s Pythonem 3.12 na Ubuntu, Windows a macOS. Samostatná úloha spouští čtyři nativní kontrolní skripty na Ubuntu pod virtuálním displejem Xvfb; každý proces má limit 60 sekund. Celá úloha má limit 10 minut. Novější běh stejné větve zruší předchozí. Token má pouze čtení obsahu; workflow nic nenasazuje ani nevydává.
+GitHub Actions kontroluje pull requesty do main, nové commity na main a ruční spuštění. Workflow `.github/workflows/ci.yml` instaluje závislosti, ověřuje jejich kompatibilitu, syntaxi Pythonu a všechny jednotkové testy s Pythonem 3.12 na Ubuntu, Windows a macOS. Samostatná úloha spouští pět nativních kontrolních skriptů na Ubuntu pod virtuálním displejem Xvfb; každý proces má limit 60 sekund. Celá úloha má limit 10 minut. Novější běh stejné větve zruší předchozí. Token má pouze čtení obsahu; workflow nic nenasazuje ani nevydává.
 
 Výsledky a logy jsou v [Actions](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml) a v kontrolách PR. Červený stav otevři a přečti první neúspěšný krok. Po opravě pushni do stejné větve a kontroly se spustí znovu. Ruční spuštění Run workflow je dostupné po sloučení workflow do výchozí větve. Branch protection tímto není zapnutá.
 
 Automatické testy nejsou ruční ověření Windows/macOS/Linux ani fyzického trackpadu. Linuxový CI běh neověřuje nativní nabídku Quit v macOS ani Tk 9 gesta; ty je potřeba dál kontrolovat na Macu.
+
+## Kartičky a opakování (nevydáno)
+
+`flashcard_page.py` obsahuje obrazovku, `repetition.py` čistou validaci a pravidla. Schéma 5 přidává decks, flashcards a review_events. Termín a interval jsou přímo u kartičky. Zápis hodnocení, snímku obou stran a dalšího termínu je jedna transakce; kontrola revize i splatnosti probíhá pod zápisovým zámkem. Opakované hodnocení stejné revize nevytvoří další záznam. Odkazy z historie mají ON DELETE SET NULL, kopie obsahu zůstávají. Balíčky mají k předmětu ON DELETE SET NULL, kartičky k balíčku ON DELETE CASCADE. Migrace z verze 4 a starších zachová existující data a výsledky testů.
+
+[Podrobný návod a pravidla](FLASHCARDS.md).
+
+```sql
+CREATE TABLE decks (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    subject_id INTEGER REFERENCES subjects(id) ON DELETE SET NULL,
+                    subject_name TEXT NOT NULL, name TEXT NOT NULL,
+                    name_key TEXT NOT NULL UNIQUE, description TEXT NOT NULL DEFAULT '');
+CREATE TABLE flashcards (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    deck_id INTEGER NOT NULL REFERENCES decks(id) ON DELETE CASCADE,
+                    front TEXT NOT NULL, back TEXT NOT NULL, due_at TEXT NOT NULL,
+                    interval_days INTEGER NOT NULL DEFAULT 0 CHECK(interval_days BETWEEN 0 AND 365),
+                    revision INTEGER NOT NULL DEFAULT 0 CHECK(revision >= 0),
+                    review_count INTEGER NOT NULL DEFAULT 0 CHECK(review_count >= 0));
+CREATE TABLE review_events (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    card_id INTEGER REFERENCES flashcards(id) ON DELETE SET NULL,
+                    deck_id INTEGER REFERENCES decks(id) ON DELETE SET NULL,
+                    card_revision INTEGER NOT NULL,
+                    deck_name TEXT NOT NULL, subject_name TEXT NOT NULL,
+                    front TEXT NOT NULL, back TEXT NOT NULL,
+                    rating TEXT NOT NULL CHECK(rating IN ('Again','Hard','Good','Easy')),
+                    reviewed_at TEXT NOT NULL, previous_due_at TEXT NOT NULL,
+                    due_at TEXT NOT NULL, interval_days INTEGER NOT NULL,
+                    UNIQUE(card_id,card_revision));
+CREATE INDEX flashcards_due ON flashcards(deck_id,due_at,id);
+CREATE INDEX review_events_deck ON review_events(deck_id,id);
+```

@@ -129,7 +129,7 @@ class SubjectPage(ctk.CTkFrame):
         self.deleting_state = state
         name, topics, questions = state
         content_warning = f" This permanently deletes {topics} topics and {questions} questions." if topics or questions else ""
-        self.delete_label.configure(text=f'Delete “{name}”?{content_warning} Saved study time and session history will be kept. Practice results and unfinished tests will also be kept.')
+        self.delete_label.configure(text=f'Delete “{name}”?{content_warning} Saved study time and session history will be kept. Practice results, unfinished tests, flashcard decks and review history will also be kept.')
         self.delete_panel.grid()
         self.app.scroll._parent_canvas.yview_moveto(0)
 
