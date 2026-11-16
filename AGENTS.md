@@ -112,5 +112,3 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 - Editing resets due/interval but keeps historical reviews. Study at most100 due cards per batch; history shows20, older rows remain stored. UTC system-clock changes can affect due status.
 - Avoid binding a persistent StringVar to repeatedly recreated CTkEntry widgets in CTk5.2.2; destroyed entries retain traces. Flashcard search copies text through public entry APIs instead.
 - Run tests/test_flashcards.py (including historical schema4 fixture) and check_flashcards.py. CI includes the fifth native check. This feature is unreleased until a separate merge/release is authorized.
-
-- The macOS unit-test runner is the standard `macos-15-intel` image to avoid the observed Arm runner queue; native Tk 9/Aqua checks remain local. Do not remove the macOS job to work around runner capacity.
