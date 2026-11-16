@@ -1,4 +1,4 @@
-# Kartičky a opakování (nevydáno)
+# Kartičky a opakování (v0.5.0)
 
 V postranní nabídce otevři **Flashcards**. New deck vytvoří balíček pro existující předmět; název musí být jedinečný mezi všemi balíčky. Předmět balíčku se potom nemění, název a popis ano. Open deck umožní přidat a upravovat kartičky. Přední strana má 1–2000 znaků, zadní 1–4000; Search hledá v obou stranách. Seznam zobrazuje nejvýše 100 výsledků, další najdeš užším hledáním.
 
@@ -21,4 +21,4 @@ Maximum je 365 dní. Termíny jsou UTC; v aplikaci se zobrazují v místním ča
 
 Review history zobrazuje posledních 20 hodnocení s kopiemi obou stran, názvu balíčku, předmětu a termínů. Starší řádky zůstávají uložené. Smazání předmětu ponechá jeho balíčky a kartičky s původním názvem předmětu. Smazání kartičky nebo balíčku vyžaduje potvrzení a ponechá historii hodnocení. Změněný počet kartiček nebo název balíčku vyžaduje nové potvrzení smazání. Zastaralá úprava nebo hodnocení kartičky se odmítne místo přepsání novější verze. Při chybě zápisu se obsah formuláře a odhalená odpověď zachovají pro opakování.
 
-Tato funkce je v pracovní větvi a není součástí vydané v0.4.1. Import, převod z otázek, AI a souhrnná statistická obrazovka zůstávají plánované.
+Funkce je dostupná od v0.5.0. Import, převod z otázek, AI a souhrnná statistická obrazovka zůstávají plánované.

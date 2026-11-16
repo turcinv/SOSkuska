@@ -32,4 +32,4 @@ Implementované jsou Dashboard a My Subjects se skutečnými předměty, termín
 
 Practice Tests používá otázky ze zvoleného předmětu, ukládá odpovědi a výsledky a umožňuje pokračování po restartu. Nativní kontrola: `.venv-macos/bin/python soskuska/check_practice.py`. Dostupné od v0.4.0.
 
-Flashcards: balíčky, vlastní kartičky, odhalení odpovědi a ukládané termíny opakování. [Návod](../docs/FLASHCARDS.md). Kontrola: `.venv-macos/bin/python soskuska/check_flashcards.py`. Zatím nevydané.
+Flashcards: balíčky, vlastní kartičky, odhalení odpovědi a ukládané termíny opakování. [Návod](../docs/FLASHCARDS.md). Kontrola: `.venv-macos/bin/python soskuska/check_flashcards.py`. Dostupné od v0.5.0.

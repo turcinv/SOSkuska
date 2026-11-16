@@ -2,7 +2,11 @@
 
 [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
-## Nevydáno
+## 0.5.0 — 2026-11-16
+
+Nová obrazovka **Flashcards**: správa balíčků a kartiček, hledání v obou stranách, odhalení odpovědi a hodnocení Again / Hard / Good / Easy. Vlastní deterministické plánování ukládá další termín; nejde o SM-2 ani FSRS. Úprava kartičky obnoví splatnost a zachová historii. Smazání předmětu ponechá balíčky i kartičky; smazání kartičky či balíčku zachová historické snímky. Formuláře zachovávají rozepsaný obsah a neúspěšný zápis lze opakovat.
+
+Ověření: 60 jednotkových testů na Ubuntu, Windows a macOS v CI; pět GUI kontrol na Ubuntu/Xvfb i lokálně na macOS. Dokumentace je samostatně česky, slovensky a rusky. Jde o zdrojové vydání bez instalátoru. [Návod a pravidla](docs/FLASHCARDS.md).
 
 `flashcard_page.py` obsahuje obrazovku, `repetition.py` čistou validaci a pravidla. Schéma 5 přidává decks, flashcards a review_events. Termín a interval jsou přímo u kartičky. Zápis hodnocení, snímku obou stran a dalšího termínu je jedna transakce; kontrola revize i splatnosti probíhá pod zápisovým zámkem. Opakované hodnocení stejné revize nevytvoří další záznam. Odkazy z historie mají ON DELETE SET NULL, kopie obsahu zůstávají. Balíčky mají k předmětu ON DELETE SET NULL, kartičky k balíčku ON DELETE CASCADE. Migrace z verze 4 a starších zachová existující data a výsledky testů.
 

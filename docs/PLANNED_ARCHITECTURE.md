@@ -2,7 +2,7 @@
 
 **Budoucí návrh, nikoli dnešní implementace.** Zde uvedené moduly a tabulky zatím neexistují, pokud je nepotvrzuje [současná architektura](CURRENT_ARCHITECTURE.md). Tento plán sám neznamená zahájení implementace všech funkcí.
 
-**Aktuální postup (16. listopadu 2026):** předměty, otázky a procvičovací testy existují. Kartičky s balíčky, vlastním plánováním a historií jsou hotové v pracovní větvi. Další krok je volitelný AI Tutor nebo celkové statistiky; import a instalátory zůstávají plánované.
+**Aktuální postup (16. listopadu 2026):** předměty, otázky a procvičovací testy existují. Kartičky s balíčky, vlastním plánováním a historií jsou vydané ve v0.5.0. Další krok je volitelný AI Tutor nebo celkové statistiky; import a instalátory zůstávají plánované.
 
 ## Směr
 

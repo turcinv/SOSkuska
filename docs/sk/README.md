@@ -1,6 +1,6 @@
 # SOSkúška — slovenská dokumentácia
 
-**Vydanie: [v0.4.1](https://github.com/turcinv/SOSkuska/releases/tag/v0.4.1)** — zdrojový kód funkčného prototypu. Prehľad funkcií a opráv je v [histórii zmien](CHANGELOG.md). Inštalátor zatiaľ nie je súčasťou vydania.
+**Vydanie: [v0.5.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.5.0)** — zdrojový kód funkčného prototypu. Prehľad funkcií a opráv je v [histórii zmien](CHANGELOG.md). Inštalátor zatiaľ nie je súčasťou vydania.
 
 Lokálny desktopový študijný asistent v Pythone a CustomTkinteri. Implementované sú Dashboard a My Subjects: správa predmetov a termínov skúšok, denný zoznam úloh, vyhľadávanie a časovač prepojený s predmetom. Úlohy a odštudovaný čas sa ukladajú do SQLite na zariadení používateľa.
 
@@ -74,7 +74,7 @@ Precvičovanie je dostupné od v0.4.0. Precvičovanie nepridáva vymyslený čas
 
 CI: Python 3.12, jednotkové testy na troch systémoch a päť GUI kontroly na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
 
-## Kartičky a opakovanie (nevydané)
+## Kartičky a opakovanie (v0.5.0)
 
 V bočnej ponuke otvor **Flashcards**. New deck vytvorí balíček pre existujúci predmet; názov musí byť jedinečný medzi všetkými balíčkami. Predmet balíčka sa potom nemení, názov a popis áno. Open deck umožní pridať a upravovať kartičky. Predná strana má 1–2000 znakov, zadná 1–4000; Search hľadá v oboch stranách. Zoznam zobrazuje najviac 100 výsledkov, ďalšie nájdeš užším hľadaním.
 
