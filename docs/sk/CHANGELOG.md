@@ -2,6 +2,10 @@
 
 [Čeština](../../CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
+## 0.5.1 — 2026-11-16
+
+Opravené označenie verzie v aplikácii a odkazy na aktuálne vydanie. História zmien, stav kartičiek a návody sú zjednotené v češtine, slovenčine a ruštine s vydanou v0.5.0. Študijné funkcie a databázová schéma sa nemenia; zdrojové vydanie bez inštalátora.
+
 ## 0.5.0 — 2026-11-16
 
 Nová obrazovka **Flashcards**: správa balíčkov a kartičiek, hľadanie na oboch stranách, odhalenie odpovede a hodnotenie Again / Hard / Good / Easy. Vlastné deterministické plánovanie ukladá ďalší termín; nejde o SM-2 ani FSRS. Úprava kartičky obnoví splatnosť a zachová históriu. Zmazanie predmetu ponechá balíčky aj kartičky; zmazanie kartičky či balíčka zachová historické snímky. Formuláre zachovávajú rozpísaný obsah a neúspešný zápis možno zopakovať.
