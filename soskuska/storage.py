@@ -284,13 +284,20 @@ class Store:
                 VALUES (?,?,?,?,?,?,?,?,?,?)""", (subject_id, topic_id, *fields))
         return cursor.lastrowid
 
-    def update_question(self, question_id, prompt, options, correct_option, difficulty="Medium", topic_id=None, explanation=""):
+    def update_question(self, question_id, prompt, options, correct_option, difficulty="Medium", topic_id=None, explanation="", *, expected_state=None):
         fields = question_fields(prompt, options, correct_option, difficulty, explanation)
-        question = self.question(question_id)
-        if question is None:
-            raise ValueError("This question no longer exists.")
-        self._validate_question_topic(question["subject_id"], topic_id)
         with self.db:
+            self.db.execute("BEGIN IMMEDIATE")
+            question = self.question(question_id)
+            if question is None:
+                raise ValueError("This question no longer exists.")
+            if expected_state is not None:
+                # Compare actual content, not updated_at's one-second precision.
+                keys = ("id", "subject_id", "topic_id", "prompt", "option_a", "option_b",
+                        "option_c", "option_d", "correct_option", "difficulty", "explanation")
+                if any(question[key] != expected_state[key] for key in keys):
+                    raise ValueError("This question changed in another window. Your draft is kept. Reopen Edit to load the latest version before saving.")
+            self._validate_question_topic(question["subject_id"], topic_id)
             cursor = self.db.execute("""UPDATE questions SET topic_id=?,prompt=?,option_a=?,option_b=?,
                 option_c=?,option_d=?,correct_option=?,difficulty=?,explanation=?,updated_at=CURRENT_TIMESTAMP
                 WHERE id=?""", (topic_id, *fields, question_id))

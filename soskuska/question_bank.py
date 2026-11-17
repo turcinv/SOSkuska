@@ -12,6 +12,7 @@ class QuestionBankPage(ctk.CTkFrame):
         self.app = app
         self.subject_id = None
         self.editing_question_id = None
+        self.question_snapshot = None
         self.editing_topic_id = None
         self.pending_delete = None
         self.filter_topics = {"All topics": "all", "No topic": None}
@@ -227,6 +228,7 @@ class QuestionBankPage(ctk.CTkFrame):
         self.cancel_delete()
         self.refresh()
         self.editing_question_id = question_id
+        self.question_snapshot = question
         self.question_form_title.configure(text="Edit question" if question else "New question")
         for textbox, value in [(self.prompt_entry, question["prompt"] if question else ""),
                                (self.explanation_entry, question["explanation"] if question else "")]:
@@ -247,6 +249,7 @@ class QuestionBankPage(ctk.CTkFrame):
     def hide_question_form(self):
         self.question_form.grid_remove()
         self.editing_question_id = None
+        self.question_snapshot = None
 
     def save_question(self):
         values = (self.prompt_entry.get("1.0", "end-1c"), [entry.get() for entry in self.option_entries],
@@ -256,7 +259,7 @@ class QuestionBankPage(ctk.CTkFrame):
             if self.editing_question_id is None:
                 self.app.store.create_question(self.subject_id, *values)
             else:
-                self.app.store.update_question(self.editing_question_id, *values)
+                self.app.store.update_question(self.editing_question_id, *values, expected_state=self.question_snapshot)
         except (ValueError, sqlite3.Error) as exc:
             self.question_error.configure(text=str(exc) if isinstance(exc, ValueError) else "Could not save the question. Please try again.")
             return
