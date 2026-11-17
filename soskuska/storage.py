@@ -5,7 +5,7 @@ import unicodedata
 from datetime import date, timedelta
 from pathlib import Path
 from content import question_fields, topic_fields
-from practice import expired, practice_settings, utc_now
+from practice import MissingPracticeError, expired, practice_settings, utc_now
 from repetition import card_fields, deck_fields, next_review
 from study_statistics import statistics_report
 
@@ -398,7 +398,7 @@ class Store:
             self.db.execute("BEGIN IMMEDIATE")
             attempt = self.practice_attempt(attempt_id)
             if attempt is None:
-                raise ValueError("This test no longer exists.")
+                raise MissingPracticeError("This test no longer exists.")
             if attempt["status"] == "in_progress":
                 now = utc_now()
                 finished = attempt["deadline_at"] if expired(attempt["deadline_at"], now) else now.isoformat()
@@ -410,7 +410,9 @@ class Store:
         with self.db:
             self.db.execute("BEGIN IMMEDIATE")
             attempt = self.practice_attempt(attempt_id)
-            if attempt is None or attempt["status"] != "in_progress":
+            if attempt is None:
+                raise MissingPracticeError("This test no longer exists.")
+            if attempt["status"] != "in_progress":
                 raise ValueError("Only an in-progress test can be discarded.")
             # Check the clock after waiting for any competing writer. Expired
             # answers belong to history even if the UI timer has not run yet.

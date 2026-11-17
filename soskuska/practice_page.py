@@ -4,7 +4,7 @@ from datetime import datetime
 
 import customtkinter as ctk
 from content import DIFFICULTIES
-from practice import expired, seconds_left, utc_now
+from practice import MissingPracticeError, expired, seconds_left, utc_now
 
 
 class PracticePage(ctk.CTkFrame):
@@ -186,8 +186,10 @@ class PracticePage(ctk.CTkFrame):
             self.cancel_action()
             self.setup.grid()
             self.scroll_to_top()
+            return True
         except (ValueError, sqlite3.Error) as exc:
             self.error(exc)
+            return False
 
     @staticmethod
     def local_time(value):
@@ -338,8 +340,26 @@ class PracticePage(ctk.CTkFrame):
                 self.finishing = False
                 self.status.configure(text="Unfinished test discarded.")
                 self.show_config()
+            except MissingPracticeError:
+                self.recover_missing_attempt()
             except (ValueError, sqlite3.Error) as exc:
                 self.error(exc)
+
+    def recover_missing_attempt(self):
+        # Missing data is terminal, unlike a locked/failed read. Stop timer
+        # retries before refreshing so even a failed setup read can be retried.
+        self.active_id = None
+        self.attempt = None
+        self.items = []
+        self.finishing = False
+        self.cancel_action()
+        self.run.grid_remove()
+        self.results.grid_remove()
+        self.active_panel.grid_remove()
+        self.start_button.configure(state="disabled")
+        self.setup.grid()
+        if self.show_config():
+            self.status.configure(text="This test was discarded in another window. Practice setup refreshed.")
 
     def finish(self):
         if self.active_id is None:
@@ -349,6 +369,8 @@ class PracticePage(ctk.CTkFrame):
         try:
             self.app.store.complete_practice(self.active_id)
             self.render_result(self.active_id)
+        except MissingPracticeError:
+            self.recover_missing_attempt()
         except (ValueError, sqlite3.Error) as exc:
             self.status.configure(text=str(exc) if isinstance(exc, ValueError) else "Could not finish or load the result. Saved answers are kept; retrying automatically.")
 
@@ -363,7 +385,9 @@ class PracticePage(ctk.CTkFrame):
         # load a committed result without performing another submission.
         attempt = self.app.store.practice_attempt(attempt_id)
         items = self.app.store.practice_items(attempt_id)
-        if attempt is None or attempt["status"] != "completed":
+        if attempt is None:
+            raise MissingPracticeError("This test no longer exists.")
+        if attempt["status"] != "completed":
             raise ValueError("This test has not been completed.")
         for child in self.results.winfo_children():
             child.destroy()

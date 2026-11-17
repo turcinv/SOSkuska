@@ -99,10 +99,56 @@ def run_check(path):
         assert "Result saved" in page.status.cget("text")
         assert len(app.store.practice_history()) == 1
 
+    def missing_practice(sid):
+        page = app.practice_page
+        aid = app.store.start_practice(sid, 1)
+        page.load()
+        other = Store(path)
+        try:
+            other.discard_practice(aid)
+        finally:
+            other.close()
+        page.ask_action("finish")
+        with patch.object(app.store, "complete_practice", wraps=app.store.complete_practice) as complete:
+            page.confirm_action()
+            assert page.active_id is None and not page.finishing
+            assert "discarded in another window" in page.status.cget("text")
+            with patch.object(page, "after"):
+                for _ in range(3):
+                    page.tick()
+            assert complete.call_count == 1
+        app.navigate("Dashboard")
+        app.navigate("Practice Tests")
+        assert page.active_id is None and page.start_button.cget("state") == "normal"
+        page.start_button.invoke()
+        assert page.active_id is not None and not page.finishing
+        # A failed setup read must not restart completion of a missing attempt.
+        other = Store(path)
+        try:
+            other.discard_practice(page.active_id)
+        finally:
+            other.close()
+        with patch.object(app.store, "subjects", side_effect=sqlite3.OperationalError("locked")):
+            page.finish()
+        assert page.active_id is None and not page.finishing
+        assert page.start_button.cget("state") == "disabled"
+        page.show_config()
+        assert page.start_button.cget("state") == "normal"
+        # Actual write failures still retain completion retry behavior.
+        page.start_button.invoke()
+        aid = page.active_id
+        with patch.object(app.store, "complete_practice", side_effect=sqlite3.OperationalError("locked")):
+            page.finish()
+        assert page.active_id == aid and page.finishing
+        page.finish()
+        assert page.active_id is None and not page.finishing
+        assert app.store.practice_attempt(aid)["status"] == "completed"
+
     def initial():
         sid = deck_draft()
         question_conflict(sid)
         expired_discard(sid)
+        missing_practice(sid)
         app.close()
 
     def guarded():
@@ -136,4 +182,4 @@ if __name__ == "__main__":
     ctk.set_appearance_mode("dark")
     with tempfile.TemporaryDirectory() as folder:
         run_check(Path(folder) / "state.sqlite3")
-    print("PASS: subject refresh without draft loss, rename/delete identity, failed-read retry, stale question conflict/reload and expired-discard retained result", flush=True)
+    print("PASS: subject refresh without draft loss, rename/delete identity, failed-read retry, stale question conflict/reload and expired-discard retained result, missing-attempt recovery and transient-write retry", flush=True)

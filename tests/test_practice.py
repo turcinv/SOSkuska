@@ -9,7 +9,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "soskuska"))
-from practice import expired, practice_settings, seconds_left
+from practice import MissingPracticeError, expired, practice_settings, seconds_left
 from storage import SCHEMA_VERSION, Store
 
 NOW = datetime(2026, 11, 15, 12, tzinfo=timezone.utc)
@@ -171,6 +171,21 @@ class PracticeTests(unittest.TestCase):
         self.assertEqual(self.store.active_practice()["answered"], 1)
         self.store.db.execute("DROP TRIGGER fail_finish")
         self.assertEqual(self.store.complete_practice(aid)["answered"], 1)
+
+    def test_missing_attempt_is_terminal_and_does_not_finish_a_new_attempt(self):
+        aid = self.store.start_practice(self.sid, 1)
+        other = Store(self.path)
+        try:
+            other.discard_practice(aid)
+            new_id = other.start_practice(self.sid, 1)
+            with self.assertRaises(MissingPracticeError):
+                self.store.complete_practice(aid)
+            with self.assertRaises(MissingPracticeError):
+                self.store.discard_practice(aid)
+            self.assertEqual(self.store.active_practice()["id"], new_id)
+            self.assertEqual(self.store.practice_attempt(new_id)["status"], "in_progress")
+        finally:
+            other.close()
 
     def test_deadline_rounding_and_untimed_rules(self):
         deadline = (NOW + timedelta(seconds=1, microseconds=1)).isoformat()
