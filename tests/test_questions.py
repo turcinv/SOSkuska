@@ -26,6 +26,44 @@ class QuestionBankTests(unittest.TestCase):
         args.update(kwargs)
         return self.store.create_question(**args)
 
+    def test_stale_question_edit_preserves_new_prompt_options_and_answer_key(self):
+        qid = self.add_question()
+        snapshot = self.store.question(qid)
+        other = Store(self.path)
+        try:
+            other.update_question(qid, "New prompt", ["A", "B", "C", "D"], 2, "Hard", explanation="New explanation")
+            newer = other.question(qid)
+            with self.assertRaisesRegex(ValueError, "changed in another window"):
+                self.store.update_question(qid, snapshot["prompt"], [snapshot[k] for k in ["option_a", "option_b", "option_c", "option_d"]],
+                    snapshot["correct_option"], snapshot["difficulty"], snapshot["topic_id"], "My draft", expected_state=snapshot)
+            self.assertEqual(self.store.question(qid), newer)
+            attempt = self.store.start_practice(self.sid, 1)
+            item = self.store.practice_items(attempt)[0]
+            self.assertEqual((item["prompt"], item["correct_option"]), ("New prompt", 2))
+        finally:
+            other.close()
+
+    def test_current_snapshot_can_save_and_old_snapshot_is_rejected_again(self):
+        qid = self.add_question()
+        snapshot = self.store.question(qid)
+        self.store.update_question(qid, "Updated", ["A", "B", "C", "D"], 1, expected_state=snapshot)
+        newer = self.store.question(qid)
+        with self.assertRaisesRegex(ValueError, "changed in another window"):
+            self.store.update_question(qid, "Stale", ["A", "B", "C", "D"], 0, expected_state=snapshot)
+        self.store.update_question(qid, "Latest", ["A", "B", "C", "D"], 3, expected_state=newer)
+        self.assertEqual(self.store.question(qid)["correct_option"], 3)
+
+    def test_snapshot_detects_deleted_topic_and_deleted_question(self):
+        qid = self.add_question()
+        snapshot = self.store.question(qid)
+        self.store.delete_topic(self.tid)
+        with self.assertRaisesRegex(ValueError, "changed in another window"):
+            self.store.update_question(qid, "Draft", ["A", "B", "C", "D"], 0, expected_state=snapshot)
+        self.assertIsNone(self.store.question(qid)["topic_id"])
+        self.store.delete_question(qid)
+        with self.assertRaisesRegex(ValueError, "no longer exists"):
+            self.store.update_question(qid, "Draft", ["A", "B", "C", "D"], 0, expected_state=snapshot)
+
     def test_unicode_question_and_answers_survive_reopen(self):
         qid = self.add_question()
         other = Store(self.path)

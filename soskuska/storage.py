@@ -5,7 +5,7 @@ import unicodedata
 from datetime import date, timedelta
 from pathlib import Path
 from content import question_fields, topic_fields
-from practice import expired, practice_settings, utc_now
+from practice import MissingPracticeError, expired, practice_settings, utc_now
 from repetition import card_fields, deck_fields, next_review
 from study_statistics import statistics_report
 
@@ -284,13 +284,20 @@ class Store:
                 VALUES (?,?,?,?,?,?,?,?,?,?)""", (subject_id, topic_id, *fields))
         return cursor.lastrowid
 
-    def update_question(self, question_id, prompt, options, correct_option, difficulty="Medium", topic_id=None, explanation=""):
+    def update_question(self, question_id, prompt, options, correct_option, difficulty="Medium", topic_id=None, explanation="", *, expected_state=None):
         fields = question_fields(prompt, options, correct_option, difficulty, explanation)
-        question = self.question(question_id)
-        if question is None:
-            raise ValueError("This question no longer exists.")
-        self._validate_question_topic(question["subject_id"], topic_id)
         with self.db:
+            self.db.execute("BEGIN IMMEDIATE")
+            question = self.question(question_id)
+            if question is None:
+                raise ValueError("This question no longer exists.")
+            if expected_state is not None:
+                # Compare actual content, not updated_at's one-second precision.
+                keys = ("id", "subject_id", "topic_id", "prompt", "option_a", "option_b",
+                        "option_c", "option_d", "correct_option", "difficulty", "explanation")
+                if any(question[key] != expected_state[key] for key in keys):
+                    raise ValueError("This question changed in another window. Your draft is kept. Reopen Edit to load the latest version before saving.")
+            self._validate_question_topic(question["subject_id"], topic_id)
             cursor = self.db.execute("""UPDATE questions SET topic_id=?,prompt=?,option_a=?,option_b=?,
                 option_c=?,option_d=?,correct_option=?,difficulty=?,explanation=?,updated_at=CURRENT_TIMESTAMP
                 WHERE id=?""", (topic_id, *fields, question_id))
@@ -391,7 +398,7 @@ class Store:
             self.db.execute("BEGIN IMMEDIATE")
             attempt = self.practice_attempt(attempt_id)
             if attempt is None:
-                raise ValueError("This test no longer exists.")
+                raise MissingPracticeError("This test no longer exists.")
             if attempt["status"] == "in_progress":
                 now = utc_now()
                 finished = attempt["deadline_at"] if expired(attempt["deadline_at"], now) else now.isoformat()
@@ -399,10 +406,22 @@ class Store:
         return self.practice_attempt(attempt_id)
 
     def discard_practice(self, attempt_id):
+        """Return True if discarded, False if expiry saved the result instead."""
         with self.db:
-            cursor = self.db.execute("DELETE FROM practice_attempts WHERE id=? AND status='in_progress'", (attempt_id,))
-            if cursor.rowcount == 0:
+            self.db.execute("BEGIN IMMEDIATE")
+            attempt = self.practice_attempt(attempt_id)
+            if attempt is None:
+                raise MissingPracticeError("This test no longer exists.")
+            if attempt["status"] != "in_progress":
                 raise ValueError("Only an in-progress test can be discarded.")
+            # Check the clock after waiting for any competing writer. Expired
+            # answers belong to history even if the UI timer has not run yet.
+            if expired(attempt["deadline_at"], utc_now()):
+                self.db.execute("UPDATE practice_attempts SET status='completed',completed_at=? WHERE id=?",
+                                (attempt["deadline_at"], attempt_id))
+                return False
+            self.db.execute("DELETE FROM practice_attempts WHERE id=?", (attempt_id,))
+        return True
 
     def decks(self):
         return [dict(row) for row in self.db.execute("""SELECT d.*,s.name AS current_subject_name,

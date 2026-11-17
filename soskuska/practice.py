@@ -3,6 +3,10 @@ from datetime import datetime, timezone
 from content import DIFFICULTIES
 
 
+class MissingPracticeError(ValueError):
+    """An attempt was removed; retrying completion cannot recover it."""
+
+
 def utc_now():
     return datetime.now(timezone.utc)
 

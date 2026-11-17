@@ -26,6 +26,7 @@ Na Windows/Linux použij odpovídající cestu k Pythonu svého prostředí. Př
 .venv-macos/bin/python soskuska/check_practice.py
 .venv-macos/bin/python soskuska/check_flashcards.py
 .venv-macos/bin/python soskuska/check_statistics.py
+.venv-macos/bin/python soskuska/check_state_fixes.py
 ```
 
 Kontrola GUI otevírá okno a potřebuje grafickou relaci. Změna samotné dokumentace obvykle vyžaduje kontrolu odkazů, příkazů a formátování; není nutné kvůli ní spouštět celé UI.
@@ -40,7 +41,7 @@ Chybu založ přes šablonu v Issues: postup opakování, očekávané/skutečn�
 
 ## Průběžná integrace (CI)
 
-CI: Python 3.12, jednotkové testy na třech systémech a šest GUI kontrol na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
+CI: Python 3.12, jednotkové testy na třech systémech a sedm GUI kontrol na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
 
 ## Statistiky (v0.6.0)
 

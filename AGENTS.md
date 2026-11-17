@@ -39,6 +39,7 @@ Commands below are relative to the project root:
 .venv-macos/bin/python soskuska/check_practice.py
 .venv-macos/bin/python soskuska/check_flashcards.py
 .venv-macos/bin/python soskuska/check_statistics.py
+.venv-macos/bin/python soskuska/check_state_fixes.py
 ```
 
 - On this Mac use `.venv-macos`, verified with Python 3.12.13 / Tk 9.0. `.venv-desktop` uses Apple Tk 8.5, which produced an empty window. Suppressing its warning is not a fix. The default Homebrew Python also lacked `_tkinter` when checked.
@@ -100,7 +101,7 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 
 ## Continuous integration
 
-- `.github/workflows/ci.yml` runs for PRs targeting main, pushes to main and manual dispatch. Python 3.12 unit tests/syntax/dependency checks run on Linux, Windows and macOS; six GUI checks run under Xvfb on Ubuntu.
+- `.github/workflows/ci.yml` runs for PRs targeting main, pushes to main and manual dispatch. Python 3.12 unit tests/syntax/dependency checks run on Linux, Windows and macOS; seven GUI checks run under Xvfb on Ubuntu.
 - Keep action references pinned to verified release commit SHAs, contents permission read-only, and process/job timeouts. CI does not publish releases or deploy. Avoid duplicate feature-branch push and PR runs.
 - CI results are automated coverage, not manual platform or hardware verification. Native Aqua Quit and Tk 9 trackpad behavior still require the Mac checks. Do not claim those are tested by the Linux GUI job.
 - Read failed job logs, fix the cause and keep fixes on the same PR branch. Do not disable a meaningful failing check to obtain a green status. Branch protection is not configured by this workflow.
@@ -122,3 +123,11 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 - Flashcard ratings are self-assessments, not accuracy/mastery. Never infer focus time from tests/reviews. Empty history has zero counts and no percentage. Keep deleted/unassigned focus history visible and document name-based grouping after deletion.
 - Refresh or reopening loads a new snapshot. Read failure preserves the previous report with a retry notice. Resize bindings must die with their labels; do not accumulate Configure callbacks on persistent report containers. Statistics shortcuts must not modify hidden search drafts.
 - Run tests/test_statistics.py and check_statistics.py with disposable data. CI includes the sixth native check. Statistics was released in v0.6.0.
+
+## Concurrent-state review fixes
+
+- discard_practice obtains BEGIN IMMEDIATE before reading the clock. It returns True for deletion of an unfinished attempt, False when an expired attempt was completed and kept instead. Failed writes roll back. Never delete an expired attempt before the UI timer gets a turn.
+- MissingPracticeError is terminal. Clear the stale active/finishing state and show usable setup; do not retry missing attempts every tick. SQLite failures still retain completion retry. A setup read failure can be retried with Refresh subjects or navigation.
+- Question forms pass their original content snapshot as expected_state to update_question. Compare all editable content/identity under the write lock; updated_at has insufficient precision. Preserve drafts on conflict; require reloading current content before another save. Schema stays 5.
+- New-deck draft subject choices refresh in place on load, Refresh and Save. Keep selected subject by ID across rename. If it was deleted, require an explicit replacement; preserve title/description on every refresh/read failure.
+- Run check_state_fixes.py and the complete unit/native suite with temporary databases. CI includes this seventh native check. These fixes were released in v0.6.2.

@@ -2,13 +2,14 @@
 import sqlite3
 import sys
 import tempfile
+import threading
 import unittest
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "soskuska"))
-from practice import expired, practice_settings, seconds_left
+from practice import MissingPracticeError, expired, practice_settings, seconds_left
 from storage import SCHEMA_VERSION, Store
 
 NOW = datetime(2026, 11, 15, 12, tzinfo=timezone.utc)
@@ -171,6 +172,21 @@ class PracticeTests(unittest.TestCase):
         self.store.db.execute("DROP TRIGGER fail_finish")
         self.assertEqual(self.store.complete_practice(aid)["answered"], 1)
 
+    def test_missing_attempt_is_terminal_and_does_not_finish_a_new_attempt(self):
+        aid = self.store.start_practice(self.sid, 1)
+        other = Store(self.path)
+        try:
+            other.discard_practice(aid)
+            new_id = other.start_practice(self.sid, 1)
+            with self.assertRaises(MissingPracticeError):
+                self.store.complete_practice(aid)
+            with self.assertRaises(MissingPracticeError):
+                self.store.discard_practice(aid)
+            self.assertEqual(self.store.active_practice()["id"], new_id)
+            self.assertEqual(self.store.practice_attempt(new_id)["status"], "in_progress")
+        finally:
+            other.close()
+
     def test_deadline_rounding_and_untimed_rules(self):
         deadline = (NOW + timedelta(seconds=1, microseconds=1)).isoformat()
         self.assertEqual(seconds_left(deadline, NOW), 2)
@@ -180,6 +196,83 @@ class PracticeTests(unittest.TestCase):
         self.assertIsNone(seconds_left(None, NOW))
         self.assertFalse(expired(None, NOW))
         practice_settings(100, 180, "Hard")
+
+
+    def test_discard_at_deadline_keeps_answers_and_completed_history(self):
+        with patch("storage.utc_now", return_value=NOW):
+            aid = self.store.start_practice(self.sid, 1, minutes=5)
+            answer = self.store.practice_items(aid)[0]["correct_option"]
+            self.store.save_practice_answer(aid, 0, answer)
+        with patch("storage.utc_now", return_value=NOW + timedelta(minutes=5)):
+            self.assertFalse(self.store.discard_practice(aid))
+        result = self.store.practice_attempt(aid)
+        self.assertEqual(result["status"], "completed")
+        self.assertEqual(result["completed_at"], (NOW + timedelta(minutes=5)).isoformat())
+        self.assertEqual(result["correct"], 1)
+        self.assertEqual(self.store.practice_items(aid)[0]["selected_option"], answer)
+        self.assertEqual(len(self.store.practice_history()), 1)
+        reopened = Store(self.path)
+        try:
+            self.assertEqual(reopened.practice_history()[0]["id"], aid)
+        finally:
+            reopened.close()
+
+    def test_discard_before_deadline_removes_only_unfinished_attempt(self):
+        with patch("storage.utc_now", return_value=NOW):
+            aid = self.store.start_practice(self.sid, 1, minutes=5)
+        with patch("storage.utc_now", return_value=NOW + timedelta(minutes=4, seconds=59)):
+            self.assertTrue(self.store.discard_practice(aid))
+        self.assertIsNone(self.store.practice_attempt(aid))
+        self.assertEqual(self.store.practice_items(aid), [])
+        self.assertEqual(self.store.practice_history(), [])
+
+    def test_discard_rechecks_deadline_after_waiting_for_write_lock(self):
+        with patch("storage.utc_now", return_value=NOW):
+            aid = self.store.start_practice(self.sid, 1, minutes=5)
+        locked = threading.Event()
+        released = threading.Event()
+        failures = []
+        def writer():
+            try:
+                db = sqlite3.connect(self.path)
+                db.execute("BEGIN IMMEDIATE")
+                locked.set()
+                # Release in a bounded interval while the main connection waits.
+                released.wait(0.2)
+                released.set()
+                db.commit()
+                db.close()
+            except Exception as exc:
+                failures.append(exc)
+                locked.set()
+        thread = threading.Thread(target=writer)
+        thread.start()
+        self.assertTrue(locked.wait(2))
+        def after_lock():
+            self.assertTrue(released.is_set(), "Clock read before acquiring write lock")
+            return NOW + timedelta(minutes=5, seconds=1)
+        try:
+            with patch("storage.utc_now", side_effect=after_lock):
+                self.assertFalse(self.store.discard_practice(aid))
+        finally:
+            thread.join(3)
+        self.assertFalse(thread.is_alive())
+        self.assertEqual(failures, [])
+        self.assertEqual(self.store.practice_attempt(aid)["status"], "completed")
+
+    def test_expiry_save_failure_preserves_attempt_for_retry(self):
+        with patch("storage.utc_now", return_value=NOW):
+            aid = self.store.start_practice(self.sid, 1, minutes=5)
+            self.store.save_practice_answer(aid, 0, 1)
+        self.store.db.execute("CREATE TRIGGER fail_expiry BEFORE UPDATE ON practice_attempts BEGIN SELECT RAISE(ABORT,'disk full'); END")
+        with patch("storage.utc_now", return_value=NOW + timedelta(minutes=6)):
+            with self.assertRaises(sqlite3.Error):
+                self.store.discard_practice(aid)
+        self.assertEqual(self.store.practice_attempt(aid)["status"], "in_progress")
+        self.assertEqual(self.store.practice_items(aid)[0]["selected_option"], 1)
+        self.store.db.execute("DROP TRIGGER fail_expiry")
+        with patch("storage.utc_now", return_value=NOW + timedelta(minutes=6)):
+            self.assertFalse(self.store.discard_practice(aid))
 
 
 class PracticeMigrationTests(unittest.TestCase):

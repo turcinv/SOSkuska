@@ -83,6 +83,7 @@ jobs:
               'check_practice.py',
               'check_flashcards.py',
               'check_statistics.py',
+              'check_state_fixes.py',
           ):
               print(f'Running {script}', flush=True)
               subprocess.run([sys.executable, '-u', f'soskuska/{script}'], check=True, timeout=60)

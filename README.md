@@ -1,6 +1,6 @@
 # SOSkúška
 
-**Vydání: [v0.6.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.6.0)** — zdrojový kód funkčního prototypu. Přehled funkcí a oprav je v [historii změn](CHANGELOG.md). Instalátor zatím není součástí vydání.
+**Vydání: [v0.6.2](https://github.com/turcinv/SOSkuska/releases/tag/v0.6.2)** — zdrojový kód funkčního prototypu. Přehled funkcí a oprav je v [historii změn](CHANGELOG.md). Instalátor zatím není součástí vydání.
 
 Název aplikace je **SOSkúška**. Repozitář a kořenová složka jsou **SOSkuska**, zdrojový adresář `soskuska/`; technické názvy používají podobu bez diakritiky.
 
@@ -76,7 +76,7 @@ Procvičování je dostupné od v0.4.0. Procvičování nepřidává smyšlený 
 
 ## Průběžná integrace (CI)
 
-CI: Python 3.12, jednotkové testy na třech systémech a šest GUI kontrol na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
+CI: Python 3.12, jednotkové testy na třech systémech a sedm GUI kontrol na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
 
 ## Kartičky a opakování (v0.5.0)
 
