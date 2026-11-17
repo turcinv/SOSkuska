@@ -2,7 +2,7 @@
 
 **Budúci návrh, nie dnešná implementácia.** Uvedené moduly a tabuľky zatiaľ neexistujú, ak ich nepotvrdzuje [súčasná architektúra](CURRENT_ARCHITECTURE.md). Tento plán sám osebe neznamená začatie implementácie všetkých funkcií.
 
-**Aktuálny postup (17. novembra 2026):** Základné Statistics je implementované v pracovnej vetve; voliteľný AI Tutor je ďalšia možnosť. Import, pokročilé grafy a inštalátory zostávajú plánované.
+**Aktuálny postup (17. novembra 2026):** Základné Statistics je vydané vo v0.6.0; voliteľný AI Tutor je ďalšia možnosť. Import, pokročilé grafy a inštalátory zostávajú plánované.
 
 ## Smer
 

@@ -1,6 +1,6 @@
 # SOSkúška
 
-**Vydání: [v0.5.1](https://github.com/turcinv/SOSkuska/releases/tag/v0.5.1)** — zdrojový kód funkčního prototypu. Přehled funkcí a oprav je v [historii změn](CHANGELOG.md). Instalátor zatím není součástí vydání.
+**Vydání: [v0.6.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.6.0)** — zdrojový kód funkčního prototypu. Přehled funkcí a oprav je v [historii změn](CHANGELOG.md). Instalátor zatím není součástí vydání.
 
 Název aplikace je **SOSkúška**. Repozitář a kořenová složka jsou **SOSkuska**, zdrojový adresář `soskuska/`; technické názvy používají podobu bez diakritiky.
 
@@ -84,7 +84,7 @@ V postranní nabídce otevři **Flashcards**. New deck vytvoří balíček pro e
 
 [Podrobný návod a pravidla](docs/FLASHCARDS.md).
 
-## Statistiky (nevydáno)
+## Statistiky (v0.6.0)
 
 V nabídce **Statistics** zvol Last 7 days, Last 30 days nebo All time. Přehled ukazuje uložený čas a sezení, otázkami váženou úspěšnost dokončených testů, počty vlastních hodnocení kartiček, čas podle předmětu a denní aktivitu. Refresh nebo návrat na obrazovku načte nový snímek. Nejde o měření zvládnutí učiva.
 

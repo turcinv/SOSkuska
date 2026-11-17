@@ -224,7 +224,7 @@ CREATE INDEX flashcards_due ON flashcards(deck_id,due_at,id);
 CREATE INDEX review_events_deck ON review_events(deck_id,id);
 ```
 
-## Statistiky (nevydáno)
+## Statistiky (v0.6.0)
 
 StatisticsPage volá Store.statistics(); study_statistics.py čte sessions, dokončené practice_attempts s practice_items a review_events v jedné konzistentní čtecí transakci. Nemění schéma 5 ani data. UI se obnovuje při návratu nebo přes Refresh, při chybě ponechá předchozí report. Vazby Configure mají životnost svých widgetů. Ctrl+K / Cmd+K a Escape nemění hledání skrytých obrazovek.
 

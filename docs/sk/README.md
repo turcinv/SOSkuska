@@ -1,6 +1,6 @@
 # SOSkúška — slovenská dokumentácia
 
-**Vydanie: [v0.5.1](https://github.com/turcinv/SOSkuska/releases/tag/v0.5.1)** — zdrojový kód funkčného prototypu. Prehľad funkcií a opráv je v [histórii zmien](CHANGELOG.md). Inštalátor zatiaľ nie je súčasťou vydania.
+**Vydanie: [v0.6.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.6.0)** — zdrojový kód funkčného prototypu. Prehľad funkcií a opráv je v [histórii zmien](CHANGELOG.md). Inštalátor zatiaľ nie je súčasťou vydania.
 
 Lokálny desktopový študijný asistent v Pythone a CustomTkinteri. Implementované sú Dashboard a My Subjects: správa predmetov a termínov skúšok, denný zoznam úloh, vyhľadávanie a časovač prepojený s predmetom. Úlohy a odštudovaný čas sa ukladajú do SQLite na zariadení používateľa.
 
@@ -80,7 +80,7 @@ V bočnej ponuke otvor **Flashcards**. New deck vytvorí balíček pre existujú
 
 [Podrobný návod a pravidlá](FLASHCARDS.md).
 
-## Štatistiky (nevydané)
+## Štatistiky (v0.6.0)
 
 V ponuke **Statistics** zvoľ Last 7 days, Last 30 days alebo All time. Prehľad ukazuje uložený čas a relácie, úspešnosť dokončených testov váženú otázkami, počty vlastných hodnotení kartičiek, čas podľa predmetu a dennú aktivitu. Refresh alebo návrat na obrazovku načíta novú snímku. Nejde o meranie zvládnutia učiva.
 

@@ -121,4 +121,4 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 - Practice accuracy is total correct / total questions from completed snapshots; unanswered questions count incorrect, unfinished/discarded tests excluded. Include full retained history beyond the other screens' 20-row display limits.
 - Flashcard ratings are self-assessments, not accuracy/mastery. Never infer focus time from tests/reviews. Empty history has zero counts and no percentage. Keep deleted/unassigned focus history visible and document name-based grouping after deletion.
 - Refresh or reopening loads a new snapshot. Read failure preserves the previous report with a retry notice. Resize bindings must die with their labels; do not accumulate Configure callbacks on persistent report containers. Statistics shortcuts must not modify hidden search drafts.
-- Run tests/test_statistics.py and check_statistics.py with disposable data. CI includes the sixth native check. Statistics is unreleased until separately authorized.
+- Run tests/test_statistics.py and check_statistics.py with disposable data. CI includes the sixth native check. Statistics was released in v0.6.0.
