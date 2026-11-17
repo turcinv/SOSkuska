@@ -186,7 +186,7 @@ class FlashcardPage(ctk.CTkFrame):
         if deck_id is not None and deck is None:
             raise ValueError("This deck no longer exists.")
         subjects = self.app.store.subjects()
-        self.subject_ids = {s["name"]: s["id"] for s in subjects}
+        self.subject_ids = {f'Subject: {s["name"]}': s["id"] for s in subjects}
         self.editing_deck = deck_id
         self.clear("deck_form")
         self.app.label(self.body, "Edit deck" if deck else "New deck", 22, bold=True).grid(row=0, column=0, sticky="w", pady=(0, 16))
@@ -194,10 +194,12 @@ class FlashcardPage(ctk.CTkFrame):
         self.name_entry = ctk.CTkEntry(self.body, height=38, font=self.app.font())
         self.name_entry.grid(row=2, column=0, sticky="ew", pady=(4, 14))
         self.name_entry.insert(0, deck["name"] if deck else "")
+        self.subject_choice_id = next(iter(self.subject_ids.values()), None)
+        self.subject_requires_choice = False
         self.subject = ctk.StringVar(value=next(iter(self.subject_ids), "Add a subject first"))
         if not deck:
             self.app.label(self.body, "Subject", 13, "secondary").grid(row=3, column=0, sticky="w")
-            self.subject_menu = ctk.CTkOptionMenu(self.body, variable=self.subject, values=list(self.subject_ids) or ["Add a subject first"], dynamic_resizing=False, height=38)
+            self.subject_menu = ctk.CTkOptionMenu(self.body, variable=self.subject, values=list(self.subject_ids) or ["Add a subject first"], command=self.select_deck_subject, dynamic_resizing=False, height=38)
             self.subject_menu.grid(row=4, column=0, sticky="ew", pady=(4, 14))
         self.app.label(self.body, "Description (optional, up to 1,000 characters)", 13, "secondary").grid(row=5, column=0, sticky="w")
         self.description = ctk.CTkTextbox(self.body, height=90, font=self.app.font(), wrap="word")
@@ -209,22 +211,31 @@ class FlashcardPage(ctk.CTkFrame):
         self.save_button.pack(side="left", padx=(0, 8))
         self.app.button(actions, "Cancel", self.show_decks, width=85).pack(side="left")
 
+    def select_deck_subject(self, label):
+        self.subject_choice_id = self.subject_ids.get(label)
+        self.subject_requires_choice = self.subject_choice_id is None
+        self.subject.set(label)
+
     def refresh_deck_subjects(self):
-        """Refresh choices in place without replacing name/description widgets."""
-        selected_name = self.subject.get()
-        selected_id = self.subject_ids.get(selected_name)
+        """Refresh choices without deriving identity from display/sentinel text."""
         subjects = self.app.store.subjects()  # Read first; failure keeps draft intact.
-        subject_ids = {item["name"]: item["id"] for item in subjects}
+        subject_ids = {f'Subject: {item["name"]}': item["id"] for item in subjects}
+        selected_id = self.subject_choice_id
+        if selected_id is not None and selected_id not in subject_ids.values():
+            # Keep this requirement across an empty list and later creations.
+            self.subject_requires_choice = True
+            selected_id = None
         if not subject_ids:
             selected = "Add a subject first"
-        elif selected_id is not None:
-            selected = next((name for name, sid in subject_ids.items() if sid == selected_id), "Choose a subject")
-        elif selected_name == "Add a subject first":
-            selected = next(iter(subject_ids))
-        else:
+        elif self.subject_requires_choice:
             selected = "Choose a subject"
+        else:
+            if selected_id is None:
+                selected_id = next(iter(subject_ids.values()))
+            selected = next(label for label, sid in subject_ids.items() if sid == selected_id)
         self.subject_menu.configure(values=list(subject_ids) or ["Add a subject first"])
         self.subject_ids = subject_ids
+        self.subject_choice_id = selected_id
         self.subject.set(selected)
 
     @safe
@@ -232,7 +243,7 @@ class FlashcardPage(ctk.CTkFrame):
         values = (self.name_entry.get(), self.description.get("1.0", "end-1c"))
         if self.editing_deck is None:
             self.refresh_deck_subjects()
-            self.editing_deck = self.app.store.create_deck(self.subject_ids.get(self.subject.get()), *values)
+            self.editing_deck = self.app.store.create_deck(self.subject_choice_id, *values)
         else:
             self.app.store.update_deck(self.editing_deck, *values)
         self.status.configure(text="Deck saved on this device.")

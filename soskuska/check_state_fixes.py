@@ -30,14 +30,14 @@ def run_check(path):
         app.subject_page.save_subject()
         sid = app.store.subjects()[0]["id"]
         app.navigate("Flashcards")
-        assert page.subject.get() == "Biology"
+        assert page.subject.get() == "Subject: Biology"
         assert page.name_entry.get() == "My saved draft"
         assert page.description.get("1.0", "end-1c") == "Keep this description"
         other = Store(path)
         try:
             other.update_subject(sid, "Biology renamed")
             page.refresh()
-            assert page.subject.get() == "Biology renamed"
+            assert page.subject.get() == "Subject: Biology renamed"
             with patch.object(app.store, "subjects", side_effect=sqlite3.OperationalError("locked")):
                 page.refresh()
             assert page.view == "deck_form" and page.name_entry.get() == "My saved draft"
@@ -48,13 +48,39 @@ def run_check(path):
             assert page.subject.get() == "Choose a subject"
             page.save_button.invoke()
             assert app.store.decks() == [] and page.name_entry.get() == "My saved draft"
-            page.subject_menu.set("Physics")
+            page.select_deck_subject("Subject: Physics")
             page.save_button.invoke()
             deck = app.store.decks()[0]
             assert deck["subject_id"] == physics
             assert deck["name"] == "My saved draft"
             assert deck["description"] == "Keep this description"
-            return physics
+            # Losing the selection through an empty list must not auto-select
+            # a later subject, even when its name matches a placeholder.
+            page.deck_form()
+            page.name_entry.insert(0, "No silent replacement")
+            other.delete_subject(physics)
+            page.refresh()
+            assert page.subject.get() == "Add a subject first"
+            replacement = other.create_subject("Choose a subject")
+            page.save_button.invoke()
+            assert len(app.store.decks()) == 1
+            assert page.subject_choice_id is None and page.subject_requires_choice
+            page.select_deck_subject("Subject: Choose a subject")
+            page.save_button.invoke()
+            assert len(app.store.decks()) == 2
+            assert next(d for d in app.store.decks() if d["name"] == "No silent replacement")["subject_id"] == replacement
+            # The other placeholder is also a valid, unambiguous real name.
+            page.deck_form()
+            page.name_entry.insert(0, "Explicit subject choice")
+            last = other.create_subject("Add a subject first")
+            other.delete_subject(replacement)
+            page.refresh()
+            page.save_button.invoke()
+            assert len(app.store.decks()) == 2 and page.subject_choice_id is None
+            page.select_deck_subject("Subject: Add a subject first")
+            page.save_button.invoke()
+            assert next(d for d in app.store.decks() if d["name"] == "Explicit subject choice")["subject_id"] == last
+            return last
         finally:
             other.close()
 
