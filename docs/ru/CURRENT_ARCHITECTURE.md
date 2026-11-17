@@ -224,7 +224,7 @@ CREATE INDEX flashcards_due ON flashcards(deck_id,due_at,id);
 CREATE INDEX review_events_deck ON review_events(deck_id,id);
 ```
 
-## Статистика (не выпущено)
+## Статистика (v0.6.0)
 
 StatisticsPage вызывает Store.statistics(); study_statistics.py читает sessions, завершённые practice_attempts с practice_items и review_events в одной согласованной транзакции чтения. Схема 5 и данные не меняются. UI обновляется при возвращении или через Refresh, при ошибке сохраняет предыдущий отчёт. Обработчики Configure живут вместе со своими виджетами. Ctrl+K / Cmd+K и Escape не меняют поиск скрытых экранов.
 
