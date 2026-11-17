@@ -1,6 +1,6 @@
 # Současná architektura
 
-Stav k 16. listopadu 2026. Implementované jsou Dashboard, My Subjects a Practice Tests; další kroky popisuje [plánovaná architektura](PLANNED_ARCHITECTURE.md).
+Stav k 17. listopadu 2026. Implementované jsou Dashboard, My Subjects, Question bank, Practice Tests, Flashcards a Statistics; další kroky popisuje [plánovaná architektura](PLANNED_ARCHITECTURE.md).
 
 ## Technologie a soubory
 
@@ -14,6 +14,7 @@ Python, CustomTkinter 5.2.2, Pillow a standardní SQLite. Jeden proces a hlavní
 | `soskuska/scrolling.py` | Kompatibilita kolečka a trackpadu Tk 9 |
 | `tests/test_storage.py`, `tests/test_subjects.py` | Úložiště, kompatibilita původní databáze, migrace a pravidla předmětů |
 | `soskuska/check_dashboard.py` | Nativní integrační kontrola s dočasnými daty |
+| `soskuska/statistics_page.py` / `soskuska/study_statistics.py` | Obrazovka Statistics a konzistentní agregace uložené historie |
 | `soskuska-local/index.html` | Historický vizuální návrh; není součástí běhu aplikace |
 
 ## Datový tok
@@ -32,6 +33,9 @@ flowchart LR
     User --> Flashcards[FlashcardPage / flashcard_page.py]
     Flashcards --> Repetition[repetition.py]
     Flashcards --> Store
+    User --> Statistics[StatisticsPage / statistics_page.py]
+    Statistics --> Store
+    Store --> Report[study_statistics.py]
     Dashboard --> Store
     Store --> DB[(SQLite)]
     Clock[time.monotonic] --> Dashboard
@@ -107,7 +111,7 @@ Pokud nová databáze není a existuje původní `ExamPrep/dashboard.sqlite3`, p
 
 Pevné vzorové předměty, procenta, profil, termíny i základy 24 h 35 min / 45 min byly odstraněné. Nová databáze je prázdná. Metriky jsou celkový čas, počet uložených sezení, série studijních dní a počet předmětů. Série může končit dnes nebo včera; starší přerušená série ukáže nulu. Cíl zůstává 60 minut denně; karta ukazuje uložené minuty, bar má přesnost na sekundy.
 
-Karty ukazují počet sezení a uložený čas předmětu, ne smyšlený učební pokrok. Zkoušky pocházejí z uložených termínů, nedávná aktivita z posledních uložených sezení. Neexistující data mají prázdné stavy. AI, statistická obrazovka a nastavení zatím nejsou implementované.
+Karty ukazují počet sezení a uložený čas předmětu, ne smyšlený učební pokrok. Zkoušky pocházejí z uložených termínů, nedávná aktivita z posledních uložených sezení. Neexistující data mají prázdné stavy. AI a nastavení zatím nejsou implementované; Statistics má vlastní obrazovku.
 
 ## Rozložení a ovládání
 
@@ -117,7 +121,7 @@ Obrazovky mají nezávislé vyhledávání přes `casefold()`. Ctrl+K / Cmd+K za
 
 ## Ověření a zbývající omezení
 
-60 testů úložiště prošlo; integrační skript prošel na macOS s Pythonem 3.12.13 / Tk 9.0 a dočasnou databází. Ověřil CRUD přes formulář, Unicode, hledání, prázdné stavy, navázání časovače, zachování historie, opětovné otevření, kompaktní režim a syntetické posouvání. Nenahrazuje ruční vizuální/hardwarové ověření; Windows/Linux nejsou ověřené.
+76 testů úložiště prošlo; integrační skript prošel na macOS s Pythonem 3.12.13 / Tk 9.0 a dočasnou databází. Ověřil CRUD přes formulář, Unicode, hledání, prázdné stavy, navázání časovače, zachování historie, opětovné otevření, kompaktní režim a syntetické posouvání. Nenahrazuje ruční vizuální/hardwarové ověření; Windows/Linux nejsou ověřené.
 
 Zbývá Ollama, překlady UI, nastavování cíle, úplná obnova po pádu, zálohy, balíčky a komplexní logování. První databázové operace mají chybová hlášení, ale úplné zpracování chyb při každém čtení ještě chybí.
 
@@ -180,7 +184,7 @@ CREATE UNIQUE INDEX practice_one_active
 
 ## Průběžná integrace (CI)
 
-GitHub Actions kontroluje pull requesty do main, nové commity na main a ruční spuštění. Workflow `.github/workflows/ci.yml` instaluje závislosti, ověřuje jejich kompatibilitu, syntaxi Pythonu a všechny jednotkové testy s Pythonem 3.12 na Ubuntu, Windows a macOS. Samostatná úloha spouští pět nativních kontrolních skriptů na Ubuntu pod virtuálním displejem Xvfb; každý proces má limit 60 sekund. Celá úloha má limit 10 minut. Novější běh stejné větve zruší předchozí. Token má pouze čtení obsahu; workflow nic nenasazuje ani nevydává.
+GitHub Actions kontroluje pull requesty do main, nové commity na main a ruční spuštění. Workflow `.github/workflows/ci.yml` instaluje závislosti, ověřuje jejich kompatibilitu, syntaxi Pythonu a všechny jednotkové testy s Pythonem 3.12 na Ubuntu, Windows a macOS. Samostatná úloha spouští šest nativních kontrolních skriptů na Ubuntu pod virtuálním displejem Xvfb; každý proces má limit 60 sekund. Celá úloha má limit 10 minut. Novější běh stejné větve zruší předchozí. Token má pouze čtení obsahu; workflow nic nenasazuje ani nevydává.
 
 Výsledky a logy jsou v [Actions](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml) a v kontrolách PR. Červený stav otevři a přečti první neúspěšný krok. Po opravě pushni do stejné větve a kontroly se spustí znovu. Ruční spuštění Run workflow je dostupné po sloučení workflow do výchozí větve. Branch protection tímto není zapnutá.
 
@@ -219,3 +223,9 @@ CREATE TABLE review_events (
 CREATE INDEX flashcards_due ON flashcards(deck_id,due_at,id);
 CREATE INDEX review_events_deck ON review_events(deck_id,id);
 ```
+
+## Statistiky (nevydáno)
+
+StatisticsPage volá Store.statistics(); study_statistics.py čte sessions, dokončené practice_attempts s practice_items a review_events v jedné konzistentní čtecí transakci. Nemění schéma 5 ani data. UI se obnovuje při návratu nebo přes Refresh, při chybě ponechá předchozí report. Vazby Configure mají životnost svých widgetů. Ctrl+K / Cmd+K a Escape nemění hledání skrytých obrazovek.
+
+[Podrobná pravidla](STATISTICS.md).
