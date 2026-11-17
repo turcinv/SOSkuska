@@ -72,8 +72,11 @@ class FlashcardPage(ctk.CTkFrame):
     def subject_text(deck):
         return deck["current_subject_name"] or f'{deck["subject_name"]} (subject deleted)'
 
+    @safe
     def load(self):
         if self.view in ("deck_form", "card_form"):
+            if self.view == "deck_form" and self.editing_deck is None:
+                self.refresh_deck_subjects()
             return  # Navigation does not discard an unfinished authoring draft.
         if self.view == "review" and self.queue:
             self.show_review()
@@ -84,8 +87,12 @@ class FlashcardPage(ctk.CTkFrame):
         else:
             self.show_decks()
 
+    @safe
     def refresh(self):
-        if self.view in ("deck_form", "card_form"):
+        if self.view == "deck_form" and self.editing_deck is None:
+            self.refresh_deck_subjects()
+            self.status.configure(text="Subject list refreshed. Your draft is kept.")
+        elif self.view in ("deck_form", "card_form"):
             self.status.configure(text="Save or cancel the current draft before refreshing.")
         else:
             self.load()
@@ -190,7 +197,8 @@ class FlashcardPage(ctk.CTkFrame):
         self.subject = ctk.StringVar(value=next(iter(self.subject_ids), "Add a subject first"))
         if not deck:
             self.app.label(self.body, "Subject", 13, "secondary").grid(row=3, column=0, sticky="w")
-            ctk.CTkOptionMenu(self.body, variable=self.subject, values=list(self.subject_ids) or ["Add a subject first"], dynamic_resizing=False, height=38).grid(row=4, column=0, sticky="ew", pady=(4, 14))
+            self.subject_menu = ctk.CTkOptionMenu(self.body, variable=self.subject, values=list(self.subject_ids) or ["Add a subject first"], dynamic_resizing=False, height=38)
+            self.subject_menu.grid(row=4, column=0, sticky="ew", pady=(4, 14))
         self.app.label(self.body, "Description (optional, up to 1,000 characters)", 13, "secondary").grid(row=5, column=0, sticky="w")
         self.description = ctk.CTkTextbox(self.body, height=90, font=self.app.font(), wrap="word")
         self.description.grid(row=6, column=0, sticky="ew", pady=(4, 14))
@@ -201,10 +209,29 @@ class FlashcardPage(ctk.CTkFrame):
         self.save_button.pack(side="left", padx=(0, 8))
         self.app.button(actions, "Cancel", self.show_decks, width=85).pack(side="left")
 
+    def refresh_deck_subjects(self):
+        """Refresh choices in place without replacing name/description widgets."""
+        selected_name = self.subject.get()
+        selected_id = self.subject_ids.get(selected_name)
+        subjects = self.app.store.subjects()  # Read first; failure keeps draft intact.
+        subject_ids = {item["name"]: item["id"] for item in subjects}
+        if not subject_ids:
+            selected = "Add a subject first"
+        elif selected_id is not None:
+            selected = next((name for name, sid in subject_ids.items() if sid == selected_id), "Choose a subject")
+        elif selected_name == "Add a subject first":
+            selected = next(iter(subject_ids))
+        else:
+            selected = "Choose a subject"
+        self.subject_menu.configure(values=list(subject_ids) or ["Add a subject first"])
+        self.subject_ids = subject_ids
+        self.subject.set(selected)
+
     @safe
     def save_deck(self):
         values = (self.name_entry.get(), self.description.get("1.0", "end-1c"))
         if self.editing_deck is None:
+            self.refresh_deck_subjects()
             self.editing_deck = self.app.store.create_deck(self.subject_ids.get(self.subject.get()), *values)
         else:
             self.app.store.update_deck(self.editing_deck, *values)
