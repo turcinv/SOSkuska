@@ -76,7 +76,7 @@ Procvičování je dostupné od v0.4.0. Procvičování nepřidává smyšlený 
 
 ## Průběžná integrace (CI)
 
-CI: Python 3.12, jednotkové testy na třech systémech a šest GUI kontrol na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
+CI: Python 3.12, jednotkové testy na třech systémech a sedm GUI kontrol na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
 
 ## Kartičky a opakování (v0.5.0)
 

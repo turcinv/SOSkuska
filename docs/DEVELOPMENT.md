@@ -113,7 +113,7 @@ Integrační kontrola nově ověřuje také skutečné přepnutí sloupců při 
 
 ## Banka témat a otázek
 
-Kontrolu banky otázek spustíš příkazem níže. Používá dočasnou databázi a krátce otevře okno. Ověřuje CRUD, validaci, kombinované filtry, kompaktní editor a posouvání, izolaci předmětů, mazání a opětovné otevření. `tests/test_questions.py` navíc ověřuje migraci ze schématu 2, Unicode a konzistenci počtů. Celkem je 76 testů bez GUI a šest nativních kontrol. Všechny prošly na macOS; Windows/Linux a fyzický trackpad nejsou tímto ověřené.
+Kontrolu banky otázek spustíš příkazem níže. Používá dočasnou databázi a krátce otevře okno. Ověřuje CRUD, validaci, kombinované filtry, kompaktní editor a posouvání, izolaci předmětů, mazání a opětovné otevření. `tests/test_questions.py` navíc ověřuje migraci ze schématu 2, Unicode a konzistenci počtů. Celkem je 84 testů bez GUI a sedm nativních kontrol. Všechny prošly na macOS; Windows/Linux a fyzický trackpad nejsou tímto ověřené.
 
 ```sh
 .venv-macos/bin/python soskuska/check_question_bank.py
@@ -121,7 +121,7 @@ Kontrolu banky otázek spustíš příkazem níže. Používá dočasnou databá
 
 ## Opravy po kontrole hlavní větve
 
-Nová kontrola `check_review_fixes.py` používá dočasné databáze a ověřuje zrušení starého potvrzení, změnu obsahu z druhého připojení, skutečný exkluzivní SQLite zámek při půlnoci, opakování obnovy, datum, dokončení časovače a syntetické posouvání v dlouhém i krátkém poli. Na macOS navíc v odděleném procesu vyvolá skutečnou položku Quit, ověří zachování sezení při chybě zápisu a uložení při opakování. Celkem je 76 testů bez GUI a šest nativních kontrol. Prošly na macOS; Windows/Linux a fyzický trackpad nejsou tímto ověřené.
+Nová kontrola `check_review_fixes.py` používá dočasné databáze a ověřuje zrušení starého potvrzení, změnu obsahu z druhého připojení, skutečný exkluzivní SQLite zámek při půlnoci, opakování obnovy, datum, dokončení časovače a syntetické posouvání v dlouhém i krátkém poli. Na macOS navíc v odděleném procesu vyvolá skutečnou položku Quit, ověří zachování sezení při chybě zápisu a uložení při opakování. Celkem je 84 testů bez GUI a sedm nativních kontrol. Prošly na macOS; Windows/Linux a fyzický trackpad nejsou tímto ověřené.
 
 ```sh
 .venv-macos/bin/python soskuska/check_review_fixes.py
@@ -131,7 +131,7 @@ Kontrola navíc ověřuje současné selhání uložení sezení a půlnočního
 
 ## Practice Tests — procvičování (v0.4.0)
 
-Nová kontrola check_practice.py ověřuje konfiguraci, filtry, ukládání odpovědí včetně chyby zápisu, potvrzení/opakování dokončení, neměnnou historii, automatické dokončení po limitu, kompaktní okno a pokračování v novém procesu. test_practice.py ověřuje migraci schématu 3, uchování obsahu, skóre, idempotenci, termíny, validaci a rollback. Celkem je 76 testů a šest nativních kontrol. Změna je ověřená na macOS; Windows/Linux a fyzická gesta nejsou prakticky ověřené.
+Nová kontrola check_practice.py ověřuje konfiguraci, filtry, ukládání odpovědí včetně chyby zápisu, potvrzení/opakování dokončení, neměnnou historii, automatické dokončení po limitu, kompaktní okno a pokračování v novém procesu. test_practice.py ověřuje migraci schématu 3, uchování obsahu, skóre, idempotenci, termíny, validaci a rollback. Celkem je 84 testů a sedm nativních kontrol. Změna je ověřená na macOS; Windows/Linux a fyzická gesta nejsou prakticky ověřené.
 
 ```sh
 .venv-macos/bin/python soskuska/check_practice.py
@@ -141,7 +141,7 @@ Kontrola také ověřuje, že dokončení testu na pozadí neposune otevřenou b
 
 ## Průběžná integrace (CI)
 
-GitHub Actions kontroluje pull requesty do main, nové commity na main a ruční spuštění. Workflow `.github/workflows/ci.yml` instaluje závislosti, ověřuje jejich kompatibilitu, syntaxi Pythonu a všechny jednotkové testy s Pythonem 3.12 na Ubuntu, Windows a macOS. Samostatná úloha spouští šest nativních kontrolních skriptů na Ubuntu pod virtuálním displejem Xvfb; každý proces má limit 60 sekund. Celá úloha má limit 10 minut. Novější běh stejné větve zruší předchozí. Token má pouze čtení obsahu; workflow nic nenasazuje ani nevydává.
+GitHub Actions kontroluje pull requesty do main, nové commity na main a ruční spuštění. Workflow `.github/workflows/ci.yml` instaluje závislosti, ověřuje jejich kompatibilitu, syntaxi Pythonu a všechny jednotkové testy s Pythonem 3.12 na Ubuntu, Windows a macOS. Samostatná úloha spouští sedm nativních kontrolních skriptů na Ubuntu pod virtuálním displejem Xvfb; každý proces má limit 60 sekund. Celá úloha má limit 10 minut. Novější běh stejné větve zruší předchozí. Token má pouze čtení obsahu; workflow nic nenasazuje ani nevydává.
 
 Výsledky a logy jsou v [Actions](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml) a v kontrolách PR. Červený stav otevři a přečti první neúspěšný krok. Po opravě pushni do stejné větve a kontroly se spustí znovu. Ruční spuštění Run workflow je dostupné po sloučení workflow do výchozí větve. Branch protection tímto není zapnutá.
 
@@ -149,23 +149,33 @@ Automatické testy nejsou ruční ověření Windows/macOS/Linux ani fyzického 
 
 ## Kartičky a opakování (v0.5.0)
 
-check_flashcards.py ověřuje formuláře, opakované hledání, zachování rozepsaného textu při navigaci, odhalení před hodnocením, odmítnutí zastaralého hodnocení, opakování po chybě zápisu, termíny, uchování historie a nové spuštění procesu. test_flashcards.py a historický fixtures/schema_v4.sql ověřují migraci a transakce. Celkem je 76 jednotkových testů a šest nativních kontrol; CI spouští testy na třech systémech a GUI na Ubuntu/Xvfb.
+check_flashcards.py ověřuje formuláře, opakované hledání, zachování rozepsaného textu při navigaci, odhalení před hodnocením, odmítnutí zastaralého hodnocení, opakování po chybě zápisu, termíny, uchování historie a nové spuštění procesu. test_flashcards.py a historický fixtures/schema_v4.sql ověřují migraci a transakce. Celkem je 84 jednotkových testů a sedm nativních kontrol; CI spouští testy na třech systémech a GUI na Ubuntu/Xvfb.
 
 [Podrobný návod a pravidla](FLASHCARDS.md).
 
 ```sh
 .venv-macos/bin/python soskuska/check_flashcards.py
 .venv-macos/bin/python soskuska/check_statistics.py
+.venv-macos/bin/python soskuska/check_state_fixes.py
 ```
 
 ## Statistiky (v0.6.0)
 
 V nabídce **Statistics** zvol Last 7 days, Last 30 days nebo All time. Přehled ukazuje uložený čas a sezení, otázkami váženou úspěšnost dokončených testů, počty vlastních hodnocení kartiček, čas podle předmětu a denní aktivitu. Refresh nebo návrat na obrazovku načte nový snímek. Nejde o měření zvládnutí učiva.
 
-Nových 16 testů ověřuje období, místní dny, váhu otázek, úplnou historii, zachování po smazání, pouze čtení, souběžný snímek a opakování po chybě. Nativní kontrola ověřuje prázdný stav, filtry, chybu a opakování, navigaci, kompaktní rozložení, posouvání a otevření v novém procesu. Celkem 76 jednotkových testů a šest nativních kontrol; používají dočasná data.
+Nových 16 testů ověřuje období, místní dny, váhu otázek, úplnou historii, zachování po smazání, pouze čtení, souběžný snímek a opakování po chybě. Nativní kontrola ověřuje prázdný stav, filtry, chybu a opakování, navigaci, kompaktní rozložení, posouvání a otevření v novém procesu. Celkem 84 jednotkových testů a sedm nativních kontrol; používají dočasná data.
 
 ```sh
 .venv-macos/bin/python soskuska/check_statistics.py
+.venv-macos/bin/python soskuska/check_state_fixes.py
 ```
 
 [Podrobná pravidla](STATISTICS.md).
+
+## Opravy souběžných změn (nevydáno)
+
+Nových osm jednotkových testů pokrývá termíny včetně čekání na zámek, rollback, konflikty otázek a odlišení odstraněného testu. check_state_fixes.py navíc ověřuje skutečné formuláře, zachování rozepsaného obsahu, konflikt a nové načtení, zachování výsledku po termínu a obnovu po odstranění z jiné instance. Celkem 84 jednotkových testů a sedm nativních kontrol s dočasnými daty.
+
+```sh
+.venv-macos/bin/python soskuska/check_state_fixes.py
+```

@@ -72,7 +72,7 @@ Finish test после подтверждения сохраняет резул�
 
 ## Непрерывная интеграция (CI)
 
-CI: Python 3.12, модульные тесты на трёх системах и шесть GUI-проверок на Ubuntu/Xvfb. [Результаты](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
+CI: Python 3.12, модульные тесты на трёх системах и семь GUI-проверок на Ubuntu/Xvfb. [Результаты](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
 
 ## Карточки и повторение (v0.5.0)
 
