@@ -399,10 +399,20 @@ class Store:
         return self.practice_attempt(attempt_id)
 
     def discard_practice(self, attempt_id):
+        """Return True if discarded, False if expiry saved the result instead."""
         with self.db:
-            cursor = self.db.execute("DELETE FROM practice_attempts WHERE id=? AND status='in_progress'", (attempt_id,))
-            if cursor.rowcount == 0:
+            self.db.execute("BEGIN IMMEDIATE")
+            attempt = self.practice_attempt(attempt_id)
+            if attempt is None or attempt["status"] != "in_progress":
                 raise ValueError("Only an in-progress test can be discarded.")
+            # Check the clock after waiting for any competing writer. Expired
+            # answers belong to history even if the UI timer has not run yet.
+            if expired(attempt["deadline_at"], utc_now()):
+                self.db.execute("UPDATE practice_attempts SET status='completed',completed_at=? WHERE id=?",
+                                (attempt["deadline_at"], attempt_id))
+                return False
+            self.db.execute("DELETE FROM practice_attempts WHERE id=?", (attempt_id,))
+        return True
 
     def decks(self):
         return [dict(row) for row in self.db.execute("""SELECT d.*,s.name AS current_subject_name,

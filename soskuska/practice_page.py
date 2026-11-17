@@ -331,7 +331,9 @@ class PracticePage(ctk.CTkFrame):
             self.finish()
         elif self.pending_action == "discard":
             try:
-                self.app.store.discard_practice(self.active_id)
+                if not self.app.store.discard_practice(self.active_id):
+                    self.finish()  # The deadline saved this attempt instead.
+                    return
                 self.active_id = None
                 self.finishing = False
                 self.status.configure(text="Unfinished test discarded.")
