@@ -25,6 +25,7 @@
 .venv-macos/bin/python soskuska/check_review_fixes.py
 .venv-macos/bin/python soskuska/check_practice.py
 .venv-macos/bin/python soskuska/check_flashcards.py
+.venv-macos/bin/python soskuska/check_statistics.py
 ```
 
 GUI-проверка открывает окно и требует графического сеанса. Для изменения только документации обычно достаточно проверить ссылки, команды и форматирование; запускать весь UI ради неё не нужно.
@@ -39,4 +40,10 @@ GUI-проверка открывает окно и требует графич�
 
 ## Непрерывная интеграция (CI)
 
-CI: Python 3.12, модульные тесты на трёх системах и пять GUI-проверки на Ubuntu/Xvfb. [Результаты](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
+CI: Python 3.12, модульные тесты на трёх системах и шесть GUI-проверок на Ubuntu/Xvfb. [Результаты](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
+
+## Статистика (не выпущено)
+
+В меню **Statistics** выбери Last 7 days, Last 30 days или All time. Экран показывает сохранённое время и занятия, точность завершённых тестов с равным весом вопросов, число собственных оценок карточек, время по предметам и активность по дням. Refresh или возвращение на экран загружает новый снимок. Это не измерение освоения материала.
+
+[Подробные правила](STATISTICS.md).

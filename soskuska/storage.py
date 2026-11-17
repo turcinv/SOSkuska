@@ -7,6 +7,7 @@ from pathlib import Path
 from content import question_fields, topic_fields
 from practice import expired, practice_settings, utc_now
 from repetition import card_fields, deck_fields, next_review
+from study_statistics import statistics_report
 
 SCHEMA_VERSION = 5
 
@@ -577,6 +578,9 @@ class Store:
     def recent_sessions(self, limit=5):
         return [dict(row) for row in self.db.execute("""SELECT id,day,seconds,subject_id,subject_name
             FROM sessions WHERE seconds>0 ORDER BY id DESC LIMIT ?""", (limit,))]
+
+    def statistics(self, period="Last 7 days", *, today=None):
+        return statistics_report(self.db, period, today=today)
 
     def close(self):
         self.db.close()

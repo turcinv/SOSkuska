@@ -25,6 +25,7 @@ Na Windows/Linux použi zodpovedajúcu cestu k Pythonu svojho prostredia. Pri zm
 .venv-macos/bin/python soskuska/check_review_fixes.py
 .venv-macos/bin/python soskuska/check_practice.py
 .venv-macos/bin/python soskuska/check_flashcards.py
+.venv-macos/bin/python soskuska/check_statistics.py
 ```
 
 Kontrola GUI otvára okno a potrebuje grafickú reláciu. Zmena samotnej dokumentácie zvyčajne vyžaduje kontrolu odkazov, príkazov a formátovania; netreba kvôli nej spúšťať celé UI.
@@ -39,4 +40,10 @@ Chybu nahlás cez šablónu v Issues: postup opakovania, očakávané/skutočné
 
 ## Priebežná integrácia (CI)
 
-CI: Python 3.12, jednotkové testy na troch systémoch a päť GUI kontroly na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
+CI: Python 3.12, jednotkové testy na troch systémoch a šesť GUI kontrol na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
+
+## Štatistiky (nevydané)
+
+V ponuke **Statistics** zvoľ Last 7 days, Last 30 days alebo All time. Prehľad ukazuje uložený čas a relácie, úspešnosť dokončených testov váženú otázkami, počty vlastných hodnotení kartičiek, čas podľa predmetu a dennú aktivitu. Refresh alebo návrat na obrazovku načíta novú snímku. Nejde o meranie zvládnutia učiva.
+
+[Podrobné pravidlá](STATISTICS.md).

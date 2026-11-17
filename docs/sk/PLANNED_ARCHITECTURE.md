@@ -2,7 +2,7 @@
 
 **Budúci návrh, nie dnešná implementácia.** Uvedené moduly a tabuľky zatiaľ neexistujú, ak ich nepotvrdzuje [súčasná architektúra](CURRENT_ARCHITECTURE.md). Tento plán sám osebe neznamená začatie implementácie všetkých funkcií.
 
-**Aktuálny postup (16. novembra 2026):** predmety, otázky a cvičné testy existujú. Kartičky s balíčkami, vlastným plánovaním a históriou sú vydané vo v0.5.0. Ďalším krokom je voliteľný AI Tutor alebo celkové štatistiky; import a inštalátory zostávajú plánované.
+**Aktuálny postup (17. novembra 2026):** Základné Statistics je implementované v pracovnej vetve; voliteľný AI Tutor je ďalšia možnosť. Import, pokročilé grafy a inštalátory zostávajú plánované.
 
 ## Smer
 
@@ -77,11 +77,11 @@ Konkrétne schémy musia doplniť cudzie kľúče, pravidlá mazania, indexy a t
 
 ## Funkčné celky
 
-**Predmety a skutočný Dashboard:** správa predmetov, tém/otázok a skutočné súčty relácií sú implementované. Úspešnosť jednotlivých pokusov je v Practice Tests; celkové štatistiky zostávajú plánované. Nová databáza je prázdna.
+**Predmety a skutočný Dashboard:** správa predmetov, tém/otázok a skutočné súčty relácií sú implementované. Úspešnosť jednotlivých pokusov je v Practice Tests; základné celkové štatistiky sú implementované. Nová databáza je prázdna.
 
 **Kartičky:** balíčky, editor, odhalenie odpovede, Again / Hard / Good / Easy, uložený termín a história sú implementované. Pravidlá sú v repetition.py a dokumente FLASHCARDS.md; nejde o SM-2 ani FSRS. Import a pokročilejšie plánovanie sú ďalšie možnosti.
 
-**Testy:** výber témy, náročnosti, počtu a času; uložený pokus, skóre a rozbor odpovedí sú implementované. Ďalšie rozšírenia: import, bohatšia história a celkové štatistiky.
+**Testy:** výber témy, náročnosti, počtu a času; uložený pokus, skóre a rozbor odpovedí sú implementované. Ďalšie rozšírenia: import a bohatšia história.
 
 **AI Tutor:** samostatný klient Ollama s časovým limitom, zoznamom dostupných modelov, priebežným prijímaním odpovede a zrušením generovania. Predvolené spojenie miestne, adresa nastaviteľná a viditeľná; žiadny automatický prechod na cloud. Modely načítať z Ollamy, nevyžadovať jeden pevný model.
 

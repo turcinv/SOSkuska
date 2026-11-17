@@ -154,10 +154,16 @@ Odpověď se uloží po každém výběru; lze ji změnit nebo vymazat přes Cle
 
 Finish test po potvrzení uloží výsledek; nevyplněné otázky se počítají jako nesprávné. Správné odpovědi a vysvětlení se zobrazí až po odevzdání. Časový limit běží i mimo obrazovku a při zavřené aplikaci; po vypršení se test automaticky dokončí při běhu nebo návratu do aplikace. Výsledek a otázky jsou snímkem ze začátku pokusu: pozdější úprava či smazání původního obsahu je nezmění. Historie zobrazuje posledních 20 dokončených testů; starší záznamy zůstávají v databázi.
 
-Procvičování je dostupné od v0.4.0. Procvičování nepřidává smyšlený čas do součtů časovače. AI, import a celková statistická obrazovka zůstávají plánované.
+Procvičování je dostupné od v0.4.0. Procvičování nepřidává smyšlený čas do součtů časovače. AI a import zůstávají plánované; celkový přehled je ve Statistics.
 
 ## Kartičky a opakování (v0.5.0)
 
 V postranní nabídce otevři **Flashcards**. New deck vytvoří balíček pro existující předmět; název musí být jedinečný mezi všemi balíčky. Předmět balíčku se potom nemění, název a popis ano. Open deck umožní přidat a upravovat kartičky. Přední strana má 1–2000 znaků, zadní 1–4000; Search hledá v obou stranách. Seznam zobrazuje nejvýše 100 výsledků, další najdeš užším hledáním.
 
 [Podrobný návod a pravidla](FLASHCARDS.md).
+
+## Statistiky (nevydáno)
+
+V nabídce **Statistics** zvol Last 7 days, Last 30 days nebo All time. Přehled ukazuje uložený čas a sezení, otázkami váženou úspěšnost dokončených testů, počty vlastních hodnocení kartiček, čas podle předmětu a denní aktivitu. Refresh nebo návrat na obrazovku načte nový snímek. Nejde o měření zvládnutí učiva.
+
+[Podrobná pravidla](STATISTICS.md).

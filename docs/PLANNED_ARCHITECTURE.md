@@ -2,7 +2,7 @@
 
 **Budoucí návrh, nikoli dnešní implementace.** Zde uvedené moduly a tabulky zatím neexistují, pokud je nepotvrzuje [současná architektura](CURRENT_ARCHITECTURE.md). Tento plán sám neznamená zahájení implementace všech funkcí.
 
-**Aktuální postup (16. listopadu 2026):** předměty, otázky a procvičovací testy existují. Kartičky s balíčky, vlastním plánováním a historií jsou vydané ve v0.5.0. Další krok je volitelný AI Tutor nebo celkové statistiky; import a instalátory zůstávají plánované.
+**Aktuální postup (17. listopadu 2026):** Základní Statistics je implementované v pracovní větvi; volitelný AI Tutor je další možnost. Import, pokročilé grafy a instalátory zůstávají plánované.
 
 ## Směr
 
@@ -77,11 +77,11 @@ Konkrétní schémata musí doplnit cizí klíče, mazací pravidla, indexy a tr
 
 ## Funkční celky
 
-**Předměty a skutečný Dashboard:** správa předmětů, témat/otázek a skutečné součty sezení jsou implementované. Úspěšnost jednotlivých pokusů je v Practice Tests; celkové statistiky zůstávají plánované. Nová databáze je prázdná.
+**Předměty a skutečný Dashboard:** správa předmětů, témat/otázek a skutečné součty sezení jsou implementované. Úspěšnost jednotlivých pokusů je v Practice Tests; základní celkové statistiky jsou implementované. Nová databáze je prázdná.
 
 **Kartičky:** balíčky, editor, odhalení odpovědi, Again / Hard / Good / Easy, uložený termín a historie jsou implementované. Pravidla jsou v repetition.py a dokumentu FLASHCARDS.md; nejde o SM-2 ani FSRS. Import a pokročilejší plánování jsou další možnosti.
 
-**Testy:** výběr tématu, obtížnosti, počtu a času; uložený pokus, skóre a rozbor odpovědí jsou implementované. Další rozšíření: import, bohatší historie a celkové statistiky.
+**Testy:** výběr tématu, obtížnosti, počtu a času; uložený pokus, skóre a rozbor odpovědí jsou implementované. Další rozšíření: import a bohatší historie.
 
 **AI Tutor:** samostatný Ollama klient s časovým limitem, seznamem dostupných modelů, streamováním a zrušením generování. Výchozí spojení místní, adresa nastavitelná a viditelná; žádný automatický cloudový fallback. Modely načítat z Ollamy, nevyžadovat jeden pevný model.
 
