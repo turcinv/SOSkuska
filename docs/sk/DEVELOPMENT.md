@@ -172,7 +172,7 @@ Nových 16 testov overuje obdobia, miestne dni, váhu otázok, úplnú históriu
 
 [Podrobné pravidlá](STATISTICS.md).
 
-## Opravy súbežných zmien (nevydané)
+## Opravy súbežných zmien (v0.6.2)
 
 Osem nových jednotkových testov pokrýva termíny vrátane čakania na zámok, rollback, konflikty otázok a odlíšenie odstráneného testu. check_state_fixes.py navyše overuje skutočné formuláre, zachovanie rozpísaného obsahu, konflikt a nové načítanie, zachovanie výsledku po termíne a obnovu po odstránení z inej inštancie. Celkovo 84 jednotkových testov a sedem natívnych kontrol s dočasnými údajmi.
 

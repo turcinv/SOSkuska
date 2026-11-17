@@ -230,7 +230,7 @@ StatisticsPage volá Store.statistics(); study_statistics.py čte sessions, doko
 
 [Podrobná pravidla](STATISTICS.md).
 
-## Opravy souběžných změn (nevydáno)
+## Opravy souběžných změn (v0.6.2)
 
 Discard test získá zápisový zámek a potom ověří termín. Pokud mezitím vypršel, pokus i odpovědi se zachovají jako dokončený výsledek místo smazání; selhání zápisu ponechá původní data pro opakování. Pokud jiná instance rozpracovaný test odstraní, Finish zastaví opakování a obnoví nastavení. Chyby SQLite se dál dají opakovat; po chybě načtení nastavení použij Refresh subjects nebo návrat na obrazovku.
 

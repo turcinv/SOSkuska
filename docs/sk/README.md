@@ -1,6 +1,6 @@
 # SOSkúška — slovenská dokumentácia
 
-**Vydanie: [v0.6.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.6.0)** — zdrojový kód funkčného prototypu. Prehľad funkcií a opráv je v [histórii zmien](CHANGELOG.md). Inštalátor zatiaľ nie je súčasťou vydania.
+**Vydanie: [v0.6.2](https://github.com/turcinv/SOSkuska/releases/tag/v0.6.2)** — zdrojový kód funkčného prototypu. Prehľad funkcií a opráv je v [histórii zmien](CHANGELOG.md). Inštalátor zatiaľ nie je súčasťou vydania.
 
 Lokálny desktopový študijný asistent v Pythone a CustomTkinteri. Implementované sú Dashboard a My Subjects: správa predmetov a termínov skúšok, denný zoznam úloh, vyhľadávanie a časovač prepojený s predmetom. Úlohy a odštudovaný čas sa ukladajú do SQLite na zariadení používateľa.
 
