@@ -1,6 +1,6 @@
 # SOSkúška
 
-**Vydání: [v0.6.2](https://github.com/turcinv/SOSkuska/releases/tag/v0.6.2)** — zdrojový kód funkčního prototypu. Přehled funkcí a oprav je v [historii změn](CHANGELOG.md). Instalátor zatím není součástí vydání.
+**Vydání: [v0.7.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.7.0)** — zdrojový kód funkčního prototypu. Přehled funkcí a oprav je v [historii změn](CHANGELOG.md). Instalátor zatím není součástí vydání.
 
 Název aplikace je **SOSkúška**. Repozitář a kořenová složka jsou **SOSkuska**, zdrojový adresář `soskuska/`; technické názvy používají podobu bez diakritiky.
 
@@ -90,7 +90,7 @@ V nabídce **Statistics** zvol Last 7 days, Last 30 days nebo All time. Přehled
 
 [Podrobná pravidla](docs/STATISTICS.md).
 
-## AI Tutor s Ollamou (nevydáno)
+## AI Tutor s Ollamou (v0.7.0)
 
 V AI Tutor připoj vlastní Ollama server přes Connect / refresh, vyber model a jazyk odpovědi a zadej otázku. Odpověď přichází průběžně; Stop ji zastaví. Ostatní obrazovky zůstávají použitelné během generování i bez Ollamy. Chat je pouze pro aktuální spuštění aplikace, neukládá se do databáze.
 

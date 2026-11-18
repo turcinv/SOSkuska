@@ -1,6 +1,6 @@
 # SOSkúška — slovenská dokumentácia
 
-**Vydanie: [v0.6.2](https://github.com/turcinv/SOSkuska/releases/tag/v0.6.2)** — zdrojový kód funkčného prototypu. Prehľad funkcií a opráv je v [histórii zmien](CHANGELOG.md). Inštalátor zatiaľ nie je súčasťou vydania.
+**Vydanie: [v0.7.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.7.0)** — zdrojový kód funkčného prototypu. Prehľad funkcií a opráv je v [histórii zmien](CHANGELOG.md). Inštalátor zatiaľ nie je súčasťou vydania.
 
 Lokálny desktopový študijný asistent v Pythone a CustomTkinteri. Implementované sú Dashboard a My Subjects: správa predmetov a termínov skúšok, denný zoznam úloh, vyhľadávanie a časovač prepojený s predmetom. Úlohy a odštudovaný čas sa ukladajú do SQLite na zariadení používateľa.
 
@@ -86,7 +86,7 @@ V ponuke **Statistics** zvoľ Last 7 days, Last 30 days alebo All time. Prehľad
 
 [Podrobné pravidlá](STATISTICS.md).
 
-## AI Tutor s Ollamou (nevydané)
+## AI Tutor s Ollamou (v0.7.0)
 
 V AI Tutor pripoj vlastný server Ollama cez Connect / refresh, vyber model a jazyk odpovede a zadaj otázku. Odpoveď prichádza priebežne; Stop ju zastaví. Ostatné obrazovky zostávajú použiteľné počas generovania aj bez Ollamy. Chat je iba pre aktuálne spustenie aplikácie, neukladá sa do databázy.
 

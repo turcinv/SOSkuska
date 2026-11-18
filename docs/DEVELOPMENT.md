@@ -183,7 +183,7 @@ Nových osm jednotkových testů pokrývá termíny včetně čekání na zámek
 .venv-macos/bin/python soskuska/check_tutor.py
 ```
 
-## AI Tutor s Ollamou (nevydáno)
+## AI Tutor s Ollamou (v0.7.0)
 
 V AI Tutor připoj vlastní Ollama server přes Connect / refresh, vyber model a jazyk odpovědi a zadej otázku. Odpověď přichází průběžně; Stop ji zastaví. Ostatní obrazovky zůstávají použitelné během generování i bez Ollamy. Chat je pouze pro aktuální spuštění aplikace, neukládá se do databáze.
 
