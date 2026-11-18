@@ -13,9 +13,9 @@ Nová inštalácia je prázdna. Názvy, termíny ani študijné štatistiky nie 
 
 ## Štúdium a ukladanie
 
-Na Dashboarde zvoľ predmet a klikni na **Start Studying**, alebo použi **Study** na karte predmetu. Spustí sa 15-minútový časovač, ktorý môžeš pozastaviť a obnoviť. **Finish** uloží skutočne uplynulé sekundy k vybranému predmetu; po 15 minútach sa dokončí automaticky. Aj bežné zatvorenie okna uloží rozpracovaný čas.
+Na Dashboarde zvoľ predmet a klikni na **Start Studying**, alebo použi **Study** na karte predmetu. Spustí sa nastaviteľný časovač (predvolene 15 minút), ktorý môžeš pozastaviť a obnoviť. **Finish** uloží skutočne uplynulé sekundy k vybranému predmetu; po dosiahnutí nastavenej dĺžky sa dokončí automaticky. Aj bežné zatvorenie okna uloží rozpracovaný čas.
 
-Dashboard potom ukáže skutočne uložený čas, počet relácií, sériu študijných dní a počet predmetov. Denný cieľ je zatiaľ pevne 60 minút. Nedávna aktivita obsahuje uložené relácie; nadchádzajúce skúšky tvoje uložené termíny. Dashboard nepočíta zvládnutie učiva; jednotlivé výsledky testov sú v Practice Tests.
+Dashboard potom ukáže skutočne uložený čas, počet relácií, sériu študijných dní a počet predmetov. Denný cieľ možno zmeniť v Settings (predvolene 60 minút). Nedávna aktivita obsahuje uložené relácie; nadchádzajúce skúšky tvoje uložené termíny. Dashboard nepočíta zvládnutie učiva; jednotlivé výsledky testov sú v Practice Tests.
 
 Denný zoznam úloh sa tiež ukladá. Review a subject označuješ ručne; Complete a focus session sa po uložení nenulového času označí automaticky. Po opätovnom spustení v rovnaký deň sa stav obnoví.
 
@@ -76,3 +76,9 @@ V ponuke **Statistics** zvoľ Last 7 days, Last 30 days alebo All time. Prehľad
 V AI Tutor pripoj vlastný server Ollama cez Connect / refresh, vyber model a jazyk odpovede a zadaj otázku. Odpoveď prichádza priebežne; Stop ju zastaví. Ostatné obrazovky zostávajú použiteľné počas generovania aj bez Ollamy. Chat je iba pre aktuálne spustenie aplikácie, neukladá sa do databázy.
 
 [Návod AI Tutor](AI_TUTOR.md).
+
+## Nastavenia
+
+Chat zostáva iba v pamäti a zatvorením sa odstráni. Voľby spojenia možno výslovne uložiť v [Settings](SETTINGS.md); bez Save sú dočasné.
+
+[Nastavenia](SETTINGS.md).

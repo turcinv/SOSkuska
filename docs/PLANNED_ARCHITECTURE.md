@@ -4,6 +4,7 @@
 
 **Aktuální postup (18. listopadu 2026):** V AI Tutor připoj vlastní Ollama server přes Connect / refresh, vyber model a jazyk odpovědi a zadej otázku. Odpověď přichází průběžně; Stop ji zastaví. Ostatní obrazovky zůstávají použitelné během generování i bez Ollamy. Chat je pouze pro aktuální spuštění aplikace, neukládá se do databáze.
 
+Nastavení se ukládá do stejné databáze jako studijní data. [Settings](SETTINGS.md). Nastavení se ukládá transakčně ve schématu 6 s ochranou před přepsáním změn jiného okna. Migrace z verze 5 zachová všechny předchozí tabulky i data; starší aplikace novější schéma odmítne otevřít.
 ## Směr
 
 Zachovat Python + CustomTkinter, místní SQLite a volitelnou AI přes Ollamu. Primární platformy Windows/Linux, ponechat funkční vývoj na macOS. Běžné studium nesmí vyžadovat cloudový účet, placené API ani spuštěnou AI. Vizuální jazyk dál rozvíjet z dnešního Dashboardu.
@@ -105,3 +106,9 @@ AI odpovědi nejdříve jako text, monospaced bloky kódu a Unicode matematika; 
 | 6. Dokončení | Statistiky, jazyky, motiv, zálohy a balíčky | Ověřené instalace na cílových systémech |
 
 Obrazovky rozvíjet iterativně po zpětné vazbě podle původního zadání. Tento návrh nevyžaduje okamžitý přepis nynějšího Dashboardu.
+
+## Nastavení
+
+Chat zůstává jen v paměti a zavřením se odstraní. Volby spojení lze výslovně uložit v [Settings](SETTINGS.md); bez Save jsou dočasné.
+
+[Nastavení](SETTINGS.md).

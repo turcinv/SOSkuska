@@ -24,18 +24,19 @@ class TutorPage(ctk.CTkFrame):
         connection.grid(row=2, column=0, sticky='ew', pady=(0, 12))
         connection.grid_columnconfigure(0, weight=1)
         self.endpoint = ctk.CTkEntry(connection, height=38, font=app.font())
-        self.endpoint.insert(0, 'http://127.0.0.1:11434')
+        self.endpoint.insert(0, app.preferences['ollama_endpoint'])
         self.endpoint.grid(row=0, column=0, sticky='ew', padx=(0, 8))
         self.connect_button = app.button(connection, 'Connect / refresh', self.connect, width=155)
         self.connect_button.grid(row=0, column=1)
         options = app.frame(self)
         options.grid(row=3, column=0, sticky='ew', pady=(0, 12))
         options.grid_columnconfigure(0, weight=1)
-        self.model = ctk.StringVar(value='Connect to load models')
+        self.preferred_model = app.preferences['ollama_model']
+        self.model = ctk.StringVar(value=self.preferred_model or 'Connect to load models')
         self.model_menu = ctk.CTkOptionMenu(options, variable=self.model, values=[self.model.get()], dynamic_resizing=False, font=app.font(), height=38, state='disabled')
         app.label(options, 'Model', 12, 'secondary').grid(row=0, column=0, sticky='w')
         self.model_menu.grid(row=1, column=0, sticky='ew', padx=(0, 8))
-        self.language = ctk.StringVar(value='Automatic')
+        self.language = ctk.StringVar(value=app.preferences['answer_language'])
         self.language_menu = ctk.CTkOptionMenu(options, variable=self.language, values=list(LANGUAGES), dynamic_resizing=False, font=app.font(), height=38, width=125)
         app.label(options, 'Answer language', 12, 'secondary').grid(row=0, column=1, sticky='w')
         self.language_menu.grid(row=1, column=1)
@@ -65,6 +66,27 @@ class TutorPage(ctk.CTkFrame):
     def load(self):
         self.pending_clear = False  # Navigation preserves chat; cancels clear confirmation.
         self.clear_button.configure(text='New chat')
+
+    def apply_preferences(self, saved, previous):
+        # Called only after explicit Settings Save; never starts networking.
+        endpoint_changed = saved['ollama_endpoint'] != previous['ollama_endpoint']
+        model_changed = saved['ollama_model'] != previous['ollama_model']
+        if endpoint_changed:
+            self.endpoint.delete(0, 'end')
+            self.endpoint.insert(0, saved['ollama_endpoint'])
+            # Remembering the already connected server must retain chat ownership.
+            if saved['ollama_endpoint'] != self.connected_endpoint:
+                self.connected_endpoint = None
+                self.models = []
+                self.app.ai_status.configure(text='○  AI not connected')
+        if model_changed:
+            self.preferred_model = saved['ollama_model']
+        if endpoint_changed or model_changed:
+            self.model.set(self.preferred_model if not self.models or self.preferred_model in self.models else '')
+            self.status.configure(text='Saved AI preferences applied. Connect to check available models.')
+        if saved['answer_language'] != previous['answer_language']:
+            self.language.set(saved['answer_language'])
+        self.controls()
 
     def controls(self):
         busy = self.task is not None
@@ -169,11 +191,21 @@ class TutorPage(ctk.CTkFrame):
                         stopped = kind == 'stopped' or (kind == 'done' and task.control.cancelled.is_set())
                         if task.kind == 'models':
                             if kind == 'done' and not stopped:
+                                same_server = self.connected_endpoint == self.request_endpoint
                                 self.connected_endpoint = self.request_endpoint
                                 self.models = value
                                 self.model_menu.configure(values=value or ['No models installed'])
-                                self.model.set(self.model.get() if self.model.get() in value else next(iter(value), 'No models installed'))
-                                self.status.configure(text='Ready. Choose a model and ask a study question.' if value else 'Connected, but no models are available. Install a model in Ollama, then refresh.')
+                                missing_preference = bool(self.preferred_model and self.preferred_model not in value)
+                                # A manual override belongs to its server; refresh may keep it.
+                                if same_server and self.model.get() in value:
+                                    selected = self.model.get()
+                                elif self.preferred_model in value:
+                                    selected = self.preferred_model
+                                else:
+                                    selected = '' if missing_preference else next(iter(value), 'No models installed')
+                                self.model.set(selected)
+                                notice = ('Preferred model is unavailable. Choose a listed model before sending.' if missing_preference and not selected else 'Ready. Choose a model and ask a study question.')
+                                self.status.configure(text=notice if value else 'Connected, but no models are available. Install a model in Ollama, then refresh.')
                                 self.app.ai_status.configure(text='○  AI ready' if value else '○  AI has no models')
                             else:
                                 self.models = []

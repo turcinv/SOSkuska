@@ -173,3 +173,9 @@ V ponuke **Statistics** zvoľ Last 7 days, Last 30 days alebo All time. Prehľad
 V AI Tutor pripoj vlastný server Ollama cez Connect / refresh, vyber model a jazyk odpovede a zadaj otázku. Odpoveď prichádza priebežne; Stop ju zastaví. Ostatné obrazovky zostávajú použiteľné počas generovania aj bez Ollamy. Chat je iba pre aktuálne spustenie aplikácie, neukladá sa do databázy.
 
 [Návod AI Tutor](AI_TUTOR.md).
+
+## Nastavenia
+
+Chat zostáva iba v pamäti a zatvorením sa odstráni. Voľby spojenia možno výslovne uložiť v [Settings](SETTINGS.md); bez Save sú dočasné.
+
+[Nastavenia](SETTINGS.md).

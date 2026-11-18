@@ -28,6 +28,8 @@ from practice_page import PracticePage
 from flashcard_page import FlashcardPage
 from statistics_page import StatisticsPage
 from tutor_page import TutorPage
+from settings_page import SettingsPage
+from preferences import AI_KEYS
 
 C = dict(bg="#0D1117", sidebar="#11151C", card="#181D27", raised="#202633",
          border="#2A303C", accent="#8B5CF6", hover="#A78BFA", primary="#6D28D9",
@@ -58,6 +60,8 @@ class Dashboard(ctk.CTk):
         self.configure(fg_color=C["bg"])
         self.family = "Segoe UI" if platform.system() == "Windows" else "Helvetica" if sys.platform == "darwin" else "Noto Sans"
         self.store = Store(database or data_path())
+        self.preferences = self.store.preferences()
+        self.saved_today_seconds = 0
         self.running_since = None
         self.session_seconds = 0.0
         self.session_open = False
@@ -68,7 +72,7 @@ class Dashboard(ctk.CTk):
         self.current_page = "Dashboard"
         self.selected_subject_id = None
         self.active_day = date.today()
-        self.focus_target = 15 * 60
+        self.focus_target = self.preferences["focus_minutes"] * 60
         self.collapsed = False
         self.layout_mode = None
         self.resize_job = None
@@ -95,6 +99,9 @@ class Dashboard(ctk.CTk):
         self.tutor_page = TutorPage(self.scroll, self)
         self.tutor_page.grid(row=0, column=0, sticky="ew", padx=28, pady=28)
         self.tutor_page.grid_remove()
+        self.settings_page = SettingsPage(self.scroll, self)
+        self.settings_page.grid(row=0, column=0, sticky="ew", padx=28, pady=28)
+        self.settings_page.grid_remove()
         self.bind("<Configure>", self.on_resize)
         self.bind("<Control-k>", self.focus_search)
         self.bind("<Command-k>", self.focus_search)
@@ -228,7 +235,7 @@ class Dashboard(ctk.CTk):
         self.timer_frame = self.frame(focus)
         self.timer_frame.grid(row=5, column=0, sticky="ew", padx=18, pady=(0, 16))
         self.timer_frame.grid_columnconfigure(0, weight=1)
-        self.timer_label = self.label(self.timer_frame, "15:00 · Focus session", 14, "hover", bold=True)
+        self.timer_label = self.label(self.timer_frame, f"{self.focus_target // 60:02d}:00 · Focus session", 14, "hover", bold=True)
         self.timer_label.grid(row=0, column=0, sticky="w")
         self.pause_button = self.button(self.timer_frame, "Pause", self.pause_focus, width=74)
         self.pause_button.grid(row=0, column=1, padx=(8, 8))
@@ -330,7 +337,7 @@ class Dashboard(ctk.CTk):
         self.reflow()
 
     def navigate(self, name):
-        if name not in ("Dashboard", "My Subjects", "Practice Tests", "Flashcards", "Statistics", "AI Tutor"):
+        if name not in ("Dashboard", "My Subjects", "Practice Tests", "Flashcards", "Statistics", "AI Tutor", "Settings"):
             self.show_notice(f"{name} will be available in a later version.")
             return
         self.subject_page.cancel_delete()
@@ -340,7 +347,13 @@ class Dashboard(ctk.CTk):
         self.flashcard_page.grid_remove()
         self.statistics_page.grid_remove()
         self.tutor_page.grid_remove()
-        if name == "AI Tutor":
+        self.settings_page.grid_remove()
+        if name == "Settings":
+            self.content.grid_remove()
+            self.subject_page.grid_remove()
+            self.settings_page.load()
+            self.settings_page.grid()
+        elif name == "AI Tutor":
             self.content.grid_remove()
             self.subject_page.grid_remove()
             self.tutor_page.load()
@@ -385,6 +398,7 @@ class Dashboard(ctk.CTk):
         self.flashcard_page.grid_remove()
         self.statistics_page.grid_remove()
         self.tutor_page.grid_remove()
+        self.settings_page.grid_remove()
         self.question_bank.load_subject(subject_id)
         self.question_bank.grid()
         self.current_page = "Question Bank"
@@ -455,7 +469,7 @@ class Dashboard(ctk.CTk):
         self.selected_subject_id = self.subject_ids.get(name)
 
     def focus_search(self, _event=None):
-        if self.current_page in ("Practice Tests", "Flashcards", "Statistics", "AI Tutor"):
+        if self.current_page in ("Practice Tests", "Flashcards", "Statistics", "AI Tutor", "Settings"):
             return "break"
         if self.current_page == "Question Bank":
             self.question_bank.search.focus_set()
@@ -464,7 +478,7 @@ class Dashboard(ctk.CTk):
         return "break"
 
     def clear_search(self, _event=None):
-        if self.current_page in ("Practice Tests", "Flashcards", "Statistics", "AI Tutor"):
+        if self.current_page in ("Practice Tests", "Flashcards", "Statistics", "AI Tutor", "Settings"):
             return
         if self.current_page == "Question Bank":
             self.question_bank.query.set("")
@@ -490,6 +504,8 @@ class Dashboard(ctk.CTk):
         self.session_subject_id = subject["id"]
         self.session_subject_name = subject["name"]
         self.navigate("Dashboard")
+        self.focus_target = self.preferences["focus_minutes"] * 60
+        self.timer_label.configure(text=f"{self.focus_target // 60:02d}:00 · Focus")
         self.session_open = True
         self.running_since = time.monotonic()
         self.pause_button.configure(text="Pause")
@@ -555,9 +571,29 @@ class Dashboard(ctk.CTk):
                   f'{summary["streak"]} days', str(summary["subjects"])]
         for label, value in zip(self.metric_values, values):
             label.configure(text=value)
-        today = summary["today_seconds"] // 60
-        self.goal.configure(text=f"{today} / 60 min")
-        self.goal_bar.set(min(summary["today_seconds"] / 3600, 1))
+        self.saved_today_seconds = summary["today_seconds"]
+        self.update_goal()
+
+    def update_goal(self):
+        goal = self.preferences["daily_goal_minutes"]
+        self.goal.configure(text=f"{self.saved_today_seconds // 60} / {goal} min")
+        self.goal_bar.set(min(self.saved_today_seconds / (goal * 60), 1))
+
+    def validate_preferences_change(self, fields):
+        tutor = self.tutor_page
+        if any(fields[key] != self.preferences[key] for key in AI_KEYS) and tutor.task is not None:
+            raise ValueError("Wait for or stop the Tutor request before changing AI preferences.")
+        if (fields["ollama_endpoint"] != self.preferences["ollama_endpoint"] and tutor.turns
+                and fields["ollama_endpoint"] != tutor.connected_endpoint):
+            raise ValueError("Start a New chat in AI Tutor before saving a different server.")
+
+    def apply_preferences(self, saved):
+        previous = self.preferences
+        self.preferences = dict(saved)
+        if not self.session_open:
+            self.focus_target = saved["focus_minutes"] * 60
+        self.update_goal()
+        self.tutor_page.apply_preferences(saved, previous)
 
     def tick(self):
         try:

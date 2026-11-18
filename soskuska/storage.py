@@ -8,8 +8,9 @@ from content import question_fields, topic_fields
 from practice import MissingPracticeError, expired, practice_settings, utc_now
 from repetition import card_fields, deck_fields, next_review
 from study_statistics import statistics_report
+from preferences import DEFAULTS, preference_fields
 
-SCHEMA_VERSION = 5
+SCHEMA_VERSION = 6
 
 
 def default_database(base):
@@ -153,6 +154,15 @@ class Store:
                     due_at TEXT NOT NULL, interval_days INTEGER NOT NULL,
                     UNIQUE(card_id,card_revision))""")
                 self.db.execute("CREATE INDEX review_events_deck ON review_events(deck_id,id)")
+            if version < 6:
+                self.db.execute("""CREATE TABLE preferences (
+                    id INTEGER PRIMARY KEY CHECK(id=1),
+                    focus_minutes INTEGER NOT NULL CHECK(focus_minutes BETWEEN 1 AND 180),
+                    daily_goal_minutes INTEGER NOT NULL CHECK(daily_goal_minutes BETWEEN 1 AND 1440),
+                    ollama_endpoint TEXT NOT NULL, ollama_model TEXT NOT NULL,
+                    answer_language TEXT NOT NULL,
+                    revision INTEGER NOT NULL DEFAULT 0 CHECK(revision>=0))""")
+                self.db.execute("INSERT INTO preferences VALUES (1,?,?,?,?,?,0)", tuple(DEFAULTS.values()))
             self.db.execute(f"PRAGMA user_version = {SCHEMA_VERSION}")
 
     def task(self, name, default=False):
@@ -600,6 +610,33 @@ class Store:
 
     def statistics(self, period="Last 7 days", *, today=None):
         return statistics_report(self.db, period, today=today)
+
+    def preferences(self):
+        row = self.db.execute("SELECT * FROM preferences WHERE id=1").fetchone()
+        if row is None:
+            return dict(DEFAULTS, revision=0, invalid=True)
+        try:
+            fields = preference_fields(*(row[key] for key in DEFAULTS))
+        except (ValueError, TypeError, AttributeError):
+            return dict(DEFAULTS, revision=row["revision"], invalid=True)
+        return dict(fields, revision=row["revision"], invalid=False)
+
+    def save_preferences(self, fields, *, expected_revision):
+        normalized = preference_fields(*(fields[key] for key in DEFAULTS))
+        if type(expected_revision) is not int or expected_revision < 0:
+            raise ValueError("Reload settings before saving.")
+        with self.db:
+            self.db.execute("BEGIN IMMEDIATE")
+            row = self.db.execute("SELECT revision FROM preferences WHERE id=1").fetchone()
+            revision = row[0] if row else 0
+            if revision != expected_revision:
+                raise ValueError("Settings changed in another window. Your draft is kept; copy it before using Reload to combine changes.")
+            self.db.execute("""INSERT INTO preferences VALUES (1,?,?,?,?,?,?)
+                ON CONFLICT(id) DO UPDATE SET focus_minutes=excluded.focus_minutes,
+                daily_goal_minutes=excluded.daily_goal_minutes,ollama_endpoint=excluded.ollama_endpoint,
+                ollama_model=excluded.ollama_model,answer_language=excluded.answer_language,
+                revision=excluded.revision""", (*normalized.values(), revision+1))
+        return dict(normalized, revision=revision+1, invalid=False)
 
     def close(self):
         self.db.close()

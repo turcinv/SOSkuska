@@ -76,7 +76,7 @@ Procvičování je dostupné od v0.4.0. Procvičování nepřidává smyšlený 
 
 ## Průběžná integrace (CI)
 
-CI: Python 3.12, jednotkové testy na třech systémech a osm GUI kontrol na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
+CI: Python 3.12, jednotkové testy na třech systémech a devět GUI kontrol na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
 
 ## Kartičky a opakování (v0.5.0)
 
@@ -95,3 +95,9 @@ V nabídce **Statistics** zvol Last 7 days, Last 30 days nebo All time. Přehled
 V AI Tutor připoj vlastní Ollama server přes Connect / refresh, vyber model a jazyk odpovědi a zadej otázku. Odpověď přichází průběžně; Stop ji zastaví. Ostatní obrazovky zůstávají použitelné během generování i bez Ollamy. Chat je pouze pro aktuální spuštění aplikace, neukládá se do databáze.
 
 [Návod AI Tutor](docs/AI_TUTOR.md).
+
+## Nastavení
+
+Chat zůstává jen v paměti a zavřením se odstraní. Volby spojení lze výslovně uložit v [Settings](docs/SETTINGS.md); bez Save jsou dočasné.
+
+[Nastavení](docs/SETTINGS.md).

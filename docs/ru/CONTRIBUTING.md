@@ -28,6 +28,7 @@
 .venv-macos/bin/python soskuska/check_statistics.py
 .venv-macos/bin/python soskuska/check_state_fixes.py
 .venv-macos/bin/python soskuska/check_tutor.py
+.venv-macos/bin/python soskuska/check_settings.py
 ```
 
 GUI-проверка открывает окно и требует графического сеанса. Для изменения только документации обычно достаточно проверить ссылки, команды и форматирование; запускать весь UI ради неё не нужно.
