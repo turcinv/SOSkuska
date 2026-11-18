@@ -1,43 +1,42 @@
-# Plánovaná architektura
+# Planned architecture
 
-**Budoucí návrh, nikoli dnešní implementace.** Zde uvedené moduly a tabulky zatím neexistují, pokud je nepotvrzuje [současná architektura](CURRENT_ARCHITECTURE.md). Tento plán sám neznamená zahájení implementace všech funkcí.
+[English](PLANNED_ARCHITECTURE.md) · [Čeština](cs/PLANNED_ARCHITECTURE.md) · [Slovenčina](sk/PLANNED_ARCHITECTURE.md) · [Русский](ru/PLANNED_ARCHITECTURE.md)
 
-**Aktuální postup (18. listopadu 2026):** V AI Tutor připoj vlastní Ollama server přes Connect / refresh, vyber model a jazyk odpovědi a zadej otázku. Odpověď přichází průběžně; Stop ji zastaví. Ostatní obrazovky zůstávají použitelné během generování i bez Ollamy. Chat je pouze pro aktuální spuštění aplikace, neukládá se do databáze.
+**Future design, not a description of everything implemented today.** Proposed files/tables exist only where confirmed by [current architecture](CURRENT_ARCHITECTURE.md). A roadmap does not authorize implementing every feature at once.
 
-Nastavení se ukládá do stejné databáze jako studijní data. [Settings](SETTINGS.md). Nastavení se ukládá transakčně ve schématu 6 s ochranou před přepsáním změn jiného okna. Migrace z verze 5 zachová všechny předchozí tabulky i data; starší aplikace novější schéma odmítne otevřít.
-## Směr
+As of 18 November 2026, v0.8.0 includes subjects/questions, focus sessions, practice, flashcards, statistics, optional session-only Ollama chat and persisted study/AI preferences. Schema 6 migration preserves previous data. [Settings](SETTINGS.md) does not automatically connect or save chat.
 
-Zachovat Python + CustomTkinter, místní SQLite a volitelnou AI přes Ollamu. Primární platformy Windows/Linux, ponechat funkční vývoj na macOS. Běžné studium nesmí vyžadovat cloudový účet, placené API ani spuštěnou AI. Vizuální jazyk dál rozvíjet z dnešního Dashboardu.
+## Direction
 
-Oddělovat UI, studijní pravidla a ukládání postupně podle potřeb konkrétních funkcí. Nevytvářet nový UI framework ani webový backend.
+Keep Python + CustomTkinter, local SQLite and optional Ollama. Windows/Linux remain primary targets with working macOS development. Ordinary study must not require a cloud account, paid API or running AI. Evolve the current Dashboard's visual style. Separate UI, study rules and persistence gradually as features need it; avoid introducing another UI framework or web backend.
 
-## Vrstvy
+## Proposed layers
 
 ```mermaid
 flowchart TD
-    UI[Obrazovky a UI komponenty] --> Services[Studijní služby a stav obrazovek]
-    Services --> Domain[Modely a studijní pravidla]
-    Services --> Repos[Repozitáře a migrace]
+    UI[Screens and components] --> Services[Study services and screen state]
+    Services --> Domain[Models and study rules]
+    Services --> Repos[Repositories and migrations]
     Repos --> DB[(SQLite)]
-    Services --> Jobs[Úlohy mimo UI vlákno]
-    Jobs --> Ollama[Místní Ollama / HTTP]
-    Jobs --> Files[Import a export]
-    Jobs --> Queue[Fronta výsledků]
-    Queue --> Main[Tk after / hlavní vlákno]
+    Services --> Jobs[Background jobs]
+    Jobs --> Ollama[Local Ollama / HTTP]
+    Jobs --> Files[Import and export]
+    Jobs --> Queue[Result queue]
+    Queue --> Main[Tk after / main thread]
     Main --> UI
 ```
 
-| Vrstva | Odpovědnost |
+| Layer | Responsibility |
 | --- | --- |
-| UI | Widgety, navigace, zaměření, zobrazení stavů; bez SQL a blokujícího HTTP |
-| Services | Spuštění studia, hodnocení, přehledy a kontext AI; bez manipulace widgety |
-| Domain | Předměty, otázky, odpovědi a pravidla opakování; bez závislosti na Tk |
-| Persistence | Dotazy, transakce, mapování dat a migrace |
-| Integrations | Ollama a formáty souborů |
+| UI | Widgets, navigation, focus and state display; no SQL or blocking HTTP |
+| Services | Study start, ratings, reports and AI context; no widget manipulation |
+| Domain | Subjects, questions, answers and repetition rules independent of Tk |
+| Persistence | Queries, transactions, mapping and migrations |
+| Integrations | Ollama and file formats |
 
-Stav obrazovky může zůstat jednoduchou datovou strukturou. Není potřeba hned zavádět rozsáhlý MVVM framework.
+Screen state can remain a simple data structure; a large MVVM framework is unnecessary.
 
-## Navrhované soubory
+## Proposed files
 
 ```text
 pyproject.toml
@@ -58,57 +57,43 @@ tests/
 docs/
 ```
 
-Přesun provádět po malých funkčních krocích. Do vytvoření balíčku zůstává platný dnešní příkaz `python soskuska/app.py`; budoucí `python -m soskuska` zatím nefunguje.
+Move incrementally in working steps. Until packaging exists, `python soskuska/app.py` remains the entry point; future `python -m soskuska` does not work yet.
 
-## Navrhovaný datový model
+## Proposed data model
 
-| Oblast | Návrh tabulek |
+| Area | Possible tables |
 | --- | --- |
-| Obsah | `subjects`, `topics`, `questions`, `answer_options` |
-| Kartičky | `decks`, `flashcards`, `review_events`, `card_schedule` |
-| Testy | `test_attempts`, `attempt_answers` |
-| Studium | `study_sessions` s předmětem a časovými údaji |
-| Plán a nastavení | `exams`, `daily_tasks`, `settings` |
-| AI | `conversations`, `messages`, reference připojeného kontextu |
-| Údržba | Verze schématu / evidence provedených migrací |
+| Content | `subjects`, `topics`, `questions`, `answer_options` |
+| Cards | `decks`, `flashcards`, `review_events`, `card_schedule` |
+| Tests | `test_attempts`, `attempt_answers` |
+| Study | `study_sessions` with subject and timing |
+| Planning/settings | `exams`, `daily_tasks`, `settings` |
+| AI | `conversations`, `messages`, attached-context references |
+| Maintenance | Schema version / migration history |
 
-Konkrétní schémata musí doplnit cizí klíče, mazací pravidla, indexy a transakce. Migrace musí zachovat dnešní `tasks` a `sessions`; existující čas nesmí dostat vymyšlený předmět. Lokální profil nemá vyžadovat serverový účet.
+These are proposed names, not replacements already performed. Define foreign keys, deletion rules, indexes and transactions. Preserve current tasks/sessions; never invent subjects for old time. A local profile should not need a server account.
 
-Časové okamžiky ukládat s jasnou časovou zónou, ideálně UTC; denní součty počítat v místní zóně. Navrhnout rozdělení sezení přes půlnoc a obnovu po pádu. Monotónní čas se nedá přenést mezi spuštěními procesu, proto nebude jediným uloženým údajem.
+Persist timestamps with explicit zones, preferably UTC, and aggregate calendar days locally. Design midnight splitting and crash recovery; monotonic time cannot survive process restart as the only saved value.
 
-## Funkční celky
+## Feature areas
 
-**Předměty a skutečný Dashboard:** správa předmětů, témat/otázek a skutečné součty sezení jsou implementované. Úspěšnost jednotlivých pokusů je v Practice Tests; základní celkové statistiky jsou implementované. Nová databáze je prázdná.
+- **Subjects/Dashboard:** subject/topic/question management, exams and actual session totals are implemented. New databases are empty; practice results and aggregate statistics already exist.
+- **Flashcards:** decks, editing, reveal/rating, saved schedules and history exist. Rules in repetition.py are custom, not SM-2/FSRS. Import and advanced scheduling are future options.
+- **Practice:** filters, counts, timing, saved attempts, score and answer review exist. Import and richer history are future extensions.
+- **AI Tutor:** bounded Ollama HTTP client, discovered models, streaming and cancellation exist. Keep default local connection, visible configurable URL and no automatic cloud fallback. Distinguish unavailable service, no models, loading/ready/generating/stopped, memory error and missing model; connection failure alone cannot prove Ollama is not installed.
+- **AI execution:** keep long operations off the Tk thread, results through queue/after, and no worker widget calls. Do not share SQLite connections without a design; short writes may stay on the main thread and future jobs should get their own connections.
+- **Text/languages:** start with plain text, code blocks and Unicode math; advanced HTML/LaTeX is optional future work. Separate UI from AI answer language. UI translations should support English/Czech/Slovak/Russian, long text and Cyrillic; AI already supports these plus Automatic and manual override.
+- **Statistics/settings/data:** basic reports and study/AI preferences exist. Future work includes richer charts (Matplotlib only if needed), appearance/UI-language settings, data management, import validation and consistent SQLite backups. Restore with closed connections and a way to recover the previous file.
 
-**Kartičky:** balíčky, editor, odhalení odpovědi, Again / Hard / Good / Easy, uložený termín a historie jsou implementované. Pravidla jsou v repetition.py a dokumentu FLASHCARDS.md; nejde o SM-2 ani FSRS. Import a pokročilejší plánování jsou další možnosti.
+## Stages and completion criteria
 
-**Testy:** výběr tématu, obtížnosti, počtu a času; uložený pokus, skóre a rozbor odpovědí jsou implementované. Další rozšíření: import a bohatší historie.
-
-**AI Tutor:** samostatný Ollama klient s časovým limitem, seznamem dostupných modelů, streamováním a zrušením generování. Výchozí spojení místní, adresa nastavitelná a viditelná; žádný automatický cloudový fallback. Modely načítat z Ollamy, nevyžadovat jeden pevný model.
-
-AI stavy: nedostupná služba, žádný model, načítání, připraveno, generování, zastaveno, nedostatek paměti, model nenalezen. Samotné selhání připojení nesmí být vydáváno za jistotu, že Ollama není nainstalovaná.
-
-Dlouhé operace běží mimo hlavní UI vlákno. Výsledky přicházejí přes frontu a `after`; pracovní vlákno nesmí volat widgety. SQLite připojení bez návrhu nesdílet mezi vlákny. První řešení může ponechat krátké zápisy v hlavním vlákně; případné pracovní úlohy dostanou vlastní připojení.
-
-AI odpovědi nejdříve jako text, monospaced bloky kódu a Unicode matematika; pokročilé HTML/LaTeX není podmínka. Jazyk UI oddělit od jazyka odpovědi AI. Plánované jazyky: English, Czech, Slovak, Russian; AI navíc Automatic s možností ručního přepsání chybné detekce. Počítat s delšími texty a Cyrilicí.
-
-**Statistiky a nastavení:** jednoduché Matplotlib grafy až nad skutečnými měřeními. Nastavení vzhledu, jazyka, studia, AI a správy dat. Import nejprve validovat; zálohy vytvářet jako konzistentní SQLite kopie. Obnovu provádět se zavřeným připojením a možností návratu k předchozímu souboru.
-
-## Etapy a kritéria dokončení
-
-| Etapa | Rozsah | Výsledek |
+| Stage | Scope | Completion evidence |
 | --- | --- | --- |
-| 1. Stabilizace | Oddělit téma/UI, chyby úložiště, migrace | Dashboard funguje a existující data zůstanou zachovaná |
-| 2. Předměty | Správa předmětů, témat, zkoušek, skutečné přehledy | Nový předmět přežije restart; prázdná data se zobrazí pravdivě |
-| 3. Obsah a kartičky | Editor/import, balíčky, opakování | Odpověď vytvoří záznam a plán příštího opakování |
-| 4. Testy | Nastavení, průchod, výsledky a chyby | Výsledek lze otevřít a znovu spočítat z odpovědí |
-| 5. AI | Ollama klient a chat | UI nezamrzá, generování jde zastavit, offline stav je srozumitelný |
-| 6. Dokončení | Statistiky, jazyky, motiv, zálohy a balíčky | Ověřené instalace na cílových systémech |
+| 1. Stabilize | Theme/UI separation, storage errors, migrations | Dashboard works and existing data survives |
+| 2. Subjects | Subjects/topics/exams and actual reports | New subject survives restart; empty data is truthful |
+| 3. Content/cards | Editor/import, decks, repetition | Rating creates history and next schedule |
+| 4. Tests | Setup, execution, results and errors | Result can be reopened/recomputed from answers |
+| 5. AI | Ollama client/chat | UI stays responsive; Stop works; offline state is clear |
+| 6. Finish | Reports, languages, theme, backups, packaging | Verified installations on target systems |
 
-Obrazovky rozvíjet iterativně po zpětné vazbě podle původního zadání. Tento návrh nevyžaduje okamžitý přepis nynějšího Dashboardu.
-
-## Nastavení
-
-Chat zůstává jen v paměti a zavřením se odstraní. Volby spojení lze výslovně uložit v [Settings](SETTINGS.md); bez Save jsou dočasné.
-
-[Nastavení](SETTINGS.md).
+Some stages are partly or substantially complete; use current architecture for status. Iterate with feedback against the semester assignment. This plan does not demand an immediate rewrite of Dashboard.

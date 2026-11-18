@@ -1,5 +1,7 @@
 # Текущая архитектура
 
+[English](../CURRENT_ARCHITECTURE.md) · [Čeština](../cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](../sk/CURRENT_ARCHITECTURE.md) · [Русский](CURRENT_ARCHITECTURE.md)
+
 Состояние на 18 ноября 2026 года. Реализованы Dashboard, My Subjects, Question bank, Practice Tests, Flashcards, Statistics и необязательный AI Tutor и Settings; следующие шаги описаны в [планируемой архитектуре](PLANNED_ARCHITECTURE.md).
 
 ## Технологии и файлы

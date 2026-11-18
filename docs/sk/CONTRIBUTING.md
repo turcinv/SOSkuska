@@ -1,12 +1,13 @@
 # Prispievanie do SOSkúška
 
-[Čeština](../../CONTRIBUTING.md) · [Русский](../ru/CONTRIBUTING.md)
+[English](../../CONTRIBUTING.md) · [Čeština](../cs/CONTRIBUTING.md) · [Slovenčina](CONTRIBUTING.md) · [Русский](../ru/CONTRIBUTING.md)
+
 
 ## Skôr než začneš
 
 Prečítaj [README](README.md), [prácu s Gitom](GIT_GUIDE.md), [vývojový návod](DEVELOPMENT.md) a [súčasnú architektúru](CURRENT_ARCHITECTURE.md). Vývojoví asistenti majú navyše pokyny v [AGENTS.md](../../AGENTS.md).
 
-Pracuj v novej vetve z aktuálneho `main`. Jedna zmena má riešiť jeden zrozumiteľný problém. Existujú Dashboard, My Subjects, Question bank, Practice Tests a Flashcards; ďalšie plánované obrazovky neprezentuj ako hotové funkcie. Nová databáza musí zostať prázdna, kým používateľ nezadá vlastné údaje. Používaj samostatnú vývojovú databázu cez `--data .local-data/dev.sqlite3`.
+Pracuj v novej vetve z aktuálneho `main`. Jedna zmena má riešiť jeden zrozumiteľný problém. Existujú Dashboard, My Subjects, Question bank, Practice Tests, Flashcards, Statistics, voliteľný AI Tutor a Settings; ďalšie plánované obrazovky neprezentuj ako hotové funkcie. Nová databáza musí zostať prázdna, kým používateľ nezadá vlastné údaje. Používaj samostatnú vývojovú databázu cez `--data .local-data/dev.sqlite3`.
 
 ## Pred odoslaním
 
@@ -33,7 +34,7 @@ Na Windows/Linux použi zodpovedajúcu cestu k Pythonu svojho prostredia. Pri zm
 
 Kontrola GUI otvára okno a potrebuje grafickú reláciu. Zmena samotnej dokumentácie zvyčajne vyžaduje kontrolu odkazov, príkazov a formátovania; netreba kvôli nej spúšťať celé UI.
 
-Skontroluj `git diff --check` a obsah commitu. Nepridávaj virtuálne prostredia, databázy, cache, tokeny ani `.env`. Zachovaj používateľské údaje, stabilitu UI a offline prevádzku. Pri podstatnej zmene aktualizuj českú, slovenskú aj ruskú dokumentáciu. AGENTS.md zostáva anglicky, rozhranie aplikácie zatiaľ tiež.
+Skontroluj `git diff --check` a obsah commitu. Nepridávaj virtuálne prostredia, databázy, cache, tokeny ani `.env`. Zachovaj používateľské údaje, stabilitu UI a offline prevádzku. Pri podstatnej zmene aktualizuj anglickú, českú, slovenskú aj ruskú dokumentáciu. AGENTS.md zostáva anglicky, rozhranie aplikácie zatiaľ tiež.
 
 ## Pull request a hlásenie problémov
 
@@ -43,7 +44,7 @@ Chybu nahlás cez šablónu v Issues: postup opakovania, očakávané/skutočné
 
 ## Priebežná integrácia (CI)
 
-CI: Python 3.12, jednotkové testy na troch systémoch a osem GUI kontrol na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
+CI: Python 3.12, jednotkové testy na troch systémoch a deväť GUI kontrol na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
 
 ## Štatistiky (v0.6.0)
 

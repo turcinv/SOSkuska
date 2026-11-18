@@ -1,5 +1,7 @@
 # AI Tutor s Ollamou (v0.7.0)
 
+[English](../AI_TUTOR.md) · [Čeština](../cs/AI_TUTOR.md) · [Slovenčina](AI_TUTOR.md) · [Русский](../ru/AI_TUTOR.md)
+
 V AI Tutor pripoj vlastný server Ollama cez Connect / refresh, vyber model a jazyk odpovede a zadaj otázku. Odpoveď prichádza priebežne; Stop ju zastaví. Ostatné obrazovky zostávajú použiteľné počas generovania aj bez Ollamy. Chat je iba pre aktuálne spustenie aplikácie, neukladá sa do databázy.
 
 ## Prvé použitie

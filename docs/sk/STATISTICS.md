@@ -1,5 +1,7 @@
 # Štatistiky (v0.6.0)
 
+[English](../STATISTICS.md) · [Čeština](../cs/STATISTICS.md) · [Slovenčina](STATISTICS.md) · [Русский](../ru/STATISTICS.md)
+
 V ponuke **Statistics** zvoľ Last 7 days, Last 30 days alebo All time. Prehľad ukazuje uložený čas a relácie, úspešnosť dokončených testov váženú otázkami, počty vlastných hodnotení kartičiek, čas podľa predmetu a dennú aktivitu. Refresh alebo návrat na obrazovku načíta novú snímku. Nejde o meranie zvládnutia učiva.
 
 ## Význam čísel

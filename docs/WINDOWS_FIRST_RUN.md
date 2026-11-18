@@ -1,64 +1,64 @@
-# Windows od nuly — první spuštění SOSkúška
+# Windows from zero: first launch
 
-Návod pro člověka, který na Windows 10/11 zatím nemá Python ani vývojové nástroje. Potřebuješ internet pro první instalaci a zdrojové soubory SOSkuska. Git, VS Code, Node.js, Ollama ani placené služby nejsou pro současný Dashboard potřeba.
+[English](WINDOWS_FIRST_RUN.md) · [Čeština](cs/WINDOWS_FIRST_RUN.md) · [Slovenčina](sk/WINDOWS_FIRST_RUN.md) · [Русский](ru/WINDOWS_FIRST_RUN.md)
 
-**Důležité:** postup vychází z aktuálního kódu a oficiální dokumentace Pythonu. Na skutečných Windows ještě nebyl celý průchod ověřený; aplikace zatím nemá vlastní instalátor `.exe`.
+For Windows 10/11 users without Python or development tools. You need internet for initial installation and the SOSkuska source files. Git, VS Code, Node.js, Ollama and paid services are not required for normal study.
 
-## 1. Nainstaluj správce Pythonu
+This guide follows the project's setup instructions; the complete manual Windows walkthrough has not yet been verified. The app has no `.exe` installer. Automated Windows unit checks do not replace a manual first run.
 
-1. Otevři prohlížeč a přejdi na [oficiální stránku Pythonu pro Windows](https://www.python.org/downloads/windows/).
-2. Vyber **Python install manager** a stáhni jeho instalátor. Samotný správce ještě není požadovaná verze Pythonu; tu přidáš v dalším kroku.
-3. Otevři stažený soubor a klikni na **Install / Instalovat**. Pokud je dostupné tlačítko **Launch / Spustit**, můžeš ho použít pro dokončení počátečního nastavení.
-4. Po dokončení zavři případná stará okna terminálu.
+## 1. Install the Python manager
 
-Nevol **embeddable package** ani archiv zdrojového kódu Pythonu. Tento návod používá běžný Python přes správce, podle [oficiálního postupu instalace na Windows](https://docs.python.org/3/using/windows.html).
+1. Open the [official Python downloads for Windows](https://www.python.org/downloads/windows/).
+2. Choose **Python install manager** and download its installer. The manager itself is not the Python version needed by this app; add that next.
+3. Open the download and select **Install**. If offered, use **Launch** to finish initial setup.
+4. Close old terminal windows afterward.
 
-## 2. Otevři PowerShell a přidej Python 3.12
+Do not select the embeddable package or Python source archive. This guide uses ordinary Python through the manager; see [Python's Windows instructions](https://docs.python.org/3/using/windows.html).
 
-Klikni na **Start**, napiš `PowerShell` a otevři **Windows PowerShell** nebo **Terminal** s profilem PowerShell. Není potřeba spouštět jako správce. Příkazy kopíruj po jednom řádku a každý potvrď klávesou Enter. Značky `PS>` nebo trojité zpětné apostrofy nekopíruj.
+## 2. Open PowerShell and add Python 3.12
+
+Open Start, search `PowerShell`, then open Windows PowerShell or Terminal with a PowerShell profile. Administrator mode is not needed. Copy one command at a time and press Enter; do not copy prompt markers such as `PS>` or Markdown fences.
 
 ```powershell
 py install 3.12
 ```
 
-Počkej na dokončení stažení a instalace. Pak ověř verzi:
+Wait for download/installation, then check:
 
 ```powershell
 py -3.12 --version
 ```
 
-Očekávej `Python 3.12.x`; poslední číslo se může lišit. Záměrně vybíráme řadu 3.12, nikoli automaticky nejnovější Python.
+Expect `Python 3.12.x`; the final number may differ. Use the 3.12 series deliberately rather than automatically selecting the newest Python.
 
-Pokud `py install` hlásí, že se snaží otevřít soubor `install`, počítač nejspíš používá starý launcher. Správce má také jednoznačný příkaz:
+If `py install` tries to open a file named `install`, an older launcher is probably handling the command. Use the manager's unambiguous command:
 
 ```powershell
 pymanager install 3.12
 ```
 
-Pokud není rozpoznané ani `py`, ani `pymanager`, zavři terminál, znovu jej otevři a ověř dokončení instalace správce. Nepokračuj, dokud kontrola verze nefunguje.
+If neither command is recognized, reopen the terminal and check the manager installation. Do not continue until the version check works.
 
-## 3. Ověř podporu oken
+## 3. Check window support
 
 ```powershell
 py -3.12 -m tkinter
 ```
 
-Má se otevřít malé demonstrační okno Tk. Zavři ho křížkem a vrať se do PowerShellu. Tím ověříš, že Python umí vytvářet okna. Samotná instalace CustomTkinteru chybějící modul `_tkinter` neopraví.
+A small Tk demonstration window should open. Close it and return to PowerShell. Installing CustomTkinter alone cannot repair a missing `_tkinter` module.
 
-## 4. Získej a rozbal projekt
+## 4. Obtain and extract the project
 
-Projekt získáš v soukromém repozitáři [turcinv/SOSkuska](https://github.com/turcinv/SOSkuska): přihlas se k účtu s přístupem, klikni na **Code → Download ZIP** a archiv rozbal. Pokud přístup nemáš, požádej autora o archiv **SOSkuska-source.zip**. Git není potřeba. GitHub ZIP obvykle obsahuje složku `SOSkuska-main`; po rozbalení ji přejmenuj na `SOSkuska`.
+Sign into an account with access to the private [turcinv/SOSkuska](https://github.com/turcinv/SOSkuska) repository and choose **Code → Download ZIP**. Without access, ask the author for a **SOSkuska-source.zip** archive. Git is optional. GitHub's ZIP usually contains `SOSkuska-main`; rename the extracted project folder to `SOSkuska`.
 
-1. Klikni na ZIP pravým tlačítkem a zvol **Extract All / Extrahovat vše**.
-2. Uvnitř najdi složku **SOSkuska**, která přímo obsahuje `README.md`, `docs` a podsložku `soskuska`.
-3. Tuto složku přesuň do své uživatelské složky. Výsledná cesta má být `C:\Users\tvoje-jmeno\SOSkuska`.
-4. Ve složce `SOSkuska\soskuska` musí být `app.py` a `requirements.txt`. Pozor na dvojí zanoření `SOSkuska\SOSkuska\soskuska`.
+1. Right-click the ZIP and choose **Extract All**.
+2. Locate the folder directly containing `README.md`, `docs` and the `soskuska` source subfolder.
+3. Move it into your user directory, such as `C:\Users\your-name\SOSkuska`.
+4. Confirm that `SOSkuska\soskuska` contains `app.py` and `requirements.txt`; avoid accidental double nesting like `SOSkuska\SOSkuska\soskuska`.
 
-Projekt musí být rozbalený, ne otevřený přímo uvnitř ZIPu. Virtuální prostředí z Macu nekopíruj; na Windows vytvoříš nové.
+Extract the files rather than running inside the archive. Do not copy a Mac virtual environment; create a Windows-local one.
 
-## 5. Přejdi do projektu
-
-V PowerShellu:
+## 5. Enter the project directory
 
 ```powershell
 cd "$HOME\SOSkuska"
@@ -66,116 +66,71 @@ Test-Path .\soskuska\app.py
 Test-Path .\soskuska\requirements.txt
 ```
 
-Obě kontroly mají vypsat `True`. `$HOME` znamená tvou uživatelskou složku, nemusíš nahrazovat uživatelské jméno. Pokud jsi projekt uložil jinam, uprav cestu v `cd` a nech ji v uvozovkách. Při výsledku `False` nejdříve najdi správnou složku.
+Both checks should print `True`. `$HOME` is your user directory; no username replacement is needed. If you saved the project elsewhere, change the quoted `cd` path. Resolve any `False` result before continuing.
 
-## 6. Vytvoř prostředí a nainstaluj knihovny
+## 6. Create the environment and install libraries
 
 ```powershell
 py -3.12 -m venv .venv
 ```
 
-Po dokončení vznikne složka `.venv`. Prázdný výstup bez chyby je v pořádku. Potom:
+This creates `.venv`; no output without an error is normal. Then run:
 
 ```powershell
 .\.venv\Scripts\python.exe -m pip install -r soskuska/requirements.txt
 ```
 
-Počkej na úspěšné dokončení instalace. Knihovny se instalují do projektu, ne globálně. Prostředí není potřeba aktivovat; **neměň PowerShell execution policy**. Pokud instalace vypíše chybu, nespouštěj další krok naslepo a ulož celý chybový výpis.
+Wait for successful installation. Packages stay inside this project. You do not need to activate the environment or change PowerShell execution policy. If installation fails, retain the full error instead of continuing blindly.
 
-## 7. Spusť aplikaci
+## 7. Launch
 
 ```powershell
 .\.venv\Scripts\python.exe soskuska/app.py
 ```
 
-Má se otevřít tmavé okno **SOSkúška** s Dashboardem a levou navigací. PowerShell nech otevřený; dokud aplikace běží, nevrátí se nový příkazový řádek. Aplikaci běžně ukonči křížkem jejího okna.
+Expect a dark **SOSkúška** window with Dashboard and sidebar navigation. Keep PowerShell open; its prompt returns when the app exits. Normally close the application using its window's close button.
 
-Fungují Dashboard, My Subjects, checklist, vyhledávání a časovač pro konkrétní předmět. Přidej svůj první předmět; nová databáze je prázdná a přehled ukazuje skutečně uložená data. Ostatní studijní obrazovky zůstávají plánované.
+Create your first subject. New databases are empty and show your actual saved data. Dashboard, My Subjects, Question bank, Practice Tests, Flashcards, Statistics, optional AI Tutor and Settings are implemented. AI Tutor requires your own Ollama setup; other study features do not.
 
-## 8. Jak spouštět příště
+## 8. Launch next time
 
-Už neopakuj instalaci Pythonu, vytvoření prostředí ani instalaci knihoven. Otevři PowerShell a zadej:
+Do not repeat Python installation or environment creation. Open PowerShell:
 
 ```powershell
 cd "$HOME\SOSkuska"
 .\.venv\Scripts\python.exe soskuska/app.py
 ```
 
-Po úspěšné první instalaci Dashboard nepotřebuje internet. Běžná data se ukládají do `%LOCALAPPDATA%\SOSkuska\dashboard.sqlite3`. Pro otevření adresáře můžeš vložit `%LOCALAPPDATA%\SOSkuska` do adresního řádku Průzkumníka; soubor nemaž, pokud chceš zachovat úkoly a čas.
+Normal study works offline after installation. Data is stored at `%LOCALAPPDATA%\SOSkuska\dashboard.sqlite3`. Open `%LOCALAPPDATA%\SOSkuska` in File Explorer's address bar to locate it; deleting it removes saved data. If no new database exists but legacy `ExamPrep/dashboard.sqlite3` does, the app uses the legacy file without copying/moving/overwriting it. Explicit `--data` always wins.
 
-## 9. Volitelné — vývoj a kontrola funkčnosti
+## 9. Optional: development and checks
 
-Pro vlastní experimenty používej samostatnou databázi:
+Use a separate database for experiments:
 
 ```powershell
 .\.venv\Scripts\python.exe soskuska/app.py --data .local-data/dev.sqlite3
 ```
 
-Kontrolní skript otevře krátce okno a používá vlastní dočasnou databázi:
+This check briefly opens a window with its own temporary database:
 
 ```powershell
 .\.venv\Scripts\python.exe soskuska/check_dashboard.py
 ```
 
-Při úspěchu vypíše `PASS` a okno zavře. Pokud kontrola nebo běh selže na Windows, jde o důležitý dosud neověřený případ — pošli celý výpis, ne pouze poslední řádek.
+It prints `PASS` and closes the window on success. If launch or a check fails, include the complete output in a report, not just its last line.
 
-## Nejčastější problémy
+## Troubleshooting
 
-| Problém | Co udělat |
+| Problem | What to do |
 | --- | --- |
-| `py` není rozpoznaný | Dokonči instalaci Python install manageru a otevři nový PowerShell; ověř také `pymanager` |
-| `No suitable Python runtime found` | Proveď `py install 3.12`, při kolizi launcheru `pymanager install 3.12` |
-| Kontroly souborů vracejí `False` | Jsi v nesprávné složce nebo je ZIP špatně rozbalený |
-| Cesta s mezerami nefunguje | V příkazu `cd` ponech celou cestu v dvojitých uvozovkách |
-| `No module named customtkinter` | Znovu proveď instalaci requirements přes `.\.venv\Scripts\python.exe` |
-| Chybí `_tkinter` | Vrať se k instalaci plného Pythonu a kontrole v kroku 3; neinstaluj jen balíček přes pip |
-| PowerShell blokuje `Activate.ps1` | Aktivaci vynech; všechny příkazy výše přímo spouštějí `python.exe` |
-| Okno se po dvojkliku hned zavře | Spusť aplikaci z PowerShellu podle kroku 7; chyba zůstane viditelná |
-| Instalace knihoven selže na síti | Ověř internet nebo firemní proxy; nevypínej ověřování certifikátů |
+| `py` not recognized | Finish installing the manager, reopen PowerShell and check `pymanager` too |
+| `No suitable Python runtime found` | Run `py install 3.12`, or `pymanager install 3.12` for a launcher conflict |
+| File checks print `False` | Find the correct directory or extract the ZIP correctly |
+| Path with spaces fails | Keep the full `cd` path inside double quotes |
+| `No module named customtkinter` | Reinstall requirements through `.\.venv\Scripts\python.exe` |
+| Missing `_tkinter` | Use a full Python with Tk and repeat step 3; a pip-only install is insufficient |
+| `Activate.ps1` blocked | Skip activation; commands above invoke the environment's Python directly |
+| Double-click window closes immediately | Launch from PowerShell so the error remains visible |
+| Dependency download fails | Check internet or organizational proxy settings; do not disable certificate verification |
 
-Podrobnosti pro další práci jsou v [návodu pro vývojáře](DEVELOPMENT.md).
-
-
-Kompatibilita s původním názvem: pokud nová databáze v `SOSkuska` neexistuje a původní `ExamPrep/dashboard.sqlite3` existuje, aplikace použije tento původní soubor. Nic automaticky nekopíruje, nepřesouvá ani nepřepisuje. Explicitní `--data` má vždy přednost.
-
-## Banka témat a otázek
-
-V My Subjects zvol u předmětu **Questions**. Přidej téma přes New topic a otázku přes New question. Každá otázka má čtyři různé povinné odpovědi A–D, právě jednu správnou odpověď, obtížnost Easy/Medium/Hard a volitelné vysvětlení. Téma je volitelné. Formulář zachová rozepsaný obsah při chybě validace nebo zápisu.
-
-Témata lze přejmenovat a smazat; vyber téma ve filtru a použij Rename selected topic nebo Delete selected topic. Otázky lze upravovat a mazat. Hledání v textu otázky se kombinuje s filtrem tématu a obtížnosti. Počty na kartách předmětů vycházejí z uloženého obsahu. Smazání tématu ponechá jeho otázky v No topic. Smazání předmětu po výslovném upozornění odstraní jeho témata a otázky, ale zachová čas i historii studia.
-
-Jde o editor obsahu: správná odpověď je viditelná. Procvičování a hodnocení najdeš v Practice Tests. Import a obrázky zatím nejsou implementované.
-
-## Practice Tests — procvičování (v0.4.0)
-
-Nejprve vytvoř předmět a otázky přes My Subjects → Questions. V Practice Tests vyber předmět, téma (všechna / bez tématu / konkrétní), obtížnost a 1–100 dostupných otázek. Volitelný limit je 5, 10, 15, 30 nebo 60 minut; Untimed nemá limit. Otázky se náhodně vyberou bez opakování.
-
-Odpověď se uloží po každém výběru; lze ji změnit nebo vymazat přes Clear answer. Previous/Next mění uloženou pozici. Při návratu nebo restartu lze pokračovat přes Resume test. Najednou může být rozpracovaný jeden test. Discard test vyžaduje potvrzení a odstraní pouze tento rozpracovaný pokus.
-
-Finish test po potvrzení uloží výsledek; nevyplněné otázky se počítají jako nesprávné. Správné odpovědi a vysvětlení se zobrazí až po odevzdání. Časový limit běží i mimo obrazovku a při zavřené aplikaci; po vypršení se test automaticky dokončí při běhu nebo návratu do aplikace. Výsledek a otázky jsou snímkem ze začátku pokusu: pozdější úprava či smazání původního obsahu je nezmění. Historie zobrazuje posledních 20 dokončených testů; starší záznamy zůstávají v databázi.
-
-Procvičování je dostupné od v0.4.0. Procvičování nepřidává smyšlený čas do součtů časovače. Import zůstává plánovaný; AI Tutor má vlastní volitelný chat; celkový přehled je ve Statistics.
-
-## Kartičky a opakování (v0.5.0)
-
-V postranní nabídce otevři **Flashcards**. New deck vytvoří balíček pro existující předmět; název musí být jedinečný mezi všemi balíčky. Předmět balíčku se potom nemění, název a popis ano. Open deck umožní přidat a upravovat kartičky. Přední strana má 1–2000 znaků, zadní 1–4000; Search hledá v obou stranách. Seznam zobrazuje nejvýše 100 výsledků, další najdeš užším hledáním.
-
-[Podrobný návod a pravidla](FLASHCARDS.md).
-
-## Statistiky (v0.6.0)
-
-V nabídce **Statistics** zvol Last 7 days, Last 30 days nebo All time. Přehled ukazuje uložený čas a sezení, otázkami váženou úspěšnost dokončených testů, počty vlastních hodnocení kartiček, čas podle předmětu a denní aktivitu. Refresh nebo návrat na obrazovku načte nový snímek. Nejde o měření zvládnutí učiva.
-
-[Podrobná pravidla](STATISTICS.md).
-
-## AI Tutor s Ollamou (v0.7.0)
-
-V AI Tutor připoj vlastní Ollama server přes Connect / refresh, vyber model a jazyk odpovědi a zadej otázku. Odpověď přichází průběžně; Stop ji zastaví. Ostatní obrazovky zůstávají použitelné během generování i bez Ollamy. Chat je pouze pro aktuální spuštění aplikace, neukládá se do databáze.
-
-[Návod AI Tutor](AI_TUTOR.md).
-
-## Nastavení
-
-Chat zůstává jen v paměti a zavřením se odstraní. Volby spojení lze výslovně uložit v [Settings](SETTINGS.md); bez Save jsou dočasné.
-
-[Nastavení](SETTINGS.md).
+Continue with [Development](DEVELOPMENT.md) and [How it works](HOW_IT_WORKS.md). Feature guides: [Flashcards](FLASHCARDS.md), [Statistics](STATISTICS.md), [AI Tutor](AI_TUTOR.md) and [Settings](SETTINGS.md). Questions are authored through My Subjects → Questions; Practice Tests uses those questions and keeps saved snapshots/results. Import and images are not implemented.

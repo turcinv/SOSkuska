@@ -1,5 +1,7 @@
 # SOSkúška — slovenská dokumentácia
 
+[English](../../README.md) · [Čeština](../cs/README.md) · [Slovenčina](README.md) · [Русский](../ru/README.md)
+
 **Vydanie: [v0.8.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.8.0)** — zdrojový kód funkčného prototypu. Prehľad funkcií a opráv je v [histórii zmien](CHANGELOG.md). Inštalátor zatiaľ nie je súčasťou vydania.
 
 Lokálny desktopový študijný asistent v Pythone a CustomTkinteri. Implementované sú Dashboard a My Subjects: správa predmetov a termínov skúšok, denný zoznam úloh, vyhľadávanie a časovač prepojený s predmetom. Úlohy a odštudovaný čas sa ukladajú do SQLite na zariadení používateľa.
@@ -97,3 +99,5 @@ V AI Tutor pripoj vlastný server Ollama cez Connect / refresh, vyber model a ja
 Chat zostáva iba v pamäti a zatvorením sa odstráni. Voľby spojenia možno výslovne uložiť v [Settings](SETTINGS.md); bez Save sú dočasné.
 
 [Nastavenia](SETTINGS.md).
+
+Hlavná dokumentácia je po anglicky v koreni repozitára a v `docs/`. Česká verzia je v `docs/cs/`, slovenská v `docs/sk/` a ruská v `docs/ru/`. AGENTS.md zostáva anglicky; konverzácia môže byť česky, slovensky, anglicky alebo rusky.

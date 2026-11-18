@@ -1,5 +1,7 @@
 # Nastavenia
 
+[English](../SETTINGS.md) · [Čeština](../cs/SETTINGS.md) · [Slovenčina](SETTINGS.md) · [Русский](../ru/SETTINGS.md)
+
 Nastavenia sa ukladajú do rovnakej databázy ako študijné údaje.
 
 V **Settings** nastav dĺžku nasledujúcej focus relácie (1–180 minút, predvolene 15), denný cieľ (1–1 440 minút, predvolene 60), URL Ollamy, preferovaný model a jazyk AI odpovede. **Save settings** uloží a použije všetky hodnoty; rozpísané zmeny prežijú prepnutie obrazovky, ale nie zatvorenie aplikácie. Prebiehajúca aj pozastavená relácia si zachová pôvodnú dĺžku. Cieľ sa zmení hneď, historický čas sa neprepočítava.

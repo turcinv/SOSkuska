@@ -1,22 +1,23 @@
-# AI Tutor s Ollamou (v0.7.0)
+# AI Tutor with Ollama (introduced in v0.7.0)
 
-V AI Tutor připoj vlastní Ollama server přes Connect / refresh, vyber model a jazyk odpovědi a zadej otázku. Odpověď přichází průběžně; Stop ji zastaví. Ostatní obrazovky zůstávají použitelné během generování i bez Ollamy. Chat je pouze pro aktuální spuštění aplikace, neukládá se do databáze.
+[English](AI_TUTOR.md) · [Čeština](cs/AI_TUTOR.md) · [Slovenčina](sk/AI_TUTOR.md) · [Русский](ru/AI_TUTOR.md)
 
-## První použití
+Connect your Ollama server through **Connect / refresh**, choose a model and answer language, type a question and select **Send**. Replies arrive progressively; **Stop** cancels generation. Other screens remain usable during generation and without Ollama. Chat is not stored in the database and lasts only for the current app session.
 
-1. Nainstaluj a spusť Ollamu podle [oficiálního návodu](https://docs.ollama.com/quickstart); pro Windows je dostupný [samostatný návod](https://docs.ollama.com/windows), pro Linux [instalace a spuštění](https://docs.ollama.com/linux). Vyber místní model odpovídající paměti počítače. SOSkúška modely sama nestahuje ani neinstaluje.
-2. Ověř v Ollamě, že je alespoň jeden model dostupný. Pro běžné studium mimo AI Tutor Ollamu nepotřebuješ.
-3. Spusť SOSkúška a otevři AI Tutor. Výchozí adresa je `http://127.0.0.1:11434`. Connect / refresh načte modely; při prázdném seznamu nejprve připrav model v Ollamě a obnov připojení.
-4. Vyber model a jazyk: Automatic, English, Czech, Slovak nebo Russian. Automatic požádá model o jazyk poslední otázky, přesnost závisí na modelu. Zadej otázku a zvol Send.
-5. Stop ponechá už přijatý text. Po chybě můžeš zkusit další otázku; neúplné odpovědi se neposílají jako kontext dalšího dotazu. New chat vyžaduje druhé potvrzení, pokud existuje chat. Návrat na obrazovku nebo Send/Connect toto potvrzení zruší.
+## First use
 
-## Soukromí a limity
+1. Install and run Ollama using its [official quickstart](https://docs.ollama.com/quickstart), [Windows guide](https://docs.ollama.com/windows) or [Linux guide](https://docs.ollama.com/linux). Choose a model that fits your computer's memory. SOSkúška does not download or install models.
+2. Check in Ollama that at least one model is available. Normal study outside AI Tutor does not require Ollama.
+3. Open AI Tutor. The default URL is `http://127.0.0.1:11434`. Connect / refresh loads models; if none appear, prepare a model in Ollama and refresh.
+4. Choose Automatic, English, Czech, Slovak or Russian. Automatic asks the model to follow the latest question's language; detection quality depends on the model.
+5. Stop retains received text. After an error, another question may be sent; failed/stopped replies are excluded from future context. New chat needs a second confirmation when chat exists. Navigation or Send/Connect cancels that confirmation.
 
-Síťový požadavek začíná pouze po Connect nebo Send; spuštění aplikace ani navigace nic neodesílá. Na zvolený server jde otázka a omezený kontext tohoto chatu, nikoli obsah SQLite, předměty, výsledky nebo soubory. Výchozí server je místní; při změně adresy rozhoduje zvolený server/model o zpracování dat. Před připojením k jinému serveru je potřeba New chat. Automatický přechod na cloud neexistuje.
+## Privacy and limits
 
-Chat zůstává jen v paměti. Volby spojení lze uložit přes [Settings](SETTINGS.md); zavření odstraní chat; pokud chceš text uchovat, zkopíruj jej před zavřením. Limit je 12 dotazů na chat, otázka 4 000 znaků, odpověď 16 000 znaků. Kontext zahrnuje nejvýše šest posledních úplných dvojic, celkem 24 000 znaků; starší obsah model nemusí znát. Text je prostý, bez vykreslování Markdown/LaTeX či připojených materiálů. Nejde o ověřené správné odpovědi ani automatické hodnocení učiva.
+Only Connect or Send starts a request; startup and navigation send nothing. The selected server receives the question and bounded context from this chat, never automatic attachments of SQLite records, subjects, results or files. The default server is local; another server/model determines how it processes data. Start New chat before connecting an existing chat to a different server. There is no automatic cloud fallback.
 
-Adresa podporuje HTTP/HTTPS bez vložených přihlašovacích údajů, cesty, query a fragmentu. Certifikáty HTTPS se ověřují, přesměrování a systémové HTTP proxy se nepoužívají. Autentizované servery zatím nejsou podporované. Časový limit socketu je 30 sekund, celkový požadavek má pojistku 180 sekund; systémové DNS/připojování může oddálit zastavení. Chyba spojení neznamená jistotu, že Ollama není nainstalovaná.
+Chat stays in memory; copy it before closing if you need it. Connection choices may be explicitly saved in [Settings](SETTINGS.md), but saving preferences does not preserve chat. Limits: 12 turns per chat, 4,000 characters per question, 16,000 per answer. Context includes at most six complete pairs / 24,000 characters; the model may not know older content. Output is plain text without Markdown/LaTeX rendering or attached materials. Replies are not verified facts or automatic grading.
 
+HTTP/HTTPS URLs may not contain credentials, a path, query or fragment. HTTPS certificates are verified; redirects and environment HTTP proxies are not used. Authenticated servers are unsupported. Socket timeout is 30 seconds; a wall-clock safeguard is 180 seconds. System DNS/TCP setup can delay cancellation. Connection failure alone does not prove Ollama is missing.
 
-API: [models](https://docs.ollama.com/api/tags) · [chat](https://docs.ollama.com/api/chat) · [streaming](https://docs.ollama.com/api/streaming).
+API references: [models](https://docs.ollama.com/api/tags) · [chat](https://docs.ollama.com/api/chat) · [streaming](https://docs.ollama.com/api/streaming).

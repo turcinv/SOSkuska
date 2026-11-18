@@ -1,5 +1,7 @@
 # Windows od nuly — prvé spustenie SOSkúška
 
+[English](../WINDOWS_FIRST_RUN.md) · [Čeština](../cs/WINDOWS_FIRST_RUN.md) · [Slovenčina](WINDOWS_FIRST_RUN.md) · [Русский](../ru/WINDOWS_FIRST_RUN.md)
+
 Návod pre človeka, ktorý na Windows 10/11 zatiaľ nemá Python ani vývojové nástroje. Potrebuješ internet na prvú inštaláciu a zdrojové súbory SOSkuska. Git, VS Code, Node.js, Ollama ani platené služby pre súčasný Dashboard nepotrebuješ.
 
 **Dôležité:** postup vychádza z aktuálneho kódu a oficiálnej dokumentácie Pythonu. Na skutočných Windows ešte nebol celý priechod overený; aplikácia zatiaľ nemá vlastný inštalátor `.exe`.
@@ -90,7 +92,7 @@ Počkaj na úspešné dokončenie inštalácie. Knižnice sa inštalujú do proj
 
 Má sa otvoriť tmavé okno **SOSkúška** s Dashboardom a ľavou navigáciou. PowerShell nechaj otvorený; kým aplikácia beží, nezobrazí sa nový príkazový riadok. Aplikáciu bežne ukonči krížikom jej okna.
 
-Fungujú Dashboard, My Subjects, zoznam úloh, vyhľadávanie a časovač pre konkrétny predmet. Pridaj svoj prvý predmet; nová databáza je prázdna a prehľad ukazuje skutočne uložené údaje. Ostatné študijné obrazovky zostávajú plánované.
+Fungujú Dashboard, My Subjects, zoznam úloh, vyhľadávanie a časovač pre konkrétny predmet. Pridaj svoj prvý predmet; nová databáza je prázdna a prehľad ukazuje skutočne uložené údaje. Question bank, Practice Tests, Flashcards, Statistics, voliteľný AI Tutor a Settings sú tiež implementované.
 
 ## 8. Ako spúšťať nabudúce
 

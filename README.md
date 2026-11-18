@@ -1,103 +1,83 @@
 # SOSkúška
 
-**Vydání: [v0.8.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.8.0)** — zdrojový kód funkčního prototypu. Přehled funkcí a oprav je v [historii změn](CHANGELOG.md). Instalátor zatím není součástí vydání.
+[English](README.md) · [Čeština](docs/cs/README.md) · [Slovenčina](docs/sk/README.md) · [Русский](docs/ru/README.md)
 
-Název aplikace je **SOSkúška**. Repozitář a kořenová složka jsou **SOSkuska**, zdrojový adresář `soskuska/`; technické názvy používají podobu bez diakritiky.
+**Release: [v0.8.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.8.0)** — a working source-code prototype. See the [changelog](CHANGELOG.md). An installer is not included yet.
 
-Lokální desktopový studijní asistent v Pythonu a CustomTkinteru. Implementované jsou Dashboard a My Subjects: správa předmětů a termínů zkoušek, denní checklist, vyhledávání a časovač propojený s předmětem. Úkoly a odstudovaný čas ukládá do SQLite na zařízení uživatele.
+SOSkúška is a local desktop study assistant built with Python, CustomTkinter and SQLite for a semester project. The product name uses accents; repository, source and data-folder names use `SOSkuska` / `soskuska`.
 
-**Stav: funkční prototyp se skutečnými lokálními daty.** Předměty lze vytvářet, upravovat a mazat; přehled používá uložené časy a termíny. Nová databáze začíná prázdná. AI Tutor nabízí volitelný session chat přes Ollamu. Běh nevyžaduje Superdesign, placené API ani internet.
+The app stores your subjects, questions, focus sessions, practice tests, flashcards and preferences on your device. New databases start empty. Normal study works offline without a cloud account, paid API, Superdesign or Ollama. Optional AI Tutor connects to your chosen Ollama server only after an explicit action.
 
-## Klonování a první instalace
+## Clone and install
 
-Repozitář je soukromý; potřebuješ Git a účet s přístupem. V terminálu přejdi do složky, kam chceš projekt uložit:
+The repository is private: you need Git and a GitHub account with access.
 
 ```sh
 git clone https://github.com/turcinv/SOSkuska.git
 cd SOSkuska
 ```
 
-Klon neobsahuje Python prostředí ani databázi. Pokračuj podle [instalace pro svůj systém](docs/DEVELOPMENT.md). Instalaci Gitu, přihlášení, aktualizace a práci s větvemi popisuje [Git krok za krokem](docs/GIT_GUIDE.md).
+A clone contains neither a Python environment nor your database. Follow [development and setup](docs/DEVELOPMENT.md) for your system. [Git basics](docs/GIT_GUIDE.md) covers Git installation, authentication, updates and branches.
 
-## Rychlé spuštění na tomto Macu
+**Starting with nothing installed on Windows?** Use [Windows first run](docs/WINDOWS_FIRST_RUN.md). It walks from Python installation through extracting the project and launching it; Git and an editor are optional.
 
-Z kořenové složky projektu:
+## Quick start on the prepared Mac
+
+From the project root:
 
 ```sh
 .venv-macos/bin/python soskuska/app.py
 ```
 
-Nebo otevři `soskuska/run-macos.command`. Připravené prostředí používá Python 3.12.13 / Tk 9.0. Staré `.venv-desktop` nepoužívej: na tomto Macu zobrazovalo prázdné okno.
+You can also open `soskuska/run-macos.command`. This environment uses Python 3.12.13 / Tk 9.0. The old `.venv-desktop` showed an empty window on this Mac; use `.venv-macos` instead.
 
-## Dokumentace
+For development, keep test data separate:
 
-**Začínáš na čistých Windows?** Použij podrobný návod: [Česky](docs/WINDOWS_FIRST_RUN.md) · [Slovensky](docs/sk/WINDOWS_FIRST_RUN.md) · [Русский](docs/ru/WINDOWS_FIRST_RUN.md). Vede od instalace Pythonu až po první spuštění; Git ani editor nejsou potřeba.
-
-Jazykové verze: **Čeština** (tento rozcestník) · [Slovenčina](docs/sk/README.md) · [Русский](docs/ru/README.md). Pokyny v `AGENTS.md` jsou anglicky; konverzace může probíhat česky, slovensky, anglicky nebo rusky.
-
-| Dokument | Obsah |
-| --- | --- |
-| [Jednoduché vysvětlení](docs/HOW_IT_WORKS.md) | Co se děje při spuštění, klikání a ukládání |
-| [Současná architektura](docs/CURRENT_ARCHITECTURE.md) | Skutečné moduly, datové toky, databáze a omezení |
-| [Plánovaná architektura](docs/PLANNED_ARCHITECTURE.md) | Budoucí členění, Ollama a etapy rozvoje |
-| [Vývoj a spuštění](docs/DEVELOPMENT.md) | Instalace, příkazy, kontroly a řešení problémů |
-| [Práce s Gitem](docs/GIT_GUIDE.md) | Klonování, přihlášení, větve, commity a aktualizace |
-| [Přispívání](CONTRIBUTING.md) | Kontroly, pull requesty a hlášení chyb |
-| [Historie změn](CHANGELOG.md) | Přehled změn prototypu |
-| [Pokyny pro asistenty](AGENTS.md) | AGENTS.md pro další vývoj aplikace |
-
-## Složky
-
-```text
-soskuska/          Nativní aplikace a kontrolní skript
-soskuska-local/    Starší samostatný HTML návrh; vizuální reference
-docs/             Dokumentace
+```sh
+.venv-macos/bin/python soskuska/app.py --data .local-data/dev.sqlite3
 ```
 
-Primární cílové platformy jsou Windows/Linux; macOS je také aktuální vývojové prostředí. Nativní kontroly prošly na macOS; CI ověřuje jednotkové testy na třech systémech a GUI na Linuxu. Ruční ověření Windows/Linux a fyzických gest zatím chybí. Instalátor zatím není vytvořený. Samostatný repozitář: [turcinv/SOSkuska](https://github.com/turcinv/SOSkuska). Repozitář je soukromý; přístup vyžaduje oprávnění.
+## Implemented features
 
-## Banka témat a otázek
+| Screen | What it does |
+| --- | --- |
+| Dashboard / My Subjects | Create, edit and delete subjects; optional exam dates; search; daily checklist; subject-linked focus sessions and real stored totals |
+| Question bank | Subject-specific topics and questions with four distinct answers, one correct answer, difficulty and optional explanation |
+| Practice Tests | Randomized tests, optional deadlines, saved answers and resume, immutable results and answer review |
+| Flashcards | Deck/card editing, reveal-before-rating, deterministic review scheduling and retained review history |
+| Statistics | Stored focus time, weighted practice accuracy, flashcard self-ratings and daily activity |
+| AI Tutor | Optional streamed Ollama chat, model discovery, answer language and cancellation; chat lasts only for the current app session |
+| Settings | Persist focus duration, daily goal, Ollama URL/model and AI answer language; explicit Save without automatic connection |
 
-V My Subjects zvol u předmětu **Questions**. Přidej téma přes New topic a otázku přes New question. Každá otázka má čtyři různé povinné odpovědi A–D, právě jednu správnou odpověď, obtížnost Easy/Medium/Hard a volitelné vysvětlení. Téma je volitelné. Formulář zachová rozepsaný obsah při chybě validace nebo zápisu.
+Open **My Subjects → Questions** to author questions. Questions require four different answers A–D, exactly one correct answer, Easy/Medium/Hard difficulty and optional topic/explanation. Search combines text, topic and difficulty. Deleting a topic keeps its questions unassigned. Deleting a subject warns before removing its questions/topics and retains study history.
 
-Témata lze přejmenovat a smazat; vyber téma ve filtru a použij Rename selected topic nebo Delete selected topic. Otázky lze upravovat a mazat. Hledání v textu otázky se kombinuje s filtrem tématu a obtížnosti. Počty na kartách předmětů vycházejí z uloženého obsahu. Smazání tématu ponechá jeho otázky v No topic. Smazání předmětu po výslovném upozornění odstraní jeho témata a otázky, ale zachová čas i historii studia.
+For **Practice Tests**, create a subject and questions first. Choose a topic, difficulty and 1–100 questions. Time limits are 5, 10, 15, 30 or 60 minutes, or Untimed. Answers and position save as you go. Only one attempt may be unfinished. Resume survives restart; deadlines keep running while away. Finish confirms submission; unanswered questions count incorrect. Correct answers appear only after completion. Discard confirms removal of an unfinished attempt. History displays the latest 20 results; older results remain stored. Content is snapshotted at start, so later edits/deletions do not change results. Practice does not add invented focus time.
 
-Jde o editor obsahu: správná odpověď je viditelná. Procvičování a hodnocení najdeš v Practice Tests. Import a obrázky zatím nejsou implementované.
+Feature guides: [Flashcards](docs/FLASHCARDS.md) · [Statistics](docs/STATISTICS.md) · [AI Tutor](docs/AI_TUTOR.md) · [Settings](docs/SETTINGS.md).
 
-## Practice Tests — procvičování (v0.4.0)
+## Documentation
 
-Nejprve vytvoř předmět a otázky přes My Subjects → Questions. V Practice Tests vyber předmět, téma (všechna / bez tématu / konkrétní), obtížnost a 1–100 dostupných otázek. Volitelný limit je 5, 10, 15, 30 nebo 60 minut; Untimed nemá limit. Otázky se náhodně vyberou bez opakování.
+English is the primary documentation language. Czech, Slovak and Russian are maintained in separate folders; the application UI remains English. Conversation with development assistants may use any of these four languages.
 
-Odpověď se uloží po každém výběru; lze ji změnit nebo vymazat přes Clear answer. Previous/Next mění uloženou pozici. Při návratu nebo restartu lze pokračovat přes Resume test. Najednou může být rozpracovaný jeden test. Discard test vyžaduje potvrzení a odstraní pouze tento rozpracovaný pokus.
+| Document | Contents |
+| --- | --- |
+| [How it works](docs/HOW_IT_WORKS.md) | A simple explanation of opening, using and saving in the app |
+| [Current architecture](docs/CURRENT_ARCHITECTURE.md) | Implemented modules, data flow, schema and limitations |
+| [Planned architecture](docs/PLANNED_ARCHITECTURE.md) | Future structure and development stages, distinct from implemented features |
+| [Development and setup](docs/DEVELOPMENT.md) | Installation, commands, checks and troubleshooting |
+| [Windows first run](docs/WINDOWS_FIRST_RUN.md) | Step-by-step setup on a clean Windows computer |
+| [Git basics](docs/GIT_GUIDE.md) | Clone, authenticate, branch, commit and update |
+| [Contributing](CONTRIBUTING.md) | Checks, pull requests and issue reports |
+| [Changelog](CHANGELOG.md) | Release history |
+| [Agent instructions](AGENTS.md) | English instructions for future development sessions |
 
-Finish test po potvrzení uloží výsledek; nevyplněné otázky se počítají jako nesprávné. Správné odpovědi a vysvětlení se zobrazí až po odevzdání. Časový limit běží i mimo obrazovku a při zavřené aplikaci; po vypršení se test automaticky dokončí při běhu nebo návratu do aplikace. Výsledek a otázky jsou snímkem ze začátku pokusu: pozdější úprava či smazání původního obsahu je nezmění. Historie zobrazuje posledních 20 dokončených testů; starší záznamy zůstávají v databázi.
+## Repository layout and limitations
 
-Procvičování je dostupné od v0.4.0. Procvičování nepřidává smyšlený čas do součtů časovače. Import zůstává plánovaný; AI Tutor má vlastní volitelný chat; celkový přehled je ve Statistics.
+```text
+soskuska/          Native application and GUI check scripts
+tests/            Unit tests and frozen migration fixtures
+soskuska-local/    Earlier standalone HTML visual reference
+docs/             English guides; cs/, sk/, ru/ contain translations
+```
 
-## Průběžná integrace (CI)
-
-CI: Python 3.12, jednotkové testy na třech systémech a devět GUI kontrol na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
-
-## Kartičky a opakování (v0.5.0)
-
-V postranní nabídce otevři **Flashcards**. New deck vytvoří balíček pro existující předmět; název musí být jedinečný mezi všemi balíčky. Předmět balíčku se potom nemění, název a popis ano. Open deck umožní přidat a upravovat kartičky. Přední strana má 1–2000 znaků, zadní 1–4000; Search hledá v obou stranách. Seznam zobrazuje nejvýše 100 výsledků, další najdeš užším hledáním.
-
-[Podrobný návod a pravidla](docs/FLASHCARDS.md).
-
-## Statistiky (v0.6.0)
-
-V nabídce **Statistics** zvol Last 7 days, Last 30 days nebo All time. Přehled ukazuje uložený čas a sezení, otázkami váženou úspěšnost dokončených testů, počty vlastních hodnocení kartiček, čas podle předmětu a denní aktivitu. Refresh nebo návrat na obrazovku načte nový snímek. Nejde o měření zvládnutí učiva.
-
-[Podrobná pravidla](docs/STATISTICS.md).
-
-## AI Tutor s Ollamou (v0.7.0)
-
-V AI Tutor připoj vlastní Ollama server přes Connect / refresh, vyber model a jazyk odpovědi a zadej otázku. Odpověď přichází průběžně; Stop ji zastaví. Ostatní obrazovky zůstávají použitelné během generování i bez Ollamy. Chat je pouze pro aktuální spuštění aplikace, neukládá se do databáze.
-
-[Návod AI Tutor](docs/AI_TUTOR.md).
-
-## Nastavení
-
-Chat zůstává jen v paměti a zavřením se odstraní. Volby spojení lze výslovně uložit v [Settings](docs/SETTINGS.md); bez Save jsou dočasné.
-
-[Nastavení](docs/SETTINGS.md).
+Windows/Linux are primary target platforms; macOS is also the current development environment. Unit CI runs on all three systems; GUI CI runs on Ubuntu/Xvfb, with native checks also run locally on macOS. This does not replace manual Windows/Linux UI or physical scrolling-gesture testing. There is no installer, import, backup, synchronization, UI translation or saved AI conversation support yet.

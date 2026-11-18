@@ -1,5 +1,7 @@
 # Ako to funguje — jednoducho
 
+[English](../HOW_IT_WORKS.md) · [Čeština](../cs/HOW_IT_WORKS.md) · [Slovenčina](HOW_IT_WORKS.md) · [Русский](../ru/HOW_IT_WORKS.md)
+
 SOSkúška je desktopová aplikácia. Python a CustomTkinter vytvárajú okno; SQLite ukladá údaje do súboru na tvojom počítači. Prehliadač, cloud ani spustenú AI nepotrebuješ. HTML v priečinku `soskuska-local/` je historický návrh, nie bežiaca aplikácia.
 
 ## Prvý vlastný predmet
