@@ -170,7 +170,7 @@ class Dashboard(ctk.CTk):
         self.label(self.footer, "Offline · Stored on this device", 12, "secondary").pack(anchor="w", pady=(2, 18))
         self.ai_status = self.label(self.footer, "○  AI not connected", 12, "secondary")
         self.ai_status.pack(anchor="w")
-        self.label(self.footer, "Study workspace · v0.8.0", 11, "secondary").pack(anchor="w", pady=(6, 0))
+        self.label(self.footer, "Study workspace · v0.8.1", 11, "secondary").pack(anchor="w", pady=(6, 0))
 
     def build_content(self):
         self.scroll = DashboardScrollFrame(self, fg_color=C["bg"], corner_radius=0,

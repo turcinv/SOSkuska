@@ -2,7 +2,7 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
-## Unreleased
+## 0.8.1 — 2026-11-18
 
 English is now the primary documentation language in the repository root and `docs/`. Existing Czech documentation is preserved under `docs/cs/`, alongside Slovak and Russian versions. Matching-page language links and English agent instructions describe the four-language structure. Documentation-only change; the application and database schema are unchanged.
 

@@ -3,7 +3,7 @@
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
 
-## Zatím nevydáno
+## 0.8.1 — 2026-11-18
 
 Angličtina je nyní hlavním jazykem dokumentace v kořeni repozitáře a v `docs/`. Česká dokumentace je zachovaná v `docs/cs/`, vedle slovenské a ruské verze. Odkazy přepínají mezi odpovídajícími stránkami všech čtyř jazyků; AGENTS.md popisuje novou strukturu. Mění se pouze dokumentace, aplikace i schéma databáze zůstávají stejné.
 

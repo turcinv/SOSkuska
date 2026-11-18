@@ -155,3 +155,5 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 - Run test_preferences.py and check_settings.py with disposable databases; CI includes the ninth native check. English Settings guide lives under docs/; translations are under docs/cs/, docs/sk/, docs/ru/.
 
 - Persistent Settings was released in v0.8.0. Switching servers resolves the saved model preference afresh; a same-server refresh preserves an available manual model choice.
+
+- English-primary documentation with Czech/Slovak/Russian translations was introduced in v0.8.1. Keep published version labels aligned across the app footer, root README, all localized READMEs and changelogs.

@@ -2,7 +2,7 @@
 
 [English](README.md) · [Čeština](docs/cs/README.md) · [Slovenčina](docs/sk/README.md) · [Русский](docs/ru/README.md)
 
-**Release: [v0.8.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.8.0)** — a working source-code prototype. See the [changelog](CHANGELOG.md). An installer is not included yet.
+**Release: [v0.8.1](https://github.com/turcinv/SOSkuska/releases/tag/v0.8.1)** — a working source-code prototype. See the [changelog](CHANGELOG.md). An installer is not included yet.
 
 SOSkúška is a local desktop study assistant built with Python, CustomTkinter and SQLite for a semester project. The product name uses accents; repository, source and data-folder names use `SOSkuska` / `soskuska`.
 
