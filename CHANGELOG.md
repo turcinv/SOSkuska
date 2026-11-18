@@ -2,7 +2,7 @@
 
 [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
-## Zatím nevydáno
+## 0.8.0 — 2026-11-18
 
 Nastavení se ukládá do stejné databáze jako studijní data. Nastavení se ukládá transakčně ve schématu 6 s ochranou před přepsáním změn jiného okna. Migrace z verze 5 zachová všechny předchozí tabulky i data; starší aplikace novější schéma odmítne otevřít.
 
@@ -15,6 +15,8 @@ Při aktivním AI požadavku nejprve počkej nebo použij Stop, než změníš A
 Chyba zápisu ani konflikt s jiným oknem neodstraní rozepsané hodnoty. Před Reload si je zkopíruj; u změněného formuláře je nutné potvrdit nahrazení druhým kliknutím. Změny jiného okna se nepoužijí živě: v tomto okně je použije Save nebo restart. Save použije všechny načtené hodnoty, včetně AI nastavení z druhého okna, proto mohou platit výše uvedené ochrany. Neplatná uložená nastavení zobrazí bezpečné výchozí hodnoty; opraví se až výslovným Save.
 
 Nastavení je místní pro vybranou databázi (`--data`), bez synchronizace a šifrování. Chybí volba vzhledu, překlady UI, zálohy a ukládání AI konverzací.
+
+Při změně serveru se preferovaný model vybere znovu; obnovení stejného serveru zachová ruční výběr. Ověření: 126 jednotkových testů a devět nativních kontrol s dočasnými daty; CI pro funkční PR prošlo na třech systémech a GUI na Ubuntu. Nezávislá kontrola Sol a opětovná kontrola oprav nenašly zbývající problémy.
 
 ## 0.7.0 — 2026-11-18
 
