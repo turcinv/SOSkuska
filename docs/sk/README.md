@@ -1,10 +1,10 @@
 # SOSkúška — slovenská dokumentácia
 
-**Vydanie: [v0.6.2](https://github.com/turcinv/SOSkuska/releases/tag/v0.6.2)** — zdrojový kód funkčného prototypu. Prehľad funkcií a opráv je v [histórii zmien](CHANGELOG.md). Inštalátor zatiaľ nie je súčasťou vydania.
+**Vydanie: [v0.7.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.7.0)** — zdrojový kód funkčného prototypu. Prehľad funkcií a opráv je v [histórii zmien](CHANGELOG.md). Inštalátor zatiaľ nie je súčasťou vydania.
 
 Lokálny desktopový študijný asistent v Pythone a CustomTkinteri. Implementované sú Dashboard a My Subjects: správa predmetov a termínov skúšok, denný zoznam úloh, vyhľadávanie a časovač prepojený s predmetom. Úlohy a odštudovaný čas sa ukladajú do SQLite na zariadení používateľa.
 
-**Stav: funkčný prototyp so skutočnými lokálnymi údajmi.** Predmety možno vytvárať, upravovať a mazať; prehľad používa uložené časy a termíny. Nová databáza začína prázdna. AI Tutor zatiaľ nie je implementovaný. Beh nevyžaduje Superdesign, platené API ani internet.
+**Stav: funkčný prototyp so skutočnými lokálnymi údajmi.** Predmety možno vytvárať, upravovať a mazať; prehľad používa uložené časy a termíny. Nová databáza začína prázdna. AI Tutor ponúka voliteľný session chat cez Ollamu. Beh nevyžaduje Superdesign, platené API ani internet.
 
 ## Dokumenty
 
@@ -68,11 +68,11 @@ Odpoveď sa uloží po každom výbere; možno ju zmeniť alebo vymazať cez Cle
 
 Finish test po potvrdení uloží výsledok; nevyplnené otázky sa počítajú ako nesprávne. Správne odpovede a vysvetlenia sa zobrazia až po odovzdaní. Časový limit beží aj mimo obrazovky a pri zatvorenej aplikácii; po uplynutí sa test automaticky dokončí pri behu alebo návrate do aplikácie. Výsledok a otázky sú snímkou zo začiatku pokusu: neskoršia úprava či vymazanie pôvodného obsahu ich nezmení. História zobrazuje posledných 20 dokončených testov; staršie záznamy zostávajú v databáze.
 
-Precvičovanie je dostupné od v0.4.0. Precvičovanie nepridáva vymyslený čas do súčtov časovača. AI a import zostávajú plánované; celkový prehľad je v Statistics.
+Precvičovanie je dostupné od v0.4.0. Precvičovanie nepridáva vymyslený čas do súčtov časovača. Import zostáva plánovaný; AI Tutor má vlastný voliteľný chat; celkový prehľad je v Statistics.
 
 ## Priebežná integrácia (CI)
 
-CI: Python 3.12, jednotkové testy na troch systémoch a sedem GUI kontrol na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
+CI: Python 3.12, jednotkové testy na troch systémoch a osem GUI kontrol na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
 
 ## Kartičky a opakovanie (v0.5.0)
 
@@ -85,3 +85,9 @@ V bočnej ponuke otvor **Flashcards**. New deck vytvorí balíček pre existujú
 V ponuke **Statistics** zvoľ Last 7 days, Last 30 days alebo All time. Prehľad ukazuje uložený čas a relácie, úspešnosť dokončených testov váženú otázkami, počty vlastných hodnotení kartičiek, čas podľa predmetu a dennú aktivitu. Refresh alebo návrat na obrazovku načíta novú snímku. Nejde o meranie zvládnutia učiva.
 
 [Podrobné pravidlá](STATISTICS.md).
+
+## AI Tutor s Ollamou (v0.7.0)
+
+V AI Tutor pripoj vlastný server Ollama cez Connect / refresh, vyber model a jazyk odpovede a zadaj otázku. Odpoveď prichádza priebežne; Stop ju zastaví. Ostatné obrazovky zostávajú použiteľné počas generovania aj bez Ollamy. Chat je iba pre aktuálne spustenie aplikácie, neukladá sa do databázy.
+
+[Návod AI Tutor](AI_TUTOR.md).

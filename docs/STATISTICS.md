@@ -18,4 +18,4 @@ Historie se neomezuje na posledních 20 položek z ostatních obrazovek. Smazán
 
 `statistics_page.py` zobrazuje přehled; `study_statistics.py` obsahuje dotazy a sestavení reportu přes `Store.statistics()`. Čtyři agregace běží v jedné čtecí transakci. Schéma zůstává 5, bez nových závislostí a zápisů do dat. Aktualizace je ruční nebo při návratu, bez časovače na pozadí. Při chybě načtení zůstane předchozí přehled a lze zkusit Refresh; nemusí být aktuální.
 
-Export, vlastní rozsah dat, filtr předmětu a pokročilé grafy zatím nejsou součástí funkce. AI Tutor zůstává plánovaný.
+Export, vlastní rozsah dat, filtr předmětu a pokročilé grafy zatím nejsou součástí funkce. AI Tutor má volitelný session chat přes Ollamu.
