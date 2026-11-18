@@ -22,8 +22,8 @@ These instructions apply to the entire standalone SOSkuska repository. Product n
 ## Scope and implementation
 
 - This is a native Python/CustomTkinter desktop application. HTML in `soskuska-local/` is a visual reference, not its runtime implementation. Do not convert it into a website without an explicit request.
-- Dashboard, My Subjects, Question bank, Practice Tests, Flashcards and Statistics exist. Subject/topic/question CRUD, optional exam dates and subject-linked focus sessions use real SQLite data. New databases start empty; no sample statistics are added. AI Tutor has optional session-only Ollama chat; Settings remains unimplemented.
-- Entry point: `soskuska/app.py`. Dashboard and timer logic live there; the subject-management screen is in `soskuska/subjects.py`; SQLite operations and transactional schema migrations (user_version 5) are in `soskuska/storage.py`; question authoring lives in `soskuska/question_bank.py` with pure validation in `soskuska/content.py`; scroll compatibility is isolated in `soskuska/scrolling.py`. Storage regression tests live in `tests/test_storage.py` and run with `python -m unittest discover -s tests -v`.
+- Dashboard, My Subjects, Question bank, Practice Tests, Flashcards and Statistics exist. Subject/topic/question CRUD, optional exam dates and subject-linked focus sessions use real SQLite data. New databases start empty; no sample statistics are added. AI Tutor has optional session-only Ollama chat; Settings persists study and AI preferences with explicit Save.
+- Entry point: `soskuska/app.py`. Dashboard and timer logic live there; the subject-management screen is in `soskuska/subjects.py`; SQLite operations and transactional schema migrations (user_version 6) are in `soskuska/storage.py`; question authoring lives in `soskuska/question_bank.py` with pure validation in `soskuska/content.py`; scroll compatibility is isolated in `soskuska/scrolling.py`. Storage regression tests live in `tests/test_storage.py` and run with `python -m unittest discover -s tests -v`.
 - Keep sample data distinct from user records. Do not present sample metrics as actual user statistics or invent records in the user's database.
 
 ## Environment and data
@@ -41,6 +41,7 @@ Commands below are relative to the project root:
 .venv-macos/bin/python soskuska/check_statistics.py
 .venv-macos/bin/python soskuska/check_state_fixes.py
 .venv-macos/bin/python soskuska/check_tutor.py
+.venv-macos/bin/python soskuska/check_settings.py
 ```
 
 - On this Mac use `.venv-macos`, verified with Python 3.12.13 / Tk 9.0. `.venv-desktop` uses Apple Tk 8.5, which produced an empty window. Suppressing its warning is not a fix. The default Homebrew Python also lacked `_tkinter` when checked.
@@ -102,7 +103,7 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 
 ## Continuous integration
 
-- `.github/workflows/ci.yml` runs for PRs targeting main, pushes to main and manual dispatch. Python 3.12 unit tests/syntax/dependency checks run on Linux, Windows and macOS; eight GUI checks run under Xvfb on Ubuntu.
+- `.github/workflows/ci.yml` runs for PRs targeting main, pushes to main and manual dispatch. Python 3.12 unit tests/syntax/dependency checks run on Linux, Windows and macOS; nine GUI checks run under Xvfb on Ubuntu.
 - Keep action references pinned to verified release commit SHAs, contents permission read-only, and process/job timeouts. CI does not publish releases or deploy. Avoid duplicate feature-branch push and PR runs.
 - CI results are automated coverage, not manual platform or hardware verification. Native Aqua Quit and Tk 9 trackpad behavior still require the Mac checks. Do not claim those are tested by the Linux GUI job.
 - Read failed job logs, fix the cause and keep fixes on the same PR branch. Do not disable a meaningful failing check to obtain a green status. Branch protection is not configured by this workflow.
@@ -142,3 +143,13 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 - Prompt max4000 chars, answer max16000, session max12 turns; context max6 complete pairs/24000 chars. Socket timeout30s and wall-clock timer180s. Bound streamed JSON lines and model lists; reject malformed/truncated responses instead of treating them as complete.
 - HTTPS verification stays enabled; reject URL credentials, paths, queries and fragments. Do not follow redirects or use environment HTTP proxies. No authenticated servers or automatic model downloads.
 - Tests use loopback FakeOllama, not real downloads/cloud services. Run test_tutor.py and check_tutor.py plus the full suite; model quality/hardware performance is not established by the fixture. CI includes the eighth GUI check. AI Tutor was released in v0.7.0.
+
+## Settings safeguards
+
+- preferences.py validates focus 1–180 minutes, daily goal 1–1440, Ollama URL/model and AI answer language. settings_page.py saves explicitly through Store; schema 6 adds the singleton preferences row and revision. Migration is transactional and must preserve schema 5 content/history; use the frozen schema_v5.sql fixture.
+- Never connect on startup, navigation or Settings Save. Use Tutor choices copies into a draft; only Save persists it. UI remains English; answer language only changes AI replies. Chat remains session-only.
+- Active/paused/unsaved focus sessions retain their original target; next session uses saved duration. Goal changes immediately without changing history. Applying committed settings must not depend on another SQLite read.
+- Reject stale revision under the write lock. Failed Save/Reload and navigation preserve drafts, including a failed initial load. Reload needs confirmation when dirty. Invalid saved preferences fall back safely and repair only on explicit Save.
+- AI preference changes wait for an idle Tutor. Different servers require New chat when chat exists. Remembering the already-connected server must retain its connection identity and chat isolation. Prefer the saved model when available; never silently substitute an unavailable preferred model. Study-only saves preserve temporary Tutor choices when persisted AI fields are unchanged.
+- Changes from another window apply in this window on Save/restart, not live; Save applies the whole loaded form, so AI guards can also apply after reloading another window's changes.
+- Run test_preferences.py and check_settings.py with disposable databases; CI includes the ninth native check. Localized Settings guides live under docs/, docs/sk/, docs/ru/.

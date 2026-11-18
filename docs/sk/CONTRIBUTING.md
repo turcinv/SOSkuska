@@ -28,6 +28,7 @@ Na Windows/Linux použi zodpovedajúcu cestu k Pythonu svojho prostredia. Pri zm
 .venv-macos/bin/python soskuska/check_statistics.py
 .venv-macos/bin/python soskuska/check_state_fixes.py
 .venv-macos/bin/python soskuska/check_tutor.py
+.venv-macos/bin/python soskuska/check_settings.py
 ```
 
 Kontrola GUI otvára okno a potrebuje grafickú reláciu. Zmena samotnej dokumentácie zvyčajne vyžaduje kontrolu odkazov, príkazov a formátovania; netreba kvôli nej spúšťať celé UI.
