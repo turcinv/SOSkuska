@@ -91,7 +91,7 @@ class BackupTests(unittest.TestCase):
 
     def test_private_snapshot_survives_changes_to_selected_file(self):
         self.store.create_subject('Selected');prepared=self.prepare()
-        with sqlite3.connect(self.copy) as db:db.execute("UPDATE subjects SET name='Changed',name_key='changed'")
+        with closing(sqlite3.connect(self.copy)) as db, db:db.execute("UPDATE subjects SET name='Changed',name_key='changed'")
         self.store.close();restore_backup(self.active,prepared)
         self.assertEqual(self.rows(self.active)['subjects'][0][1],'Selected')
 
@@ -150,10 +150,10 @@ class BackupTests(unittest.TestCase):
         before=self.rows(self.active)
         for version in [5,7]:
             path=self.folder/f'v{version}.sqlite3';s=Store(path);s.close()
-            with sqlite3.connect(path) as db:db.execute(f'PRAGMA user_version={version}')
+            with closing(sqlite3.connect(path)) as db, db:db.execute(f'PRAGMA user_version={version}')
             with self.assertRaises(ValueError):PreparedBackup(path,self.active)
         unrelated=self.folder/'other.sqlite3'
-        with sqlite3.connect(unrelated) as db:db.execute('CREATE TABLE other(id)');db.execute('PRAGMA user_version=6')
+        with closing(sqlite3.connect(unrelated)) as db, db:db.execute('CREATE TABLE other(id)');db.execute('PRAGMA user_version=6')
         with self.assertRaises(ValueError):PreparedBackup(unrelated,self.active)
         self.assertEqual(self.rows(self.active),before)
 
@@ -167,7 +167,7 @@ class BackupTests(unittest.TestCase):
         for index,sql in enumerate(changes):
             path=self.folder/f'bad{index}.sqlite3'
             with closing(sqlite3.connect(self.copy)) as src,closing(sqlite3.connect(path)) as dst:src.backup(dst)
-            with sqlite3.connect(path) as db:db.execute(sql)
+            with closing(sqlite3.connect(path)) as db, db:db.execute(sql)
             with self.subTest(sql=sql),self.assertRaises((ValueError,sqlite3.Error)):PreparedBackup(path,self.active)
 
     @unittest.skipUnless(hasattr(os,'mkfifo'),'Named pipes are POSIX-only')
