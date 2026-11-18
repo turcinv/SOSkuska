@@ -191,11 +191,18 @@ class TutorPage(ctk.CTkFrame):
                         stopped = kind == 'stopped' or (kind == 'done' and task.control.cancelled.is_set())
                         if task.kind == 'models':
                             if kind == 'done' and not stopped:
+                                same_server = self.connected_endpoint == self.request_endpoint
                                 self.connected_endpoint = self.request_endpoint
                                 self.models = value
                                 self.model_menu.configure(values=value or ['No models installed'])
                                 missing_preference = bool(self.preferred_model and self.preferred_model not in value)
-                                selected = self.model.get() if self.model.get() in value else (self.preferred_model if self.preferred_model in value else ('' if missing_preference else next(iter(value), 'No models installed')))
+                                # A manual override belongs to its server; refresh may keep it.
+                                if same_server and self.model.get() in value:
+                                    selected = self.model.get()
+                                elif self.preferred_model in value:
+                                    selected = self.preferred_model
+                                else:
+                                    selected = '' if missing_preference else next(iter(value), 'No models installed')
                                 self.model.set(selected)
                                 notice = ('Preferred model is unavailable. Choose a listed model before sending.' if missing_preference and not selected else 'Ready. Choose a model and ask a study question.')
                                 self.status.configure(text=notice if value else 'Connected, but no models are available. Install a model in Ollama, then refresh.')

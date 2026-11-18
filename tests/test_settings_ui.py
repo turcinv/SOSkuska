@@ -91,6 +91,47 @@ class SettingsUiTests(unittest.TestCase):
 
         self.assertEqual(tutor.model.get(), 'preferred-model')
 
+    def reconnect(self, tutor, endpoint, models):
+        tutor.endpoint.set(endpoint)
+        tutor.model_menu = Mock()
+        tutor.after = Mock()
+        tutor.closed = False
+        with patch('tutor_page.TutorTask') as job:
+            tutor.connect()
+            task = job.return_value
+            task.kind = 'models'
+            task.control.cancelled.is_set.return_value = False
+            task.events.get_nowait.return_value = ('done', models)
+            tutor.poll()
+
+    def test_new_server_selects_saved_preference_over_previous_fallback(self):
+        tutor = self.tutor(dict(DEFAULTS, ollama_model='preferred'), endpoint='http://localhost:11435')
+        tutor.models = ['fallback']
+        tutor.model.set('fallback')  # Explicit choice on the previous server.
+        self.reconnect(tutor, 'http://localhost:11436', ['fallback', 'preferred'])
+        self.assertEqual(tutor.model.get(), 'preferred')
+        self.assertEqual(tutor.connected_endpoint, 'http://localhost:11436')
+
+    def test_new_server_missing_preference_requires_choice_before_send(self):
+        tutor = self.tutor(dict(DEFAULTS, ollama_model='preferred'), endpoint='http://localhost:11435')
+        tutor.models = ['fallback']
+        tutor.model.set('fallback')
+        self.reconnect(tutor, 'http://localhost:11436', ['fallback'])
+        self.assertEqual(tutor.model.get(), '')
+        self.assertIn('Preferred model is unavailable', tutor.status.configure.call_args.kwargs['text'])
+        with patch('tutor_page.TutorTask') as job:
+            tutor.send()
+            job.assert_not_called()
+        self.assertIsNone(tutor.task)
+        self.assertEqual(tutor.turns, [])
+
+    def test_same_server_refresh_preserves_explicit_fallback(self):
+        tutor = self.tutor(dict(DEFAULTS, ollama_model='preferred'), endpoint='http://localhost:11435')
+        tutor.models = ['fallback']
+        tutor.model.set('fallback')
+        self.reconnect(tutor, 'http://localhost:11435', ['fallback', 'preferred'])
+        self.assertEqual(tutor.model.get(), 'fallback')
+
     def test_edits_after_failed_initial_read_survive_navigation(self):
         saved = dict(DEFAULTS, revision=0, invalid=False)
         store = Mock()
