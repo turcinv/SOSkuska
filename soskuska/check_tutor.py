@@ -7,6 +7,7 @@ from pathlib import Path
 
 import customtkinter as ctk
 from app import Dashboard
+from storage import SCHEMA_VERSION
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tests'))
 from ollama_fixture import FakeOllama
 
@@ -188,7 +189,7 @@ def check(path):
 
     def closing():
         assert app.store.seconds() == 0
-        assert app.store.db.execute('PRAGMA user_version').fetchone()[0] == 5
+        assert app.store.db.execute('PRAGMA user_version').fetchone()[0] == SCHEMA_VERSION
         task = page.task
         app.close()
         task.thread.join(2)
