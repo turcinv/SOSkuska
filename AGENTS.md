@@ -153,3 +153,5 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 - AI preference changes wait for an idle Tutor. Different servers require New chat when chat exists. Remembering the already-connected server must retain its connection identity and chat isolation. Prefer the saved model when available; never silently substitute an unavailable preferred model. Study-only saves preserve temporary Tutor choices when persisted AI fields are unchanged.
 - Changes from another window apply in this window on Save/restart, not live; Save applies the whole loaded form, so AI guards can also apply after reloading another window's changes.
 - Run test_preferences.py and check_settings.py with disposable databases; CI includes the ninth native check. Localized Settings guides live under docs/, docs/sk/, docs/ru/.
+
+- Persistent Settings was released in v0.8.0. Switching servers resolves the saved model preference afresh; a same-server refresh preserves an available manual model choice.
