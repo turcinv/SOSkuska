@@ -139,7 +139,8 @@ class SettingsUiTests(unittest.TestCase):
         app = SimpleNamespace(store=store, label=Mock(), button=Mock(), frame=Mock(), font=Mock())
         language = Entry('Automatic')
 
-        with (patch.object(ctk.CTkFrame, '__init__', return_value=None),
+        with (patch('settings_page.BackupPanel'),
+              patch.object(ctk.CTkFrame, '__init__', return_value=None),
               patch.object(SettingsPage, 'grid_columnconfigure'),
               patch.object(SettingsPage, 'bind'),
               patch.object(ctk, 'CTkEntry', side_effect=lambda *args, **kwargs: Entry()),

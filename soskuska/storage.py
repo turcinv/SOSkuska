@@ -9,6 +9,7 @@ from practice import MissingPracticeError, expired, practice_settings, utc_now
 from repetition import card_fields, deck_fields, next_review
 from study_statistics import statistics_report
 from preferences import DEFAULTS, preference_fields
+from database_lock import DatabaseLease
 
 SCHEMA_VERSION = 6
 
@@ -41,15 +42,19 @@ def subject_fields(name, description="", exam_date=""):
 
 class Store:
     def __init__(self, path):
-        path = Path(path)
+        path = Path(path).resolve()
         path.parent.mkdir(parents=True, exist_ok=True)
-        self.db = sqlite3.connect(str(path))
-        self.db.row_factory = sqlite3.Row
-        self.db.execute("PRAGMA foreign_keys = ON")
+        self.path = path
+        self.lease = DatabaseLease(path)
         try:
+            self.db = sqlite3.connect(str(path))
+            self.db.row_factory = sqlite3.Row
+            self.db.execute("PRAGMA foreign_keys = ON")
             self._migrate()
         except Exception:
-            self.db.close()
+            if hasattr(self, 'db'):
+                self.db.close()
+            self.lease.close()
             raise
 
     def _migrate(self):
@@ -639,4 +644,7 @@ class Store:
         return dict(normalized, revision=revision+1, invalid=False)
 
     def close(self):
-        self.db.close()
+        try:
+            self.db.close()
+        finally:
+            self.lease.close()

@@ -16,3 +16,4 @@ sources/
 .env
 .env.*
 !.env.example
+*.sqlite3.lock
