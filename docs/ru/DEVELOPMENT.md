@@ -1,5 +1,7 @@
 # Разработка и запуск
 
+[English](../DEVELOPMENT.md) · [Čeština](../cs/DEVELOPMENT.md) · [Slovenčina](../sk/DEVELOPMENT.md) · [Русский](DEVELOPMENT.md)
+
 Проекта ещё нет? Начни с [клонирования и основ Git](GIT_GUIDE.md). Правила изменений описаны в [CONTRIBUTING](CONTRIBUTING.md).
 
 Выполняй команды из корневой папки проекта. Нынешнее приложение использует скрипты в `soskuska/`, а не устанавливаемый пакет.

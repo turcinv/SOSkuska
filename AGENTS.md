@@ -4,12 +4,12 @@ These instructions apply to the entire standalone SOSkuska repository. Product n
 
 ## Start here in a new session
 
-1. Read this file, `README.md`, `docs/CURRENT_ARCHITECTURE.md`, and `docs/DEVELOPMENT.md` before changing the application. Equivalent Slovak and Russian documentation is available under `docs/sk/` and `docs/ru/`.
+1. Read this file, `README.md`, `docs/CURRENT_ARCHITECTURE.md`, and `docs/DEVELOPMENT.md` before changing the application. English is primary; Czech, Slovak and Russian translations are under `docs/cs/`, `docs/sk/` and `docs/ru/`.
 2. Distinguish implemented behavior from proposals in `docs/PLANNED_ARCHITECTURE.md`. A roadmap is not an instruction to implement every feature.
 3. Check the user's latest message for their current language and requested scope. Do not assume access to other chats or decisions not recorded in this workspace.
-4. For users with a clean Windows machine, use `docs/WINDOWS_FIRST_RUN.md` or its Slovak/Russian equivalent. These guides cover installing Python, obtaining/extracting sources, creating a Windows-local environment, installing dependencies, and launching the app. Never assume a Mac virtual environment can be copied to Windows or that the user has access to a private repository.
+4. For users with a clean Windows machine, use `docs/WINDOWS_FIRST_RUN.md` or its Czech/Slovak/Russian equivalent. These guides cover installing Python, obtaining/extracting sources, creating a Windows-local environment, installing dependencies, and launching the app. Never assume a Mac virtual environment can be copied to Windows or that the user has access to a private repository.
 
-5. Read `CONTRIBUTING.md` for contribution checks and `docs/GIT_GUIDE.md` (or its Slovak/Russian version) for cloning and repository workflow. Keep the language versions aligned.
+5. Read `CONTRIBUTING.md` for contribution checks and `docs/GIT_GUIDE.md` (or its Czech/Slovak/Russian version) for cloning and repository workflow. Keep the language versions aligned.
 
 ## Conversation languages
 
@@ -17,7 +17,7 @@ These instructions apply to the entire standalone SOSkuska repository. Product n
 - Respond in the language of the user's **most recent message**, unless they explicitly request a different response language. Do not force English merely because this file or the source code is in English.
 - Do not translate or restate the user's messages in English unless asked. Ask a concise clarification only when meaning is genuinely ambiguous.
 - Conversation language, application UI language, and documentation language are independent. The initial application UI remains **English**. Do not change UI labels just because the user writes in another language.
-- Keep this AGENTS.md in **English**. Keep Slovak documentation separately in `docs/sk/` and Russian documentation in `docs/ru/`. Existing Czech documentation remains under `docs/` and the root README. Do not mix languages within localized documents; preserve code identifiers, commands, paths, and literal UI labels as needed.
+- Keep this AGENTS.md in **English**. English is the primary documentation language: root README.md, CONTRIBUTING.md, CHANGELOG.md and guides in `docs/`. Keep Czech translations in `docs/cs/`, Slovak in `docs/sk/` and Russian in `docs/ru/`. Keep matching-page language links on all guides and all four versions aligned. Do not mix languages within localized documents; preserve code identifiers, commands, paths, and literal UI labels as needed.
 
 ## Scope and implementation
 
@@ -64,7 +64,7 @@ Commands below are relative to the project root:
 - The native smoke check opens a real window and requires a graphical session. It uses a temporary database and must not modify normal user data.
 - Add focused checks for persistence, timer, and scrolling changes. Avoid tests that merely duplicate static style values.
 - Report what was actually verified. Syntax checking is not UI testing; synthetic events are not a manual hardware test; macOS checks do not establish Windows/Linux compatibility.
-- Update current architecture, developer instructions, and known limitations with material changes. Keep Czech, Slovak, and Russian versions aligned; do not silently update only one language. Current code is the source of truth for implemented behavior.
+- Update current architecture, developer instructions, and known limitations with material changes. Keep English, Czech, Slovak, and Russian versions aligned; do not silently update only one language. Current code is the source of truth for implemented behavior.
 - Preserve offline operation without mandatory cloud services or paid APIs. Ollama is optional and connects only after an explicit Connect/Send.
 - GitHub repository: `https://github.com/turcinv/SOSkuska`. Keep it private unless the user requests a visibility change. Use the code and checked Git state to report publication status.
 
@@ -119,7 +119,7 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 
 ## Statistics safeguards
 
-- StatisticsPage uses Store.statistics() / study_statistics.py. Keep all four read aggregates in one deferred SQLite transaction; no writes or migration. Schema stays 5.
+- StatisticsPage uses Store.statistics() / study_statistics.py. Keep all four read aggregates in one deferred SQLite transaction; no writes or migration. Statistics introduced no schema change (schema 5 in v0.6.0; current schema is 6).
 - Last 7/30 days includes today and previous 6/29 local calendar days; all-time totals exclude future days and chart only the latest 30 days. Focus uses stored local day; UTC completion/review times use SQLite localtime. Time-zone changes can rebucket events.
 - Practice accuracy is total correct / total questions from completed snapshots; unanswered questions count incorrect, unfinished/discarded tests excluded. Include full retained history beyond the other screens' 20-row display limits.
 - Flashcard ratings are self-assessments, not accuracy/mastery. Never infer focus time from tests/reviews. Empty history has zero counts and no percentage. Keep deleted/unassigned focus history visible and document name-based grouping after deletion.
@@ -130,7 +130,7 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 
 - discard_practice obtains BEGIN IMMEDIATE before reading the clock. It returns True for deletion of an unfinished attempt, False when an expired attempt was completed and kept instead. Failed writes roll back. Never delete an expired attempt before the UI timer gets a turn.
 - MissingPracticeError is terminal. Clear the stale active/finishing state and show usable setup; do not retry missing attempts every tick. SQLite failures still retain completion retry. A setup read failure can be retried with Refresh subjects or navigation.
-- Question forms pass their original content snapshot as expected_state to update_question. Compare all editable content/identity under the write lock; updated_at has insufficient precision. Preserve drafts on conflict; require reloading current content before another save. Schema stays 5.
+- Question forms pass their original content snapshot as expected_state to update_question. Compare all editable content/identity under the write lock; updated_at has insufficient precision. Preserve drafts on conflict; require reloading current content before another save. These fixes introduced no schema change (5 in v0.6.2; current schema is 6).
 - New-deck draft subject choices refresh in place on load, Refresh and Save. Keep selected subject by ID across rename. If it was deleted, require an explicit replacement; preserve title/description on every refresh/read failure.
 - Run check_state_fixes.py and the complete unit/native suite with temporary databases. CI includes this seventh native check. These fixes were released in v0.6.2.
 
@@ -152,6 +152,8 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 - Reject stale revision under the write lock. Failed Save/Reload and navigation preserve drafts, including a failed initial load. Reload needs confirmation when dirty. Invalid saved preferences fall back safely and repair only on explicit Save.
 - AI preference changes wait for an idle Tutor. Different servers require New chat when chat exists. Remembering the already-connected server must retain its connection identity and chat isolation. Prefer the saved model when available; never silently substitute an unavailable preferred model. Study-only saves preserve temporary Tutor choices when persisted AI fields are unchanged.
 - Changes from another window apply in this window on Save/restart, not live; Save applies the whole loaded form, so AI guards can also apply after reloading another window's changes.
-- Run test_preferences.py and check_settings.py with disposable databases; CI includes the ninth native check. Localized Settings guides live under docs/, docs/sk/, docs/ru/.
+- Run test_preferences.py and check_settings.py with disposable databases; CI includes the ninth native check. English Settings guide lives under docs/; translations are under docs/cs/, docs/sk/, docs/ru/.
 
 - Persistent Settings was released in v0.8.0. Switching servers resolves the saved model preference afresh; a same-server refresh preserves an available manual model choice.
+
+- English-primary documentation with Czech/Slovak/Russian translations was introduced in v0.8.1. Keep published version labels aligned across the app footer, root README, all localized READMEs and changelogs.

@@ -1,25 +1,25 @@
-# Vývoj a spuštění
+# Development and setup
 
-Projekt ještě nemáš? Začni [klonováním a základy Gitu](GIT_GUIDE.md). Pravidla pro změny jsou v [CONTRIBUTING](../CONTRIBUTING.md).
+[English](DEVELOPMENT.md) · [Čeština](cs/DEVELOPMENT.md) · [Slovenčina](sk/DEVELOPMENT.md) · [Русский](ru/DEVELOPMENT.md)
 
-Příkazy spouštěj z kořene projektu. Dnešní aplikace používá skripty v `soskuska/`, nikoli instalovatelný balíček.
+Start with the [Git guide](GIT_GUIDE.md) if you do not have the project. Read [Contributing](../CONTRIBUTING.md) before changing it. Run commands from the repository root. The application currently uses scripts in `soskuska/`, not an installable package.
 
-## Tento Mac — nejrychlejší cesta
+## Prepared Mac: fastest path
 
 ```sh
 cd "$HOME/Documents/SOSkuska"
 .venv-macos/bin/python soskuska/app.py --data .local-data/dev.sqlite3
 ```
 
-Vývojová databáze je oddělená od běžných uživatelských dat. Rodičovský adresář se vytvoří automaticky a `.local-data/` je ignorovaná v Gitu. Bez `--data` aplikace použije standardní uživatelskou databázi; nejde o tentýž soubor. Spouštěč `soskuska/run-macos.command` přijímá stejné argumenty.
+The development database is separate from ordinary user data. Its parent directory is created automatically; `.local-data/` is Git-ignored. Without `--data`, the app opens the normal user database instead. `soskuska/run-macos.command` accepts the same arguments.
 
-## Požadavky
+## Requirements
 
-Ověřené prostředí je Python 3.12.13 / Tk 9.0 / CustomTkinter 5.2.2. Pro reprodukování použij Python 3.12 s Tk. Na macOS aplikace vyžaduje alespoň Tk 8.6. Samotné číslo Pythonu nezaručuje přítomnost Tk.
+The verified local environment is Python 3.12.13 / Tk 9.0 / CustomTkinter 5.2.2. Use Python 3.12 with Tk to reproduce it. macOS requires at least Tk 8.6; Python's version alone does not guarantee Tk support.
 
-Externí závislosti jsou v `soskuska/requirements.txt`. Úplný lockfile zatím není, tranzitivní verze řeší instalátor. Instalace potřebuje internet jednou; běh Dashboardu pak funguje offline. Ollama se zatím nevyžaduje. GUI kontroly potřebují grafickou desktopovou relaci.
+External dependencies are in `soskuska/requirements.txt`. There is no complete lockfile; pip resolves transitive versions. Installation needs internet, but normal study then works offline. Ollama is optional. GUI checks need a graphical desktop session.
 
-## Nové prostředí na macOS
+## New macOS environment
 
 ```sh
 python3.12 -c "import sys, tkinter; print(sys.executable); print(sys.version); print('Tk', tkinter.TkVersion)"
@@ -28,15 +28,13 @@ python3.12 -m venv .venv-macos
 .venv-macos/bin/python soskuska/app.py --data .local-data/dev.sqlite3
 ```
 
-Na tomto Macu je vhodný interpret také `/Users/turcinv/.local/bin/python3.12`. `/usr/bin/python3` používá staré systémové Tk 8.5; Homebrew `python3` při ověření postrádal `_tkinter`. Potlačení varování přes `TK_SILENCE_DEPRECATION` prázdné okno neopraví.
+On the current developer's Mac, `/Users/turcinv/.local/bin/python3.12` is also suitable. `/usr/bin/python3` used old system Tk 8.5; Homebrew `python3` lacked `_tkinter` when checked. Silencing the warning with `TK_SILENCE_DEPRECATION` does not fix an empty window. Do not assume these machine-specific paths apply elsewhere.
 
-Pokud prostředí už existuje s jiným Pythonem, vytvoř nové pod jiným názvem a uprav příkazy; instalace knihoven nevymění základní Python existujícího prostředí. Spouštěč očekává konkrétně `.venv-macos`.
+If an existing environment uses another Python, create a new environment with a different name and adjust commands. Installing libraries does not replace its base interpreter. The Mac launcher specifically expects `.venv-macos`.
 
-## Windows — PowerShell
+## Windows / PowerShell
 
-Pokud nemáš nainstalovaný ani Python, začni podrobným návodem [Windows od nuly](WINDOWS_FIRST_RUN.md). Následující zkrácený postup předpokládá již připravený Python.
-
-Předpoklad: nainstalovaný Python 3.12 s Tcl/Tk a launcherem `py`.
+With nothing installed, follow [Windows first run](WINDOWS_FIRST_RUN.md). This abbreviated procedure assumes Python 3.12, Tcl/Tk and the `py` launcher already work:
 
 ```powershell
 py -3.12 -m venv .venv
@@ -45,11 +43,11 @@ py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe soskuska/app.py --data .local-data/dev.sqlite3
 ```
 
-Není potřeba aktivace prostředí ani změna execution policy. Windows ještě není prakticky ověřený.
+No activation or execution-policy change is needed. Unit CI runs on Windows; the complete manual first-run/UI walkthrough remains unverified.
 
 ## Linux
 
-Použij Python s podporou Tk a virtuálních prostředí. Systémové balíčky bývají `python3-tk` a `python3-venv`; přesné názvy závisí na distribuci a musejí odpovídat vybranému Pythonu.
+Use Python with Tk and virtual-environment support. Common system package names are `python3-tk` and `python3-venv`; exact names depend on your distribution and must match the selected Python.
 
 ```sh
 python3 -c "import sys, tkinter; print(sys.version); print('Tk', tkinter.TkVersion)"
@@ -58,157 +56,76 @@ python3 -m venv .venv
 .venv/bin/python soskuska/app.py --data .local-data/dev.sqlite3
 ```
 
-Linux ještě není prakticky ověřený. Na serveru bez grafické relace se okno neotevře.
+A server without a graphical session cannot display the window. Linux GUI CI uses Xvfb; it does not replace manual desktop testing.
 
-## Kontroly
+## Checks
 
-Syntaxe bez otevření okna:
-
-```sh
-.venv-macos/bin/python -m compileall -q soskuska
-```
-
-Nativní kontrola funkčnosti s vlastní dočasnou databází:
+Syntax and unit tests without opening the application window:
 
 ```sh
-.venv-macos/bin/python soskuska/check_dashboard.py
-```
-
-Na Windows/Linux zaměň interpret za cestu ze svého prostředí. Skript krátce otevře okno, ověří mapované widgety, hledání/prázdný stav, sidebar, kompaktní rozložení, kolečko, v Tk 9 trackpad, časovač a uložení času. Při úspěchu vypíše `PASS` a okno zavře. Nepoužívá běžnou databázi.
-
-Má 12sekundovou pojistku přes Tk; nejde o tvrdý limit procesu při zamrznutí GUI smyčky. V takovém případě ukonči proces přes Ctrl+C. Syntaxe ani syntetické události nejsou ruční vizuální kontrola nebo test fyzického trackpadu.
-
-Po změně UI ručně ověř 1440 × 900 i 1024 × 700, dosažení spodního obsahu, skutečné gesto/kolečko, sidebar, hledání, Ctrl+K / Cmd+K a Escape. Po změně ukládání změň checklist a dokonči krátké sezení; restartuj a zkontroluj data. Automatické přenačítání kódu není implementované — aplikaci je nutné restartovat.
-
-## Řešení problémů
-
-| Projev | Postup |
-| --- | --- |
-| Prázdné okno / system Tk warning | Zkontroluj interpret a verzi Tk; na tomto Macu použij `.venv-macos` |
-| `No module named _tkinter` | Vyber Python sestavený s Tk; samotná instalace CustomTkinteru to neopraví |
-| `No module named customtkinter` | Instaluj requirements přes stejný interpret, kterým spouštíš aplikaci |
-| Trackpad neposouvá obsah | Použij aktuální `scrolling.py` a restartuj; Tk 9 potřebuje `TouchpadScroll` |
-| Chyba zápisu SQLite | Přes `--data` vyber zapisovatelnou cestu, ověř oprávnění a volné místo |
-| Chybějí dřívější data | Porovnej `--data` s výchozí uživatelskou databází |
-
-## Další vývoj a GitHub
-
-UI je dnes v `app.py`, SQL v `storage.py`, posouvání v `scrolling.py`. Kvůli změně nativní aplikace nemusíš upravovat HTML návrh. Postupné členění popisuje [plánovaná architektura](PLANNED_ARCHITECTURE.md).
-
-Do repozitáře nepatří virtuální prostředí, SQLite soubory, cache a lokální konfigurace nástrojů. Zdrojový kód je v soukromém repozitáři [turcinv/SOSkuska](https://github.com/turcinv/SOSkuska).
-
-Kompatibilita s původním názvem: pokud nová databáze v `SOSkuska` neexistuje a původní `ExamPrep/dashboard.sqlite3` existuje, aplikace použije tento původní soubor. Nic automaticky nekopíruje, nepřesouvá ani nepřepisuje. Explicitní `--data` má vždy přednost.
-
-Kontrola úložiště bez GUI (včetně zachování dat původní aplikace):
-
-```sh
+.venv-macos/bin/python -m compileall -q soskuska tests
 .venv-macos/bin/python -m unittest discover -s tests -v
 ```
 
-
-Nová integrační kontrola také vytváří a upravuje předmět přes UI, ověřuje prázdnou databázi bez vzorových metrik, termín zkoušky, vazbu sezení a smazání předmětu se zachováním historie. Migraci původních tabulek a validaci předmětů ověřují `tests/test_subjects.py`. Vše používá dočasná data.
-
-
-Integrační kontrola nově ověřuje také skutečné přepnutí sloupců při změně šířky, pokračování plánování časovače po chybě automatického uložení a obnovení checklistu při změně dne. Test souběžných migrací používá pouze dočasné databáze.
-
-## Banka témat a otázek
-
-Kontrolu banky otázek spustíš příkazem níže. Používá dočasnou databázi a krátce otevře okno. Ověřuje CRUD, validaci, kombinované filtry, kompaktní editor a posouvání, izolaci předmětů, mazání a opětovné otevření. `tests/test_questions.py` navíc ověřuje migraci ze schématu 2, Unicode a konzistenci počtů. Celkem je 126 testů bez GUI a devět nativních kontrol. Všechny prošly na macOS; Windows/Linux a fyzický trackpad nejsou tímto ověřené.
+Native checks use disposable databases and open real windows:
 
 ```sh
+.venv-macos/bin/python soskuska/check_dashboard.py
 .venv-macos/bin/python soskuska/check_question_bank.py
-```
-
-## Opravy po kontrole hlavní větve
-
-Nová kontrola `check_review_fixes.py` používá dočasné databáze a ověřuje zrušení starého potvrzení, změnu obsahu z druhého připojení, skutečný exkluzivní SQLite zámek při půlnoci, opakování obnovy, datum, dokončení časovače a syntetické posouvání v dlouhém i krátkém poli. Na macOS navíc v odděleném procesu vyvolá skutečnou položku Quit, ověří zachování sezení při chybě zápisu a uložení při opakování. Celkem je 126 testů bez GUI a devět nativních kontrol. Prošly na macOS; Windows/Linux a fyzický trackpad nejsou tímto ověřené.
-
-```sh
 .venv-macos/bin/python soskuska/check_review_fixes.py
-```
-
-Kontrola navíc ověřuje současné selhání uložení sezení a půlnočního čtení, zachování pokynu k ručnímu uložení po obnově, skutečný SQLite zámek až po úspěšném zápisu sezení během stejného dne, automatickou obnovu metrik/výběru bez duplicitního záznamu a syntetická gesta nad posuvníkem i okrajem editoru.
-
-## Practice Tests — procvičování (v0.4.0)
-
-Nová kontrola check_practice.py ověřuje konfiguraci, filtry, ukládání odpovědí včetně chyby zápisu, potvrzení/opakování dokončení, neměnnou historii, automatické dokončení po limitu, kompaktní okno a pokračování v novém procesu. test_practice.py ověřuje migraci schématu 3, uchování obsahu, skóre, idempotenci, termíny, validaci a rollback. Celkem je 126 testů a devět nativních kontrol. Změna je ověřená na macOS; Windows/Linux a fyzická gesta nejsou prakticky ověřené.
-
-```sh
 .venv-macos/bin/python soskuska/check_practice.py
-```
-
-Kontrola také ověřuje, že dokončení testu na pozadí neposune otevřenou banku otázek a nezmění rozepsaný text.
-
-## Průběžná integrace (CI)
-
-GitHub Actions kontroluje pull requesty do main, nové commity na main a ruční spuštění. Workflow `.github/workflows/ci.yml` instaluje závislosti, ověřuje jejich kompatibilitu, syntaxi Pythonu a všechny jednotkové testy s Pythonem 3.12 na Ubuntu, Windows a macOS. Samostatná úloha spouští devět nativních kontrolních skriptů na Ubuntu pod virtuálním displejem Xvfb; každý proces má limit 60 sekund. Celá úloha má limit 10 minut. Novější běh stejné větve zruší předchozí. Token má pouze čtení obsahu; workflow nic nenasazuje ani nevydává.
-
-Výsledky a logy jsou v [Actions](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml) a v kontrolách PR. Červený stav otevři a přečti první neúspěšný krok. Po opravě pushni do stejné větve a kontroly se spustí znovu. Ruční spuštění Run workflow je dostupné po sloučení workflow do výchozí větve. Branch protection tímto není zapnutá.
-
-Automatické testy nejsou ruční ověření Windows/macOS/Linux ani fyzického trackpadu. Linuxový CI běh neověřuje nativní nabídku Quit v macOS ani Tk 9 gesta; ty je potřeba dál kontrolovat na Macu.
-
-## Kartičky a opakování (v0.5.0)
-
-check_flashcards.py ověřuje formuláře, opakované hledání, zachování rozepsaného textu při navigaci, odhalení před hodnocením, odmítnutí zastaralého hodnocení, opakování po chybě zápisu, termíny, uchování historie a nové spuštění procesu. test_flashcards.py a historický fixtures/schema_v4.sql ověřují migraci a transakce. Celkem je 126 jednotkových testů a devět nativních kontrol; CI spouští testy na třech systémech a GUI na Ubuntu/Xvfb.
-
-[Podrobný návod a pravidla](FLASHCARDS.md).
-
-```sh
 .venv-macos/bin/python soskuska/check_flashcards.py
 .venv-macos/bin/python soskuska/check_statistics.py
 .venv-macos/bin/python soskuska/check_state_fixes.py
 .venv-macos/bin/python soskuska/check_tutor.py
-```
-
-## Statistiky (v0.6.0)
-
-V nabídce **Statistics** zvol Last 7 days, Last 30 days nebo All time. Přehled ukazuje uložený čas a sezení, otázkami váženou úspěšnost dokončených testů, počty vlastních hodnocení kartiček, čas podle předmětu a denní aktivitu. Refresh nebo návrat na obrazovku načte nový snímek. Nejde o měření zvládnutí učiva.
-
-Nových 16 testů ověřuje období, místní dny, váhu otázek, úplnou historii, zachování po smazání, pouze čtení, souběžný snímek a opakování po chybě. Nativní kontrola ověřuje prázdný stav, filtry, chybu a opakování, navigaci, kompaktní rozložení, posouvání a otevření v novém procesu. Celkem 126 jednotkových testů a devět nativních kontrol; používají dočasná data.
-
-```sh
-.venv-macos/bin/python soskuska/check_statistics.py
-.venv-macos/bin/python soskuska/check_state_fixes.py
-.venv-macos/bin/python soskuska/check_tutor.py
-```
-
-[Podrobná pravidla](STATISTICS.md).
-
-## Opravy souběžných změn (v0.6.2)
-
-Nových osm jednotkových testů pokrývá termíny včetně čekání na zámek, rollback, konflikty otázek a odlišení odstraněného testu. check_state_fixes.py navíc ověřuje skutečné formuláře, zachování rozepsaného obsahu, konflikt a nové načtení, zachování výsledku po termínu a obnovu po odstranění z jiné instance. Celkem 126 jednotkových testů a devět nativních kontrol s dočasnými daty.
-
-```sh
-.venv-macos/bin/python soskuska/check_state_fixes.py
-.venv-macos/bin/python soskuska/check_tutor.py
-```
-
-## AI Tutor s Ollamou (v0.7.0)
-
-V AI Tutor připoj vlastní Ollama server přes Connect / refresh, vyber model a jazyk odpovědi a zadej otázku. Odpověď přichází průběžně; Stop ji zastaví. Ostatní obrazovky zůstávají použitelné během generování i bez Ollamy. Chat je pouze pro aktuální spuštění aplikace, neukládá se do databáze.
-
-23 nových testů a check_tutor.py používají výhradně fake Ollama server na loopbacku a dočasná data. Ověřují protokol, Unicode, chybné odpovědi, přerušení streamu/TLS handshake, limity, kontext, navigaci a zavření při generování. Celkem 126 jednotkových testů a devět GUI kontrol. Tyto testy neověřují kvalitu skutečného modelu ani jeho hardwarové nároky.
-
-```sh
-.venv-macos/bin/python soskuska/check_tutor.py
-```
-
-[Návod AI Tutor](AI_TUTOR.md).
-
-## Nastavení
-
-Chat zůstává jen v paměti a zavřením se odstraní. Volby spojení lze výslovně uložit v [Settings](SETTINGS.md); bez Save jsou dočasné.
-
-[Nastavení](SETTINGS.md).
-
-Nastavení se ukládá transakčně ve schématu 6 s ochranou před přepsáním změn jiného okna. Migrace z verze 5 zachová všechny předchozí tabulky i data; starší aplikace novější schéma odmítne otevřít.
-
-`tests/test_preferences.py`, `tests/fixtures/schema_v5.sql`, `check_settings.py`.
-
-```sh
 .venv-macos/bin/python soskuska/check_settings.py
 ```
 
+Use the corresponding environment executable on Windows/Linux. For example:
+
 ```powershell
-.venv\Scripts\python.exe soskuska/check_settings.py
+.\.venv\Scripts\python.exe soskuska/check_settings.py
 ```
+
+Checks print `PASS` and close their windows on success. They never use the normal user database. The Dashboard script has a 12-second Tk safeguard, not a hard process timeout if the event loop freezes; use Ctrl+C in that case. CI adds a 60-second external timeout per script.
+
+The v0.8.0 baseline passed 126 unit tests and nine native checks locally. Do not present old results as validation of untested code changes. Coverage includes:
+
+| Check / tests | Main coverage |
+| --- | --- |
+| `check_dashboard.py`, `test_storage.py`, `test_subjects.py` | Empty database, real metrics, subject CRUD/Unicode/exam dates, session links/history, wide/compact columns, search, synthetic scrolling, timer retry, midnight checklist, concurrent migrations |
+| `check_question_bank.py`, `test_questions.py` | Topic/question CRUD, combined filters, subject isolation, compact editor, retained history, schema 2 fixture migration |
+| `check_review_fixes.py` | Stale deletion warnings, real SQLite locks, failed reads/writes, daily header/retry, no duplicate sessions, nested editor/scrollbar gestures; native macOS Quit in a bounded child process |
+| `check_practice.py`, `test_practice.py` | Setup, answer save/retry, scoring, immutable snapshots, UTC deadlines, idempotent completion, fresh-process resume, no scroll/draft changes on another screen |
+| `check_flashcards.py`, `test_flashcards.py` | Draft retention, repeated search, reveal/rating guard, stale revisions, write retry, scheduling/history, fresh process, frozen schema 4 migration |
+| `check_statistics.py`, `test_statistics.py` | Empty state, local periods, weighted accuracy, full history, consistent read snapshot, retry, compact layout, scrolling and fresh process |
+| `check_state_fixes.py` | Question conflicts/reload, refreshed deck-subject choices, expired-discard preservation, missing-attempt recovery and transient errors |
+| `check_tutor.py`, `test_tutor.py` | Loopback fake Ollama, Unicode/stream errors, Stop/TLS cancellation, context bounds, navigation, clearing and close while generating |
+| `check_settings.py`, `test_preferences.py`, `test_settings_ui.py` | Atomic/stale preference writes, migration/rollback from frozen schema 5, kept drafts, active timer target, fresh-process persistence, no auto-connection, per-server model choice |
+
+After UI changes, manually check 1440 × 900 and 1024 × 700, access to lower content, actual scrolling gestures, sidebar, search, Ctrl+K / Cmd+K and Escape. For persistence changes, edit the checklist, finish a short session and restart to inspect saved data. There is no automatic code reload: restart the app.
+
+## CI
+
+`.github/workflows/ci.yml` runs on PRs targeting main, pushes to main and manual dispatch. Python 3.12 syntax, dependencies and unit tests run on Ubuntu, Windows and macOS; nine GUI checks run under Xvfb on Ubuntu. Each process has a 60-second timeout, each job 10 minutes. Newer runs cancel superseded runs for the same ref. Actions are pinned and the token can only read contents. CI does not deploy, publish releases or configure branch protection.
+
+Read the first failing step in [Actions](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml), fix it and push to the same branch. Do not disable meaningful checks to get green results. Linux GUI checks do not establish native Aqua Quit or Tk 9 hardware trackpad behavior. Fake Ollama does not establish real-model quality or performance.
+
+## Troubleshooting
+
+| Symptom | What to check |
+| --- | --- |
+| Empty window / system Tk warning | Check interpreter and Tk; use `.venv-macos` on the prepared Mac |
+| `No module named _tkinter` | Choose Python built with Tk; installing CustomTkinter alone will not fix it |
+| `No module named customtkinter` | Install requirements through the same interpreter used to launch |
+| Trackpad does not scroll | Use current `scrolling.py` and restart; Tk 9 needs `TouchpadScroll` |
+| SQLite write error | Select a writable `--data` path; check permissions and free space |
+| Earlier data missing | Compare `--data` with the normal user database path |
+
+## Data and further development
+
+If no fresh `SOSkuska` database exists but legacy `ExamPrep/dashboard.sqlite3` does, the app uses that file without copying, moving or overwriting it. Explicit `--data` wins. Schema 6 migration preserves prior records; older apps refuse newer schemas. [Settings](SETTINGS.md) explains revision conflicts and explicit preference application.
+
+`app.py` owns Dashboard/timer/navigation; `storage.py` owns SQL and migrations; `scrolling.py` owns scrolling compatibility. Other screens have their own modules. HTML under `soskuska-local/` is only a visual reference. See [planned architecture](PLANNED_ARCHITECTURE.md) for gradual restructuring, [Flashcards](FLASHCARDS.md), [Statistics](STATISTICS.md) and [AI Tutor](AI_TUTOR.md) for feature rules.
+
+Keep environments, SQLite files, caches and local tool configuration out of Git. The repository [turcinv/SOSkuska](https://github.com/turcinv/SOSkuska) remains private.

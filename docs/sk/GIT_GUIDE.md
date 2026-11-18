@@ -1,5 +1,7 @@
 # Klonovanie a základná práca s Gitom
 
+[English](../GIT_GUIDE.md) · [Čeština](../cs/GIT_GUIDE.md) · [Slovenčina](GIT_GUIDE.md) · [Русский](../ru/GIT_GUIDE.md)
+
 Git ukladá históriu zmien na tvojom počítači. GitHub uchováva vzdialenú kópiu a umožňuje spoluprácu. ZIP stačí na spustenie aplikácie; na vývoj a odosielanie zmien použi klon.
 
 ## 1. Získaj prístup a Git

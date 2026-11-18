@@ -1,24 +1,26 @@
-# Kartičky a opakování (v0.5.0)
+# Flashcards and repetition (introduced in v0.5.0)
 
-V postranní nabídce otevři **Flashcards**. New deck vytvoří balíček pro existující předmět; název musí být jedinečný mezi všemi balíčky. Předmět balíčku se potom nemění, název a popis ano. Open deck umožní přidat a upravovat kartičky. Přední strana má 1–2000 znaků, zadní 1–4000; Search hledá v obou stranách. Seznam zobrazuje nejvýše 100 výsledků, další najdeš užším hledáním.
+[English](FLASHCARDS.md) · [Čeština](cs/FLASHCARDS.md) · [Slovenčina](sk/FLASHCARDS.md) · [Русский](ru/FLASHCARDS.md)
 
-**Study due** otevře nejvýše 100 právě splatných kartiček, od nejstaršího termínu. Nejprve se zobrazí přední strana. Reveal answer ukáže odpověď a zpřístupní Again / Hard / Good / Easy. Hodnocení je vlastní posouzení vybavení odpovědi, nikoli měření správnosti nebo zvládnutí učiva. Po každém hodnocení se současně uloží historický záznam a další termín. Neohodnocená kartička zůstane splatná; po restartu můžeš začít další dávku. Refresh obnoví počty a splatnost; seznam se na pozadí sám nepřestavuje.
+Open **Flashcards** in the sidebar. New deck creates a deck for an existing subject; deck names are globally unique. A deck's subject cannot later change, but its name and description can. Open deck lets you add/edit cards. Front: 1–2,000 characters; back: 1–4,000. Search checks both sides. Lists show up to 100 matches; narrow your search for others.
 
-## Pravidla termínů
+**Study due** opens at most 100 currently due cards, oldest first. Reveal answer shows the back and enables Again / Hard / Good / Easy. Ratings are your own assessment of recall, not measured accuracy or mastery. Each rating saves a history snapshot and next due date together. Unrated cards stay due; after restart, start another batch. Refresh reloads counts and due status; lists do not rebuild in the background.
 
-Jde o jednoduchá vlastní pravidla, nikoli implementaci SM-2 nebo FSRS.
+## Scheduling rules
 
-| Hodnocení | Nová / učící se kartička (interval 0) | Kartička s intervalem alespoň 1 den |
+These are simple custom rules, not SM-2 or FSRS.
+
+| Rating | New / learning card (interval 0) | Card with an interval of at least one day |
 | --- | --- | --- |
-| Again | Za 10 minut, interval se nastaví na 0 | Za 10 minut, interval se nastaví na 0 |
-| Hard | Za 1 hodinu, interval zůstává 0 | Předchozí počet dní × 1,2, zaokrouhleno nahoru |
-| Good | Za 1 den | Předchozí počet dní × 2,5, zaokrouhleno nahoru |
-| Easy | Za 4 dny | Předchozí počet dní × 3,5, zaokrouhleno nahoru |
+| Again | In 10 minutes; reset interval to 0 | In 10 minutes; reset interval to 0 |
+| Hard | In 1 hour; interval stays 0 | Previous days × 1.2, rounded up |
+| Good | In 1 day | Previous days × 2.5, rounded up |
+| Easy | In 4 days | Previous days × 3.5, rounded up |
 
-Maximum je 365 dní. Termíny jsou UTC; v aplikaci se zobrazují v místním čase. Změna systémových hodin může ovlivnit splatnost. Úprava obsahu kartičky obnoví splatnost na teď a interval na 0; minulá hodnocení zůstanou zachovaná.
+The maximum is 365 days. Due dates are UTC and displayed in local time. System-clock changes can affect due status. Editing card content makes it due now and resets its interval to 0; earlier ratings remain.
 
-## Historie a mazání
+## History and deletion
 
-Review history zobrazuje posledních 20 hodnocení s kopiemi obou stran, názvu balíčku, předmětu a termínů. Starší řádky zůstávají uložené. Smazání předmětu ponechá jeho balíčky a kartičky s původním názvem předmětu. Smazání kartičky nebo balíčku vyžaduje potvrzení a ponechá historii hodnocení. Změněný počet kartiček nebo název balíčku vyžaduje nové potvrzení smazání. Zastaralá úprava nebo hodnocení kartičky se odmítne místo přepsání novější verze. Při chybě zápisu se obsah formuláře a odhalená odpověď zachovají pro opakování.
+Review history shows the latest 20 ratings with front/back, deck/subject names and due-date snapshots. Older rows remain stored. Deleting a subject keeps its decks/cards and historical subject name. Deleting a card or deck needs confirmation and retains review history. A changed deck name/card count requires a refreshed deletion confirmation. Stale edits/ratings are rejected instead of overwriting newer content. Write errors preserve form drafts and revealed answers for retry.
 
-Funkce je dostupná od v0.5.0. Import, převod z otázek, propojení materiálů s AI zůstává plánované; souhrnný přehled je ve Statistics.
+Import, conversion from questions and AI material integration remain planned. Aggregate activity is in [Statistics](STATISTICS.md).

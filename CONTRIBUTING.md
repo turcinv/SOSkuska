@@ -1,23 +1,23 @@
-# Přispívání do SOSkúška
+# Contributing to SOSkúška
 
-[Slovenčina](docs/sk/CONTRIBUTING.md) · [Русский](docs/ru/CONTRIBUTING.md)
+[English](CONTRIBUTING.md) · [Čeština](docs/cs/CONTRIBUTING.md) · [Slovenčina](docs/sk/CONTRIBUTING.md) · [Русский](docs/ru/CONTRIBUTING.md)
 
-## Než začneš
+## Before you start
 
-Přečti [README](README.md), [práci s Gitem](docs/GIT_GUIDE.md), [vývojový návod](docs/DEVELOPMENT.md) a [současnou architekturu](docs/CURRENT_ARCHITECTURE.md). Vývojoví asistenti mají navíc pokyny v [AGENTS.md](AGENTS.md).
+Read the [README](README.md), [Git guide](docs/GIT_GUIDE.md), [development guide](docs/DEVELOPMENT.md) and [current architecture](docs/CURRENT_ARCHITECTURE.md). Development assistants must also follow [AGENTS.md](AGENTS.md).
 
-Pracuj v nové větvi z aktuálního `main`. Jedna změna má řešit jeden srozumitelný problém. Existují Dashboard, My Subjects, Question bank, Practice Tests a Flashcards; další plánované obrazovky neprezentuj jako hotové funkce. Nová databáze musí zůstat prázdná, dokud uživatel nezadá vlastní data. Používej samostatnou vývojovou databázi přes `--data .local-data/dev.sqlite3`.
+Start a new branch from current `main`. Each change should solve one understandable problem. Dashboard, My Subjects, Question bank, Practice Tests, Flashcards, Statistics, AI Tutor and Settings exist; distinguish future proposals from implemented behavior. New databases must remain empty until the user enters data. Use `--data .local-data/dev.sqlite3` for isolated development.
 
-## Před odesláním
+## Before submitting
 
-Na macOS s připraveným prostředím:
+On the prepared Mac:
 
 ```sh
 .venv-macos/bin/python -m compileall -q soskuska tests
 .venv-macos/bin/python -m unittest discover -s tests -v
 ```
 
-Na Windows/Linux použij odpovídající cestu k Pythonu svého prostředí. Při změně UI, časovače nebo posouvání spusť i nativní kontrolu a ručně ověř dotčené chování:
+On Windows/Linux, use the Python executable from your local environment. For relevant UI, timer or scrolling changes, run the affected native checks and manually verify the behavior:
 
 ```sh
 .venv-macos/bin/python soskuska/check_dashboard.py
@@ -31,22 +31,16 @@ Na Windows/Linux použij odpovídající cestu k Pythonu svého prostředí. Př
 .venv-macos/bin/python soskuska/check_settings.py
 ```
 
-Kontrola GUI otevírá okno a potřebuje grafickou relaci. Změna samotné dokumentace obvykle vyžaduje kontrolu odkazů, příkazů a formátování; není nutné kvůli ní spouštět celé UI.
+GUI checks open real windows and need a graphical session. Documentation-only changes normally need link, command and formatting checks rather than the entire UI suite.
 
-Zkontroluj `git diff --check` a obsah commitu. Nepřidávej virtuální prostředí, databáze, cache, tokeny ani `.env`. Zachovej uživatelská data, stabilitu UI a offline provoz. Při podstatné změně aktualizuj českou, slovenskou i ruskou dokumentaci. AGENTS.md zůstává anglicky, rozhraní aplikace zatím také.
+Check `git diff --check` and review the staged changes. Never commit environments, databases, caches, tokens or `.env`. Preserve user data, UI stability and offline use. Keep English documentation and the Czech (`docs/cs/`), Slovak (`docs/sk/`) and Russian (`docs/ru/`) versions aligned. AGENTS.md and the application UI remain English.
 
-## Pull request a hlášení problémů
+## Pull requests and issue reports
 
-Pushni svou větev a otevři pull request do `main`. Popiš problém, nové chování a skutečně provedené kontroly včetně OS, Pythonu a Tk. Screenshot přidej, pokud pomáhá posoudit změnu UI. Neoznačuj neprovedené kontroly jako úspěšné; syntetické události neprokazují ověření fyzického trackpadu.
+Push your branch and open a PR targeting `main`. Never commit or push directly to `main`; merge only after the user authorizes the PR and findings are resolved. Describe the problem, resulting behavior and actual validation, including OS/Python/Tk where relevant. Add a screenshot when it helps assess a UI change. Synthetic events do not prove physical trackpad behavior.
 
-Chybu založ přes šablonu v Issues: postup opakování, očekávané/skutečné chování, prostředí a úplný relevantní výpis. Návrh funkce má popsat potřebu uživatele a očekávané chování. Nepřikládej soukromou databázi ani přístupové údaje. V Issues a pull requestech můžeš psát česky, slovensky, anglicky nebo rusky.
+Use the issue templates to report reproduction steps, expected/actual behavior, environment and relevant complete logs. A feature request should explain the user's need and expected behavior. Do not attach private databases or credentials. Issues and PRs may use Czech, Slovak, English or Russian.
 
-## Průběžná integrace (CI)
+## Continuous integration
 
-CI: Python 3.12, jednotkové testy na třech systémech a osm GUI kontrol na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
-
-## Statistiky (v0.6.0)
-
-V nabídce **Statistics** zvol Last 7 days, Last 30 days nebo All time. Přehled ukazuje uložený čas a sezení, otázkami váženou úspěšnost dokončených testů, počty vlastních hodnocení kartiček, čas podle předmětu a denní aktivitu. Refresh nebo návrat na obrazovku načte nový snímek. Nejde o měření zvládnutí učiva.
-
-[Podrobná pravidla](docs/STATISTICS.md).
+CI runs Python 3.12 unit tests on Ubuntu, Windows and macOS, plus nine GUI checks on Ubuntu/Xvfb. [Workflow results](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml). Checks do not deploy or publish releases. See [Statistics rules](docs/STATISTICS.md) when changing reports; self-ratings must not be presented as measured mastery.

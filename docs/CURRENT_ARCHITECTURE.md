@@ -1,57 +1,58 @@
-# Současná architektura
+# Current architecture
 
-Stav k 18. listopadu 2026. Implementované jsou Dashboard, My Subjects, Question bank, Practice Tests, Flashcards, Statistics a volitelný AI Tutor a Settings; další kroky popisuje [plánovaná architektura](PLANNED_ARCHITECTURE.md).
+[English](CURRENT_ARCHITECTURE.md) · [Čeština](cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](sk/CURRENT_ARCHITECTURE.md) · [Русский](ru/CURRENT_ARCHITECTURE.md)
 
-## Technologie a soubory
+Status as of 18 November 2026, release v0.8.0. Dashboard, My Subjects, Question bank, Practice Tests, Flashcards, Statistics, optional AI Tutor and Settings are implemented. See [planned architecture](PLANNED_ARCHITECTURE.md) for future proposals.
 
-Python, CustomTkinter 5.2.2, Pillow a standardní SQLite. Jeden proces a hlavní vlákno Tk; s volitelným Ollama klientem ve vedlejším vlákně. Vstup je `python soskuska/app.py`; instalovatelný balíček zatím není.
+## Technology and modules
 
-| Soubor | Odpovědnost |
+Python, CustomTkinter 5.2.2, Pillow and standard-library SQLite. One process owns the Tk main thread, with optional Ollama jobs on background threads. Entry point: `python soskuska/app.py`; there is no installable package yet. HTML under `soskuska-local/` is a historical visual reference, not the runtime.
+
+| Module | Responsibility |
 | --- | --- |
-| `soskuska/app.py` | Dashboard, navigace obrazovek, metriky, časovač, volba databáze a CLI |
-| `soskuska/subjects.py` | My Subjects, inline formulář, validace a potvrzení smazání |
-| `soskuska/storage.py` | Verze schématu, migrace, CRUD předmětů, úkoly, sezení a přehledy |
-| `soskuska/scrolling.py` | Kompatibilita kolečka a trackpadu Tk 9 |
-| `tests/test_storage.py`, `tests/test_subjects.py` | Úložiště, kompatibilita původní databáze, migrace a pravidla předmětů |
-| `soskuska/check_dashboard.py` | Nativní integrační kontrola s dočasnými daty |
-| `soskuska/statistics_page.py` / `soskuska/study_statistics.py` | Obrazovka Statistics a konzistentní agregace uložené historie |
-| `soskuska/tutor_page.py`, `soskuska/tutor.py`, `soskuska/ollama_client.py` | Session chat, fronta úloh a volitelný Ollama klient |
-| `soskuska-local/index.html` | Historický vizuální návrh; není součástí běhu aplikace |
+| `soskuska/app.py` | Dashboard, navigation, metrics, timer, database selection and CLI |
+| `soskuska/subjects.py` | Subject forms, validation and deletion confirmation |
+| `soskuska/storage.py` | Schema version, transactional migrations, CRUD and stored study state |
+| `soskuska/content.py` / `question_bank.py` | Pure question/topic validation and authoring screen |
+| `soskuska/practice.py` / `practice_page.py` | Pure practice/deadline rules and test UI |
+| `soskuska/repetition.py` / `flashcard_page.py` | Pure card rules/scheduling and flashcard UI |
+| `soskuska/study_statistics.py` / `statistics_page.py` | Consistent history aggregates and report UI |
+| `soskuska/ollama_client.py`, `tutor.py`, `tutor_page.py` | HTTP/HTTPS, bounded context/background jobs and session-chat UI |
+| `soskuska/preferences.py` / `settings_page.py` | Pure preference validation and explicit-save UI |
+| `soskuska/scrolling.py` | Mouse wheel and Tk 9 trackpad compatibility |
+| `tests/` / `soskuska/check_*.py` | Unit tests, frozen migration fixtures and native GUI checks using temporary data |
 
-## Datový tok
+## Data flow
 
 ```mermaid
 flowchart LR
-    User[Uživatel] --> Dashboard[Dashboard / app.py]
-    User --> Subjects[SubjectPage / subjects.py]
-    Subjects --> Store[Store / storage.py]
-    User --> Questions[QuestionBankPage / question_bank.py]
-    Questions --> Validation[content.py]
-    Questions --> Store
-    User --> Practice[PracticePage / practice_page.py]
-    Practice --> Rules[practice.py]
-    Practice --> Store
-    User --> Flashcards[FlashcardPage / flashcard_page.py]
-    Flashcards --> Repetition[repetition.py]
-    Flashcards --> Store
-    User --> Statistics[StatisticsPage / statistics_page.py]
+    User --> Dashboard[Dashboard / app.py]
+    User --> Screens[Subjects / Questions / Practice / Flashcards]
+    Dashboard --> Store[Store / storage.py]
+    Screens --> Rules[content.py / practice.py / repetition.py]
+    Screens --> Store
+    User --> Statistics[StatisticsPage]
     Statistics --> Store
     Store --> Report[study_statistics.py]
-    User --> Tutor[TutorPage / tutor_page.py]
+    User --> Settings[SettingsPage]
+    Settings --> Preferences[preferences.py]
+    Settings --> Store
+    User --> Tutor[TutorPage]
     Tutor --> Jobs[tutor.py / background task]
     Jobs --> Ollama[ollama_client.py / HTTP]
     Jobs --> Queue[queue / Tk after]
     Queue --> Tutor
-    Dashboard --> Store
     Store --> DB[(SQLite)]
     Clock[time.monotonic] --> Dashboard
 ```
 
-Obrazovky volají `Store` přímo. Samostatná servisní/doménová vrstva a sdílený modul tématu zůstávají plánované. `SubjectPage` využívá stávající stylovací pomocné metody aplikace.
+Screens call Store directly; separate service/domain layers and a shared theme module remain proposals. SubjectPage uses the app's existing styling helpers. Workers never call Tk or SQLite; queue events are handled on the main thread.
 
-## Schéma a migrace
+## Schema and migrations
 
-`PRAGMA user_version` nyní označuje verzi **6**. Otevření původní databáze verze 0 vytvoří/uzná původní tabulky a v jedné transakci doplní předměty a vazby. Databáze s novější verzí se odmítne otevřít místo pokusu o downgrade. Cizí klíče jsou zapnuté pro každé připojení.
+`PRAGMA user_version` is **6**. Store obtains `BEGIN IMMEDIATE` before reading the version so concurrent launches cannot migrate from stale metadata. Migrations are transactional and preserve old tasks/sessions plus newer content/history. Foreign keys are enabled per connection. A newer schema is rejected rather than downgraded. Source of truth: `storage.py`; the SQL below describes the main tables and indexes.
+
+### Tasks, subjects and question bank
 
 ```sql
 CREATE TABLE tasks (
@@ -95,72 +96,45 @@ CREATE INDEX questions_subject ON questions(subject_id);
 CREATE INDEX questions_topic ON questions(topic_id);
 ```
 
-Staré úkoly a sezení se zachovají. Původní sezení nemají vymyšlený předmět: nové sloupce jsou `NULL`, UI je označí jako Unassigned session. Při smazání předmětu se zachová čas i název předmětu uložený u nového sezení; cizí klíč se nastaví na `NULL`. ID předmětu se znovu nepoužívá.
+Legacy sessions get no invented subject: new links/snapshots are NULL and display as Unassigned session. Subject deletion keeps saved time/name snapshots and sets its reference to NULL. Subject IDs are not reused.
 
-Název předmětu má 1–120 znaků; mezery se sjednotí, unikátní klíč používá Unicode NFKC a `casefold()`. Popis má nejvýše 1 000 znaků. Datum je volitelné, musí přesně odpovídat platnému `YYYY-MM-DD`. Minulé datum lze uložit, ale nezobrazí se mezi nadcházejícími zkouškami.
+Subject names contain 1–120 characters, normalized whitespace and Unicode NFKC/casefold unique keys. Descriptions allow 1,000 characters; optional exam dates must exactly match a valid `YYYY-MM-DD`. Past dates can be stored but are excluded from upcoming exams.
 
-## Ukládání a časovač
+Schema 3 introduced topics/questions, preserving earlier records. Topic names are unique within a subject (1–120 characters, same normalization). Questions have 1–2,000 characters, four distinct normalized answers of 1–500 characters, correct_option 0–3, Easy/Medium/Hard difficulty and explanation up to 2,000 characters. Optional topic ownership is enforced by API validation and SQL triggers. Subject/topic indexes support filtering. The UI does not move topics/questions between subjects.
 
-| Platforma | Výchozí databáze |
+Question authoring exposes the correct answer; it is not the running-test UI. Deleting a topic leaves questions unassigned. Subject deletion warns before cascading topics/questions and retains study history. Stale question forms compare all original editable content under the write lock; timestamp precision alone is insufficient. Conflicts retain drafts for copying/reloading/combining.
+
+## Storage locations and focus timer
+
+| Platform | Default database |
 | --- | --- |
 | macOS | `~/Library/Application Support/SOSkuska/dashboard.sqlite3` |
-| Windows | `%LOCALAPPDATA%\SOSkuska\dashboard.sqlite3`; náhradní základ `~/AppData/Local` |
-| Linux | `$XDG_DATA_HOME/SOSkuska/dashboard.sqlite3`; náhradní základ `~/.local/share` |
+| Windows | `%LOCALAPPDATA%\SOSkuska\dashboard.sqlite3`; fallback base `~/AppData/Local` |
+| Linux | `$XDG_DATA_HOME/SOSkuska/dashboard.sqlite3`; fallback base `~/.local/share` |
 
-Pokud nová databáze není a existuje původní `ExamPrep/dashboard.sqlite3`, použije se původní soubor bez přesunu nebo přepisu. `--data` má přednost. Data se nešifrují, nezálohují ani nesynchronizují. Zápisy běží na hlavním vlákně.
+If the new database does not exist but legacy `ExamPrep/dashboard.sqlite3` does, use the legacy file without moving/copying/overwriting it. Explicit `--data` takes precedence. Data is neither encrypted, backed up nor synchronized. Short SQLite writes run on the main thread.
 
-Časovač vyžaduje existující předmět. Po dobu sezení drží jeho ID a kopii názvu; přejmenování nemění historii. Má nastavitelný limit 1–180 minut (výchozí 15), měření přes `time.monotonic()`, aktualizaci přes `after(250, tick)`, pauzu a dokončení. Mazání aktivního předmětu UI zablokuje do dokončení sezení. Finish, dosažení limitu a běžné zavření ukládají čas. Při chybě zápisu se sezení pozastaví a lze zkusit Finish znovu; okno se nezavře s neuloženým sezením.
+Focus requires an existing subject and holds its ID/name snapshot during the session. It uses `time.monotonic()`, `after(250, tick)`, pause/resume and Finish, with a configurable 1–180 minute target (default 15). Active subject deletion is blocked. Finish, target completion and normal close save elapsed time. Failed writes pause the session and retain it for retry; both window close and native macOS Quit use the same handler and keep the app open if saving fails.
 
-Čas není průběžně ukládaný a po pádu se nemusí obnovit. Sezení se připisuje ke dni uložení a nerozděluje se přes půlnoc. Změna dne za běhu obnoví přehled a dnešní checklist. Nový checklist používá klíče `review_subject` a `focus`; staré řádky zůstávají v databázi, ale nejsou mapované na nové úkoly.
+Time is not saved continuously; a crash may lose the active session. Sessions are assigned to their save day, not split at midnight. Daily rollover refreshes the summary/checklist; `active_day` and the header update only after successful reads. Checklist keys are `review_subject` and `focus`; old keys stay stored without being mapped to new tasks.
 
-## Skutečný Dashboard
+Read failures re-arm timer ticks and retry refresh independently of day changes. A committed session is never inserted again just because the subsequent summary read failed. Recovery refreshes metrics and subject choices and clears retry notices. An unsaved session's Press Finish instruction must remain visible during refresh failures/recovery.
 
-Pevné vzorové předměty, procenta, profil, termíny i základy 24 h 35 min / 45 min byly odstraněné. Nová databáze je prázdná. Metriky jsou celkový čas, počet uložených sezení, série studijních dní a počet předmětů. Série může končit dnes nebo včera; starší přerušená série ukáže nulu. Cíl je nastavitelný (výchozí 60 minut denně); karta ukazuje uložené minuty, bar má přesnost na sekundy.
+Dashboard metrics use actual total time, saved sessions, subject count and study-day streak. A streak can end today or yesterday; an older broken streak shows zero. The daily goal is configurable (default 60 minutes), with saved minutes in text and seconds in the bar. Subject cards show time/session counts, not invented mastery. Exam dates and recent activity come from stored data; new databases are empty.
 
-Karty ukazují počet sezení a uložený čas předmětu, ne smyšlený učební pokrok. Zkoušky pocházejí z uložených termínů, nedávná aktivita z posledních uložených sezení. Neexistující data mají prázdné stavy. Nastavení je implementované; AI Tutor má volitelný chat; Statistics má vlastní obrazovku.
+## Layout and scrolling
 
-## Rozložení a ovládání
+Target window: 1440 × 900; minimum: 1024 × 700. Sidebar is 230 px, collapsed 72 px. With less than 1100 px remaining, Dashboard metrics become 2 × 2 and its right panel moves below the main content. My Subjects uses two columns above its 850 px breakpoint and one below; long names wrap.
 
-Okno 1440 × 900, minimum 1024 × 700. Sidebar 230 px / sbalený 72 px; při zbylé šířce pod 1100 px se Dashboard přeuspořádá na metriky 2 × 2 a pravý panel pod obsah. My Subjects přepíná mezi jedním a dvěma sloupci při šířce 850 px. Dlouhé názvy se na kartách zalamují.
+Search is independent per screen and uses casefold. Ctrl+K / Cmd+K focuses active search; Escape clears it. Screens without search must leave hidden drafts alone. Forms and deletion confirmations are inline. Navigation cancels pending subject deletion; name/content counts are compared under the write lock before deletion, requiring a refreshed warning if changed.
 
-Obrazovky mají nezávislé vyhledávání přes `casefold()`. Ctrl+K / Cmd+K zaměří hledání aktivní obrazovky; Escape vymaže dotaz. Formuláře pro nový/upravený předmět i potvrzení smazání jsou inline. Podpora `TouchpadScroll`, kolečka a staršího Linux/X11 zůstává v adaptéru využívajícím privátní členy CustomTkinteru; při upgradu jej znovu ověřit.
+`scrolling.py` isolates private CustomTkinter access and supports wheel, older Linux/X11 events and Tk 9 TouchpadScroll packed deltas. Long text editors contain their own scroll, including at boundaries; short editors allow outer scrolling. Gestures over editor scrollbar/border canvases forward to the Text widget exactly once. Recheck this adapter when upgrading CustomTkinter.
 
-## Ověření a zbývající omezení
+## Practice Tests (introduced in v0.4.0)
 
-126 testů úložiště prošlo; integrační skript prošel na macOS s Pythonem 3.12.13 / Tk 9.0 a dočasnou databází. Ověřil CRUD přes formulář, Unicode, hledání, prázdné stavy, navázání časovače, zachování historie, opětovné otevření, kompaktní režim a syntetické posouvání. Nenahrazuje ruční vizuální/hardwarové ověření; Windows/Linux nejsou ověřené.
+Schema 4 added snapshotted attempts/items. A partial unique index permits only one unfinished attempt globally. Start, answer changes, position and completion are transactional. Deadlines are checked after obtaining the write lock. Late answers are rejected; failed answer writes restore the saved selection. Completion is idempotent, including retries after result-read failure.
 
-Zbývá ukládání AI konverzací, překlady UI, úplná obnova po pádu, zálohy, balíčky a komplexní logování. První databázové operace mají chybová hlášení, ale úplné zpracování chyb při každém čtení ještě chybí.
-
-
-Verze schématu se čte až po získání `BEGIN IMMEDIATE`, aby souběžné starty nepoužily zastaralou hodnotu. Rozložení My Subjects zpracovává skutečné Configure události CustomTkinteru; integrační kontrola ověřuje dva sloupce ve velkém okně a jeden v kompaktním.
-
-## Banka témat a otázek
-
-`soskuska/question_bank.py` obsahuje obrazovku QuestionBankPage; `soskuska/content.py` čistou validaci bez Tk. Obrazovka volá Store přímo. Schéma 3 přidává topics a questions; stávající tabulky ve výpisu výše zůstávají. Migrace 0/1/2 → 3 probíhá v jedné transakci a zachová předměty, úkoly i sezení.
-
-Název tématu je jedinečný v rámci předmětu (1–120 znaků, normalizace mezer, NFKC/casefold). Otázka má text 1–2000 znaků, přesně čtyři různé odpovědi po normalizaci (1–500 znaků), correct_option 0–3, povinnou obtížnost a vysvětlení do 2000 znaků. Vazba na téma je volitelná; API a SQL triggery při zápisu otázky odmítají téma jiného předmětu. Indexy pokrývají subject_id a topic_id otázek. Témata ani otázky nelze přes UI přesouvat mezi předměty.
-
-V My Subjects zvol u předmětu **Questions**. Přidej téma přes New topic a otázku přes New question. Každá otázka má čtyři různé povinné odpovědi A–D, právě jednu správnou odpověď, obtížnost Easy/Medium/Hard a volitelné vysvětlení. Téma je volitelné. Formulář zachová rozepsaný obsah při chybě validace nebo zápisu.
-
-Témata lze přejmenovat a smazat; vyber téma ve filtru a použij Rename selected topic nebo Delete selected topic. Otázky lze upravovat a mazat. Hledání v textu otázky se kombinuje s filtrem tématu a obtížnosti. Počty na kartách předmětů vycházejí z uloženého obsahu. Smazání tématu ponechá jeho otázky v No topic. Smazání předmětu po výslovném upozornění odstraní jeho témata a otázky, ale zachová čas i historii studia.
-
-Jde o editor obsahu: správná odpověď je viditelná. Procvičování a hodnocení najdeš v Practice Tests. Import a obrázky zatím nejsou implementované.
-
-## Opravy po kontrole hlavní větve
-
-Zavření okna i příkaz Quit v nabídce macOS používají stejné uložení sezení. Pokud uložení selže, aplikace zůstane otevřená se zachovaným pozastaveným časem; po odstranění problému lze zkusit Finish nebo Quit znovu.
-
-Opuštění obrazovky My Subjects zruší rozpracované potvrzení smazání předmětu. Před smazáním se v jedné transakci porovná aktuální název a počty témat/otázek s posledním zobrazeným upozorněním. Pokud se změnily, aplikace nejprve zobrazí aktualizované upozornění a vyžádá nové potvrzení.
-
-Při změně dne se aktualizuje i datum v záhlaví. Chyba čtení při obnově checklistu nebo přehledu nezastaví plánování časovače; obnova se opakuje a nový den se potvrdí až po úspěchu. Posouvání uvnitř dlouhého textového pole zůstává v tomto poli, včetně jeho krajů; stránku posuneš nad jinou částí okna. Krátké pole bez vlastního posuvu dál umožňuje posouvání stránky.
-
-Pokud se sezení uložilo, ale následné načtení přehledu selže, aplikace opakuje pouze načtení i během stejného dne; záznam sezení znovu neukládá. Po úspěchu obnoví metriky i výběr předmětu a odstraní oznámení o opakování. Pokud se naopak sezení neuložilo, pokyn Press Finish zůstane viditelný i při chybě či úspěšné obnově denního přehledu. Gesta trackpadu nad posuvníkem a okrajem dlouhého editoru se předají jeho textovému poli.
-
-## Practice Tests — procvičování (v0.4.0)
-
-`practice_page.py` obsahuje obrazovku a vlastní neblokující Tk callback; `practice.py` čistou validaci a UTC časová pravidla. Schéma 4 přidává practice_attempts a practice_items v transakční migraci z verze 3 i starších verzí. Rozpracovaný pokus je v databázi nejvýše jeden (částečný unikátní index). Start, změny odpovědí, pozice a dokončení používají transakce; po termínu nelze odpověď uložit. Dokončení je idempotentní, takže opakování po chybě čtení výsledku nepřidá druhý výsledek. Chyba zápisu odpovědi vrátí výběr na poslední uloženou hodnotu.
-
-practice_items ukládá text, všechny čtyři možnosti, správnou odpověď, obtížnost, název tématu a vysvětlení jako kopie. Odkazy na původní předmět/otázku používají ON DELETE SET NULL. Mazání předmětu ponechá dokončené i rozpracované pokusy; zahodit lze jen rozpracovaný pokus a jeho položky se smažou kaskádou. Časové údaje jsou UTC ISO 8601, v UI se dokončení převádí do místního času. Skóre se počítá ze snímků: každá otázka má stejnou váhu, bez penalizace, nevyplněná odpověď má nulu. Časový limit používá systémové UTC hodiny; ruční změna času může změnit zbývající dobu. Ctrl+K / Cmd+K a Escape na obrazovce testů nemění skryté hledání jiné obrazovky.
+Items copy prompt/options/correct answer/difficulty/topic name/explanation. Original subject/question references use ON DELETE SET NULL. Source deletion preserves unfinished/completed attempts; discarding only removes unfinished attempts and cascades their items. UTC ISO 8601 timestamps display in local time. Each question has equal score weight, no penalty, and unanswered items score zero. System-clock changes can affect deadlines; time continues while away/closed. Running UI never reveals correct answers. Background completion must not scroll another screen or change its draft.
 
 ```sql
 CREATE TABLE practice_attempts (
@@ -188,19 +162,11 @@ CREATE UNIQUE INDEX practice_one_active
                     ON practice_attempts(status) WHERE status='in_progress';
 ```
 
-## Průběžná integrace (CI)
+Discard obtains the write lock before checking the clock. An expired attempt is completed and retained rather than deleted. MissingPracticeError is terminal: clear stale state and show usable setup rather than retrying forever. SQLite errors remain retryable; Refresh subjects/navigation can recover a setup-read failure. History displays 20 results; older rows remain stored.
 
-GitHub Actions kontroluje pull requesty do main, nové commity na main a ruční spuštění. Workflow `.github/workflows/ci.yml` instaluje závislosti, ověřuje jejich kompatibilitu, syntaxi Pythonu a všechny jednotkové testy s Pythonem 3.12 na Ubuntu, Windows a macOS. Samostatná úloha spouští devět nativních kontrolních skriptů na Ubuntu pod virtuálním displejem Xvfb; každý proces má limit 60 sekund. Celá úloha má limit 10 minut. Novější běh stejné větve zruší předchozí. Token má pouze čtení obsahu; workflow nic nenasazuje ani nevydává.
+## Flashcards (introduced in v0.5.0)
 
-Výsledky a logy jsou v [Actions](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml) a v kontrolách PR. Červený stav otevři a přečti první neúspěšný krok. Po opravě pushni do stejné větve a kontroly se spustí znovu. Ruční spuštění Run workflow je dostupné po sloučení workflow do výchozí větve. Branch protection tímto není zapnutá.
-
-Automatické testy nejsou ruční ověření Windows/macOS/Linux ani fyzického trackpadu. Linuxový CI běh neověřuje nativní nabídku Quit v macOS ani Tk 9 gesta; ty je potřeba dál kontrolovat na Macu.
-
-## Kartičky a opakování (v0.5.0)
-
-`flashcard_page.py` obsahuje obrazovku, `repetition.py` čistou validaci a pravidla. Schéma 5 přidává decks, flashcards a review_events. Termín a interval jsou přímo u kartičky. Zápis hodnocení, snímku obou stran a dalšího termínu je jedna transakce; kontrola revize i splatnosti probíhá pod zápisovým zámkem. Opakované hodnocení stejné revize nevytvoří další záznam. Odkazy z historie mají ON DELETE SET NULL, kopie obsahu zůstávají. Balíčky mají k předmětu ON DELETE SET NULL, kartičky k balíčku ON DELETE CASCADE. Migrace z verze 4 a starších zachová existující data a výsledky testů.
-
-[Podrobný návod a pravidla](FLASHCARDS.md).
+Schema 5 added decks, flashcards and immutable review_events. Scheduling lives directly on cards. Revision and due status are checked under the write lock; rating, content snapshot and next due time commit together. Repeated rating of the same revision cannot add another event. History references use ON DELETE SET NULL and retain snapshots. Deck-to-subject uses SET NULL; card-to-deck uses CASCADE. Schema 4 and older content/results survive migration.
 
 ```sql
 CREATE TABLE decks (
@@ -230,35 +196,23 @@ CREATE INDEX flashcards_due ON flashcards(deck_id,due_at,id);
 CREATE INDEX review_events_deck ON review_events(deck_id,id);
 ```
 
-## Statistiky (v0.6.0)
+See [Flashcards](FLASHCARDS.md) for exact custom scheduling and limits; this is not SM-2/FSRS or measured mastery. Reveal must precede rating. Advance only after commit; stale callbacks cannot rate the next card or hidden page. Failed writes retain revealed answers and drafts. Editing resets due time/interval while retaining history. New-deck subject choices refresh on load/Refresh/Save without losing title/description; renames retain ID selection, deletion requires an explicit replacement. Avoid binding persistent StringVars to repeatedly recreated CTkEntry widgets in CTk 5.2.2 because destroyed entries retain traces.
 
-StatisticsPage volá Store.statistics(); study_statistics.py čte sessions, dokončené practice_attempts s practice_items a review_events v jedné konzistentní čtecí transakci. Nemění schéma 5 ani data. UI se obnovuje při návratu nebo přes Refresh, při chybě ponechá předchozí report. Vazby Configure mají životnost svých widgetů. Ctrl+K / Cmd+K a Escape nemění hledání skrytých obrazovek.
+## Statistics (introduced in v0.6.0)
 
-[Podrobná pravidla](STATISTICS.md).
+Store.statistics() reads sessions, completed attempts/items and review_events in one deferred read transaction. It does not mutate data or introduce a schema change. Refresh/reopening replaces the report; failures retain the prior snapshot. Configure bindings live with their widgets to avoid accumulating callbacks. See [Statistics](STATISTICS.md) for periods, weighting, time zones, name grouping and limits.
 
-## Opravy souběžných změn (v0.6.2)
+## AI Tutor (introduced in v0.7.0)
 
-Discard test získá zápisový zámek a potom ověří termín. Pokud mezitím vypršel, pokus i odpovědi se zachovají jako dokončený výsledek místo smazání; selhání zápisu ponechá původní data pro opakování. Pokud jiná instance rozpracovaný test odstraní, Finish zastaví opakování a obnoví nastavení. Chyby SQLite se dál dají opakovat; po chybě načtení nastavení použij Refresh subjects nebo návrat na obrazovku.
+`tutor_page.py` owns widgets/session chat; `tutor.py` builds bounded context and starts daemon jobs. `ollama_client.py` uses standard-library http.client/ssl for GET /api/tags and streaming POST /api/chat. Tk polls the queue every 50 ms. Shutdown cancels without joining on the UI thread; failed focus saves still prevent closing. This feature added no schema change or external dependency.
 
-Editor otázek ukládá kopii původního obsahu. Při uložení ji porovná s aktuální otázkou pod zápisovým zámkem. Novější text, možnosti, správná odpověď, obtížnost, téma nebo vysvětlení se nepřepíšou starým formulářem. Při konfliktu zůstane rozepsaný obsah; před opětovným otevřením Edit si jej zkopíruj a změny spoj s aktuální verzí. Schéma databáze zůstává 5.
+No request starts on startup/navigation. Only this chat is sent to the visible server; no automatic database/files or cloud fallback. Endpoint changes require clearing existing chat. Stop signals cancellation; nonblocking socket reads/writes/TLS handshake poll at most every 100 ms. Only workers mutate/close sockets; DNS/TCP setup can delay cancellation. Keep one task active until its terminal event and ignore stale task events. Partial failed/stopped text remains visible but is excluded from later context.
 
-Formulář New deck obnoví nabídku předmětů při návratu, přes Refresh i před uložením, bez ztráty názvu a popisu. Přejmenovaný předmět zůstane vybraný podle ID. Pokud byl vybraný předmět smazán, Choose a subject vyžaduje výslovně zvolit jiný; formulář jej sám nenahradí jiným existujícím předmětem.
+See [AI Tutor](AI_TUTOR.md) for protocol/security choices, chat/model bounds, 30/180-second limits and session loss on close. Tests use FakeOllama on loopback, not real models.
 
-## AI Tutor s Ollamou (v0.7.0)
+## Settings (introduced in v0.8.0)
 
-tutor_page.py drží session chat a widgety. tutor.py sestavuje omezený kontext a spouští daemon pracovní vlákno; výsledky předává přes queue, zpracovanou Tk after každých 50 ms. ollama_client.py používá standardní http.client/ssl, GET /api/tags a streamované POST /api/chat. Pracovní vlákna nevolají Tk ani SQLite. Ukončení přeruší síťový úkol bez čekání v UI; neúspěšné uložení focus sezení dál brání zavření. Schéma zůstává 5, nové externí závislosti nejsou potřeba.
-
-[Návod AI Tutor](AI_TUTOR.md).
-
-## Nastavení
-
-Chat zůstává jen v paměti a zavřením se odstraní. Volby spojení lze výslovně uložit v [Settings](SETTINGS.md); bez Save jsou dočasné.
-
-[Nastavení](SETTINGS.md).
-
-Nastavení se ukládá transakčně ve schématu 6 s ochranou před přepsáním změn jiného okna. Migrace z verze 5 zachová všechny předchozí tabulky i data; starší aplikace novější schéma odmítne otevřít.
-
-`settings_page.py` → `preferences.py` / `Store.preferences()` / `Store.save_preferences()`. `revision` + `BEGIN IMMEDIATE`.
+SettingsPage validates through `preferences.py` and Store.preferences()/save_preferences(). Schema 6 adds the singleton row. `revision` plus BEGIN IMMEDIATE prevents stale overwrites. Frozen schema 5 migration tests check preservation/rollback.
 
 ```sql
 CREATE TABLE preferences (
@@ -270,3 +224,13 @@ CREATE TABLE preferences (
     revision INTEGER NOT NULL DEFAULT 0 CHECK(revision >= 0)
 );
 ```
+
+Save explicitly applies the whole form without requiring post-commit reads or network activity. Invalid stored values fall back safely and repair only on Save. Failed reads/writes/conflicts and navigation preserve drafts, including after first-load failure; Reload confirms replacement. Active/paused/unsaved focus sessions keep their target; the next session uses the new duration. Goal changes immediately without rewriting history.
+
+Changed AI preferences require an idle Tutor. A different server requires New chat when chat exists; remembering the currently connected server retains chat ownership. New-server connection resolves the saved model preference; same-server refresh keeps an available manual override. Missing preferences require explicit selection. Study-only saves preserve temporary Tutor choices if persisted AI fields are unchanged. Other-window changes apply on Save/restart, not live. Answer language changes AI replies, not UI language. See [Settings](SETTINGS.md).
+
+## Verification and remaining limits
+
+The v0.8.0 baseline passed 126 unit tests and nine native macOS checks using disposable data (Python 3.12.13 / Tk 9.0). CI tests Python 3.12 on Ubuntu/Windows/macOS and GUI on Ubuntu/Xvfb. Processes are bounded at 60 seconds, jobs at 10 minutes; superseded ref runs cancel. Actions are pinned, token contents access is read-only, and there is no deployment/release step or automatic branch protection. See [Development](DEVELOPMENT.md).
+
+Automated/synthetic checks do not establish manual platform UI or hardware gesture correctness; Linux does not test Aqua Quit/Tk 9 hardware behavior. Real Ollama quality/performance is unverified. Remaining work includes saved AI conversations, UI translations, full crash recovery, imports, backups, installers and comprehensive logging/error handling at every read.

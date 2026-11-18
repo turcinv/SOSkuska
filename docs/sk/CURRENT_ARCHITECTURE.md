@@ -1,5 +1,7 @@
 # Súčasná architektúra
 
+[English](../CURRENT_ARCHITECTURE.md) · [Čeština](../cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](CURRENT_ARCHITECTURE.md) · [Русский](../ru/CURRENT_ARCHITECTURE.md)
+
 Stav k 18. novembru 2026. Implementované sú Dashboard, My Subjects, Question bank, Practice Tests, Flashcards, Statistics a voliteľný AI Tutor a Settings; ďalšie kroky opisuje [plánovaná architektúra](PLANNED_ARCHITECTURE.md).
 
 ## Technológie a súbory

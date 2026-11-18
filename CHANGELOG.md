@@ -1,117 +1,105 @@
-# Historie změn
+# Changelog
 
-[Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
+[English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
+
+## 0.8.1 — 2026-11-18
+
+English is now the primary documentation language in the repository root and `docs/`. Existing Czech documentation is preserved under `docs/cs/`, alongside Slovak and Russian versions. Matching-page language links and English agent instructions describe the four-language structure. Documentation-only change; the application and database schema are unchanged.
 
 ## 0.8.0 — 2026-11-18
 
-Nastavení se ukládá do stejné databáze jako studijní data. Nastavení se ukládá transakčně ve schématu 6 s ochranou před přepsáním změn jiného okna. Migrace z verze 5 zachová všechny předchozí tabulky i data; starší aplikace novější schéma odmítne otevřít.
+Persistent Settings uses the study database. Schema 6 adds a singleton preferences row and revision-checked writes; transactional migration preserves all schema 5 tables/data. Older applications refuse the newer schema.
 
-V **Settings** nastav délku příštího focus sezení (1–180 minut, výchozí 15), denní cíl (1–1 440 minut, výchozí 60), URL Ollamy, preferovaný model a jazyk AI odpovědi. **Save settings** uloží a použije všechny hodnoty; rozepsané změny přežijí přepnutí obrazovky, ale ne zavření aplikace. Probíhající i pozastavené sezení si zachová původní délku. Cíl se změní hned, historický čas se nepřepočítává.
+Configure the next focus duration (1–180 minutes, default 15), daily goal (1–1,440 minutes, default 60), Ollama URL, preferred model and AI answer language. Save settings explicitly persists/applies the whole form. Drafts survive navigation but not closing. Current/paused sessions retain their duration; goals update immediately without rewriting history.
 
-**Use Tutor choices** jen zkopíruje do formuláře aktuální volby AI Tutor; potom použij Save settings. Přímé změny v AI Tutor jsou dočasné. Uložení, spuštění ani návrat na obrazovku nevytváří síťové spojení. Připoj se výslovně přes Connect / refresh. Nedostupný preferovaný model se nenahradí jiným bez výběru uživatele. Jazyk platí pro AI odpovědi, nikoli rozhraní aplikace.
+Use Tutor choices copies temporary Tutor choices into the form; Save is still required. Startup, navigation and Save never connect. Missing preferred models require explicit selection. Changing servers resolves the preference afresh; refreshing the same server retains a manual choice. Answer language affects AI replies, not UI. Active AI requests block AI preference changes; study-only changes remain usable. Existing chats require New chat before moving servers. Saving the already-connected server preserves its chat; closing still loses chat.
 
-Při aktivním AI požadavku nejprve počkej nebo použij Stop, než změníš AI preference. Studijní hodnoty lze uložit dál. Pokud chat patří jinému serveru, nejprve jej vymaž přes New chat a potvrzení. Zapamatování právě připojeného serveru jeho chat zachová. Chat se při zavření stále ztratí.
+Failed reads/writes and stale-window conflicts retain drafts. Reload confirms before replacing edits. Other-window changes apply on Save/restart, not live; Save applies all loaded fields, including AI preferences and their safeguards. Invalid saved values show safe defaults and repair only on explicit Save. Preferences are per database (`--data`), without synchronization/encryption. Themes, UI translations, backups and saved AI conversations remain future work.
 
-Chyba zápisu ani konflikt s jiným oknem neodstraní rozepsané hodnoty. Před Reload si je zkopíruj; u změněného formuláře je nutné potvrdit nahrazení druhým kliknutím. Změny jiného okna se nepoužijí živě: v tomto okně je použije Save nebo restart. Save použije všechny načtené hodnoty, včetně AI nastavení z druhého okna, proto mohou platit výše uvedené ochrany. Neplatná uložená nastavení zobrazí bezpečné výchozí hodnoty; opraví se až výslovným Save.
-
-Nastavení je místní pro vybranou databázi (`--data`), bez synchronizace a šifrování. Chybí volba vzhledu, překlady UI, zálohy a ukládání AI konverzací.
-
-Při změně serveru se preferovaný model vybere znovu; obnovení stejného serveru zachová ruční výběr. Ověření: 126 jednotkových testů a devět nativních kontrol s dočasnými daty; CI pro funkční PR prošlo na třech systémech a GUI na Ubuntu. Nezávislá kontrola Sol a opětovná kontrola oprav nenašly zbývající problémy.
+Validation: 126 unit tests and nine native checks with temporary data; feature-PR CI passed on three systems and GUI on Ubuntu. Independent Sol review and re-review found no remaining issues. [Settings guide](docs/SETTINGS.md).
 
 ## 0.7.0 — 2026-11-18
 
-V AI Tutor připoj vlastní Ollama server přes Connect / refresh, vyber model a jazyk odpovědi a zadej otázku. Odpověď přichází průběžně; Stop ji zastaví. Ostatní obrazovky zůstávají použitelné během generování i bez Ollamy. Chat je pouze pro aktuální spuštění aplikace, neukládá se do databáze.
+Optional Ollama AI Tutor adds explicit connection/model discovery, answer-language selection, streamed replies and Stop. Other screens remain usable during generation/offline. Chat lasts only for the app session and is not saved to SQLite.
 
-tutor_page.py drží session chat a widgety. tutor.py sestavuje omezený kontext a spouští daemon pracovní vlákno; výsledky předává přes queue, zpracovanou Tk after každých 50 ms. ollama_client.py používá standardní http.client/ssl, GET /api/tags a streamované POST /api/chat. Pracovní vlákna nevolají Tk ani SQLite. Ukončení přeruší síťový úkol bez čekání v UI; neúspěšné uložení focus sezení dál brání zavření. Schéma zůstává 5, nové externí závislosti nejsou potřeba.
+`tutor_page.py` owns chat/widgets; `tutor.py` bounds context and runs daemon workers with queue events polled by Tk every 50 ms. `ollama_client.py` uses standard http.client/ssl, GET /api/tags and streaming POST /api/chat. Workers call neither Tk nor SQLite. Shutdown cancels without waiting in the UI; failed focus saves still prevent closing. Schema remained 5; no new external dependencies.
 
-23 nových testů a check_tutor.py používají výhradně fake Ollama server na loopbacku a dočasná data. Ověřují protokol, Unicode, chybné odpovědi, přerušení streamu/TLS handshake, limity, kontext, navigaci a zavření při generování. Celkem 107 jednotkových testů a osm GUI kontrol. Tyto testy neověřují kvalitu skutečného modelu ani jeho hardwarové nároky.
+23 new tests plus check_tutor.py use loopback FakeOllama and disposable data. They cover Unicode/protocol errors, stream/TLS cancellation, limits/context, navigation and close while generating. Total: 107 unit tests and eight GUI checks. Real-model quality/hardware requirements were not established.
 
 ## 0.6.2 — 2026-11-17
 
-Discard test získá zápisový zámek a potom ověří termín. Pokud mezitím vypršel, pokus i odpovědi se zachovají jako dokončený výsledek místo smazání; selhání zápisu ponechá původní data pro opakování. Pokud jiná instance rozpracovaný test odstraní, Finish zastaví opakování a obnoví nastavení. Chyby SQLite se dál dají opakovat; po chybě načtení nastavení použij Refresh subjects nebo návrat na obrazovku.
+Discard obtains the write lock before checking the deadline. Expired tests are completed/retained rather than deleted; failed writes preserve state for retry. A missing attempt from another instance is terminal: Finish clears stale state and restores setup instead of retrying forever. SQLite errors remain retryable; Refresh subjects/navigation recovers setup reads.
 
-Editor otázek ukládá kopii původního obsahu. Při uložení ji porovná s aktuální otázkou pod zápisovým zámkem. Novější text, možnosti, správná odpověď, obtížnost, téma nebo vysvětlení se nepřepíšou starým formulářem. Při konfliktu zůstane rozepsaný obsah; před opětovným otevřením Edit si jej zkopíruj a změny spoj s aktuální verzí. Schéma databáze zůstává 5.
+Question forms compare an original content snapshot under the write lock, covering text/options/correct answer/difficulty/topic/explanation instead of relying on coarse timestamps. Conflicts retain drafts for copying and combining after reload. Schema remained 5.
 
-Formulář New deck obnoví nabídku předmětů při návratu, přes Refresh i před uložením, bez ztráty názvu a popisu. Přejmenovaný předmět zůstane vybraný podle ID. Pokud byl vybraný předmět smazán, Choose a subject vyžaduje výslovně zvolit jiný; formulář jej sám nenahradí jiným existujícím předmětem.
+New deck refreshes subject choices on navigation, Refresh and Save without losing title/description. Renamed subjects stay selected by ID; deletion requires an explicit replacement rather than silently choosing another subject.
 
-Nových osm jednotkových testů pokrývá termíny včetně čekání na zámek, rollback, konflikty otázek a odlišení odstraněného testu. check_state_fixes.py navíc ověřuje skutečné formuláře, zachování rozepsaného obsahu, konflikt a nové načtení, zachování výsledku po termínu a obnovu po odstranění z jiné instance. Celkem 84 jednotkových testů a sedm nativních kontrol s dočasnými daty.
+Eight new unit tests and check_state_fixes.py cover lock/deadline timing, rollback, stale edits/reload, expired-discard retention, subject refresh and missing-attempt recovery. Total: 84 unit tests and seven native checks using temporary data.
 
 ## 0.6.0 — 2026-11-17
 
-V nabídce **Statistics** zvol Last 7 days, Last 30 days nebo All time. Přehled ukazuje uložený čas a sezení, otázkami váženou úspěšnost dokončených testů, počty vlastních hodnocení kartiček, čas podle předmětu a denní aktivitu. Refresh nebo návrat na obrazovku načte nový snímek. Nejde o měření zvládnutí učiva.
+Statistics adds Last 7 days / Last 30 days / All time reports of saved time/sessions, question-weighted completed-test accuracy, card self-ratings, subject time and daily activity. Refresh/reopening loads a snapshot; this is not measured mastery.
 
-StatisticsPage volá Store.statistics(); study_statistics.py čte sessions, dokončené practice_attempts s practice_items a review_events v jedné konzistentní čtecí transakci. Nemění schéma 5 ani data. UI se obnovuje při návratu nebo přes Refresh, při chybě ponechá předchozí report. Vazby Configure mají životnost svých widgetů. Ctrl+K / Cmd+K a Escape nemění hledání skrytých obrazovek.
+StatisticsPage calls Store.statistics(); study_statistics.py reads sessions, completed practice snapshots and review_events in one consistent read transaction. No schema/data changes (schema 5). Read errors retain the report, Configure bindings live with widgets, and search shortcuts leave hidden drafts alone.
 
-Nových 16 testů ověřuje období, místní dny, váhu otázek, úplnou historii, zachování po smazání, pouze čtení, souběžný snímek a opakování po chybě. Nativní kontrola ověřuje prázdný stav, filtry, chybu a opakování, navigaci, kompaktní rozložení, posouvání a otevření v novém procesu. Celkem 76 jednotkových testů a šest nativních kontrol; používají dočasná data.
+16 new tests cover local periods, weighting, full history/deletion retention, read-only behavior, concurrent snapshots and retry. Native checks cover empty states, filters, navigation, compact layout, scrolling and process reopen. Total: 76 unit tests and six native checks using disposable data. [Statistics guide](docs/STATISTICS.md).
 
 ## 0.5.1 — 2026-11-16
 
-Opraveno označení verze v aplikaci a odkazy na aktuální vydání. Historie změn, stav kartiček a návody jsou sjednocené v češtině, slovenštině a ruštině s vydanou v0.5.0. Studijní funkce a databázové schéma se nemění; zdrojové vydání bez instalátoru.
+Aligned the app version, current release links, changelogs and Czech/Slovak/Russian flashcard guides with v0.5.0. Study behavior/schema unchanged; source release without installer.
 
 ## 0.5.0 — 2026-11-16
 
-Nová obrazovka **Flashcards**: správa balíčků a kartiček, hledání v obou stranách, odhalení odpovědi a hodnocení Again / Hard / Good / Easy. Vlastní deterministické plánování ukládá další termín; nejde o SM-2 ani FSRS. Úprava kartičky obnoví splatnost a zachová historii. Smazání předmětu ponechá balíčky i kartičky; smazání kartičky či balíčku zachová historické snímky. Formuláře zachovávají rozepsaný obsah a neúspěšný zápis lze opakovat.
+Flashcards adds deck/card CRUD, front/back search, reveal and Again / Hard / Good / Easy self-ratings. Custom deterministic scheduling is not SM-2/FSRS. Editing resets due status and retains history. Subject deletion retains decks/cards; deleting cards/decks retains review snapshots. Drafts and failed writes can be retried.
 
-Ověření: 60 jednotkových testů na Ubuntu, Windows a macOS v CI; pět GUI kontrol na Ubuntu/Xvfb i lokálně na macOS. Dokumentace je samostatně česky, slovensky a rusky. Jde o zdrojové vydání bez instalátoru. [Návod a pravidla](docs/FLASHCARDS.md).
+`flashcard_page.py` owns UI; `repetition.py` owns pure validation/scheduling. Schema 5 adds decks, flashcards and review_events; schedules live on cards. Revision/due checks occur under the write lock; rating, content snapshot and next due commit together. One revision cannot be rated twice. History foreign keys use SET NULL, deck-subject uses SET NULL and card-deck uses CASCADE. Migration preserves earlier content and practice results.
 
-`flashcard_page.py` obsahuje obrazovku, `repetition.py` čistou validaci a pravidla. Schéma 5 přidává decks, flashcards a review_events. Termín a interval jsou přímo u kartičky. Zápis hodnocení, snímku obou stran a dalšího termínu je jedna transakce; kontrola revize i splatnosti probíhá pod zápisovým zámkem. Opakované hodnocení stejné revize nevytvoří další záznam. Odkazy z historie mají ON DELETE SET NULL, kopie obsahu zůstávají. Balíčky mají k předmětu ON DELETE SET NULL, kartičky k balíčku ON DELETE CASCADE. Migrace z verze 4 a starších zachová existující data a výsledky testů.
+60 unit tests passed on Ubuntu/Windows/macOS CI; five GUI checks passed on Ubuntu/Xvfb and locally on macOS. Separate Czech/Slovak/Russian documentation; source release without installer. [Flashcard rules](docs/FLASHCARDS.md).
 
 ## 0.4.1 — 2026-11-15
 
-CI: Python 3.12, jednotkové testy na třech systémech a čtyři GUI kontroly na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
-
-CI ověřuje 45 jednotkových testů, syntaxi a kompatibilitu závislostí na Ubuntu, Windows a macOS s Pythonem 3.12. Čtyři GUI kontroly běží na Ubuntu/Xvfb (Tk 8.6). První hostovaný běh všech úloh prošel. Workflow používá připnuté verze akcí, token pouze pro čtení, časové limity a rušení nahrazených běhů. Přidána dokumentace v češtině, slovenštině a ruštině. Studijní funkce i schéma databáze zůstávají stejné jako ve v0.4.0; nejde o nové vydání instalátoru.
+Added CI with Python 3.12 syntax/dependency checks and 45 unit tests on Ubuntu/Windows/macOS, plus four GUI checks on Ubuntu/Xvfb (Tk 8.6). The first hosted run passed all jobs. Pinned actions, read-only token, timeouts and superseded-run cancellation. Added documentation in Czech/Slovak/Russian. Study features and schema unchanged from v0.4.0; no installer release. [Workflow](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
 
 ## 0.4.0 — 2026-11-15
 
-Practice Tests — procvičování
+Practice Tests uses subject questions with topic/difficulty filters, 1–100 random questions without repetition and optional 5/10/15/30/60-minute limits or Untimed. Answers and position save immediately; Clear answer and Previous/Next are available. One attempt may be unfinished; Resume survives restart and Discard requires confirmation.
 
-Nejprve vytvoř předmět a otázky přes My Subjects → Questions. V Practice Tests vyber předmět, téma (všechna / bez tématu / konkrétní), obtížnost a 1–100 dostupných otázek. Volitelný limit je 5, 10, 15, 30 nebo 60 minut; Untimed nemá limit. Otázky se náhodně vyberou bez opakování.
+Finish confirms submission; unanswered questions count incorrect. Correct answers/explanations appear afterward. Deadlines continue while closed/away and expired tests finish on return. Questions/options/answers are start-time snapshots, unaffected by later source edits/deletions. History shows 20 results while older rows remain stored. Practice never adds invented focus time. AI, flashcards, import and aggregate statistics were still planned at this release.
 
-Odpověď se uloží po každém výběru; lze ji změnit nebo vymazat přes Clear answer. Previous/Next mění uloženou pozici. Při návratu nebo restartu lze pokračovat přes Resume test. Najednou může být rozpracovaný jeden test. Discard test vyžaduje potvrzení a odstraní pouze tento rozpracovaný pokus.
-
-Finish test po potvrzení uloží výsledek; nevyplněné otázky se počítají jako nesprávné. Správné odpovědi a vysvětlení se zobrazí až po odevzdání. Časový limit běží i mimo obrazovku a při zavřené aplikaci; po vypršení se test automaticky dokončí při běhu nebo návratu do aplikace. Výsledek a otázky jsou snímkem ze začátku pokusu: pozdější úprava či smazání původního obsahu je nezmění. Historie zobrazuje posledních 20 dokončených testů; starší záznamy zůstávají v databázi.
-
-Procvičování je dostupné od v0.4.0. Procvičování nepřidává smyšlený čas do součtů časovače. AI, kartičky, import a celková statistická obrazovka zůstávají plánované.
-
-Migrace na schéma 4 zachová předměty, otázky a studijní historii. Ověřeno 45 testy a čtyřmi nativními kontrolami na macOS; nezávislá kontrola Sol (medium) ověřila opravu posunu jiné obrazovky při dokončení na pozadí. Windows/Linux a fyzická gesta zůstávají neověřené. Vydání obsahuje zdrojový kód bez instalátoru.
+Schema 4 migration preserves subjects/questions/study history. Validation: 45 tests and four native checks on macOS; independent Sol medium review confirmed the fix preventing background completion from scrolling another screen. Manual Windows/Linux UI and physical gestures were unverified. Source-only release.
 
 ## 0.3.0 — 2026-11-14
 
-První GitHub vydání zdrojového kódu. Zahrnuje správu předmětů, banku otázek a opravy z PR #1, #2 a #3. Verze 0.2.0 nebyla samostatně vydaná. Jde o funkční desktopový prototyp; instalátor zatím není součástí vydání.
+First source release published on GitHub, combining subjects, question bank and fixes from PRs #1–#3. Version 0.2.0 was not separately released at that time. Working desktop prototype without installer.
 
-### Nové funkce
+### Features
 
-- Nativní Dashboard v CustomTkinteru, sbalitelná navigace, hledání, denní checklist a lokální ukládání bez cloudového účtu.
-- My Subjects: vytváření, úpravy a mazání předmětů, popis, volitelný termín zkoušky a validace Unicode.
-- Question bank: témata a otázky pro každý předmět, čtyři různé odpovědi, jedna správná odpověď, obtížnost a volitelné vysvětlení. Úpravy, mazání a kombinované filtry tématu, obtížnosti a textu.
-- Skutečné počty předmětů, témat, otázek a sezení; uložený čas, studijní série, nadcházející zkoušky a nedávná aktivita. Nová databáze začíná prázdná.
-- Časovač propojený s předmětem, pauza, dokončení a uchování názvu předmětu ve studijní historii.
-- Transakční migrace SQLite až na schéma 3; zachování původních úkolů a sezení a kompatibilita s datovou složkou ExamPrep.
-- Dokumentace v češtině, slovenštině a ruštině: instalace včetně Windows od nuly, klonování, Git, přispívání a současná/plánovaná architektura. Anglický AGENTS.md.
+- Native CustomTkinter Dashboard, collapsible navigation, search, daily checklist and local persistence without cloud login.
+- Subject CRUD, descriptions, optional exam dates and Unicode validation.
+- Per-subject topics/questions, four distinct answers, one correct choice, difficulty, optional explanation and combined text/topic/difficulty filters.
+- Actual content/session counts, saved time, streaks, upcoming exams and recent activity; empty new databases.
+- Subject-linked focus timer with pause/finish and retained subject-name history.
+- Transactional SQLite migrations through schema 3, preserving legacy tasks/sessions and ExamPrep data-folder compatibility.
+- Czech/Slovak/Russian setup, clean-Windows, cloning/Git, contribution and architecture guides; English AGENTS.md.
 
-### Opravy
+### Fixes
 
-- Zavření okna i Quit v nabídce macOS ukládají sezení; chyba zápisu zachová pozastavený čas a pokyn Press Finish pro opakování.
-- Zastaralé potvrzení smazání předmětu se při navigaci ruší; změna názvu či počtů obsahu vyžaduje nové potvrzení pod SQLite zámkem. Historie studia se zachová.
-- Selhání čtení nezastaví plánování časovače. Denní obnova se opakuje a datum v záhlaví se aktualizuje po úspěchu.
-- Přehled se po uloženém sezení opakovaně načítá i ve stejný den; obnoví metriky a výběr předmětu bez duplicitního zápisu sezení. Pokyn k uložení neuloženého sezení zůstane viditelný.
-- Jedno gesto neposouvá dlouhé textové pole i stránku současně. Tk 9 gesta nad posuvníkem a okrajem editoru se předají textovému poli; krátké pole umožňuje posuv stránky.
-- Opravené souběžné migrace, přepínání sloupců My Subjects a přístup k obsahu v kompaktním okně.
+- Window close and native macOS Quit save sessions; failures retain paused time and Press Finish retry instructions.
+- Navigation cancels stale deletion confirmations; changed names/content counts require renewed warning under the SQLite lock. History is retained.
+- Read failures do not stop timer scheduling. Daily refresh retries and updates the header only after success.
+- Same-day post-save reads retry metrics/subject choices without duplicate sessions; unsaved-session instructions stay visible.
+- A gesture does not scroll both a long editor and page. Tk 9 editor scrollbar/border gestures forward to Text; short editors permit outer scrolling.
+- Concurrent migrations, responsive subject columns and compact-content access fixed.
 
-### Ověření a rozsah
-
-32 testů a všechny tři nativní kontroly prošly na macOS s Pythonem 3.12.13 / Tk 9.0 / CustomTkinter 5.2.2. Regresní kontroly používají dočasné databáze, skutečné SQLite zámky, nativní nabídku Quit a syntetická gesta posouvání.
-
-Windows/Linux a fyzický trackpad nejsou prakticky ověřené. Banka otázek je editor s viditelnou správnou odpovědí; procvičovací testy s vyhodnocením, kartičky, AI Tutor, import a instalátory zůstávají plánované. Běh funguje offline bez placených služeb.
+32 tests and all three native checks passed on macOS, Python 3.12.13 / Tk 9.0 / CustomTkinter 5.2.2, using temporary databases, real SQLite locks, native Quit and synthetic gestures. Manual Windows/Linux and physical trackpad behavior remained unverified. Authoring showed correct answers; practice, cards, AI, import and installers were still planned. Normal use was offline without paid services.
 
 ## 0.1.0 — 2026-11-10
 
-Počáteční prototyp; označení verze, nikoli oznámení vydaného instalátoru nebo GitHub release.
+Initial prototype version label, not an announcement of an installer or GitHub release at that time.
 
-- Dashboard SOSkúška v Pythonu/CustomTkinteru, resizable okno a sbalitelná navigace.
-- Vyhledávání předmětů, denní checklist a 15minutový časovač; ukládání do SQLite.
-- Posouvání včetně Tk 9 trackpadu a kompatibilita s databází původní aplikace ExamPrep.
-- Automatické kontroly úložiště a nativní kontrolní skript; prověřeno na macOS, Windows/Linux zatím neověřené.
-- Česká, slovenská a ruská dokumentace včetně návodu Windows od nuly; anglický AGENTS.md.
-- Soukromý repozitář `turcinv/SOSkuska`. Vzorové metriky a ostatní obrazovky zůstávají ve stavu popsaném v dokumentaci.
+- Python/CustomTkinter Dashboard, resizable window and collapsible navigation.
+- Subject search, daily checklist, 15-minute timer and SQLite storage.
+- Scrolling including Tk 9 trackpad and legacy ExamPrep database compatibility.
+- Storage/native checks on macOS; Windows/Linux unverified.
+- Czech/Slovak/Russian documentation including clean-Windows setup; English AGENTS.md.
+- Private `turcinv/SOSkuska` repository. Sample metrics and other screens remained at the stage described by that version's documentation.

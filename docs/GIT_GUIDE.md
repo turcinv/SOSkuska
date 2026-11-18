@@ -1,24 +1,24 @@
-# Klonování a základní práce s Gitem
+# Cloning and Git basics
 
-Git ukládá historii změn na tvém počítači. GitHub uchovává vzdálenou kopii a umožňuje spolupráci. ZIP stačí ke spuštění aplikace; pro vývoj a odesílání změn použij klon.
+[English](GIT_GUIDE.md) · [Čeština](cs/GIT_GUIDE.md) · [Slovenčina](sk/GIT_GUIDE.md) · [Русский](ru/GIT_GUIDE.md)
 
-## 1. Získej přístup a Git
+Git stores change history locally. GitHub hosts a remote copy and supports collaboration. A ZIP is enough to run the app; use a clone to develop and submit changes.
 
-Repozitář [turcinv/SOSkuska](https://github.com/turcinv/SOSkuska) je **soukromý**. Nejdříve jej otevři v prohlížeči pod účtem, který má přístup. Chyba 404 může znamenat chybějící oprávnění.
+## 1. Get access and Git
 
-Ověř instalaci Gitu:
+[turcinv/SOSkuska](https://github.com/turcinv/SOSkuska) is **private**. Open it in a browser using an account with access first. A 404 may mean missing permission.
 
 ```sh
 git --version
 ```
 
-Pokud příkaz neexistuje, nainstaluj Git podle [oficiálního návodu pro svou platformu](https://git-scm.com/downloads/). Na Windows použij Git for Windows a ponech Git Credential Manager; po instalaci otevři nový PowerShell. Na macOS můžeš využít Apple Command Line Tools podle nabídky systému nebo jinou možnost z oficiálního návodu. Na Linuxu použij balíček své distribuce.
+If Git is missing, follow its [official installation guide](https://git-scm.com/downloads/). On Windows, use Git for Windows and retain Git Credential Manager; reopen PowerShell afterward. macOS may offer Apple Command Line Tools; Linux users can use their distribution's package.
 
-Při HTTPS klonování může Git Credential Manager otevřít přihlášení v prohlížeči. Přihlas se účtem s přístupem. Samotné přihlášení na webu nemusí přihlásit také Git. Heslo k účtu nevkládej do adresy repozitáře; podrobnosti popisuje [GitHub dokumentace přihlašování](https://docs.github.com/en/get-started/git-basics/caching-your-github-credentials-in-git). Pokud už používáš GitHub CLI, můžeš využít `gh auth login` a `gh auth setup-git`.
+HTTPS cloning may open browser login through Git Credential Manager. Use an authorized account. Browser login alone does not necessarily authenticate Git. Never put an account password in the repository URL. See [GitHub credential guidance](https://docs.github.com/en/get-started/git-basics/caching-your-github-credentials-in-git). Existing GitHub CLI users can use `gh auth login` and `gh auth setup-git`.
 
-## 2. Naklonuj projekt
+## 2. Clone
 
-Přejdi v terminálu do nadřazené složky, kam chceš projekt uložit. Pak spusť:
+Open a terminal in the parent directory where you want the project:
 
 ```sh
 git clone https://github.com/turcinv/SOSkuska.git
@@ -26,13 +26,13 @@ cd SOSkuska
 git status
 ```
 
-Vznikne nová složka `SOSkuska` s historií `.git`. Výpis má ukázat větev `main` a žádné neuložené změny. Pokud cílová složka už existuje, neklonuj přes ni; použij jinou nadřazenou složku. Existující skutečný klon aktualizuj pomocí `git pull --ff-only`.
+This creates `SOSkuska` with `.git` history. Expect branch `main` and no local changes. Do not clone over an existing folder; choose another parent directory. Update an existing real clone with `git pull --ff-only`.
 
-## 3. Připrav Python a spusť aplikaci
+## 3. Prepare Python and launch
 
-Klon neobsahuje virtuální prostředí ani databázi. Na každém počítači vytvoř vlastní prostředí. Pokud ještě nemáš Python na Windows, projdi nejprve [návod Windows od nuly](WINDOWS_FIRST_RUN.md); kroky pro stažení ZIPu přeskoč, protože už máš klon.
+The clone contains neither an environment nor a database. Create a local environment on each computer. With no Python installed on Windows, follow [Windows first run](WINDOWS_FIRST_RUN.md), skipping the ZIP download steps.
 
-Windows / PowerShell, pokud je Python 3.12 již nainstalovaný:
+Windows / PowerShell with Python 3.12 already installed:
 
 ```powershell
 py -3.12 -m venv .venv
@@ -40,7 +40,7 @@ py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe soskuska/app.py --data .local-data/dev.sqlite3
 ```
 
-macOS s Pythonem 3.12 a Tk:
+macOS with Python 3.12 and Tk:
 
 ```sh
 python3.12 -m venv .venv-macos
@@ -48,22 +48,22 @@ python3.12 -m venv .venv-macos
 .venv-macos/bin/python soskuska/app.py --data .local-data/dev.sqlite3
 ```
 
-Linux, požadavky Tk a řešení problémů jsou v [návodu pro vývojáře](DEVELOPMENT.md).
+Linux setup, Tk prerequisites and troubleshooting are in [Development](DEVELOPMENT.md).
 
-## 4. Nastav autora pro tento klon
+## 4. Set the author for this clone
 
-Před prvním commitem nastav vlastní jméno a adresu, kterou chceš mít v historii. Následující dvě hodnoty jsou příklady — nahraď je svými. GitHub nabízí také soukromou adresu `noreply` v nastavení e-mailu.
+Replace both example values with your own before your first commit. GitHub also provides a private `noreply` address in email settings.
 
 ```sh
-git config user.name "Tvoje jméno"
-git config user.email "tvoje-adresa@example.com"
+git config user.name "Your name"
+git config user.email "your-address@example.com"
 ```
 
-Příkazy bez `--global` mění pouze tento repozitář. Autor commitu a přihlášení ke GitHubu jsou dvě různé věci.
+Without `--global`, these commands affect only this repository. Commit authorship and GitHub authentication are separate.
 
-## 5. Běžný pracovní postup
+## 5. Normal workflow
 
-Začni z čisté větve `main`:
+Start from clean current `main`:
 
 ```sh
 git switch main
@@ -71,7 +71,7 @@ git pull --ff-only
 git switch -c feature/my-change
 ```
 
-Uprav soubory a spusť relevantní kontroly podle [CONTRIBUTING](../CONTRIBUTING.md). Pak zkontroluj a ulož změny:
+Edit files and run relevant [contribution checks](../CONTRIBUTING.md). Review and save your work:
 
 ```sh
 git status
@@ -82,11 +82,11 @@ git commit -m "docs: clarify setup instructions"
 git push -u origin feature/my-change
 ```
 
-`README.md`, název větve a zpráva jsou příklady. Do `git add` uveď soubory své skutečné změny; odesílej jen zkontrolované soubory. `commit` uloží historii lokálně, `push` ji odešle na GitHub. Zápis vyžaduje oprávnění k repozitáři.
+The filename, branch and message are examples; stage the actual files you reviewed. Commit records locally; push sends history to GitHub and requires write access. Never commit or push directly to main.
 
-Na GitHubu otevři **Compare & pull request**, zvol základ `main`, popiš změnu a skutečně provedené kontroly. Po kontrole a sloučení se vrať na `main` a aktualizuj ji. Tato instrukce sama neuděluje oprávnění měnit přístup nebo viditelnost repozitáře.
+On GitHub, select **Compare & pull request**, choose base `main`, explain the change and actual checks. Merge only with the user's authorization for that PR. After merging, return to main and update it. This workflow does not authorize access/visibility changes.
 
-## 6. Aktualizace existujícího klonu
+## 6. Update an existing clone
 
 ```sh
 git status
@@ -94,19 +94,19 @@ git switch main
 git pull --ff-only
 ```
 
-Před přepnutím a stažením vyřeš vlastní neuložené změny. Pokud `--ff-only` oznámí rozdílnou historii, zastav se a zkontroluj ji; nepřidávej naslepo `--force` ani nemaž práci přes `reset --hard`.
+Resolve your own local changes first. If `--ff-only` reports diverging history, inspect it; do not blindly force-push or discard work with `reset --hard`.
 
-Po změně `requirements.txt` zopakuj instalaci knihoven přes Python svého prostředí. Po aktualizaci kódu aplikaci restartuj. Databáze a prostředí se Gitem nesynchronizují.
+Reinstall requirements through your environment's Python after dependency changes. Restart after code changes. Git does not synchronize databases or environments.
 
-## Rychlý přehled
+## Command reference
 
-| Příkaz | Význam |
+| Command | Meaning |
 | --- | --- |
-| `git status` | Stav větve a upravené soubory |
-| `git diff` | Změny ještě nepřipravené do commitu |
-| `git diff --cached` | Obsah příštího commitu |
-| `git log --oneline -5` | Posledních pět commitů |
-| `git remote -v` | Adresa vzdáleného repozitáře |
-| `git pull --ff-only` | Stažení změn bez automatického slučovacího commitu |
+| `git status` | Branch and modified files |
+| `git diff` | Unstaged changes |
+| `git diff --cached` | Contents of the next commit |
+| `git log --oneline -5` | Latest five commits |
+| `git remote -v` | Remote repository URLs |
+| `git pull --ff-only` | Download updates without an automatic merge commit |
 
-Nahrávají se zdroje a dokumentace. Virtuální prostředí, `.local-data/`, SQLite databáze a `.env` jsou ignorované. Stažený ZIP nemá historii `.git`; ke Git práci začni klonováním do jiné složky.
+Commit sources and documentation. Environments, `.local-data/`, SQLite databases and `.env` are ignored. A downloaded ZIP has no `.git`; start Git work with a clone in another folder.

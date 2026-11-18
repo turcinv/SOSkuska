@@ -1,35 +1,21 @@
-# SOSkúška — desktopová aplikace
+# SOSkúška desktop application
 
-Vstupní soubor je `app.py`. Rozhraní používá Python a CustomTkinter, úkoly a studijní čas ukládá SQLite.
+Entry point: `app.py`. Python and CustomTkinter create the UI; SQLite stores local study data and preferences. New databases start empty.
 
-Z kořene projektu na tomto Macu:
+From the prepared Mac's repository root:
 
 ```sh
 .venv-macos/bin/python soskuska/app.py --data .local-data/dev.sqlite3
 ```
 
-Bez `--data` se použije běžná uživatelská databáze. Nativní kontrola s vlastní dočasnou databází:
+Without `--data`, the normal user database is used. Native checks use disposable databases; see the complete [development guide](../docs/DEVELOPMENT.md) for all nine commands.
 
-```sh
-.venv-macos/bin/python soskuska/check_dashboard.py
-.venv-macos/bin/python soskuska/check_question_bank.py
-```
+Documentation: [English](../README.md) · [Čeština](../docs/cs/README.md) · [Slovenčina](../docs/sk/README.md) · [Русский](../docs/ru/README.md).
 
-Úplná dokumentace:
+- [Windows first run](../docs/WINDOWS_FIRST_RUN.md)
+- [How it works](../docs/HOW_IT_WORKS.md)
+- [Current architecture](../docs/CURRENT_ARCHITECTURE.md)
+- [Planned architecture](../docs/PLANNED_ARCHITECTURE.md)
+- [Development instructions](../AGENTS.md)
 
-První instalace na Windows: [Česky](../docs/WINDOWS_FIRST_RUN.md) · [Slovensky](../docs/sk/WINDOWS_FIRST_RUN.md) · [Русский](../docs/ru/WINDOWS_FIRST_RUN.md).
-
-[Slovenčina](../docs/sk/README.md) · [Русский](../docs/ru/README.md) · Čeština (odkazy níže). Pokyny v AGENTS.md jsou anglicky.
-
-- [Přehled projektu](../README.md)
-- [Spuštění, instalace a vývoj](../docs/DEVELOPMENT.md)
-- [Jednoduché vysvětlení](../docs/HOW_IT_WORKS.md)
-- [Současná architektura](../docs/CURRENT_ARCHITECTURE.md)
-- [Plánovaná architektura](../docs/PLANNED_ARCHITECTURE.md)
-- [Pokyny pro další vývoj](../AGENTS.md)
-
-Implementované jsou Dashboard a My Subjects se skutečnými předměty, termíny a studijním časem. V My Subjects otevři Questions pro správu témat a otázek. Nová databáze je prázdná. Kartičky, Practice Tests, Statistics a volitelný session AI Tutor jsou implementované; Settings a ukládání AI konverzací zůstávají plánované.
-
-Practice Tests používá otázky ze zvoleného předmětu, ukládá odpovědi a výsledky a umožňuje pokračování po restartu. Nativní kontrola: `.venv-macos/bin/python soskuska/check_practice.py`. Dostupné od v0.4.0.
-
-Flashcards: balíčky, vlastní kartičky, odhalení odpovědi a ukládané termíny opakování. [Návod](../docs/FLASHCARDS.md). Kontrola: `.venv-macos/bin/python soskuska/check_flashcards.py`. Dostupné od v0.5.0.
+Dashboard, My Subjects, Question bank, Practice Tests, Flashcards, Statistics, optional session-only AI Tutor and persisted Settings are implemented. Practice resumes after restart; cards retain schedules/review history. Settings persists study/AI choices without connecting automatically. AI conversations remain session-only. Normal study works offline.

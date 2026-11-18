@@ -1,5 +1,7 @@
 # Kartičky a opakovanie (v0.5.0)
 
+[English](../FLASHCARDS.md) · [Čeština](../cs/FLASHCARDS.md) · [Slovenčina](FLASHCARDS.md) · [Русский](../ru/FLASHCARDS.md)
+
 V bočnej ponuke otvor **Flashcards**. New deck vytvorí balíček pre existujúci predmet; názov musí byť jedinečný medzi všetkými balíčkami. Predmet balíčka sa potom nemení, názov a popis áno. Open deck umožní pridať a upravovať kartičky. Predná strana má 1–2000 znakov, zadná 1–4000; Search hľadá v oboch stranách. Zoznam zobrazuje najviac 100 výsledkov, ďalšie nájdeš užším hľadaním.
 
 **Study due** otvorí najviac 100 práve splatných kartičiek, od najstaršieho termínu. Najprv sa zobrazí predná strana. Reveal answer ukáže odpoveď a sprístupní Again / Hard / Good / Easy. Hodnotenie je vlastné posúdenie vybavenia odpovede, nie meranie správnosti alebo zvládnutia učiva. Po každom hodnotení sa súčasne uloží historický záznam a ďalší termín. Neohodnotená kartička zostane splatná; po reštarte môžeš začať ďalšiu dávku. Refresh obnoví počty a splatnosť; zoznam sa na pozadí sám neprestavuje.
