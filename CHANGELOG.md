@@ -8,7 +8,7 @@ V AI Tutor připoj vlastní Ollama server přes Connect / refresh, vyber model a
 
 tutor_page.py drží session chat a widgety. tutor.py sestavuje omezený kontext a spouští daemon pracovní vlákno; výsledky předává přes queue, zpracovanou Tk after každých 50 ms. ollama_client.py používá standardní http.client/ssl, GET /api/tags a streamované POST /api/chat. Pracovní vlákna nevolají Tk ani SQLite. Ukončení přeruší síťový úkol bez čekání v UI; neúspěšné uložení focus sezení dál brání zavření. Schéma zůstává 5, nové externí závislosti nejsou potřeba.
 
-22 nových testů a check_tutor.py používají výhradně fake Ollama server na loopbacku a dočasná data. Ověřují protokol, Unicode, chybné odpovědi, přerušení streamu/TLS handshake, limity, kontext, navigaci a zavření při generování. Celkem 106 jednotkových testů a osm GUI kontrol. Tyto testy neověřují kvalitu skutečného modelu ani jeho hardwarové nároky.
+23 nových testů a check_tutor.py používají výhradně fake Ollama server na loopbacku a dočasná data. Ověřují protokol, Unicode, chybné odpovědi, přerušení streamu/TLS handshake, limity, kontext, navigaci a zavření při generování. Celkem 107 jednotkových testů a osm GUI kontrol. Tyto testy neověřují kvalitu skutečného modelu ani jeho hardwarové nároky.
 
 ## 0.6.2 — 2026-11-17
 

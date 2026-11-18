@@ -9,7 +9,7 @@ from unittest.mock import Mock, patch
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'soskuska'))
-from ollama_client import ControlledHTTPSConnection, Cancelled, OllamaClient, OllamaError, RequestControl, endpoint_url
+from ollama_client import CancellableSocket, ControlledHTTPSConnection, Cancelled, OllamaClient, OllamaError, RequestControl, endpoint_url
 from tutor import TutorTask, chat_messages
 from ollama_fixture import FakeOllama
 
@@ -188,6 +188,16 @@ class OllamaClientTests(unittest.TestCase):
         finally:
             release.set()
             server.join(2)
+
+    def test_blocked_write_waits_for_write_readiness(self):
+        sock = Mock()
+        sock.send.side_effect = [BlockingIOError(), 3]
+        transport = CancellableSocket(sock, RequestControl(), 1)
+        with patch('select.select', return_value=([], [sock], [])) as readiness:
+            transport.sendall(b'abc')
+        self.assertEqual(sock.send.call_count, 2)
+        self.assertEqual(readiness.call_args.args[:3], ([], [sock], []))
+        transport.close()
 
     def test_cancel_during_connect_never_sends_prompt(self):
         control = RequestControl()

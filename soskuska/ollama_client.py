@@ -1,6 +1,9 @@
 """Small direct Ollama HTTP client; no Tk, proxies, redirects or cloud fallback."""
 import http.client
 import json
+import io
+import select
+import time
 import socket
 import ssl
 import threading
@@ -39,16 +42,12 @@ class RequestControl:
             raise Cancelled("Stopped.")
 
     def cancel(self, timeout=False):
-        self.timed_out = timeout
-        self.cancelled.set()
+        # Only the worker touches sockets/TLS state. Polling wakes within 100ms;
+        # first cancellation wins if a Stop and the deadline happen together.
         with self.lock:
-            connection = self.connection
-            sock = (connection.sock if connection is not None else None) or self.transport_socket
-            if sock is not None:
-                try:
-                    sock.shutdown(socket.SHUT_RDWR)
-                except OSError:
-                    pass
+            if not self.cancelled.is_set():
+                self.timed_out = timeout
+                self.cancelled.set()
 
 
 def endpoint_url(value):
@@ -72,9 +71,80 @@ def safe_detail(value):
     return str(value).encode('utf-8', errors='replace').decode('utf-8')[:300]
 
 
-class ControlledHTTPSConnection(http.client.HTTPConnection):
-    """Expose the live TLS socket before its cancellable blocking handshake."""
-    default_port = 443
+class CancellableSocket:
+    """Nonblocking I/O with short cancellation polls, including on Windows.
+
+    HTTP/1.0 may close the connection object before its response file is read;
+    retain the underlying socket until both connection and file are closed.
+    """
+    def __init__(self, sock, control, timeout):
+        self.socket = sock
+        self.control = control
+        self.timeout = timeout
+        self.file_count = 0
+        self.closing = False
+        sock.setblocking(False)
+
+    def __getattr__(self, name):
+        return getattr(self.socket, name)
+
+    def retry(self, operation, *, reading=True):
+        deadline = time.monotonic() + self.timeout
+        while True:
+            self.control.check()
+            try:
+                result = operation()
+                self.control.check()
+                return result
+            except ssl.SSLWantReadError:
+                wait_read = True
+            except ssl.SSLWantWriteError:
+                wait_read = False
+            except BlockingIOError:
+                wait_read = reading
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                raise TimeoutError('Socket operation timed out')
+            select.select([self.socket] if wait_read else [], [] if wait_read else [self.socket], [], min(0.1, remaining))
+
+    def sendall(self, data):
+        view = memoryview(data)
+        while view:
+            sent = self.retry(lambda: self.socket.send(view), reading=False)
+            if not sent:
+                raise OSError('Connection closed while sending')
+            view = view[sent:]
+
+    def makefile(self, mode='rb', *_args, **_kwargs):
+        if mode != 'rb':
+            raise ValueError('Only binary response reads are supported')
+        owner = self
+        class Reader(io.RawIOBase):
+            def readable(self):
+                return True
+
+            def readinto(self, buffer):
+                return owner.retry(lambda: owner.socket.recv_into(buffer))
+
+            def close(self):
+                if not self.closed:
+                    super().close()
+                    owner.file_count -= 1
+                    owner.finish_close()
+        self.file_count += 1
+        return io.BufferedReader(Reader())
+
+    def close(self):
+        self.closing = True
+        self.finish_close()
+
+    def finish_close(self):
+        if self.closing and self.file_count == 0:
+            self.socket.close()
+
+
+class ControlledHTTPConnection(http.client.HTTPConnection):
+    secure = False
 
     def __init__(self, host, port, control, **kwargs):
         super().__init__(host, port, **kwargs)
@@ -82,13 +152,22 @@ class ControlledHTTPSConnection(http.client.HTTPConnection):
 
     def connect(self):
         super().connect()
-        context = ssl.create_default_context()
         self.control.check()
-        self.sock = context.wrap_socket(self.sock, server_hostname=self.host, do_handshake_on_connect=False)
+        if self.secure:
+            context = ssl.create_default_context()
+            self.control.check()
+            self.sock = context.wrap_socket(self.sock, server_hostname=self.host, do_handshake_on_connect=False)
+        self.sock = CancellableSocket(self.sock, self.control, self.timeout)
         with self.control.lock:
             self.control.transport_socket = self.sock
         self.control.check()
-        self.sock.do_handshake()
+        if self.secure:
+            self.sock.retry(self.sock.socket.do_handshake)
+
+
+class ControlledHTTPSConnection(ControlledHTTPConnection):
+    default_port = 443
+    secure = True
 
 
 class OllamaClient:
@@ -102,7 +181,7 @@ class OllamaClient:
         control.check()
         parsed = urlsplit(self.endpoint)
         connection = (ControlledHTTPSConnection(parsed.hostname, parsed.port, control, timeout=self.timeout)
-                      if parsed.scheme == 'https' else http.client.HTTPConnection(parsed.hostname, parsed.port, timeout=self.timeout))
+                      if parsed.scheme == 'https' else ControlledHTTPConnection(parsed.hostname, parsed.port, control, timeout=self.timeout))
         control.attach(connection)
         # A wall-clock bound also stops a server that trickles data forever.
         timer = threading.Timer(self.total_timeout, lambda: control.cancel(timeout=True))
@@ -135,7 +214,7 @@ class OllamaClient:
         except (OSError, http.client.HTTPException) as exc:
             control.check()
             if isinstance(exc, (TimeoutError, socket.timeout)):
-                raise OllamaError("Ollama did not respond in time. Please retry.") from None
+                raise OllamaError("Ollama did not respond in time. Check the URL and server, then retry.") from None
             raise OllamaError("Could not connect to or read from the Ollama server. Check the URL and that the service is running.") from None
         finally:
             timer.cancel()
