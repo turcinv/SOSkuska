@@ -22,7 +22,7 @@ These instructions apply to the entire standalone SOSkuska repository. Product n
 ## Scope and implementation
 
 - This is a native Python/CustomTkinter desktop application. HTML in `soskuska-local/` is a visual reference, not its runtime implementation. Do not convert it into a website without an explicit request.
-- Dashboard, My Subjects, Question bank, Practice Tests, Flashcards and Statistics exist. Subject/topic/question CRUD, optional exam dates and subject-linked focus sessions use real SQLite data. New databases start empty; no sample statistics are added. AI Tutor and Settings remain unimplemented.
+- Dashboard, My Subjects, Question bank, Practice Tests, Flashcards and Statistics exist. Subject/topic/question CRUD, optional exam dates and subject-linked focus sessions use real SQLite data. New databases start empty; no sample statistics are added. AI Tutor has optional session-only Ollama chat; Settings remains unimplemented.
 - Entry point: `soskuska/app.py`. Dashboard and timer logic live there; the subject-management screen is in `soskuska/subjects.py`; SQLite operations and transactional schema migrations (user_version 5) are in `soskuska/storage.py`; question authoring lives in `soskuska/question_bank.py` with pure validation in `soskuska/content.py`; scroll compatibility is isolated in `soskuska/scrolling.py`. Storage regression tests live in `tests/test_storage.py` and run with `python -m unittest discover -s tests -v`.
 - Keep sample data distinct from user records. Do not present sample metrics as actual user statistics or invent records in the user's database.
 
@@ -40,6 +40,7 @@ Commands below are relative to the project root:
 .venv-macos/bin/python soskuska/check_flashcards.py
 .venv-macos/bin/python soskuska/check_statistics.py
 .venv-macos/bin/python soskuska/check_state_fixes.py
+.venv-macos/bin/python soskuska/check_tutor.py
 ```
 
 - On this Mac use `.venv-macos`, verified with Python 3.12.13 / Tk 9.0. `.venv-desktop` uses Apple Tk 8.5, which produced an empty window. Suppressing its warning is not a fix. The default Homebrew Python also lacked `_tkinter` when checked.
@@ -63,7 +64,7 @@ Commands below are relative to the project root:
 - Add focused checks for persistence, timer, and scrolling changes. Avoid tests that merely duplicate static style values.
 - Report what was actually verified. Syntax checking is not UI testing; synthetic events are not a manual hardware test; macOS checks do not establish Windows/Linux compatibility.
 - Update current architecture, developer instructions, and known limitations with material changes. Keep Czech, Slovak, and Russian versions aligned; do not silently update only one language. Current code is the source of truth for implemented behavior.
-- Preserve offline operation without mandatory cloud services or paid APIs. Ollama is a planned optional local integration.
+- Preserve offline operation without mandatory cloud services or paid APIs. Ollama is optional and connects only after an explicit Connect/Send.
 - GitHub repository: `https://github.com/turcinv/SOSkuska`. Keep it private unless the user requests a visibility change. Use the code and checked Git state to report publication status.
 
 ## CodeGraph
@@ -78,7 +79,7 @@ If `.codegraph/` exists at the repository root, use `codegraph_explore` or `code
 
 ## Question bank
 
-Open Questions from a subject card. Questions have four distinct answers, one correct answer (0–3), difficulty and optional explanation/topic. Topics are unique within a subject. Deleting a topic keeps its questions unassigned; deleting a subject explicitly warns and cascades its content while retaining session history. Schema 3 migrates existing data transactionally. Use `tests/test_questions.py` and `check_question_bank.py` for verification; all automated checks use disposable data. Practice execution, saved answers, resume, deadlines and snapshot scoring are implemented in `practice_page.py`, `practice.py` and Store; flashcards are implemented in flashcard_page.py with pure rules in repetition.py; AI remains planned.
+Open Questions from a subject card. Questions have four distinct answers, one correct answer (0–3), difficulty and optional explanation/topic. Topics are unique within a subject. Deleting a topic keeps its questions unassigned; deleting a subject explicitly warns and cascades its content while retaining session history. Schema 3 migrates existing data transactionally. Use `tests/test_questions.py` and `check_question_bank.py` for verification; all automated checks use disposable data. Practice execution, saved answers, resume, deadlines and snapshot scoring are implemented in `practice_page.py`, `practice.py` and Store; flashcards are implemented in flashcard_page.py with pure rules in repetition.py; session-only AI Tutor is implemented.
 
 ## Reviewed lifecycle safeguards
 
@@ -101,7 +102,7 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 
 ## Continuous integration
 
-- `.github/workflows/ci.yml` runs for PRs targeting main, pushes to main and manual dispatch. Python 3.12 unit tests/syntax/dependency checks run on Linux, Windows and macOS; seven GUI checks run under Xvfb on Ubuntu.
+- `.github/workflows/ci.yml` runs for PRs targeting main, pushes to main and manual dispatch. Python 3.12 unit tests/syntax/dependency checks run on Linux, Windows and macOS; eight GUI checks run under Xvfb on Ubuntu.
 - Keep action references pinned to verified release commit SHAs, contents permission read-only, and process/job timeouts. CI does not publish releases or deploy. Avoid duplicate feature-branch push and PR runs.
 - CI results are automated coverage, not manual platform or hardware verification. Native Aqua Quit and Tk 9 trackpad behavior still require the Mac checks. Do not claim those are tested by the Linux GUI job.
 - Read failed job logs, fix the cause and keep fixes on the same PR branch. Do not disable a meaningful failing check to obtain a green status. Branch protection is not configured by this workflow.
@@ -131,3 +132,13 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 - Question forms pass their original content snapshot as expected_state to update_question. Compare all editable content/identity under the write lock; updated_at has insufficient precision. Preserve drafts on conflict; require reloading current content before another save. Schema stays 5.
 - New-deck draft subject choices refresh in place on load, Refresh and Save. Keep selected subject by ID across rename. If it was deleted, require an explicit replacement; preserve title/description on every refresh/read failure.
 - Run check_state_fixes.py and the complete unit/native suite with temporary databases. CI includes this seventh native check. These fixes were released in v0.6.2.
+
+## AI Tutor safeguards
+
+- tutor_page.py owns session-only chat; tutor.py builds bounded context and runs daemon jobs; ollama_client.py uses direct standard-library HTTP/HTTPS. No SQLite chat persistence or schema changes. Make session loss on app close explicit.
+- No request on startup/navigation. Connect loads /api/tags; Send streams /api/chat to the visible endpoint. Never automatically attach database records/files or fall back to a cloud service. Endpoint changes require clearing the prior chat. Backend/model processing is determined by the selected server.
+- Workers must never call Tk or SQLite; queue events are handled by the main-thread after poll. Hidden updates must not scroll shared pages or alter another screen's draft. Shutdown cancels networking without joining a worker on the UI thread; failed focus saves must still keep the window open.
+- Stop interrupts streaming and TLS handshakes via the active socket. Preserve partial text but exclude stopped/failed turns from future context. Keep one task active until its terminal event; do not consume events from an old task as a new answer. System DNS/TCP setup can delay cancellation.
+- Prompt max4000 chars, answer max16000, session max12 turns; context max6 complete pairs/24000 chars. Socket timeout30s and wall-clock timer180s. Bound streamed JSON lines and model lists; reject malformed/truncated responses instead of treating them as complete.
+- HTTPS verification stays enabled; reject URL credentials, paths, queries and fragments. Do not follow redirects or use environment HTTP proxies. No authenticated servers or automatic model downloads.
+- Tests use loopback FakeOllama, not real downloads/cloud services. Run test_tutor.py and check_tutor.py plus the full suite; model quality/hardware performance is not established by the fixture. CI includes the eighth GUI check. Feature remains unreleased until authorized.

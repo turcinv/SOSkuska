@@ -154,7 +154,7 @@ Odpověď se uloží po každém výběru; lze ji změnit nebo vymazat přes Cle
 
 Finish test po potvrzení uloží výsledek; nevyplněné otázky se počítají jako nesprávné. Správné odpovědi a vysvětlení se zobrazí až po odevzdání. Časový limit běží i mimo obrazovku a při zavřené aplikaci; po vypršení se test automaticky dokončí při běhu nebo návratu do aplikace. Výsledek a otázky jsou snímkem ze začátku pokusu: pozdější úprava či smazání původního obsahu je nezmění. Historie zobrazuje posledních 20 dokončených testů; starší záznamy zůstávají v databázi.
 
-Procvičování je dostupné od v0.4.0. Procvičování nepřidává smyšlený čas do součtů časovače. AI a import zůstávají plánované; celkový přehled je ve Statistics.
+Procvičování je dostupné od v0.4.0. Procvičování nepřidává smyšlený čas do součtů časovače. Import zůstává plánovaný; AI Tutor má vlastní volitelný chat; celkový přehled je ve Statistics.
 
 ## Kartičky a opakování (v0.5.0)
 
@@ -167,3 +167,9 @@ V postranní nabídce otevři **Flashcards**. New deck vytvoří balíček pro e
 V nabídce **Statistics** zvol Last 7 days, Last 30 days nebo All time. Přehled ukazuje uložený čas a sezení, otázkami váženou úspěšnost dokončených testů, počty vlastních hodnocení kartiček, čas podle předmětu a denní aktivitu. Refresh nebo návrat na obrazovku načte nový snímek. Nejde o měření zvládnutí učiva.
 
 [Podrobná pravidla](STATISTICS.md).
+
+## AI Tutor s Ollamou (nevydáno)
+
+V AI Tutor připoj vlastní Ollama server přes Connect / refresh, vyber model a jazyk odpovědi a zadej otázku. Odpověď přichází průběžně; Stop ji zastaví. Ostatní obrazovky zůstávají použitelné během generování i bez Ollamy. Chat je pouze pro aktuální spuštění aplikace, neukládá se do databáze.
+
+[Návod AI Tutor](AI_TUTOR.md).

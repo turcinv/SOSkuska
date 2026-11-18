@@ -27,6 +27,7 @@
 .venv-macos/bin/python soskuska/check_flashcards.py
 .venv-macos/bin/python soskuska/check_statistics.py
 .venv-macos/bin/python soskuska/check_state_fixes.py
+.venv-macos/bin/python soskuska/check_tutor.py
 ```
 
 GUI-проверка открывает окно и требует графического сеанса. Для изменения только документации обычно достаточно проверить ссылки, команды и форматирование; запускать весь UI ради неё не нужно.
@@ -41,7 +42,7 @@ GUI-проверка открывает окно и требует графич�
 
 ## Непрерывная интеграция (CI)
 
-CI: Python 3.12, модульные тесты на трёх системах и семь GUI-проверок на Ubuntu/Xvfb. [Результаты](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
+CI: Python 3.12, модульные тесты на трёх системах и восемь GUI-проверок на Ubuntu/Xvfb. [Результаты](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
 
 ## Статистика (v0.6.0)
 

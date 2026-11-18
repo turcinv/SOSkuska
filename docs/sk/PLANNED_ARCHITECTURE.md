@@ -2,7 +2,7 @@
 
 **Budúci návrh, nie dnešná implementácia.** Uvedené moduly a tabuľky zatiaľ neexistujú, ak ich nepotvrdzuje [súčasná architektúra](CURRENT_ARCHITECTURE.md). Tento plán sám osebe neznamená začatie implementácie všetkých funkcií.
 
-**Aktuálny postup (17. novembra 2026):** Základné Statistics je vydané vo v0.6.0; voliteľný AI Tutor je ďalšia možnosť. Import, pokročilé grafy a inštalátory zostávajú plánované.
+**Aktuálny postup (18. novembra 2026):** V AI Tutor pripoj vlastný server Ollama cez Connect / refresh, vyber model a jazyk odpovede a zadaj otázku. Odpoveď prichádza priebežne; Stop ju zastaví. Ostatné obrazovky zostávajú použiteľné počas generovania aj bez Ollamy. Chat je iba pre aktuálne spustenie aplikácie, neukladá sa do databázy.
 
 ## Smer
 

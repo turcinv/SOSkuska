@@ -18,4 +18,4 @@ História sa neobmedzuje na posledných 20 položiek z ostatných obrazoviek. Zm
 
 `statistics_page.py` zobrazuje prehľad; `study_statistics.py` obsahuje dotazy a zostavenie reportu cez `Store.statistics()`. Štyri agregácie bežia v jednej čítacej transakcii. Schéma zostáva 5, bez nových závislostí a zápisov do údajov. Aktualizácia je ručná alebo pri návrate, bez časovača na pozadí. Pri chybe načítania zostane predchádzajúci prehľad a možno skúsiť Refresh; nemusí byť aktuálny.
 
-Export, vlastný rozsah dátumov, filter predmetu a pokročilé grafy zatiaľ nie sú súčasťou funkcie. AI Tutor zostáva plánovaný.
+Export, vlastný rozsah dátumov, filter predmetu a pokročilé grafy zatiaľ nie sú súčasťou funkcie. AI Tutor má voliteľný session chat cez Ollamu.

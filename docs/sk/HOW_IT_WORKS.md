@@ -29,7 +29,7 @@ Na Macu je predvolený súbor `~/Library/Application Support/SOSkuska/dashboard.
 
 Parameter `--data` umožňuje vlastnú cestu. Údaje sa automaticky nesynchronizujú, nezálohujú ani nešifrujú. Počas časovača sa čas priebežne neukladá: pri páde môže rozpracovaná relácia zmiznúť a po reštarte sa neobnoví. Relácia cez polnoc sa zatiaľ pripíše ku dňu dokončenia.
 
-AI Tutor je ďalšia plánovaná funkcia; jeho položka v navigácii zatiaľ zobrazuje oznámenie.
+AI Tutor otvára voliteľný session chat cez Ollamu; spojenie začne až po Connect alebo Send.
 
 ## Banka tém a otázok
 
@@ -57,7 +57,7 @@ Odpoveď sa uloží po každom výbere; možno ju zmeniť alebo vymazať cez Cle
 
 Finish test po potvrdení uloží výsledok; nevyplnené otázky sa počítajú ako nesprávne. Správne odpovede a vysvetlenia sa zobrazia až po odovzdaní. Časový limit beží aj mimo obrazovky a pri zatvorenej aplikácii; po uplynutí sa test automaticky dokončí pri behu alebo návrate do aplikácie. Výsledok a otázky sú snímkou zo začiatku pokusu: neskoršia úprava či vymazanie pôvodného obsahu ich nezmení. História zobrazuje posledných 20 dokončených testov; staršie záznamy zostávajú v databáze.
 
-Precvičovanie je dostupné od v0.4.0. Precvičovanie nepridáva vymyslený čas do súčtov časovača. AI a import zostávajú plánované; celkový prehľad je v Statistics.
+Precvičovanie je dostupné od v0.4.0. Precvičovanie nepridáva vymyslený čas do súčtov časovača. Import zostáva plánovaný; AI Tutor má vlastný voliteľný chat; celkový prehľad je v Statistics.
 
 ## Kartičky a opakovanie (v0.5.0)
 
@@ -70,3 +70,9 @@ V bočnej ponuke otvor **Flashcards**. New deck vytvorí balíček pre existujú
 V ponuke **Statistics** zvoľ Last 7 days, Last 30 days alebo All time. Prehľad ukazuje uložený čas a relácie, úspešnosť dokončených testov váženú otázkami, počty vlastných hodnotení kartičiek, čas podľa predmetu a dennú aktivitu. Refresh alebo návrat na obrazovku načíta novú snímku. Nejde o meranie zvládnutia učiva.
 
 [Podrobné pravidlá](STATISTICS.md).
+
+## AI Tutor s Ollamou (nevydané)
+
+V AI Tutor pripoj vlastný server Ollama cez Connect / refresh, vyber model a jazyk odpovede a zadaj otázku. Odpoveď prichádza priebežne; Stop ju zastaví. Ostatné obrazovky zostávajú použiteľné počas generovania aj bez Ollamy. Chat je iba pre aktuálne spustenie aplikácie, neukladá sa do databázy.
+
+[Návod AI Tutor](AI_TUTOR.md).

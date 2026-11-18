@@ -1,10 +1,10 @@
 # Současná architektura
 
-Stav k 17. listopadu 2026. Implementované jsou Dashboard, My Subjects, Question bank, Practice Tests, Flashcards a Statistics; další kroky popisuje [plánovaná architektura](PLANNED_ARCHITECTURE.md).
+Stav k 18. listopadu 2026. Implementované jsou Dashboard, My Subjects, Question bank, Practice Tests, Flashcards, Statistics a volitelný AI Tutor; další kroky popisuje [plánovaná architektura](PLANNED_ARCHITECTURE.md).
 
 ## Technologie a soubory
 
-Python, CustomTkinter 5.2.2, Pillow a standardní SQLite. Jeden proces a hlavní vlákno Tk; bez síťových požadavků a Ollama klienta. Vstup je `python soskuska/app.py`; instalovatelný balíček zatím není.
+Python, CustomTkinter 5.2.2, Pillow a standardní SQLite. Jeden proces a hlavní vlákno Tk; s volitelným Ollama klientem ve vedlejším vlákně. Vstup je `python soskuska/app.py`; instalovatelný balíček zatím není.
 
 | Soubor | Odpovědnost |
 | --- | --- |
@@ -15,6 +15,7 @@ Python, CustomTkinter 5.2.2, Pillow a standardní SQLite. Jeden proces a hlavní
 | `tests/test_storage.py`, `tests/test_subjects.py` | Úložiště, kompatibilita původní databáze, migrace a pravidla předmětů |
 | `soskuska/check_dashboard.py` | Nativní integrační kontrola s dočasnými daty |
 | `soskuska/statistics_page.py` / `soskuska/study_statistics.py` | Obrazovka Statistics a konzistentní agregace uložené historie |
+| `soskuska/tutor_page.py`, `soskuska/tutor.py`, `soskuska/ollama_client.py` | Session chat, fronta úloh a volitelný Ollama klient |
 | `soskuska-local/index.html` | Historický vizuální návrh; není součástí běhu aplikace |
 
 ## Datový tok
@@ -36,6 +37,11 @@ flowchart LR
     User --> Statistics[StatisticsPage / statistics_page.py]
     Statistics --> Store
     Store --> Report[study_statistics.py]
+    User --> Tutor[TutorPage / tutor_page.py]
+    Tutor --> Jobs[tutor.py / background task]
+    Jobs --> Ollama[ollama_client.py / HTTP]
+    Jobs --> Queue[queue / Tk after]
+    Queue --> Tutor
     Dashboard --> Store
     Store --> DB[(SQLite)]
     Clock[time.monotonic] --> Dashboard
@@ -111,7 +117,7 @@ Pokud nová databáze není a existuje původní `ExamPrep/dashboard.sqlite3`, p
 
 Pevné vzorové předměty, procenta, profil, termíny i základy 24 h 35 min / 45 min byly odstraněné. Nová databáze je prázdná. Metriky jsou celkový čas, počet uložených sezení, série studijních dní a počet předmětů. Série může končit dnes nebo včera; starší přerušená série ukáže nulu. Cíl zůstává 60 minut denně; karta ukazuje uložené minuty, bar má přesnost na sekundy.
 
-Karty ukazují počet sezení a uložený čas předmětu, ne smyšlený učební pokrok. Zkoušky pocházejí z uložených termínů, nedávná aktivita z posledních uložených sezení. Neexistující data mají prázdné stavy. AI a nastavení zatím nejsou implementované; Statistics má vlastní obrazovku.
+Karty ukazují počet sezení a uložený čas předmětu, ne smyšlený učební pokrok. Zkoušky pocházejí z uložených termínů, nedávná aktivita z posledních uložených sezení. Neexistující data mají prázdné stavy. Nastavení zatím není implementované; AI Tutor má volitelný chat; Statistics má vlastní obrazovku.
 
 ## Rozložení a ovládání
 
@@ -121,9 +127,9 @@ Obrazovky mají nezávislé vyhledávání přes `casefold()`. Ctrl+K / Cmd+K za
 
 ## Ověření a zbývající omezení
 
-84 testů úložiště prošlo; integrační skript prošel na macOS s Pythonem 3.12.13 / Tk 9.0 a dočasnou databází. Ověřil CRUD přes formulář, Unicode, hledání, prázdné stavy, navázání časovače, zachování historie, opětovné otevření, kompaktní režim a syntetické posouvání. Nenahrazuje ruční vizuální/hardwarové ověření; Windows/Linux nejsou ověřené.
+106 testů úložiště prošlo; integrační skript prošel na macOS s Pythonem 3.12.13 / Tk 9.0 a dočasnou databází. Ověřil CRUD přes formulář, Unicode, hledání, prázdné stavy, navázání časovače, zachování historie, opětovné otevření, kompaktní režim a syntetické posouvání. Nenahrazuje ruční vizuální/hardwarové ověření; Windows/Linux nejsou ověřené.
 
-Zbývá Ollama, překlady UI, nastavování cíle, úplná obnova po pádu, zálohy, balíčky a komplexní logování. První databázové operace mají chybová hlášení, ale úplné zpracování chyb při každém čtení ještě chybí.
+Zbývá ukládání AI konverzací, překlady UI, nastavování cíle, úplná obnova po pádu, zálohy, balíčky a komplexní logování. První databázové operace mají chybová hlášení, ale úplné zpracování chyb při každém čtení ještě chybí.
 
 
 Verze schématu se čte až po získání `BEGIN IMMEDIATE`, aby souběžné starty nepoužily zastaralou hodnotu. Rozložení My Subjects zpracovává skutečné Configure události CustomTkinteru; integrační kontrola ověřuje dva sloupce ve velkém okně a jeden v kompaktním.
@@ -184,7 +190,7 @@ CREATE UNIQUE INDEX practice_one_active
 
 ## Průběžná integrace (CI)
 
-GitHub Actions kontroluje pull requesty do main, nové commity na main a ruční spuštění. Workflow `.github/workflows/ci.yml` instaluje závislosti, ověřuje jejich kompatibilitu, syntaxi Pythonu a všechny jednotkové testy s Pythonem 3.12 na Ubuntu, Windows a macOS. Samostatná úloha spouští sedm nativních kontrolních skriptů na Ubuntu pod virtuálním displejem Xvfb; každý proces má limit 60 sekund. Celá úloha má limit 10 minut. Novější běh stejné větve zruší předchozí. Token má pouze čtení obsahu; workflow nic nenasazuje ani nevydává.
+GitHub Actions kontroluje pull requesty do main, nové commity na main a ruční spuštění. Workflow `.github/workflows/ci.yml` instaluje závislosti, ověřuje jejich kompatibilitu, syntaxi Pythonu a všechny jednotkové testy s Pythonem 3.12 na Ubuntu, Windows a macOS. Samostatná úloha spouští osm nativních kontrolních skriptů na Ubuntu pod virtuálním displejem Xvfb; každý proces má limit 60 sekund. Celá úloha má limit 10 minut. Novější běh stejné větve zruší předchozí. Token má pouze čtení obsahu; workflow nic nenasazuje ani nevydává.
 
 Výsledky a logy jsou v [Actions](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml) a v kontrolách PR. Červený stav otevři a přečti první neúspěšný krok. Po opravě pushni do stejné větve a kontroly se spustí znovu. Ruční spuštění Run workflow je dostupné po sloučení workflow do výchozí větve. Branch protection tímto není zapnutá.
 
@@ -237,3 +243,9 @@ Discard test získá zápisový zámek a potom ověří termín. Pokud mezitím 
 Editor otázek ukládá kopii původního obsahu. Při uložení ji porovná s aktuální otázkou pod zápisovým zámkem. Novější text, možnosti, správná odpověď, obtížnost, téma nebo vysvětlení se nepřepíšou starým formulářem. Při konfliktu zůstane rozepsaný obsah; před opětovným otevřením Edit si jej zkopíruj a změny spoj s aktuální verzí. Schéma databáze zůstává 5.
 
 Formulář New deck obnoví nabídku předmětů při návratu, přes Refresh i před uložením, bez ztráty názvu a popisu. Přejmenovaný předmět zůstane vybraný podle ID. Pokud byl vybraný předmět smazán, Choose a subject vyžaduje výslovně zvolit jiný; formulář jej sám nenahradí jiným existujícím předmětem.
+
+## AI Tutor s Ollamou (nevydáno)
+
+tutor_page.py drží session chat a widgety. tutor.py sestavuje omezený kontext a spouští daemon pracovní vlákno; výsledky předává přes queue, zpracovanou Tk after každých 50 ms. ollama_client.py používá standardní http.client/ssl, GET /api/tags a streamované POST /api/chat. Pracovní vlákna nevolají Tk ani SQLite. Ukončení přeruší síťový úkol bez čekání v UI; neúspěšné uložení focus sezení dál brání zavření. Schéma zůstává 5, nové externí závislosti nejsou potřeba.
+
+[Návod AI Tutor](AI_TUTOR.md).

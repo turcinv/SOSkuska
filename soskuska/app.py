@@ -27,6 +27,7 @@ from question_bank import QuestionBankPage
 from practice_page import PracticePage
 from flashcard_page import FlashcardPage
 from statistics_page import StatisticsPage
+from tutor_page import TutorPage
 
 C = dict(bg="#0D1117", sidebar="#11151C", card="#181D27", raised="#202633",
          border="#2A303C", accent="#8B5CF6", hover="#A78BFA", primary="#6D28D9",
@@ -91,6 +92,9 @@ class Dashboard(ctk.CTk):
         self.statistics_page = StatisticsPage(self.scroll, self)
         self.statistics_page.grid(row=0, column=0, sticky="ew", padx=28, pady=28)
         self.statistics_page.grid_remove()
+        self.tutor_page = TutorPage(self.scroll, self)
+        self.tutor_page.grid(row=0, column=0, sticky="ew", padx=28, pady=28)
+        self.tutor_page.grid_remove()
         self.bind("<Configure>", self.on_resize)
         self.bind("<Control-k>", self.focus_search)
         self.bind("<Command-k>", self.focus_search)
@@ -157,7 +161,8 @@ class Dashboard(ctk.CTk):
         self.label(self.footer, "LOCAL WORKSPACE", 11, "secondary").pack(anchor="w", pady=(0, 12))
         self.label(self.footer, "Local student", bold=True).pack(anchor="w")
         self.label(self.footer, "Offline · Stored on this device", 12, "secondary").pack(anchor="w", pady=(2, 18))
-        self.label(self.footer, "○  AI not connected", 12, "secondary").pack(anchor="w")
+        self.ai_status = self.label(self.footer, "○  AI not connected", 12, "secondary")
+        self.ai_status.pack(anchor="w")
         self.label(self.footer, "Study workspace · v0.6.2", 11, "secondary").pack(anchor="w", pady=(6, 0))
 
     def build_content(self):
@@ -325,7 +330,7 @@ class Dashboard(ctk.CTk):
         self.reflow()
 
     def navigate(self, name):
-        if name not in ("Dashboard", "My Subjects", "Practice Tests", "Flashcards", "Statistics"):
+        if name not in ("Dashboard", "My Subjects", "Practice Tests", "Flashcards", "Statistics", "AI Tutor"):
             self.show_notice(f"{name} will be available in a later version.")
             return
         self.subject_page.cancel_delete()
@@ -334,7 +339,13 @@ class Dashboard(ctk.CTk):
         self.practice_page.grid_remove()
         self.flashcard_page.grid_remove()
         self.statistics_page.grid_remove()
-        if name == "Statistics":
+        self.tutor_page.grid_remove()
+        if name == "AI Tutor":
+            self.content.grid_remove()
+            self.subject_page.grid_remove()
+            self.tutor_page.load()
+            self.tutor_page.grid()
+        elif name == "Statistics":
             self.content.grid_remove()
             self.subject_page.grid_remove()
             self.statistics_page.load()
@@ -373,6 +384,7 @@ class Dashboard(ctk.CTk):
         self.practice_page.grid_remove()
         self.flashcard_page.grid_remove()
         self.statistics_page.grid_remove()
+        self.tutor_page.grid_remove()
         self.question_bank.load_subject(subject_id)
         self.question_bank.grid()
         self.current_page = "Question Bank"
@@ -443,7 +455,7 @@ class Dashboard(ctk.CTk):
         self.selected_subject_id = self.subject_ids.get(name)
 
     def focus_search(self, _event=None):
-        if self.current_page in ("Practice Tests", "Flashcards", "Statistics"):
+        if self.current_page in ("Practice Tests", "Flashcards", "Statistics", "AI Tutor"):
             return "break"
         if self.current_page == "Question Bank":
             self.question_bank.search.focus_set()
@@ -452,7 +464,7 @@ class Dashboard(ctk.CTk):
         return "break"
 
     def clear_search(self, _event=None):
-        if self.current_page in ("Practice Tests", "Flashcards", "Statistics"):
+        if self.current_page in ("Practice Tests", "Flashcards", "Statistics", "AI Tutor"):
             return
         if self.current_page == "Question Bank":
             self.question_bank.query.set("")
@@ -577,6 +589,7 @@ class Dashboard(ctk.CTk):
     def close(self):
         if self.session_open and not self.finish_focus():
             return
+        self.tutor_page.shutdown()
         self.store.close()
         self.destroy()
 
