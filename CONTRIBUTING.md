@@ -43,4 +43,4 @@ Use the issue templates to report reproduction steps, expected/actual behavior, 
 
 ## Continuous integration
 
-CI runs Python 3.12 unit tests on Ubuntu, Windows and macOS, plus nine GUI checks on Ubuntu/Xvfb. [Workflow results](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml). Checks do not deploy or publish releases. See [Statistics rules](docs/STATISTICS.md) when changing reports; self-ratings must not be presented as measured mastery.
+CI runs Python 3.12 unit tests on Ubuntu, Windows and macOS, plus ten GUI checks on Ubuntu/Xvfb. [Workflow results](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml). Checks do not deploy or publish releases. See [Statistics rules](docs/STATISTICS.md) when changing reports; self-ratings must not be presented as measured mastery.

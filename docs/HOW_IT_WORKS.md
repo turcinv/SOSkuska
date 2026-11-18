@@ -51,3 +51,7 @@ Long text editors contain their own scrolling, including at boundaries and over 
 On macOS, the default is `~/Library/Application Support/SOSkuska/dashboard.sqlite3`; Windows uses `%LOCALAPPDATA%\SOSkuska\dashboard.sqlite3`, Linux uses `$XDG_DATA_HOME/SOSkuska/dashboard.sqlite3` or `~/.local/share/SOSkuska/dashboard.sqlite3`. If no new database exists but legacy `ExamPrep/dashboard.sqlite3` does, the app continues using that file without moving it. Migration preserves records without assigning invented subjects to old sessions. `--data` selects another file.
 
 There is no automatic synchronization, encryption or backup. Focus time is not continuously persisted, so a crash may lose the active session. Sessions crossing midnight belong entirely to their save day. UI translations, saved AI conversations and installers remain future work. See [current architecture](CURRENT_ARCHITECTURE.md) for details.
+
+## Backup and restore
+
+Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Schema stays 6. Restore closes the app; reopen it afterward. See [Backup and restore](BACKUP_RESTORE.md).

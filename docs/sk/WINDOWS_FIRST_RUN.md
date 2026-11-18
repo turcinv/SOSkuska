@@ -181,3 +181,7 @@ V AI Tutor pripoj vlastný server Ollama cez Connect / refresh, vyber model a ja
 Chat zostáva iba v pamäti a zatvorením sa odstráni. Voľby spojenia možno výslovne uložiť v [Settings](SETTINGS.md); bez Save sú dočasné.
 
 [Nastavenia](SETTINGS.md).
+
+## Záloha a obnova
+
+Settings teraz ponúka ručnú miestnu zálohu a overenú obnovu s bezpečnostnou kópiou pred nahradením. Schéma zostáva 6. Obnova zatvorí aplikáciu; potom ju spusti znovu. Pozri [Záloha a obnova](BACKUP_RESTORE.md).

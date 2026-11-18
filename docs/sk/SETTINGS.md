@@ -12,6 +12,10 @@ Pri aktívnej AI požiadavke najprv počkaj alebo použi Stop, kým zmeníš AI 
 
 Chyba zápisu ani konflikt s iným oknom neodstráni rozpísané hodnoty. Pred Reload si ich skopíruj; pri zmenenom formulári treba potvrdiť nahradenie druhým kliknutím. Zmeny iného okna sa nepoužijú priebežne: v tomto okne ich použije Save alebo reštart. Save použije všetky načítané hodnoty vrátane AI nastavení z druhého okna, preto môžu platiť uvedené ochrany. Neplatné uložené nastavenia zobrazia bezpečné predvolené hodnoty; opravia sa až výslovným Save.
 
-Nastavenia sú miestne pre vybranú databázu (`--data`), bez synchronizácie a šifrovania. Chýba voľba vzhľadu, preklady UI, zálohy a ukladanie AI konverzácií.
+Nastavenia sú miestne pre vybranú databázu (`--data`), bez synchronizácie a šifrovania. Chýba voľba vzhľadu, preklady UI a ukladanie AI konverzácií.
 
 Pri pripojení k inému serveru sa model vyberie znovu podľa uloženej preferencie. Obnovenie rovnakého servera zachová ručne vybraný dostupný model.
+
+## Záloha a obnova
+
+Settings teraz ponúka ručnú miestnu zálohu a overenú obnovu s bezpečnostnou kópiou pred nahradením. Schéma zostáva 6. Obnova zatvorí aplikáciu; potom ju spusti znovu. Pozri [Záloha a obnova](BACKUP_RESTORE.md).

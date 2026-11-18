@@ -77,7 +77,7 @@ Procvičování je dostupné od v0.4.0. Procvičování nepřidává smyšlený 
 
 ## Průběžná integrace (CI)
 
-CI: Python 3.12, jednotkové testy na třech systémech a devět GUI kontrol na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
+CI: Python 3.12, jednotkové testy na třech systémech a deset GUI kontrol na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
 
 ## Kartičky a opakování (v0.5.0)
 
@@ -104,3 +104,7 @@ Chat zůstává jen v paměti a zavřením se odstraní. Volby spojení lze výs
 [Nastavení](SETTINGS.md).
 
 Hlavní dokumentace je anglicky v kořeni repozitáře a v `docs/`. Česká verze je v `docs/cs/`, slovenská v `docs/sk/` a ruská v `docs/ru/`. AGENTS.md zůstává anglicky; konverzace může být česky, slovensky, anglicky nebo rusky.
+
+## Záloha a obnova
+
+Settings nyní nabízí ruční místní zálohu a ověřenou obnovu s bezpečnostní kopií před nahrazením. Schéma zůstává 6. Obnova zavře aplikaci; potom ji spusť znovu. Viz [Záloha a obnova](BACKUP_RESTORE.md).

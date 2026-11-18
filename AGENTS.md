@@ -42,6 +42,7 @@ Commands below are relative to the project root:
 .venv-macos/bin/python soskuska/check_state_fixes.py
 .venv-macos/bin/python soskuska/check_tutor.py
 .venv-macos/bin/python soskuska/check_settings.py
+.venv-macos/bin/python soskuska/check_backup.py
 ```
 
 - On this Mac use `.venv-macos`, verified with Python 3.12.13 / Tk 9.0. `.venv-desktop` uses Apple Tk 8.5, which produced an empty window. Suppressing its warning is not a fix. The default Homebrew Python also lacked `_tkinter` when checked.
@@ -103,7 +104,7 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 
 ## Continuous integration
 
-- `.github/workflows/ci.yml` runs for PRs targeting main, pushes to main and manual dispatch. Python 3.12 unit tests/syntax/dependency checks run on Linux, Windows and macOS; nine GUI checks run under Xvfb on Ubuntu.
+- `.github/workflows/ci.yml` runs for PRs targeting main, pushes to main and manual dispatch. Python 3.12 unit tests/syntax/dependency checks run on Linux, Windows and macOS; ten GUI checks run under Xvfb on Ubuntu.
 - Keep action references pinned to verified release commit SHAs, contents permission read-only, and process/job timeouts. CI does not publish releases or deploy. Avoid duplicate feature-branch push and PR runs.
 - CI results are automated coverage, not manual platform or hardware verification. Native Aqua Quit and Tk 9 trackpad behavior still require the Mac checks. Do not claim those are tested by the Linux GUI job.
 - Read failed job logs, fix the cause and keep fixes on the same PR branch. Do not disable a meaningful failing check to obtain a green status. Branch protection is not configured by this workflow.
@@ -157,3 +158,12 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 - Persistent Settings was released in v0.8.0. Switching servers resolves the saved model preference afresh; a same-server refresh preserves an available manual model choice.
 
 - English-primary documentation with Czech/Slovak/Russian translations was introduced in v0.8.1. Keep published version labels aligned across the app footer, root README, all localized READMEs and changelogs.
+
+## Backup and restore safeguards
+
+- Schema remains 6. Backup snapshots use SQLite backup(), include committed WAL data and export standalone DELETE-mode files. Never overwrite existing outputs or active database/companion aliases; reject hard-linked active databases. POSIX publication uses atomic hard links, Windows uses no-overwrite rename.
+- Only regular standalone schema 6 files are accepted. Validate a private copy for integrity, canonical structure/constraints, types/dates/aware timestamps, practice consistency, preferences and references. Never execute source DDL against the live database. Keep the private selection stable through confirmation.
+- Store holds a shared database lease; restore requires an exclusive lease (POSIX flock / Windows LockFileEx). Close other current app instances; external tools/old versions must be closed manually. Keep the .lock file persistent; never unlink it while a lease may exist.
+- Actual restore requires idle focus/Tutor and no target unfinished practice test; recheck on confirmation and under the write lock where applicable. Close Store, pause periodic callbacks and block editing. Create a safety snapshot under the write lock before replacing rows. Compare final rows and sequences; commit once, rollback pre-commit failures. Restore success or failure closes the app for a fresh launch.
+- Database jobs run in isolated backup_worker.py processes. Do not move validation into Python threads: cyclic GC can finalize Tk objects there and crash macOS. Poll child state on Tk; use a temporary output file, never undrained pipes. Enforce the process timeout without waiting on the UI thread. Keep Quit blocked through result dialogs. Cleanup failure must not mask a committed restore.
+- Tests use disposable databases. Run test_backup.py, test_backup_review.py and check_backup.py, plus affected/full checks. CI includes the tenth GUI script. Keep docs/BACKUP_RESTORE.md and cs/sk/ru versions aligned. No automatic/cloud backup, encryption or power-loss durability guarantee.
