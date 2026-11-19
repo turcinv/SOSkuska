@@ -338,6 +338,10 @@ class Dashboard(ctk.CTk):
         self.reflow()
 
     def navigate(self, name):
+        if self.question_bank.importer.saving:
+            self.question_bank.importer.status.configure(text='Wait for the question import to finish before navigating.')
+            return
+        self.question_bank.importer.cancel()
         if name not in ("Dashboard", "My Subjects", "Practice Tests", "Flashcards", "Statistics", "AI Tutor", "Settings"):
             self.show_notice(f"{name} will be available in a later version.")
             return
@@ -389,6 +393,8 @@ class Dashboard(ctk.CTk):
                              text_color=C["hover"] if item == name else C["secondary"])
 
     def open_question_bank(self, subject_id):
+        if self.question_bank.importer.saving:
+            return
         if self.store.subject(subject_id) is None:
             self.navigate("My Subjects")
             self.show_notice("This subject no longer exists.")
@@ -627,6 +633,9 @@ class Dashboard(ctk.CTk):
             self.after(250, self.tick)
 
     def close(self):
+        if self.question_bank.importer.saving:
+            self.question_bank.importer.status.configure(text='Wait for the question import to finish before closing.')
+            return
         if self.settings_page.backups.busy:
             self.settings_page.backups.status.configure(text="Wait for the database operation to finish before closing.")
             return

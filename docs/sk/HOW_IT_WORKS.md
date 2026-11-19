@@ -39,7 +39,7 @@ V My Subjects zvoľ pri predmete **Questions**. Pridaj tému cez New topic a ot�
 
 Témy možno premenovať a vymazať; vyber tému vo filtri a použi Rename selected topic alebo Delete selected topic. Otázky možno upravovať a mazať. Hľadanie v texte otázky sa kombinuje s filtrom témy a náročnosti. Počty na kartách predmetov vychádzajú z uloženého obsahu. Vymazanie témy ponechá jej otázky v No topic. Vymazanie predmetu po výslovnom upozornení odstráni jeho témy a otázky, ale zachová čas aj históriu štúdia.
 
-Ide o editor obsahu: správna odpoveď je viditeľná. Precvičovanie a hodnotenie nájdeš v Practice Tests. Import a obrázky zatiaľ nie sú implementované.
+Ide o editor obsahu: správna odpoveď je viditeľná. Precvičovanie a hodnotenie nájdeš v Practice Tests. Import otázok z CSV je dostupný; obrázky ani import kartičiek zatiaľ nie sú implementované.
 
 ## Opravy po kontrole hlavnej vetvy
 
@@ -59,7 +59,7 @@ Odpoveď sa uloží po každom výbere; možno ju zmeniť alebo vymazať cez Cle
 
 Finish test po potvrdení uloží výsledok; nevyplnené otázky sa počítajú ako nesprávne. Správne odpovede a vysvetlenia sa zobrazia až po odovzdaní. Časový limit beží aj mimo obrazovky a pri zatvorenej aplikácii; po uplynutí sa test automaticky dokončí pri behu alebo návrate do aplikácie. Výsledok a otázky sú snímkou zo začiatku pokusu: neskoršia úprava či vymazanie pôvodného obsahu ich nezmení. História zobrazuje posledných 20 dokončených testov; staršie záznamy zostávajú v databáze.
 
-Precvičovanie je dostupné od v0.4.0. Precvičovanie nepridáva vymyslený čas do súčtov časovača. Import zostáva plánovaný; AI Tutor má vlastný voliteľný chat; celkový prehľad je v Statistics.
+Precvičovanie je dostupné od v0.4.0. Precvičovanie nepridáva vymyslený čas do súčtov časovača. Import kartičiek zostáva plánovaný; AI Tutor má vlastný voliteľný chat; celkový prehľad je v Statistics.
 
 ## Kartičky a opakovanie (v0.5.0)
 
@@ -88,3 +88,7 @@ Chat zostáva iba v pamäti a zatvorením sa odstráni. Voľby spojenia možno v
 ## Záloha a obnova
 
 Settings teraz ponúka ručnú miestnu zálohu a overenú obnovu s bezpečnostnou kópiou pred nahradením. Schéma zostáva 6. Obnova zatvorí aplikáciu; potom ju spusti znovu. Pozri [Záloha a obnova](BACKUP_RESTORE.md).
+
+## Import otázok z CSV
+
+Banka otázok teraz podporuje import UTF-8 CSV do existujúceho predmetu: šablóna s hlavičkou, stránkovaný náhľad, odmietnutie presných duplicít a jedno atomické uloženie. Maximum 2 MiB / 500 záznamov; zoznam ukazuje 50 otázok na stránku. Schéma zostáva 6. [Import otázok z CSV](QUESTION_CSV_IMPORT.md).

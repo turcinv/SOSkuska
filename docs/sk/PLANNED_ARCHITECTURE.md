@@ -84,7 +84,7 @@ Konkrétne schémy musia doplniť cudzie kľúče, pravidlá mazania, indexy a t
 
 **Kartičky:** balíčky, editor, odhalenie odpovede, Again / Hard / Good / Easy, uložený termín a história sú implementované. Pravidlá sú v repetition.py a dokumente FLASHCARDS.md; nejde o SM-2 ani FSRS. Import a pokročilejšie plánovanie sú ďalšie možnosti.
 
-**Testy:** výber témy, náročnosti, počtu a času; uložený pokus, skóre a rozbor odpovedí sú implementované. Ďalšie rozšírenia: import a bohatšia história.
+**Testy:** výber témy, náročnosti, počtu a času; uložený pokus, skóre a rozbor odpovedí sú implementované. Import otázok z CSV je implementovaný; bohatšia história zostáva ďalším rozšírením.
 
 **AI Tutor:** samostatný klient Ollama s časovým limitom, zoznamom dostupných modelov, priebežným prijímaním odpovede a zrušením generovania. Predvolené spojenie miestne, adresa nastaviteľná a viditeľná; žiadny automatický prechod na cloud. Modely načítať z Ollamy, nevyžadovať jeden pevný model.
 
@@ -118,3 +118,7 @@ Chat zostáva iba v pamäti a zatvorením sa odstráni. Voľby spojenia možno v
 ## Záloha a obnova
 
 Settings teraz ponúka ručnú miestnu zálohu a overenú obnovu s bezpečnostnou kópiou pred nahradením. Schéma zostáva 6. Obnova zatvorí aplikáciu; potom ju spusti znovu. Pozri [Záloha a obnova](BACKUP_RESTORE.md).
+
+## Import otázok z CSV
+
+Banka otázok teraz podporuje import UTF-8 CSV do existujúceho predmetu: šablóna s hlavičkou, stránkovaný náhľad, odmietnutie presných duplicít a jedno atomické uloženie. Maximum 2 MiB / 500 záznamov; zoznam ukazuje 50 otázok na stránku. Schéma zostáva 6. [Import otázok z CSV](QUESTION_CSV_IMPORT.md).

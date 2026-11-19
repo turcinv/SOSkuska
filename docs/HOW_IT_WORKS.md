@@ -23,7 +23,7 @@ The daily checklist also persists. Mark Review a subject manually; saving nonzer
 
 ## Questions and practice
 
-Use **My Subjects → Questions**. New topic creates an optional topic; New question creates four distinct required answers A–D, exactly one correct choice, Easy/Medium/Hard difficulty and optional explanation. Search combines question text, topic and difficulty. Rename/delete topics using the selected-topic actions; deleting a topic leaves its questions in No topic. Forms keep drafts after validation/write errors. Correct answers are visible here because this is the authoring screen. Import and images are not implemented.
+Use **My Subjects → Questions**. New topic creates an optional topic; New question creates four distinct required answers A–D, exactly one correct choice, Easy/Medium/Hard difficulty and optional explanation. Search combines question text, topic and difficulty. Rename/delete topics using the selected-topic actions; deleting a topic leaves its questions in No topic. Forms keep drafts after validation/write errors. Correct answers are visible here because this is the authoring screen. Question CSV import is available; images and flashcard import are not implemented.
 
 In **Practice Tests**, choose a subject, topic (all / no topic / specific), difficulty and 1–100 available questions. Questions are selected randomly without repetition. Choose Untimed or a 5/10/15/30/60-minute limit.
 
@@ -55,3 +55,7 @@ There is no automatic synchronization, encryption or backup. Focus time is not c
 ## Backup and restore
 
 Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Schema stays 6. Restore closes the app; reopen it afterward. See [Backup and restore](BACKUP_RESTORE.md).
+
+## Import questions from CSV
+
+Question bank now supports UTF-8 CSV import into an existing subject, with a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records; question lists show 50 per page. Schema stays 6. [Question CSV import](QUESTION_CSV_IMPORT.md).

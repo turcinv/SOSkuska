@@ -233,7 +233,7 @@ Changed AI preferences require an idle Tutor. A different server requires New ch
 
 The v0.8.0 baseline passed 126 unit tests and nine native macOS checks using disposable data (Python 3.12.13 / Tk 9.0). CI tests Python 3.12 on Ubuntu/Windows/macOS and GUI on Ubuntu/Xvfb. Processes are bounded at 60 seconds, jobs at 10 minutes; superseded ref runs cancel. Actions are pinned, token contents access is read-only, and there is no deployment/release step or automatic branch protection. See [Development](DEVELOPMENT.md).
 
-Automated/synthetic checks do not establish manual platform UI or hardware gesture correctness; Linux does not test Aqua Quit/Tk 9 hardware behavior. Real Ollama quality/performance is unverified. Remaining work includes saved AI conversations, UI translations, full crash recovery, imports, installers and comprehensive logging/error handling at every read.
+Automated/synthetic checks do not establish manual platform UI or hardware gesture correctness; Linux does not test Aqua Quit/Tk 9 hardware behavior. Real Ollama quality/performance is unverified. Remaining work includes saved AI conversations, UI translations, full crash recovery, flashcard import, installers and comprehensive logging/error handling at every read.
 
 ## Backup and restore
 
@@ -241,4 +241,10 @@ Settings now includes manual local backup and validated restore, with a pre-rest
 
 backup.py and backup_validation.py validate private standalone snapshots and application domains, then replace rows in one write transaction without copying source DDL. database_lock.py provides shared Store leases and exclusive restore leases (flock / Windows LockFileEx). backup_worker.py runs in an isolated process; backup_panel.py polls a temporary output file on Tk, avoiding pipe deadlocks and worker-thread Tk finalization. The current Store is closed and periodic callbacks pause for actual restore. The safety copy is taken while the write lock is held; final rows and ID sequences must match before commit.
 
-Backup/restore validation: 156 unit tests and ten native macOS checks with disposable data. Tests include the independently reproduced review failures. CI runs the ten GUI checks on Ubuntu/Xvfb; Windows/macOS unit jobs exercise platform leases.
+Backup/restore validation: 156 unit tests and ten native macOS checks with disposable data. Tests include the independently reproduced review failures. CI runs the eleven GUI checks on Ubuntu/Xvfb; Windows/macOS unit jobs exercise platform leases.
+
+## Import questions from CSV
+
+Question bank now supports UTF-8 CSV import into an existing subject, with a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records; question lists show 50 per page. Schema stays 6. [Question CSV import](QUESTION_CSV_IMPORT.md).
+
+csv_import.py validates bounded canonical records; csv_import_worker.py runs isolated parse/read-only preflight/save/template jobs with file-backed output. Store.open_existing uses mode=ro/rw without creation or migration. Store.import_questions revalidates under BEGIN IMMEDIATE and inserts topics/questions in one transaction. A successful batch is consumed before UI report reads; refresh retry never imports again. Question-bank pagination applies filtering before selecting 50 visible cards.

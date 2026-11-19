@@ -4,6 +4,7 @@ import unicodedata
 
 import customtkinter as ctk
 from content import DIFFICULTIES
+from csv_import_panel import CsvImportPanel
 
 
 class QuestionBankPage(ctk.CTkFrame):
@@ -11,6 +12,7 @@ class QuestionBankPage(ctk.CTkFrame):
         super().__init__(parent, fg_color="transparent", corner_radius=0)
         self.app = app
         self.subject_id = None
+        self.subject_snapshot = None
         self.editing_question_id = None
         self.question_snapshot = None
         self.editing_topic_id = None
@@ -29,10 +31,12 @@ class QuestionBankPage(ctk.CTkFrame):
         self.add_question_button = app.button(actions, "+ New question", self.show_question_form, primary=True, width=150)
         self.add_question_button.pack(side="left", padx=(0, 8))
         self.add_topic_button = app.button(actions, "+ New topic", self.show_topic_form, width=125)
-        self.add_topic_button.pack(side="left")
+        self.add_topic_button.pack(side="left", padx=(0, 8))
+        self.csv_button=app.button(actions,'Import CSV',lambda:self.importer.open(),width=125)
+        self.csv_button.pack(side='left')
 
         self.topic_form = app.frame(self, card=True)
-        self.topic_form.grid(row=4, column=0, sticky="ew", pady=(0, 16))
+        self.topic_form.grid(row=5, column=0, sticky="ew", pady=(0, 16))
         self.topic_form.grid_columnconfigure(0, weight=1)
         self.topic_form_title = app.label(self.topic_form, "New topic", 16, bold=True)
         self.topic_form_title.grid(row=0, column=0, sticky="w", padx=18, pady=(14, 8))
@@ -48,7 +52,7 @@ class QuestionBankPage(ctk.CTkFrame):
         self.topic_form.grid_remove()
 
         self.question_form = app.frame(self, card=True)
-        self.question_form.grid(row=5, column=0, sticky="ew", pady=(0, 16))
+        self.question_form.grid(row=6, column=0, sticky="ew", pady=(0, 16))
         self.question_form.grid_columnconfigure(0, weight=1)
         self.question_form_title = app.label(self.question_form, "New question", 18, bold=True)
         self.question_form_title.grid(row=0, column=0, sticky="w", padx=18, pady=(16, 10))
@@ -90,7 +94,7 @@ class QuestionBankPage(ctk.CTkFrame):
         self.question_form.grid_remove()
 
         self.delete_panel = app.frame(self, card=True)
-        self.delete_panel.grid(row=6, column=0, sticky="ew", pady=(0, 16))
+        self.delete_panel.grid(row=7, column=0, sticky="ew", pady=(0, 16))
         self.delete_panel.grid_columnconfigure(0, weight=1)
         self.delete_text = app.label(self.delete_panel, "", 14, wraplength=600)
         self.delete_text.grid(row=0, column=0, sticky="ew", padx=18, pady=14)
@@ -103,7 +107,7 @@ class QuestionBankPage(ctk.CTkFrame):
         self.delete_panel.grid_remove()
 
         filters = app.frame(self)
-        filters.grid(row=7, column=0, sticky="ew", pady=(0, 12))
+        filters.grid(row=8, column=0, sticky="ew", pady=(0, 12))
         filters.grid_columnconfigure((0, 1), weight=1, uniform="filter")
         self.topic_filter = ctk.StringVar(value="All topics")
         self.difficulty_filter = ctk.StringVar(value="All difficulties")
@@ -111,19 +115,29 @@ class QuestionBankPage(ctk.CTkFrame):
         self.topic_filter_menu.grid(row=0, column=0, sticky="ew", padx=(0, 8))
         self.menu(filters, self.difficulty_filter, ["All difficulties", *DIFFICULTIES], self.filter_changed).grid(row=0, column=1, sticky="ew")
         topic_actions = app.frame(self)
-        topic_actions.grid(row=8, column=0, sticky="w", pady=(0, 12))
+        topic_actions.grid(row=9, column=0, sticky="w", pady=(0, 12))
         self.edit_topic_button = app.button(topic_actions, "Rename selected topic", self.edit_selected_topic, width=180)
         self.edit_topic_button.pack(side="left", padx=(0, 8))
         self.delete_topic_button = app.button(topic_actions, "Delete selected topic", self.delete_selected_topic, width=180)
         self.delete_topic_button.pack(side="left")
         self.query = ctk.StringVar()
         self.search = ctk.CTkEntry(self, height=38, textvariable=self.query, font=app.font(), placeholder_text="Search question text…")
-        self.search.grid(row=9, column=0, sticky="ew", pady=(0, 12))
+        self.search.grid(row=10, column=0, sticky="ew", pady=(0, 12))
         self.status = app.label(self, "", 12, "secondary", wraplength=650)
-        self.status.grid(row=10, column=0, sticky="ew", pady=(0, 12))
+        self.status.grid(row=11, column=0, sticky="ew", pady=(0, 12))
+        self.question_page=0
+        pages=app.frame(self)
+        pages.grid(row=12,column=0,sticky='ew',pady=(0,12))
+        self.previous_page=app.button(pages,'Previous page',lambda:self.move_question_page(-1),width=130)
+        self.previous_page.pack(side='left',padx=(0,8))
+        self.next_page=app.button(pages,'Next page',lambda:self.move_question_page(1),width=120)
+        self.next_page.pack(side='left',padx=(0,12))
+        self.page_label=app.label(pages,'',12,'secondary');self.page_label.pack(side='left')
         self.cards = app.frame(self)
-        self.cards.grid(row=11, column=0, sticky="ew")
+        self.cards.grid(row=13, column=0, sticky="ew")
         self.cards.grid_columnconfigure(0, weight=1)
+        self.importer=CsvImportPanel(self,app,self)
+        self.importer.grid(row=4,column=0,sticky='ew',pady=(0,16));self.importer.grid_remove()
         self.query.trace_add("write", lambda *_: self.render_questions())
         self.bind("<Configure>", lambda event: self.heading.configure(wraplength=max(300, event.width - 20)))
 
@@ -133,7 +147,10 @@ class QuestionBankPage(ctk.CTkFrame):
                                 button_color="#6D28D9", button_hover_color="#8B5CF6")
 
     def load_subject(self, subject_id):
+        if self.importer.saving:return
+        self.importer.cancel()
         self.subject_id = subject_id
+        self.subject_snapshot = None
         self.hide_question_form()
         self.hide_topic_form()
         self.cancel_delete()
@@ -145,11 +162,13 @@ class QuestionBankPage(ctk.CTkFrame):
 
     def refresh(self):
         subject = self.app.store.subject(self.subject_id)
+        self.subject_snapshot = dict(subject) if subject else None
         if subject is None:
             self.subject_id = None
             self.heading.configure(text="This subject no longer exists.")
             self.add_question_button.configure(state="disabled")
             self.add_topic_button.configure(state="disabled")
+            self.csv_button.configure(state="disabled")
             self.hide_question_form()
             self.hide_topic_form()
             self.cancel_delete()
@@ -157,6 +176,7 @@ class QuestionBankPage(ctk.CTkFrame):
             self.heading.configure(text=f'{subject["name"]} · Question bank')
             self.add_question_button.configure(state="normal")
             self.add_topic_button.configure(state="normal")
+            self.csv_button.configure(state="normal")
         selected_filter = self.filter_topics.get(self.topic_filter.get(), "all")
         selected_form = self.form_topics.get(self.question_topic.get())
         topics = self.app.store.topics(self.subject_id) if subject else []
@@ -167,14 +187,14 @@ class QuestionBankPage(ctk.CTkFrame):
         self.question_topic_menu.configure(values=list(self.form_topics))
         self.topic_filter.set(next((k for k, v in self.filter_topics.items() if v == selected_filter), "All topics"))
         self.question_topic.set(next((k for k, v in self.form_topics.items() if v == selected_form), "No topic"))
-        self.filter_changed()
+        self.filter_changed(reset=False)
 
-    def filter_changed(self, _value=None):
+    def filter_changed(self, _value=None, *, reset=True):
         selected = self.filter_topics.get(self.topic_filter.get(), "all")
         state = "normal" if isinstance(selected, int) else "disabled"
         self.edit_topic_button.configure(state=state)
         self.delete_topic_button.configure(state=state)
-        self.render_questions()
+        self.render_questions(reset=reset)
 
     def show_topic_form(self, topic_id=None):
         if self.subject_id is None:
@@ -307,7 +327,12 @@ class QuestionBankPage(ctk.CTkFrame):
         self.app.refresh_data()
         self.status.configure(text="Topic deleted; its questions were kept." if kind == "topic" else "Question deleted.")
 
-    def render_questions(self):
+    def move_question_page(self,offset):
+        self.question_page+=offset
+        self.render_questions(reset=False)
+
+    def render_questions(self, reset=True):
+        if reset:self.question_page=0
         for widget in self.cards.winfo_children():
             widget.destroy()
         questions = self.app.store.questions(self.subject_id) if self.subject_id is not None else []
@@ -319,11 +344,16 @@ class QuestionBankPage(ctk.CTkFrame):
                    and (difficulty == "All difficulties" or q["difficulty"] == difficulty)]
         topics = self.app.store.topics(self.subject_id) if self.subject_id is not None else []
         self.count_label.configure(text=f"{len(topics)} topics · {len(visible)} of {len(questions)} questions")
+        pages=max(1,(len(visible)+49)//50)
+        self.question_page=max(0,min(self.question_page,pages-1))
+        self.page_label.configure(text=f'Page {self.question_page+1} / {pages} · up to 50 questions per page')
+        self.previous_page.configure(state='normal' if self.question_page>0 else 'disabled')
+        self.next_page.configure(state='normal' if self.question_page+1<pages else 'disabled')
         if not visible:
             message = "No matching questions. Try different filters." if questions else "No questions yet. Add your first multiple-choice question."
             self.app.label(self.cards, message, 14, "secondary", wraplength=600).grid(row=0, column=0, sticky="w", pady=20)
             return
-        for row, question in enumerate(visible):
+        for row, question in enumerate(visible[self.question_page*50:(self.question_page+1)*50]):
             card = self.app.frame(self.cards, card=True)
             card.grid(row=row, column=0, sticky="ew", pady=(0, 14))
             card.grid_columnconfigure(0, weight=1)

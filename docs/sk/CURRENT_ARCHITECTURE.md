@@ -129,7 +129,7 @@ Obrazovky majú nezávislé vyhľadávanie cez `casefold()`. Ctrl+K / Cmd+K zame
 
 ## Overenie a zostávajúce obmedzenia
 
-156 testov úložiska prešlo; integračný skript prešiel na macOS s Pythonom 3.12.13 / Tk 9.0 a dočasnou databázou. Overil CRUD cez formulár, Unicode, hľadanie, prázdne stavy, naviazanie časovača, zachovanie histórie, opätovné otvorenie, kompaktný režim a syntetické posúvanie. Nenahrádza ručné vizuálne/hardvérové overenie; Windows/Linux nie sú overené.
+188 testov úložiska prešlo; integračný skript prešiel na macOS s Pythonom 3.12.13 / Tk 9.0 a dočasnou databázou. Overil CRUD cez formulár, Unicode, hľadanie, prázdne stavy, naviazanie časovača, zachovanie histórie, opätovné otvorenie, kompaktný režim a syntetické posúvanie. Nenahrádza ručné vizuálne/hardvérové overenie; Windows/Linux nie sú overené.
 
 Zostáva ukladanie AI konverzácií, preklady UI, úplná obnova po páde, balíky a komplexné logovanie. Základné databázové operácie majú chybové hlásenia, ale úplné spracovanie chýb pri každom čítaní ešte chýba.
 
@@ -146,7 +146,7 @@ V My Subjects zvoľ pri predmete **Questions**. Pridaj tému cez New topic a ot�
 
 Témy možno premenovať a vymazať; vyber tému vo filtri a použi Rename selected topic alebo Delete selected topic. Otázky možno upravovať a mazať. Hľadanie v texte otázky sa kombinuje s filtrom témy a náročnosti. Počty na kartách predmetov vychádzajú z uloženého obsahu. Vymazanie témy ponechá jej otázky v No topic. Vymazanie predmetu po výslovnom upozornení odstráni jeho témy a otázky, ale zachová čas aj históriu štúdia.
 
-Ide o editor obsahu: správna odpoveď je viditeľná. Precvičovanie a hodnotenie nájdeš v Practice Tests. Import a obrázky zatiaľ nie sú implementované.
+Ide o editor obsahu: správna odpoveď je viditeľná. Precvičovanie a hodnotenie nájdeš v Practice Tests. Import otázok z CSV je dostupný; obrázky ani import kartičiek zatiaľ nie sú implementované.
 
 ## Opravy po kontrole hlavnej vetvy
 
@@ -192,7 +192,7 @@ CREATE UNIQUE INDEX practice_one_active
 
 ## Priebežná integrácia (CI)
 
-GitHub Actions kontroluje pull requesty do main, nové commity na main a ručné spustenie. Workflow `.github/workflows/ci.yml` inštaluje závislosti, overuje ich kompatibilitu, syntax Pythonu a všetky jednotkové testy s Pythonom 3.12 na Ubuntu, Windows a macOS. Samostatná úloha spúšťa desať natívnych kontrolných skriptov na Ubuntu pod virtuálnym displejom Xvfb; každý proces má limit 60 sekúnd. Celá úloha má limit 10 minút. Novší beh rovnakej vetvy zruší predchádzajúci. Token má iba čítanie obsahu; workflow nič nenasadzuje ani nevydáva.
+GitHub Actions kontroluje pull requesty do main, nové commity na main a ručné spustenie. Workflow `.github/workflows/ci.yml` inštaluje závislosti, overuje ich kompatibilitu, syntax Pythonu a všetky jednotkové testy s Pythonom 3.12 na Ubuntu, Windows a macOS. Samostatná úloha spúšťa jedenásť natívnych kontrolných skriptov na Ubuntu pod virtuálnym displejom Xvfb; každý proces má limit 60 sekúnd. Celá úloha má limit 10 minút. Novší beh rovnakej vetvy zruší predchádzajúci. Token má iba čítanie obsahu; workflow nič nenasadzuje ani nevydáva.
 
 Výsledky a logy sú v [Actions](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml) a v kontrolách PR. Otvor červený stav a prečítaj prvý neúspešný krok. Po oprave pushni do rovnakej vetvy a kontroly sa spustia znovu. Ručné spustenie Run workflow je dostupné po zlúčení workflow do predvolenej vetvy. Branch protection týmto nie je zapnutá.
 
@@ -278,3 +278,9 @@ CREATE TABLE preferences (
 Settings teraz ponúka ručnú miestnu zálohu a overenú obnovu s bezpečnostnou kópiou pred nahradením. Schéma zostáva 6. Obnova zatvorí aplikáciu; potom ju spusti znovu. Pozri [Záloha a obnova](BACKUP_RESTORE.md).
 
 backup.py a backup_validation.py overujú súkromné samostatné snímky a aplikačné hodnoty; riadky nahrádzajú v jednej transakcii bez prevzatia cudzieho DDL. database_lock.py drží zdieľané zámky Store a výhradný zámok obnovy (flock / Windows LockFileEx). backup_worker.py beží v oddelenom procese; backup_panel.py cez Tk číta dočasný výstupný súbor, takže nehrozí plná rúra ani finalizácia Tk z pracovného vlákna. Pri obnove sa Store zatvorí a periodické callbacky pozastavia. Bezpečnostná kópia vznikne pod zápisovým zámkom; pred commitom sa overia konečné riadky a ID sekvencie.
+
+## Import otázok z CSV
+
+Banka otázok teraz podporuje import UTF-8 CSV do existujúceho predmetu: šablóna s hlavičkou, stránkovaný náhľad, odmietnutie presných duplicít a jedno atomické uloženie. Maximum 2 MiB / 500 záznamov; zoznam ukazuje 50 otázok na stránku. Schéma zostáva 6. [Import otázok z CSV](QUESTION_CSV_IMPORT.md).
+
+csv_import.py overuje ohraničené normalizované záznamy; csv_import_worker.py izoluje parsovanie, kontrolu iba na čítanie, uloženie a šablónu s výstupom do súboru. Store.open_existing používa mode=ro/rw bez vytvárania či migrácie. Store.import_questions znovu overí dávku pod BEGIN IMMEDIATE a uloží témy/otázky jednou transakciou. Úspešná dávka sa zneplatní pred čítaním prehľadov; opakovaná obnova nič neimportuje. Stránkovanie filtruje celý zoznam a potom vykreslí 50 kariet.
