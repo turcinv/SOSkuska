@@ -89,7 +89,7 @@ Use the corresponding environment executable on Windows/Linux. For example:
 
 Checks print `PASS` and close their windows on success. They never use the normal user database. The Dashboard script has a 12-second Tk safeguard, not a hard process timeout if the event loop freezes; use Ctrl+C in that case. CI adds a 60-second external timeout per script.
 
-Backup/restore validation on this branch passed 156 unit tests and ten native checks locally. Do not present old results as validation of untested code changes. Coverage includes:
+Backup/restore validation on this branch passed 186 unit tests and eleven native checks locally. Do not present old results as validation of untested code changes. Coverage includes:
 
 | Check / tests | Main coverage |
 | --- | --- |
@@ -107,7 +107,7 @@ After UI changes, manually check 1440 × 900 and 1024 × 700, access to lower co
 
 ## CI
 
-`.github/workflows/ci.yml` runs on PRs targeting main, pushes to main and manual dispatch. Python 3.12 syntax, dependencies and unit tests run on Ubuntu, Windows and macOS; ten GUI checks run under Xvfb on Ubuntu. Each process has a 60-second timeout, each job 10 minutes. Newer runs cancel superseded runs for the same ref. Actions are pinned and the token can only read contents. CI does not deploy, publish releases or configure branch protection.
+`.github/workflows/ci.yml` runs on PRs targeting main, pushes to main and manual dispatch. Python 3.12 syntax, dependencies and unit tests run on Ubuntu, Windows and macOS; eleven GUI checks run under Xvfb on Ubuntu. Each process has a 60-second timeout, each job 10 minutes. Newer runs cancel superseded runs for the same ref. Actions are pinned and the token can only read contents. CI does not deploy, publish releases or configure branch protection.
 
 Read the first failing step in [Actions](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml), fix it and push to the same branch. Do not disable meaningful checks to get green results. Linux GUI checks do not establish native Aqua Quit or Tk 9 hardware trackpad behavior. Fake Ollama does not establish real-model quality or performance.
 
@@ -142,4 +142,18 @@ Settings now includes manual local backup and validated restore, with a pre-rest
 
 ```powershell
 .\.venv\Scripts\python.exe soskuska/check_backup.py
+```
+
+## Import questions from CSV
+
+Question bank now supports UTF-8 CSV import into an existing subject, with a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records; question lists show 50 per page. Schema stays 6. [Question CSV import](QUESTION_CSV_IMPORT.md).
+
+`tests/test_csv_import.py`, `soskuska/check_csv_import.py`.
+
+```sh
+.venv-macos/bin/python soskuska/check_csv_import.py
+```
+
+```powershell
+.\.venv\Scripts\python.exe soskuska/check_csv_import.py
 ```

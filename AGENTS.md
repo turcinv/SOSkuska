@@ -43,6 +43,7 @@ Commands below are relative to the project root:
 .venv-macos/bin/python soskuska/check_tutor.py
 .venv-macos/bin/python soskuska/check_settings.py
 .venv-macos/bin/python soskuska/check_backup.py
+.venv-macos/bin/python soskuska/check_csv_import.py
 ```
 
 - On this Mac use `.venv-macos`, verified with Python 3.12.13 / Tk 9.0. `.venv-desktop` uses Apple Tk 8.5, which produced an empty window. Suppressing its warning is not a fix. The default Homebrew Python also lacked `_tkinter` when checked.
@@ -104,7 +105,7 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 
 ## Continuous integration
 
-- `.github/workflows/ci.yml` runs for PRs targeting main, pushes to main and manual dispatch. Python 3.12 unit tests/syntax/dependency checks run on Linux, Windows and macOS; ten GUI checks run under Xvfb on Ubuntu.
+- `.github/workflows/ci.yml` runs for PRs targeting main, pushes to main and manual dispatch. Python 3.12 unit tests/syntax/dependency checks run on Linux, Windows and macOS; eleven GUI checks run under Xvfb on Ubuntu.
 - Keep action references pinned to verified release commit SHAs, contents permission read-only, and process/job timeouts. CI does not publish releases or deploy. Avoid duplicate feature-branch push and PR runs.
 - CI results are automated coverage, not manual platform or hardware verification. Native Aqua Quit and Tk 9 trackpad behavior still require the Mac checks. Do not claim those are tested by the Linux GUI job.
 - Read failed job logs, fix the cause and keep fixes on the same PR branch. Do not disable a meaningful failing check to obtain a green status. Branch protection is not configured by this workflow.
@@ -169,3 +170,13 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 - Tests use disposable databases. Run test_backup.py, test_backup_review.py and check_backup.py, plus affected/full checks. CI includes the tenth GUI script. Keep docs/BACKUP_RESTORE.md and cs/sk/ru versions aligned. No automatic/cloud backup, encryption or power-loss durability guarantee.
 
 - Local backup/restore was released in v0.9.0. Schema remains 6; standalone schema 6 backups are required.
+
+## Question CSV import safeguards
+
+- Schema remains 6. csv_import.py validates UTF-8/BOM, comma CSV, known unique headers, 2 MiB / 500 nonblank records and existing content rules. Correct answer is A–D; difficulty is Easy/Medium/Hard. Optional topic/explanation may be omitted. Template is header-only, never sample user records.
+- Preview uses Store.open_existing(mode=ro) with a shared lease and no creation/migration; save uses mode=rw. Worker argument values must handle leading-hyphen subject names. Use isolated processes and temporary output files, no Tk worker threads or undrained pipes.
+- Exact duplicates include canonical question fields plus normalized topic name, both within the batch and existing subject. Never overwrite or silently skip records. Store.import_questions obtains BEGIN IMMEDIATE, rechecks subject identity/name and duplicates, reuses/creates current topics, and saves everything in one transaction. No nested CRUD commits.
+- Preview is an immutable private batch; original-file edits need re-selection. Any issue disables Import all. Navigation/cancel discards reads; actual save blocks close/Quit/navigation. Consume a successful or uncertain batch before report reads. Failed report reads retry refresh only; unknown helper results may have committed and require inspection. Cleanup errors must not mask a known commit.
+- Keep CSV panel separate from hidden topic/question forms and preserve drafts. Question bank filters the full subject then renders 50 cards/page; CRUD/refresh preserves/clamps the page, explicit filter/subject changes reset it.
+- Template publication is atomic/no-clobber and protects database/companion paths. POSIX requires hard-link support; Windows uses no-overwrite rename.
+- Run test_csv_import.py and check_csv_import.py with disposable data. CI includes the eleventh GUI check. Maintain QUESTION_CSV_IMPORT.md in all four languages. Flashcard import, update/merge and semicolon/legacy-encoding formats remain outside this feature.
