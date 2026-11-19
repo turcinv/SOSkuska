@@ -59,7 +59,7 @@ class CsvImportPanel(ctk.CTkFrame):
     def open(self):
         if self.saving:return
         self.cancel()
-        subject=self.app.store.subject(self.bank.subject_id)
+        subject=self.bank.subject_snapshot
         if subject is None:
             self.bank.status.configure(text='This subject no longer exists.');return
         self.subject_id=subject['id'];self.subject_name=subject['name']
@@ -95,12 +95,17 @@ class CsvImportPanel(ctk.CTkFrame):
         if self.process is not None:return
         selected=filedialog.askopenfilename(parent=self.app,title='Choose question CSV',filetypes=[('CSV file','*.csv'),('All files','*')])
         if not selected:return
-        subject=self.app.store.subject(self.bank.subject_id)
-        if subject is None:
-            self.status.configure(text='The subject was deleted. Choose another subject.');return
+        # A new selection always invalidates the old batch before any fallible work.
+        self.preview=None;self.position=0;self.saved_message=None
+        self.text(self.details,'');self.text(self.errors,'');self.errors.grid_remove()
+        self.record_label.configure(text='');self.controls()
+        # Capture the subject already displayed by the bank. The read-only helper
+        # rechecks identity/name; a locked database must not block the Tk callback.
+        subject=self.bank.subject_snapshot
+        if subject is None or subject['id']!=self.bank.subject_id:
+            self.status.configure(text='Reload the question bank before choosing another CSV.');return
         self.subject_id=subject['id'];self.subject_name=subject['name']
         self.heading.configure(text=f'Import into {self.subject_name}')
-        self.preview=None;self.position=0;self.saved_message=None;self.text(self.details,'');self.text(self.errors,'');self.errors.grid_remove()
         self.launch('parse',selected)
 
     def save_template(self):

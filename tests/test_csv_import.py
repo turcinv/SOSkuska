@@ -10,11 +10,13 @@ import tempfile
 import unittest
 from contextlib import closing
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import patch, Mock
+from types import SimpleNamespace
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'soskuska'))
 from csv_import import COLUMNS, MAX_BYTES, MAX_ROWS, ImportValidationError, parse_csv, read_csv, template_text
 from csv_import_worker import run
+from csv_import_panel import CsvImportPanel
 from storage import Store, SCHEMA_VERSION
 
 
@@ -247,6 +249,41 @@ class CsvStorageTests(unittest.TestCase):
         args[1]=str(payload)
         result=subprocess.run([*base,'save',*args],capture_output=True,check=True,timeout=15)
         self.assertEqual(json.loads(result.stdout)['value']['questions'],1)
+
+
+class CsvSelectionTests(unittest.TestCase):
+    def panel(self):
+        panel=CsvImportPanel.__new__(CsvImportPanel)
+        panel.process=None;panel.kind=None;panel.preview={'rows':[{'old':'batch'}],'errors':[]}
+        panel.app=SimpleNamespace(store=Mock(),scroll=SimpleNamespace(_parent_canvas=Mock()))
+        panel.app.store.subject.side_effect=sqlite3.OperationalError('database is locked')
+        panel.bank=SimpleNamespace(subject_id=1,subject_snapshot={'id':1,'name':'Biology'},status=Mock())
+        for field in ('details','errors','record_label','heading','status'):
+            setattr(panel,field,Mock())
+        panel.text=Mock();panel.controls=Mock();panel.launch=Mock()
+        return panel
+
+    def test_new_selection_consumes_old_preview_without_tk_database_read(self):
+        panel=self.panel()
+        with patch('csv_import_panel.filedialog.askopenfilename',return_value='/tmp/new.csv'):
+            panel.choose()
+        self.assertIsNone(panel.preview)
+        panel.controls.assert_called_once()
+        panel.launch.assert_called_once_with('parse','/tmp/new.csv')
+        panel.app.store.subject.assert_not_called()
+        panel.record_label.configure.assert_called_with(text='')
+        panel.launch.reset_mock()
+        panel.preview={'rows':[{'old':'batch'}],'errors':[]};panel.bank.subject_snapshot=None
+        with patch('csv_import_panel.filedialog.askopenfilename',return_value='/tmp/new.csv'):
+            panel.choose()
+        self.assertIsNone(panel.preview);panel.launch.assert_not_called()
+        self.assertIn('Reload',panel.status.configure.call_args.kwargs['text'])
+
+    def test_open_captures_displayed_subject_without_tk_database_read(self):
+        panel=self.panel();panel.cancel=Mock();panel.grid=Mock()
+        panel.open()
+        self.assertEqual(panel.subject_id,1);self.assertEqual(panel.subject_name,'Biology')
+        panel.app.store.subject.assert_not_called()
 
 
 if __name__=='__main__':unittest.main()

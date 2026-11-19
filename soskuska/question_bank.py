@@ -12,6 +12,7 @@ class QuestionBankPage(ctk.CTkFrame):
         super().__init__(parent, fg_color="transparent", corner_radius=0)
         self.app = app
         self.subject_id = None
+        self.subject_snapshot = None
         self.editing_question_id = None
         self.question_snapshot = None
         self.editing_topic_id = None
@@ -149,6 +150,7 @@ class QuestionBankPage(ctk.CTkFrame):
         if self.importer.saving:return
         self.importer.cancel()
         self.subject_id = subject_id
+        self.subject_snapshot = None
         self.hide_question_form()
         self.hide_topic_form()
         self.cancel_delete()
@@ -160,6 +162,7 @@ class QuestionBankPage(ctk.CTkFrame):
 
     def refresh(self):
         subject = self.app.store.subject(self.subject_id)
+        self.subject_snapshot = dict(subject) if subject else None
         if subject is None:
             self.subject_id = None
             self.heading.configure(text="This subject no longer exists.")

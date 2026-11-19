@@ -88,6 +88,26 @@ def check(path,reopen=False):
         assert 'Что такое клетка' in panel.details.get('1.0','end')
         panel.next_button.invoke();assert 'Second question' in panel.details.get('1.0','end')
         panel.previous_button.invoke();assert 'Second line' in panel.details.get('1.0','end')
+        locked_source=path.parent/'locked-selection.csv'
+        locked_source.write_text(contents([['','Selected under lock','A','B','C','D','A','Easy','']]),encoding='utf-8')
+        locker=Store(path)
+        try:
+            locker.db.execute('BEGIN EXCLUSIVE')
+            with patch('csv_import_panel.filedialog.askopenfilename',return_value=str(locked_source)):
+                panel.choose_button.invoke()
+            assert panel.preview is None and panel.import_button.cget('state')=='disabled'
+            assert 'Reading and validating' in panel.status.cget('text')
+            locker.db.rollback()
+        finally:locker.close()
+        wait_for(lambda:panel.process is None,locked_selection_done)
+
+    def locked_selection_done():
+        assert len(panel.preview['rows'])==1
+        assert 'Selected under lock' in panel.details.get('1.0','end')
+        choose();wait_for(lambda:panel.process is None,ready_for_failed_save)
+
+    def ready_for_failed_save():
+        assert len(panel.preview['rows'])==2
         source.write_text('Changed after preview',encoding='utf-8')
         app.store.db.execute("CREATE TRIGGER fail_csv BEFORE INSERT ON questions WHEN NEW.prompt='Second question' BEGIN SELECT RAISE(ABORT,'disk full'); END")
         panel.import_button.invoke()
