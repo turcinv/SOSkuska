@@ -10,6 +10,7 @@ from repetition import card_fields, deck_fields, next_review
 from study_statistics import statistics_report
 from preferences import DEFAULTS, preference_fields
 from database_lock import DatabaseLease
+from csv_import import ImportValidationError, validate_rows, signature
 
 SCHEMA_VERSION = 6
 
@@ -56,6 +57,27 @@ class Store:
                 self.db.close()
             self.lease.close()
             raise
+
+    @classmethod
+    def open_existing(cls, path, *, readonly=False):
+        """Job connection: never create or migrate a database during import preview/save."""
+        path=Path(path).resolve()
+        if not path.is_file():
+            raise ValueError('The active database file is missing. Reopen the app before importing.')
+        store=cls.__new__(cls)
+        store.path=path
+        store.lease=DatabaseLease(path)
+        try:
+            store.db=sqlite3.connect(path.as_uri()+('?mode=ro' if readonly else '?mode=rw'),uri=True)
+            store.db.row_factory=sqlite3.Row
+            store.db.execute('PRAGMA foreign_keys=ON')
+            if store.db.execute('PRAGMA user_version').fetchone()[0]!=SCHEMA_VERSION:
+                raise ValueError('The database version changed. Reopen the app before importing.')
+        except Exception:
+            if hasattr(store,'db'):store.db.close()
+            store.lease.close()
+            raise
+        return store
 
     def _migrate(self):
         # Avoid executescript: it commits implicitly and would split the migration.
@@ -298,6 +320,54 @@ class Store:
                 subject_id,topic_id,prompt,option_a,option_b,option_c,option_d,correct_option,difficulty,explanation)
                 VALUES (?,?,?,?,?,?,?,?,?,?)""", (subject_id, topic_id, *fields))
         return cursor.lastrowid
+
+    def _check_question_import(self, subject_id, rows, expected_subject_name):
+        normalized,errors=validate_rows(rows)
+        subject=self.subject(subject_id)
+        if subject is None:
+            raise ImportValidationError(['The selected subject no longer exists. Choose another subject and CSV.'])
+        if subject['name'] != expected_subject_name:
+            raise ImportValidationError(['The selected subject was renamed. Reload its question bank and choose the CSV again.'])
+        wanted={signature(row):row['record'] for row in normalized}
+        prompts=list({row['fields'][0] for row in normalized})
+        if prompts:
+            marks=','.join('?' for _ in prompts)
+            existing=self.db.execute(f"""SELECT q.*,t.name_key AS import_topic_key FROM questions q
+                LEFT JOIN topics t ON t.id=q.topic_id
+                WHERE q.subject_id=? AND q.prompt IN ({marks})""",(subject_id,*prompts))
+            reported=set()
+            for row in existing:
+                key=(row['import_topic_key'] or '',*[row[k] for k in
+                     ('prompt','option_a','option_b','option_c','option_d','correct_option','difficulty','explanation')])
+                if key in wanted and key not in reported:
+                    errors.append(f'CSV record {wanted[key]}: This exact question already exists in this subject.')
+                    reported.add(key)
+        return normalized,errors
+
+    def check_question_import(self, subject_id, rows, *, expected_subject_name):
+        with self.db:
+            self.db.execute('BEGIN')
+            return self._check_question_import(subject_id,rows,expected_subject_name)[1]
+
+    def import_questions(self, subject_id, rows, *, expected_subject_name):
+        with self.db:
+            self.db.execute('BEGIN IMMEDIATE')
+            normalized,errors=self._check_question_import(subject_id,rows,expected_subject_name)
+            if errors:
+                raise ImportValidationError(errors)
+            topics={r['name_key']:r['id'] for r in self.db.execute('SELECT id,name_key FROM topics WHERE subject_id=?',(subject_id,))}
+            created=0
+            for row in normalized:
+                topic_id=None
+                if row['topic']:
+                    name,key=topic_fields(row['topic'])
+                    if key not in topics:
+                        topics[key]=self.db.execute('INSERT INTO topics(subject_id,name,name_key) VALUES (?,?,?)',(subject_id,name,key)).lastrowid
+                        created+=1
+                    topic_id=topics[key]
+                self.db.execute("""INSERT INTO questions(subject_id,topic_id,prompt,option_a,option_b,option_c,option_d,correct_option,difficulty,explanation)
+                    VALUES (?,?,?,?,?,?,?,?,?,?)""",(subject_id,topic_id,*row['fields']))
+        return {'questions':len(normalized),'topics':created,'subject':expected_subject_name}
 
     def update_question(self, question_id, prompt, options, correct_option, difficulty="Medium", topic_id=None, explanation="", *, expected_state=None):
         fields = question_fields(prompt, options, correct_option, difficulty, explanation)
