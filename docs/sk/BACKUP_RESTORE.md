@@ -1,4 +1,4 @@
-# Záloha a obnova
+# Záloha a obnova (v0.9.0)
 
 [English](../BACKUP_RESTORE.md) · [Čeština](../cs/BACKUP_RESTORE.md) · [Slovenčina](BACKUP_RESTORE.md) · [Русский](../ru/BACKUP_RESTORE.md)
 

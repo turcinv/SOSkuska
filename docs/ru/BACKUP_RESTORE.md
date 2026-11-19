@@ -1,4 +1,4 @@
-# Резервное копирование и восстановление
+# Резервное копирование и восстановление (v0.9.0)
 
 [English](../BACKUP_RESTORE.md) · [Čeština](../cs/BACKUP_RESTORE.md) · [Slovenčina](../sk/BACKUP_RESTORE.md) · [Русский](BACKUP_RESTORE.md)
 
