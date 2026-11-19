@@ -3,11 +3,13 @@
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
 
-## Zatím nevydáno
+## 0.9.0 — 2026-11-19
 
 Settings nyní nabízí ruční místní zálohu a ověřenou obnovu s bezpečnostní kopií před nahrazením. Schéma zůstává 6. Obnova zavře aplikaci; potom ji spusť znovu. Viz [Záloha a obnova](BACKUP_RESTORE.md).
 
 backup.py a backup_validation.py ověřují soukromé samostatné snímky a aplikační hodnoty; řádky nahrazují v jedné transakci bez převzetí cizího DDL. database_lock.py drží sdílené zámky Store a výhradní zámek obnovy (flock / Windows LockFileEx). backup_worker.py běží v odděleném procesu; backup_panel.py přes Tk čte dočasný výstupní soubor, takže nehrozí plná roura ani finalizace Tk z pracovního vlákna. Při obnově se Store zavře a periodické callbacky pozastaví. Bezpečnostní kopie vznikne pod zápisovým zámkem; před commitem se ověří konečné řádky a ID sekvence.
+
+Ověření: 156 jednotkových testů a deset nativních kontrol na macOS s dočasnými databázemi. CI funkčního PR prošlo na Ubuntu, Windows a macOS; všech deset GUI kontrol prošlo na Ubuntu/Xvfb. Nálezy nezávislé kontroly Sol byly opravené a znovu ověřené.
 
 ## 0.8.1 — 2026-11-18
 
