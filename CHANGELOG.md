@@ -2,11 +2,13 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
-## Unreleased
+## 0.10.0 — 2026-11-19
 
 Question bank now supports UTF-8 CSV import into an existing subject, with a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records; question lists show 50 per page. Schema stays 6. [Question CSV import](docs/QUESTION_CSV_IMPORT.md).
 
 csv_import.py validates bounded canonical records; csv_import_worker.py runs isolated parse/read-only preflight/save/template jobs with file-backed output. Store.open_existing uses mode=ro/rw without creation or migration. Store.import_questions revalidates under BEGIN IMMEDIATE and inserts topics/questions in one transaction. A successful batch is consumed before UI report reads; refresh retry never imports again. Question-bank pagination applies filtering before selecting 50 visible cards.
+
+Final review fixed a stale-preview risk: choosing a new file immediately clears the old batch, and subject validation stays off the Tk thread. Validation: 188 unit tests, eleven native checks across implementation and affected-fix retests, independent Sol review/re-review, and all four feature-PR CI jobs passed.
 
 ## 0.9.0 — 2026-11-19
 

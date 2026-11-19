@@ -182,3 +182,5 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 - Run test_csv_import.py and check_csv_import.py with disposable data. CI includes the eleventh GUI check. Maintain QUESTION_CSV_IMPORT.md in all four languages. Flashcard import, update/merge and semicolon/legacy-encoding formats remain outside this feature.
 
 - CSV selection must clear/disable the old batch immediately after a new filename is chosen. Capture the subject snapshot already displayed by the bank; do not make synchronous subject reads on Tk during CSV open/choose. The helper rechecks identity/name and reports read failures.
+
+- CSV question import and 50-question bank pagination were released in v0.10.0. Schema stays 6; published version labels must match in the footer and all four README/changelog versions.
