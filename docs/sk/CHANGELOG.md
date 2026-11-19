@@ -3,11 +3,13 @@
 [English](../../CHANGELOG.md) · [Čeština](../cs/CHANGELOG.md) · [Slovenčina](CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
 
-## Zatiaľ nevydané
+## 0.10.0 — 2026-11-19
 
 Banka otázok teraz podporuje import UTF-8 CSV do existujúceho predmetu: šablóna s hlavičkou, stránkovaný náhľad, odmietnutie presných duplicít a jedno atomické uloženie. Maximum 2 MiB / 500 záznamov; zoznam ukazuje 50 otázok na stránku. Schéma zostáva 6. [Import otázok z CSV](QUESTION_CSV_IMPORT.md).
 
 csv_import.py overuje ohraničené normalizované záznamy; csv_import_worker.py izoluje parsovanie, kontrolu iba na čítanie, uloženie a šablónu s výstupom do súboru. Store.open_existing používa mode=ro/rw bez vytvárania či migrácie. Store.import_questions znovu overí dávku pod BEGIN IMMEDIATE a uloží témy/otázky jednou transakciou. Úspešná dávka sa zneplatní pred čítaním prehľadov; opakovaná obnova nič neimportuje. Stránkovanie filtruje celý zoznam a potom vykreslí 50 kariet.
+
+Záverečná kontrola opravila riziko starého náhľadu: výber nového súboru okamžite zruší starú dávku a overenie predmetu neblokuje Tk. Overenie: 188 jednotkových testov, jedenásť natívnych kontrol počas implementácie a opakované overenie opravy, nezávislá kontrola Sol aj opätovná kontrola a všetky štyri CI úlohy funkčného PR prešli.
 
 ## 0.9.0 — 2026-11-19
 

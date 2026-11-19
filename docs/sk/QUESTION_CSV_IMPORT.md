@@ -1,4 +1,4 @@
-# Import otázok z CSV
+# Import otázok z CSV (v0.10.0)
 
 [English](../QUESTION_CSV_IMPORT.md) · [Čeština](../cs/QUESTION_CSV_IMPORT.md) · [Slovenčina](QUESTION_CSV_IMPORT.md) · [Русский](../ru/QUESTION_CSV_IMPORT.md)
 
