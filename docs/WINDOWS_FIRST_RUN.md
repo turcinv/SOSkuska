@@ -134,3 +134,7 @@ It prints `PASS` and closes the window on success. If launch or a check fails, i
 | Dependency download fails | Check internet or organizational proxy settings; do not disable certificate verification |
 
 Continue with [Development](DEVELOPMENT.md) and [How it works](HOW_IT_WORKS.md). Feature guides: [Flashcards](FLASHCARDS.md), [Statistics](STATISTICS.md), [AI Tutor](AI_TUTOR.md) and [Settings](SETTINGS.md). Questions are authored through My Subjects → Questions; Practice Tests uses those questions and keeps saved snapshots/results. Import and images are not implemented.
+
+## Backup and restore
+
+Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Schema stays 6. Restore closes the app; reopen it afterward. See [Backup and restore](BACKUP_RESTORE.md).

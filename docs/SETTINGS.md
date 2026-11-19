@@ -12,6 +12,10 @@ Wait for or Stop an active AI request before changing AI preferences. Study pref
 
 Failed writes and conflicting edits from another window keep the draft. Copy it before Reload; replacing a changed form requires a second click. Changes from another window are not applied live: Save or restart applies them in this window. Save applies all loaded fields, including externally changed AI preferences, so the same guards can apply. Invalid stored preferences display safe defaults and repair only on explicit Save.
 
-Preferences belong to the selected database (`--data`), without synchronization or encryption. Themes, UI translations, backups and saved AI conversations remain unimplemented.
+Preferences belong to the selected database (`--data`), without synchronization or encryption. Themes, UI translations and saved AI conversations remain unimplemented.
 
 Connecting to a different server resolves the model from the saved preference again. Refreshing the same server preserves an available manual selection.
+
+## Backup and restore
+
+Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Schema stays 6. Restore closes the app; reopen it afterward. See [Backup and restore](BACKUP_RESTORE.md).

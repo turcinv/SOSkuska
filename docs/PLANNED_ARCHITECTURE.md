@@ -83,7 +83,7 @@ Persist timestamps with explicit zones, preferably UTC, and aggregate calendar d
 - **AI Tutor:** bounded Ollama HTTP client, discovered models, streaming and cancellation exist. Keep default local connection, visible configurable URL and no automatic cloud fallback. Distinguish unavailable service, no models, loading/ready/generating/stopped, memory error and missing model; connection failure alone cannot prove Ollama is not installed.
 - **AI execution:** keep long operations off the Tk thread, results through queue/after, and no worker widget calls. Do not share SQLite connections without a design; short writes may stay on the main thread and future jobs should get their own connections.
 - **Text/languages:** start with plain text, code blocks and Unicode math; advanced HTML/LaTeX is optional future work. Separate UI from AI answer language. UI translations should support English/Czech/Slovak/Russian, long text and Cyrillic; AI already supports these plus Automatic and manual override.
-- **Statistics/settings/data:** basic reports and study/AI preferences exist. Future work includes richer charts (Matplotlib only if needed), appearance/UI-language settings, data management, import validation and consistent SQLite backups. Restore with closed connections and a way to recover the previous file.
+- **Statistics/settings/data:** basic reports and study/AI preferences exist. Future work includes richer charts (Matplotlib only if needed), appearance/UI-language settings, data management, import validation and scheduled backups. Manual backup/restore is now implemented.  The current manual restore closes the connection and creates a safety copy.
 
 ## Stages and completion criteria
 
@@ -97,3 +97,7 @@ Persist timestamps with explicit zones, preferably UTC, and aggregate calendar d
 | 6. Finish | Reports, languages, theme, backups, packaging | Verified installations on target systems |
 
 Some stages are partly or substantially complete; use current architecture for status. Iterate with feedback against the semester assignment. This plan does not demand an immediate rewrite of Dashboard.
+
+## Backup and restore
+
+Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Schema stays 6. Restore closes the app; reopen it afterward. See [Backup and restore](BACKUP_RESTORE.md).

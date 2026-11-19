@@ -426,6 +426,8 @@ class PracticePage(ctk.CTkFrame):
 
     def tick(self):
         try:
+            if self.app.data_restoring:
+                return
             if self.active_id is not None:
                 remaining = seconds_left(self.attempt["deadline_at"], utc_now())
                 self.timer.configure(text="Untimed · answers saved as you choose" if remaining is None else f'Time left · {remaining // 60:02d}:{remaining % 60:02d}')

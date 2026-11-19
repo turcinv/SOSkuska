@@ -62,6 +62,7 @@ class Dashboard(ctk.CTk):
         self.store = Store(database or data_path())
         self.preferences = self.store.preferences()
         self.saved_today_seconds = 0
+        self.data_restoring = False
         self.running_since = None
         self.session_seconds = 0.0
         self.session_open = False
@@ -341,6 +342,7 @@ class Dashboard(ctk.CTk):
             self.show_notice(f"{name} will be available in a later version.")
             return
         self.subject_page.cancel_delete()
+        self.settings_page.backups.cancel_pending()
         self.current_page = name
         self.question_bank.grid_remove()
         self.practice_page.grid_remove()
@@ -597,6 +599,8 @@ class Dashboard(ctk.CTk):
 
     def tick(self):
         try:
+            if self.data_restoring:
+                return
             if self.session_open:
                 remaining = max(0, self.focus_target - int(self.elapsed()))
                 self.timer_label.configure(text=f"{remaining // 60:02d}:{remaining % 60:02d} · {'Paused' if self.running_since is None else 'Focus'}")
@@ -623,6 +627,10 @@ class Dashboard(ctk.CTk):
             self.after(250, self.tick)
 
     def close(self):
+        if self.settings_page.backups.busy:
+            self.settings_page.backups.status.configure(text="Wait for the database operation to finish before closing.")
+            return
+        self.settings_page.backups.cancel_pending()
         if self.session_open and not self.finish_focus():
             return
         self.tutor_page.shutdown()

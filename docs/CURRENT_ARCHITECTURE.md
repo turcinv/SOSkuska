@@ -112,7 +112,7 @@ Question authoring exposes the correct answer; it is not the running-test UI. De
 | Windows | `%LOCALAPPDATA%\SOSkuska\dashboard.sqlite3`; fallback base `~/AppData/Local` |
 | Linux | `$XDG_DATA_HOME/SOSkuska/dashboard.sqlite3`; fallback base `~/.local/share` |
 
-If the new database does not exist but legacy `ExamPrep/dashboard.sqlite3` does, use the legacy file without moving/copying/overwriting it. Explicit `--data` takes precedence. Data is neither encrypted, backed up nor synchronized. Short SQLite writes run on the main thread.
+If the new database does not exist but legacy `ExamPrep/dashboard.sqlite3` does, use the legacy file without moving/copying/overwriting it. Explicit `--data` takes precedence. Data is neither encrypted nor synchronized automatically. Short SQLite writes run on the main thread.
 
 Focus requires an existing subject and holds its ID/name snapshot during the session. It uses `time.monotonic()`, `after(250, tick)`, pause/resume and Finish, with a configurable 1–180 minute target (default 15). Active subject deletion is blocked. Finish, target completion and normal close save elapsed time. Failed writes pause the session and retain it for retry; both window close and native macOS Quit use the same handler and keep the app open if saving fails.
 
@@ -233,4 +233,12 @@ Changed AI preferences require an idle Tutor. A different server requires New ch
 
 The v0.8.0 baseline passed 126 unit tests and nine native macOS checks using disposable data (Python 3.12.13 / Tk 9.0). CI tests Python 3.12 on Ubuntu/Windows/macOS and GUI on Ubuntu/Xvfb. Processes are bounded at 60 seconds, jobs at 10 minutes; superseded ref runs cancel. Actions are pinned, token contents access is read-only, and there is no deployment/release step or automatic branch protection. See [Development](DEVELOPMENT.md).
 
-Automated/synthetic checks do not establish manual platform UI or hardware gesture correctness; Linux does not test Aqua Quit/Tk 9 hardware behavior. Real Ollama quality/performance is unverified. Remaining work includes saved AI conversations, UI translations, full crash recovery, imports, backups, installers and comprehensive logging/error handling at every read.
+Automated/synthetic checks do not establish manual platform UI or hardware gesture correctness; Linux does not test Aqua Quit/Tk 9 hardware behavior. Real Ollama quality/performance is unverified. Remaining work includes saved AI conversations, UI translations, full crash recovery, imports, installers and comprehensive logging/error handling at every read.
+
+## Backup and restore
+
+Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Schema stays 6. Restore closes the app; reopen it afterward. See [Backup and restore](BACKUP_RESTORE.md).
+
+backup.py and backup_validation.py validate private standalone snapshots and application domains, then replace rows in one write transaction without copying source DDL. database_lock.py provides shared Store leases and exclusive restore leases (flock / Windows LockFileEx). backup_worker.py runs in an isolated process; backup_panel.py polls a temporary output file on Tk, avoiding pipe deadlocks and worker-thread Tk finalization. The current Store is closed and periodic callbacks pause for actual restore. The safety copy is taken while the write lock is held; final rows and ID sequences must match before commit.
+
+Backup/restore validation: 156 unit tests and ten native macOS checks with disposable data. Tests include the independently reproduced review failures. CI runs the ten GUI checks on Ubuntu/Xvfb; Windows/macOS unit jobs exercise platform leases.

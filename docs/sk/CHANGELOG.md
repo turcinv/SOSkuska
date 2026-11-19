@@ -3,6 +3,12 @@
 [English](../../CHANGELOG.md) · [Čeština](../cs/CHANGELOG.md) · [Slovenčina](CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
 
+## Zatiaľ nevydané
+
+Settings teraz ponúka ručnú miestnu zálohu a overenú obnovu s bezpečnostnou kópiou pred nahradením. Schéma zostáva 6. Obnova zatvorí aplikáciu; potom ju spusti znovu. Pozri [Záloha a obnova](BACKUP_RESTORE.md).
+
+backup.py a backup_validation.py overujú súkromné samostatné snímky a aplikačné hodnoty; riadky nahrádzajú v jednej transakcii bez prevzatia cudzieho DDL. database_lock.py drží zdieľané zámky Store a výhradný zámok obnovy (flock / Windows LockFileEx). backup_worker.py beží v oddelenom procese; backup_panel.py cez Tk číta dočasný výstupný súbor, takže nehrozí plná rúra ani finalizácia Tk z pracovného vlákna. Pri obnove sa Store zatvorí a periodické callbacky pozastavia. Bezpečnostná kópia vznikne pod zápisovým zámkom; pred commitom sa overia konečné riadky a ID sekvencie.
+
 ## 0.8.1 — 2026-11-18
 
 Angličtina je teraz hlavným jazykom dokumentácie v koreni repozitára a v `docs/`. Česká dokumentácia je zachovaná v `docs/cs/`, vedľa slovenskej a ruskej verzie. Odkazy prepínajú medzi zodpovedajúcimi stránkami všetkých štyroch jazykov; AGENTS.md opisuje novú štruktúru. Mení sa iba dokumentácia, aplikácia aj schéma databázy zostávajú rovnaké.

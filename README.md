@@ -80,4 +80,8 @@ soskuska-local/    Earlier standalone HTML visual reference
 docs/             English guides; cs/, sk/, ru/ contain translations
 ```
 
-Windows/Linux are primary target platforms; macOS is also the current development environment. Unit CI runs on all three systems; GUI CI runs on Ubuntu/Xvfb, with native checks also run locally on macOS. This does not replace manual Windows/Linux UI or physical scrolling-gesture testing. There is no installer, import, backup, synchronization, UI translation or saved AI conversation support yet.
+Windows/Linux are primary target platforms; macOS is also the current development environment. Unit CI runs on all three systems; GUI CI runs on Ubuntu/Xvfb, with native checks also run locally on macOS. This does not replace manual Windows/Linux UI or physical scrolling-gesture testing. There is no installer, import, synchronization, UI translation or saved AI conversation support yet.
+
+## Backup and restore
+
+Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Schema stays 6. Restore closes the app; reopen it afterward. See [Backup and restore](docs/BACKUP_RESTORE.md).

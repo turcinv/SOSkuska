@@ -4,6 +4,7 @@ import sqlite3
 import customtkinter as ctk
 from preferences import preference_fields
 from tutor import LANGUAGES
+from backup_panel import BackupPanel
 
 
 class SettingsPage(ctk.CTkFrame):
@@ -41,6 +42,8 @@ class SettingsPage(ctk.CTkFrame):
         self.reload_button.pack(side='left', padx=(0, 8))
         self.copy_button = app.button(actions, 'Use Tutor choices', self.copy_tutor, width=155)
         self.copy_button.pack(side='left')
+        self.backups = BackupPanel(self, app)
+        self.backups.grid(row=14, column=0, sticky='ew', pady=(20, 0))
         self.baseline = self.values()  # Even a failed first read must preserve later edits.
         self.bind('<Configure>', lambda event: [label.configure(wraplength=max(250,event.width-12)) for label in (self.status,info)], add='+')
 
