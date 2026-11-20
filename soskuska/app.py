@@ -33,7 +33,7 @@ from tutor_page import TutorPage
 from settings_page import SettingsPage
 from preferences import AI_KEYS
 
-APP_VERSION = '0.12.0'
+APP_VERSION = '0.13.0'
 
 C = dict(bg="#0D1117", sidebar="#11151C", card="#181D27", raised="#202633",
          border="#2A303C", accent="#8B5CF6", hover="#A78BFA", primary="#6D28D9",

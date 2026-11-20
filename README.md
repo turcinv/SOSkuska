@@ -2,7 +2,7 @@
 
 [English](README.md) · [Čeština](docs/cs/README.md) · [Slovenčina](docs/sk/README.md) · [Русский](docs/ru/README.md)
 
-**Release: [v0.12.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.12.0)** — a working source-code prototype. See the [changelog](CHANGELOG.md). An installer is not included yet.
+**Release: [v0.13.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.13.0)** — a working source-code prototype. See the [changelog](CHANGELOG.md). An installer is not included yet.
 
 SOSkúška is a local desktop study assistant built with Python, CustomTkinter and SQLite for a semester project. The product name uses accents; repository, source and data-folder names use `SOSkuska` / `soskuska`.
 
@@ -101,4 +101,4 @@ AI Tutor now saves conversations locally, including the original server/model an
 
 ## Interface language
 
-UI language selection is implemented on this branch: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current schema is 8; the published release remains v0.12.0 until release authorization. [Interface language](docs/UI_LANGUAGES.md).
+UI language selection is available in v0.13.0: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current schema is 8. [Interface language](docs/UI_LANGUAGES.md).
