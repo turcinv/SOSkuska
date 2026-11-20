@@ -72,27 +72,4 @@ jobs:
         run: python -c "import sys, tkinter; print(sys.version); print('Tk', tkinter.TkVersion)"
       - name: Run native GUI checks with process timeouts
         run: |
-          xvfb-run --auto-servernum --server-args='-screen 0 1920x1080x24' python -u - <<'PY'
-          import subprocess
-          import sys
-
-          for script in (
-              'check_dashboard.py',
-              'check_question_bank.py',
-              'check_review_fixes.py',
-              'check_practice.py',
-              'check_practice_history.py',
-              'check_flashcards.py',
-              'check_statistics.py',
-              'check_state_fixes.py',
-              'check_tutor.py',
-              'check_settings.py',
-              'check_backup.py',
-              'check_csv_import.py',
-              'check_flashcard_import.py',
-              'check_tutor_history.py',
-              'check_ui_languages.py',
-          ):
-              print(f'Running {script}', flush=True)
-              subprocess.run([sys.executable, '-u', f'soskuska/{script}'], check=True, timeout=60)
-          PY
+          xvfb-run --auto-servernum --server-args='-screen 0 1920x1080x24' python -u tools/run_checks.py --gui-only

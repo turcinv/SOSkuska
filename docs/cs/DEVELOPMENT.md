@@ -2,6 +2,13 @@
 
 [English](../DEVELOPMENT.md) · [Čeština](DEVELOPMENT.md) · [Slovenčina](../sk/DEVELOPMENT.md) · [Русский](../ru/DEVELOPMENT.md)
 
+[Testy v kontejneru](CONTAINER_TESTS.md).
+
+```sh
+docker build -f Dockerfile.tests -t soskuska-tests .
+docker run --rm --init --network none --cpus 2 --memory 2g soskuska-tests
+```
+
 Projekt ještě nemáš? Začni [klonováním a základy Gitu](GIT_GUIDE.md). Pravidla pro změny jsou v [CONTRIBUTING](CONTRIBUTING.md).
 
 Příkazy spouštěj z kořene projektu. Dnešní aplikace používá skripty v `soskuska/`, nikoli instalovatelný balíček.

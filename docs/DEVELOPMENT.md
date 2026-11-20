@@ -2,6 +2,13 @@
 
 [English](DEVELOPMENT.md) · [Čeština](cs/DEVELOPMENT.md) · [Slovenčina](sk/DEVELOPMENT.md) · [Русский](ru/DEVELOPMENT.md)
 
+[Container tests](CONTAINER_TESTS.md).
+
+```sh
+docker build -f Dockerfile.tests -t soskuska-tests .
+docker run --rm --init --network none --cpus 2 --memory 2g soskuska-tests
+```
+
 Start with the [Git guide](GIT_GUIDE.md) if you do not have the project. Read [Contributing](../CONTRIBUTING.md) before changing it. Run commands from the repository root. The application currently uses scripts in `soskuska/`, not an installable package.
 
 ## Prepared Mac: fastest path

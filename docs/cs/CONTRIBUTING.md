@@ -2,6 +2,13 @@
 
 [English](../../CONTRIBUTING.md) · [Čeština](CONTRIBUTING.md) · [Slovenčina](../sk/CONTRIBUTING.md) · [Русский](../ru/CONTRIBUTING.md)
 
+[Testy v kontejneru](CONTAINER_TESTS.md).
+
+```sh
+docker build -f Dockerfile.tests -t soskuska-tests .
+docker run --rm --init --network none --cpus 2 --memory 2g soskuska-tests
+```
+
 
 ## Než začneš
 
@@ -18,7 +25,7 @@ Na macOS s připraveným prostředím:
 .venv-macos/bin/python -m unittest discover -s tests -v
 ```
 
-Na Windows/Linux použij odpovídající cestu k Pythonu svého prostředí. Při změně UI, časovače nebo posouvání spusť i nativní kontrolu a ručně ověř dotčené chování:
+Běžné kontroly UI, časovače a posouvání spouštěj v kontejneru výše. Příkazy níže otevírají nativní okna a slouží jen k nutnému platformnímu/ručnímu ověření; viditelný běh nejprve domluv s uživatelem. Na Windows/Linux použij odpovídající Python:
 
 ```sh
 .venv-macos/bin/python soskuska/check_dashboard.py
@@ -44,7 +51,7 @@ Chybu založ přes šablonu v Issues: postup opakování, očekávané/skutečn�
 
 ## Průběžná integrace (CI)
 
-CI: Python 3.12, jednotkové testy na třech systémech a čtrnáct GUI kontrol na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
+CI: Python 3.12, jednotkové testy na třech systémech a patnáct GUI kontrol na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
 
 ## Statistiky (v0.6.0)
 

@@ -2,6 +2,13 @@
 
 [English](../DEVELOPMENT.md) · [Čeština](../cs/DEVELOPMENT.md) · [Slovenčina](../sk/DEVELOPMENT.md) · [Русский](DEVELOPMENT.md)
 
+[Тесты в контейнере](CONTAINER_TESTS.md).
+
+```sh
+docker build -f Dockerfile.tests -t soskuska-tests .
+docker run --rm --init --network none --cpus 2 --memory 2g soskuska-tests
+```
+
 Проекта ещё нет? Начни с [клонирования и основ Git](GIT_GUIDE.md). Правила изменений описаны в [CONTRIBUTING](CONTRIBUTING.md).
 
 Выполняй команды из корневой папки проекта. Нынешнее приложение использует скрипты в `soskuska/`, а не устанавливаемый пакет.

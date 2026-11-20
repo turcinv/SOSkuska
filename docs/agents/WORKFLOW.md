@@ -52,3 +52,7 @@ English instructions for development agents, referenced by [AGENTS.md](../../AGE
 - For label/documentation-only release alignment, the user has preferred focused local checks without waiting for the entire hosted suite again; this does not waive failing checks or apply to feature changes.
 - After publication verify the release URL, tag target, clean local main and synchronization with origin. Branch cleanup is a separate request; preserve unmerged work, main and release tags.
 - Keep AGENTS.md concise. Put durable decisions in these topic files and dated lessons in `docs/SESSION_LESSONS.md`; do not copy the full chat or duplicate entire guides into the startup instructions.
+
+## Uninterrupted desktop testing
+
+The user prefers GUI checks inside the Linux test container because native windows interrupt their work. Default to `docker build -f Dockerfile.tests -t soskuska-tests .` followed by `docker run --rm --init --network none --cpus 2 --memory 2g soskuska-tests`. No host display/data mounts; use disposable databases. Rebuild after source changes. See [Container tests](../CONTAINER_TESTS.md). Run native Mac UI checks only for required Aqua/Tk9/platform coverage and arrange the visible run with the user first. Container coverage is Linux only. CI shares the bounded GUI script list in `tools/run_checks.py`; keep new checks in that list.
