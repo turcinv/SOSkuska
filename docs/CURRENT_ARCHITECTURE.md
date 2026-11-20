@@ -2,7 +2,7 @@
 
 [English](CURRENT_ARCHITECTURE.md) · [Čeština](cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](sk/CURRENT_ARCHITECTURE.md) · [Русский](ru/CURRENT_ARCHITECTURE.md)
 
-Status as of 20 November 2026, release v0.11.0. Dashboard, My Subjects, Question bank, Practice Tests, Flashcards, Statistics, optional AI Tutor, Settings, local backup/restore, and CSV question import are implemented. See [planned architecture](PLANNED_ARCHITECTURE.md) for future proposals.
+Status as of 20 November 2026, release v0.11.1. Dashboard, My Subjects, Question bank, Practice Tests, Flashcards, Statistics, optional AI Tutor, Settings, local backup/restore, and CSV question import are implemented. See [planned architecture](PLANNED_ARCHITECTURE.md) for future proposals.
 
 ## Technology and modules
 

@@ -3,6 +3,14 @@
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
 
+## 0.11.1 — 2026-11-20
+
+Kořenový AGENTS.md je přibližně o 86 % menší (z 27,4 KB na 3,9 KB), s výslovnými odkazy `@` a tabulkou pro načítání pokynů. Všech 20 původních sekcí zůstává zachováno v pěti anglických souborech pro agenty. Odkazy vyžadují přečtení souborů; nespoléhají na automatické vložení.
+
+Datované poznatky uchovávají preference projektu, postup kontroly/vydání a pravidla pro importy, procesy Tk a rozepsané formuláře. Anglická, česká, slovenská a ruská verze jsou odkazované z README. Předání v0.11.0 zůstává historickým výchozím stavem. Studijní chování aplikace a schéma 6 se nemění.
+
+Ověření: kontrola dokumentace nenašla blokující problém; ověřily se všechny původní sekce, místní odkazy, bloky kódu, cíle `@` a jazyková navigace. Všechny čtyři CI úlohy dokumentačního PR prošly. Označení vydání prošlo kontrolou verzí, syntaxe a dokumentace.
+
 ## 0.11.0 — 2026-11-20
 
 Flashcards nyní podporuje import UTF-8 CSV do existujícího balíčku: šablonu s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů. Nové kartičky jsou ihned splatné; původní termíny a historie hodnocení zůstávají zachované. Schéma zůstává 6. [Import kartiček z CSV](FLASHCARD_CSV_IMPORT.md).
