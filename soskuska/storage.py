@@ -2,7 +2,7 @@
 import random
 import sqlite3
 import unicodedata
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from content import question_fields, topic_fields
 from practice import MissingPracticeError, expired, practice_settings, utc_now
@@ -542,6 +542,51 @@ class Store:
     def practice_history(self, limit=20):
         ids = self.db.execute("SELECT id FROM practice_attempts WHERE status='completed' ORDER BY id DESC LIMIT ?", (limit,)).fetchall()
         return [self.practice_attempt(row[0]) for row in ids]
+
+    def practice_history_page(self, *, subject_name=None, date_from='', date_to='', page=0, page_size=20):
+        """Read one consistent, bounded page using historical names and local completion dates."""
+        if type(page) is not int or page < 0 or type(page_size) is not int or not 1 <= page_size <= 100:
+            raise ValueError("Choose a valid history page.")
+        if subject_name is not None and (not isinstance(subject_name, str) or not 1 <= len(subject_name) <= 120):
+            raise ValueError("Choose a subject from practice history.")
+        bounds = []
+        for value in (date_from, date_to):
+            try:
+                if not isinstance(value, str) or (value and date.fromisoformat(value).isoformat() != value):
+                    raise ValueError
+            except ValueError:
+                raise ValueError("Use valid history dates in YYYY-MM-DD format, or leave them empty.") from None
+            bounds.append(value)
+        if all(bounds) and date_from > date_to:
+            raise ValueError("History start date must not be after the end date.")
+        # Use the same parser as result display/backup validation, including
+        # accepted ISO offsets and fractional seconds SQLite date() cannot parse.
+        self.db.create_function('practice_local_day', 1, lambda value:
+            datetime.fromisoformat(value).astimezone().date().isoformat() if value else None)
+        self.db.create_function('practice_completion_utc', 1, lambda value:
+            datetime.fromisoformat(value).astimezone(timezone.utc).isoformat(timespec='microseconds') if value else None)
+        where = ["status='completed'"]
+        params = []
+        if subject_name is not None:
+            where.append('subject_name=?'); params.append(subject_name)
+        if date_from:
+            where.append("practice_local_day(completed_at)>=?"); params.append(date_from)
+        if date_to:
+            where.append("practice_local_day(completed_at)<=?"); params.append(date_to)
+        clause = ' AND '.join(where)
+        with self.db:
+            self.db.execute('BEGIN')
+            names = [row[0] for row in self.db.execute(
+                "SELECT DISTINCT subject_name FROM practice_attempts WHERE status='completed' ORDER BY subject_name COLLATE NOCASE,subject_name")]
+            total = self.db.execute('SELECT COUNT(*) FROM practice_attempts WHERE '+clause, params).fetchone()[0]
+            pages = max(1, (total + page_size - 1) // page_size)
+            page = min(page, pages - 1)
+            rows = self.db.execute("""SELECT a.*,
+                (SELECT COUNT(*) FROM practice_items WHERE attempt_id=a.id AND selected_option IS NOT NULL) AS answered,
+                (SELECT COUNT(*) FROM practice_items WHERE attempt_id=a.id AND selected_option=correct_option) AS correct
+                FROM practice_attempts a WHERE """+clause+" ORDER BY practice_completion_utc(completed_at) DESC,id DESC LIMIT ? OFFSET ?",
+                [*params,page_size,page*page_size]).fetchall()
+        return dict(rows=[dict(row) for row in rows], total=total, page=page, pages=pages, subjects=names)
 
     def _editable_practice(self, attempt_id):
         attempt = self.practice_attempt(attempt_id)

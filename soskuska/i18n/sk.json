@@ -617,5 +617,19 @@
   "○  AI has no models": "○  AI nemá modely",
   "○  AI not connected": "○  AI nepripojená",
   "○  AI ready": "○  AI pripravená",
-  "⚙   Settings": "⚙   Nastavenia"
+  "⚙   Settings": "⚙   Nastavenia",
+  "Completed tests": "Dokončené testy",
+  "Subject name saved with the test": "Názov predmetu uložený s testom",
+  "All subjects": "Všetky predmety",
+  "Completed from (YYYY-MM-DD, optional)": "Dokončené od (YYYY-MM-DD, nepovinné)",
+  "Completed through (YYYY-MM-DD, optional)": "Dokončené do (YYYY-MM-DD, nepovinné)",
+  "Apply filters": "Použiť filtre",
+  "Reset filters": "Zrušiť filtre",
+  "No completed tests match these filters.": "Žiadne dokončené testy nezodpovedajú týmto filtrom.",
+  "Page {v0} / {v1} · {v2} completed tests": "Strana {v0} / {v1} · {v2} dokončených testov",
+  "Could not load practice history. Previous results are kept; retry the filters or page.": "Históriu testov sa nepodarilo načítať. Predchádzajúce výsledky zostávajú; skúste filtre alebo stránku znova.",
+  "Choose a valid history page.": "Vyberte platnú stránku histórie.",
+  "Choose a subject from practice history.": "Vyberte predmet z histórie testov.",
+  "Use valid history dates in YYYY-MM-DD format, or leave them empty.": "Zadajte platné dátumy histórie vo formáte YYYY-MM-DD alebo ich nechajte prázdne.",
+  "History start date must not be after the end date.": "Počiatočný dátum histórie nesmie byť po koncovom dátume."
 }

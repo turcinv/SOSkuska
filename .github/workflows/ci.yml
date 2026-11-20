@@ -81,6 +81,7 @@ jobs:
               'check_question_bank.py',
               'check_review_fixes.py',
               'check_practice.py',
+              'check_practice_history.py',
               'check_flashcards.py',
               'check_statistics.py',
               'check_state_fixes.py',

@@ -617,5 +617,19 @@
   "○  AI has no models": "○  У AI нет моделей",
   "○  AI not connected": "○  AI не подключён",
   "○  AI ready": "○  AI готов",
-  "⚙   Settings": "⚙   Настройки"
+  "⚙   Settings": "⚙   Настройки",
+  "Completed tests": "Завершённые тесты",
+  "Subject name saved with the test": "Название предмета, сохранённое с тестом",
+  "All subjects": "Все предметы",
+  "Completed from (YYYY-MM-DD, optional)": "Завершено с (YYYY-MM-DD, необязательно)",
+  "Completed through (YYYY-MM-DD, optional)": "Завершено по (YYYY-MM-DD, необязательно)",
+  "Apply filters": "Применить фильтры",
+  "Reset filters": "Сбросить фильтры",
+  "No completed tests match these filters.": "Нет завершённых тестов, соответствующих фильтрам.",
+  "Page {v0} / {v1} · {v2} completed tests": "Страница {v0} / {v1} · завершённых тестов: {v2}",
+  "Could not load practice history. Previous results are kept; retry the filters or page.": "Не удалось загрузить историю тестов. Прежние результаты сохранены; повторите выбор фильтров или страницы.",
+  "Choose a valid history page.": "Выберите допустимую страницу истории.",
+  "Choose a subject from practice history.": "Выберите предмет из истории тестов.",
+  "Use valid history dates in YYYY-MM-DD format, or leave them empty.": "Введите допустимые даты истории в формате YYYY-MM-DD или оставьте их пустыми.",
+  "History start date must not be after the end date.": "Начальная дата истории не должна быть позже конечной."
 }

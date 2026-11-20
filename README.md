@@ -51,7 +51,7 @@ For development, keep test data separate:
 
 Open **My Subjects → Questions** to author questions. Questions require four different answers A–D, exactly one correct answer, Easy/Medium/Hard difficulty and optional topic/explanation. Search combines text, topic and difficulty. Deleting a topic keeps its questions unassigned. Deleting a subject warns before removing its questions/topics and retains study history.
 
-For **Practice Tests**, create a subject and questions first. Choose a topic, difficulty and 1–100 questions. Time limits are 5, 10, 15, 30 or 60 minutes, or Untimed. Answers and position save as you go. Only one attempt may be unfinished. Resume survives restart; deadlines keep running while away. Finish confirms submission; unanswered questions count incorrect. Correct answers appear only after completion. Discard confirms removal of an unfinished attempt. History displays the latest 20 results; older results remain stored. Content is snapshotted at start, so later edits/deletions do not change results. Practice does not add invented focus time.
+For **Practice Tests**, create a subject and questions first. Choose a topic, difficulty and 1–100 questions. Time limits are 5, 10, 15, 30 or 60 minutes, or Untimed. Answers and position save as you go. Only one attempt may be unfinished. Resume survives restart; deadlines keep running while away. Finish confirms submission; unanswered questions count incorrect. Correct answers appear only after completion. Discard confirms removal of an unfinished attempt. History provides all completed results in pages of 20, with saved subject-name and local-date filters. Content is snapshotted at start, so later edits/deletions do not change results. Practice does not add invented focus time.
 
 Feature guides: [Flashcards](docs/FLASHCARDS.md) · [Statistics](docs/STATISTICS.md) · [AI Tutor](docs/AI_TUTOR.md) · [Settings](docs/SETTINGS.md).
 
@@ -102,3 +102,7 @@ AI Tutor now saves conversations locally, including the original server/model an
 ## Interface language
 
 UI language selection is available in v0.13.0: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current schema is 8. [Interface language](docs/UI_LANGUAGES.md).
+
+## Practice history
+
+Practice history now supports pages of 20 across all completed attempts, historical subject-name and inclusive local-date filters, and reopening saved answer reviews. Filter drafts and the applied page survive navigation; failed reads keep prior results. Schema remains 8. [Practice history](docs/PRACTICE_HISTORY.md).

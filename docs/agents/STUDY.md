@@ -12,8 +12,10 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 - Snapshot questions/options/correct answers/explanations on start. History and unfinished attempts survive source edits/deletions; completed results are read-only through the API. Never expose correct answers in the running test UI.
 - Save each answer and navigation position transactionally. On failed answer writes restore the last saved choice. Deadline checks occur after obtaining the write lock. Completion is idempotent; failed result reads may retry without creating another result.
 - UTC deadlines continue while away or closed. On reopening, expired tests complete and reject late answers. System-clock changes can affect remaining time. Discard requires confirmation and applies only to an unfinished attempt.
-- Practice results do not count as focus-session time. History shows the latest 20 results; older rows remain stored. Schema 4 migration preserves all existing content/history.
-- Run `tests/test_practice.py` and `check_practice.py` with temporary data. The native check covers fresh-process resume, write errors and timed completion, in addition to the existing native checks.
+- Practice results do not count as focus-session time. History exposes all completed results in pages of 20, using saved subject names and inclusive local completion dates. Apply filters explicitly; preserve drafts, prior rows and applied page on read failure. Query names/count/rows in one deferred read transaction. No schema change (8). Schema 4 migration preserves all existing content/history.
+- Run `tests/test_practice.py`, `tests/test_practice_history.py`, `check_practice.py` and `check_practice_history.py` with temporary data. The native check covers fresh-process resume, write errors and timed completion, in addition to the existing native checks.
+
+- History filters/sorting must parse the same timezone-aware ISO timestamps as result display and backup validation. Normalize chronology to UTC including microseconds; use local calendar days for date bounds. Raw SQLite date()/text ordering misses accepted offset variants. Initialize retry controls before the first read; do not require a prior successful load.
 
 - Background practice completion must not reset the shared scroll canvas or affect another screen's editing draft. Only reset practice scrolling when Practice Tests is active.
 
@@ -30,7 +32,7 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 
 - StatisticsPage uses Store.statistics() / study_statistics.py. Keep all four read aggregates in one deferred SQLite transaction; no writes or migration. Statistics introduced no schema change (schema 5 in v0.6.0; current schema is 8).
 - Last 7/30 days includes today and previous 6/29 local calendar days; all-time totals exclude future days and chart only the latest 30 days. Focus uses stored local day; UTC completion/review times use SQLite localtime. Time-zone changes can rebucket events.
-- Practice accuracy is total correct / total questions from completed snapshots; unanswered questions count incorrect, unfinished/discarded tests excluded. Include full retained history beyond the other screens' 20-row display limits.
+- Practice accuracy is total correct / total questions from completed snapshots; unanswered questions count incorrect, unfinished/discarded tests excluded. Include full retained history beyond Flashcards’ 20-row review-history display limit.
 - Flashcard ratings are self-assessments, not accuracy/mastery. Never infer focus time from tests/reviews. Empty history has zero counts and no percentage. Keep deleted/unassigned focus history visible and document name-based grouping after deletion.
 - Refresh or reopening loads a new snapshot. Read failure preserves the previous report with a retry notice. Resize bindings must die with their labels; do not accumulate Configure callbacks on persistent report containers. Statistics shortcuts must not modify hidden search drafts.
 - Run tests/test_statistics.py and check_statistics.py with disposable data. CI includes the sixth native check. Statistics was released in v0.6.0.

@@ -617,5 +617,19 @@
   "○  AI has no models": "○  AI has no models",
   "○  AI not connected": "○  AI not connected",
   "○  AI ready": "○  AI ready",
-  "⚙   Settings": "⚙   Settings"
+  "⚙   Settings": "⚙   Settings",
+  "Completed tests": "Completed tests",
+  "Subject name saved with the test": "Subject name saved with the test",
+  "All subjects": "All subjects",
+  "Completed from (YYYY-MM-DD, optional)": "Completed from (YYYY-MM-DD, optional)",
+  "Completed through (YYYY-MM-DD, optional)": "Completed through (YYYY-MM-DD, optional)",
+  "Apply filters": "Apply filters",
+  "Reset filters": "Reset filters",
+  "No completed tests match these filters.": "No completed tests match these filters.",
+  "Page {v0} / {v1} · {v2} completed tests": "Page {v0} / {v1} · {v2} completed tests",
+  "Could not load practice history. Previous results are kept; retry the filters or page.": "Could not load practice history. Previous results are kept; retry the filters or page.",
+  "Choose a valid history page.": "Choose a valid history page.",
+  "Choose a subject from practice history.": "Choose a subject from practice history.",
+  "Use valid history dates in YYYY-MM-DD format, or leave them empty.": "Use valid history dates in YYYY-MM-DD format, or leave them empty.",
+  "History start date must not be after the end date.": "History start date must not be after the end date."
 }
