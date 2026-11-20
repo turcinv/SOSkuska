@@ -1,4 +1,6 @@
 """SOSkúška native Dashboard. Run: python soskuska/app.py."""
+from localization_widgets import LocalizedOptionMenu
+from localization import tr, Translator
 import argparse
 import os
 import platform
@@ -31,6 +33,8 @@ from tutor_page import TutorPage
 from settings_page import SettingsPage
 from preferences import AI_KEYS
 
+APP_VERSION = '0.12.0'
+
 C = dict(bg="#0D1117", sidebar="#11151C", card="#181D27", raised="#202633",
          border="#2A303C", accent="#8B5CF6", hover="#A78BFA", primary="#6D28D9",
          text="#F3F4F6", secondary="#9CA3AF", green="#22C55E", warning="#F59E0B")
@@ -54,13 +58,14 @@ def data_path():
 class Dashboard(ctk.CTk):
     def __init__(self, database=None):
         super().__init__()
-        self.title("SOSkúška")
+        self.title(tr(self, 'SOSkúška'))
         self.geometry("1440x900")
         self.minsize(1024, 700)
         self.configure(fg_color=C["bg"])
         self.family = "Segoe UI" if platform.system() == "Windows" else "Helvetica" if sys.platform == "darwin" else "Noto Sans"
         self.store = Store(database or data_path())
         self.preferences = self.store.preferences()
+        self.translator = Translator(self.preferences["ui_language"])
         self.saved_today_seconds = 0
         self.data_restoring = False
         self.running_since = None
@@ -115,6 +120,10 @@ class Dashboard(ctk.CTk):
         self.after(100, self.reflow)
         self.after(250, self.tick)
 
+    def display_date(self, day):
+        if self.translator.language=='English':return day.strftime('%A, %B %d, %Y')
+        return day.strftime('%d.%m.%Y')
+
     def font(self, size=14, bold=False):
         return ctk.CTkFont(family=self.family, size=size, weight="bold" if bold else "normal")
 
@@ -128,6 +137,8 @@ class Dashboard(ctk.CTk):
                             border_width=1 if card else 0, border_color=C["border"], **kwargs)
 
     def button(self, parent, text, command, primary=False, **kwargs):
+        if self.translator.language!='English' and 'width' in kwargs:
+            kwargs['width']=max(kwargs['width'],self.font(14,primary).measure(text)+24)
         return ctk.CTkButton(parent, text=text, command=command, height=38,
                              corner_radius=8, font=self.font(14, primary),
                              fg_color=C["primary"] if primary else C["raised"],
@@ -144,7 +155,7 @@ class Dashboard(ctk.CTk):
         brand = self.frame(self.sidebar)
         brand.grid(row=0, column=0, padx=16, pady=(24, 26), sticky="ew")
         brand.grid_columnconfigure(0, weight=1)
-        self.brand = self.label(brand, "▤  SOSkúška", 19, bold=True)
+        self.brand = self.label(brand, tr(self, '▤  SOSkúška'), 19, bold=True)
         self.brand.grid(row=0, column=0, sticky="w")
         self.collapse_btn = self.button(brand, "‹", self.toggle_sidebar, width=28)
         self.collapse_btn.grid(row=0, column=1)
@@ -152,7 +163,7 @@ class Dashboard(ctk.CTk):
         nav.grid(row=1, column=0, padx=12, sticky="ew")
         self.nav_buttons = []
         for i, (name, icon) in enumerate(NAV):
-            b = ctk.CTkButton(nav, text=f"{icon}   {name}", anchor="w", height=42,
+            b = ctk.CTkButton(nav, text=f"{icon}   {tr(self,name)}", anchor="w", height=42,
                              font=self.font(14, i == 0), corner_radius=8,
                              fg_color="#211B35" if i == 0 else "transparent",
                              hover_color=C["raised"],
@@ -160,18 +171,18 @@ class Dashboard(ctk.CTk):
                              command=lambda name=name: self.navigate(name))
             b.pack(fill="x", pady=2)
             self.nav_buttons.append(b)
-        self.settings_btn = ctk.CTkButton(self.sidebar, text="⚙   Settings", anchor="w", height=40,
+        self.settings_btn = ctk.CTkButton(self.sidebar, text=tr(self, '⚙   Settings'), anchor="w", height=40,
                                           font=self.font(), fg_color="transparent", hover_color=C["raised"],
                                           text_color=C["secondary"], command=lambda: self.navigate("Settings"))
         self.settings_btn.grid(row=4, column=0, padx=12, pady=12, sticky="ew")
         self.footer = self.frame(self.sidebar)
         self.footer.grid(row=5, column=0, sticky="ew", padx=20, pady=(8, 24))
-        self.label(self.footer, "LOCAL WORKSPACE", 11, "secondary").pack(anchor="w", pady=(0, 12))
-        self.label(self.footer, "Local student", bold=True).pack(anchor="w")
-        self.label(self.footer, "Offline · Stored on this device", 12, "secondary").pack(anchor="w", pady=(2, 18))
-        self.ai_status = self.label(self.footer, "○  AI not connected", 12, "secondary")
+        self.label(self.footer, tr(self, 'LOCAL WORKSPACE'), 11, "secondary").pack(anchor="w", pady=(0, 12))
+        self.label(self.footer, tr(self, 'Local student'), bold=True).pack(anchor="w")
+        self.label(self.footer, tr(self, 'Offline · Stored on this device'), 12, "secondary").pack(anchor="w", pady=(2, 18))
+        self.ai_status = self.label(self.footer, tr(self, '○  AI not connected'), 12, "secondary")
         self.ai_status.pack(anchor="w")
-        self.label(self.footer, "Study workspace · v0.12.0", 11, "secondary").pack(anchor="w", pady=(6, 0))
+        self.label(self.footer, tr(self, 'Study workspace · {v0}',v0=f'v{APP_VERSION}'), 11, "secondary").pack(anchor="w", pady=(6, 0))
 
     def build_content(self):
         self.scroll = DashboardScrollFrame(self, fg_color=C["bg"], corner_radius=0,
@@ -185,18 +196,18 @@ class Dashboard(ctk.CTk):
         head = self.frame(self.content)
         head.grid(row=0, column=0, sticky="ew", pady=(0, 24))
         head.grid_columnconfigure(0, weight=1)
-        self.date_label = self.label(head, date.today().strftime("%A, %B %d, %Y"), 12, "secondary")
+        self.date_label = self.label(head, self.display_date(date.today()), 12, "secondary")
         self.date_label.grid(row=0, column=0, sticky="w")
-        self.label(head, "Ready to make progress?", 28, bold=True).grid(row=1, column=0, sticky="w", pady=(4, 2))
-        self.label(head, "A little focus today goes a long way.", 14, "secondary").grid(row=2, column=0, sticky="w")
-        self.start_button = self.button(head, "Start Studying  →", self.start_focus, primary=True, width=160)
+        self.label(head, tr(self, 'Ready to make progress?'), 28, bold=True).grid(row=1, column=0, sticky="w", pady=(4, 2))
+        self.label(head, tr(self, 'A little focus today goes a long way.'), 14, "secondary").grid(row=2, column=0, sticky="w")
+        self.start_button = self.button(head, tr(self, 'Start Studying  →'), self.start_focus, primary=True, width=160)
         self.start_button.grid(row=1, column=1, rowspan=2, padx=(16, 0), sticky="e")
         self.metrics = self.frame(self.content)
         self.metrics.grid(row=1, column=0, sticky="ew", pady=(0, 24))
         self.metric_cards, self.metric_values = [], []
         for name, val in [("Total study time", "0h 00m"), ("Study sessions", "0"), ("Current streak", "0 days"), ("Subjects", "0")]:
             card = self.frame(self.metrics, card=True)
-            self.label(card, name, 12, "secondary").pack(anchor="w", padx=16, pady=(16, 6))
+            self.label(card, tr(self,name), 12, "secondary").pack(anchor="w", padx=16, pady=(16, 6))
             label = self.label(card, val, 26, bold=True)
             label.pack(anchor="w", padx=16, pady=(0, 16))
             self.metric_cards.append(card)
@@ -211,16 +222,16 @@ class Dashboard(ctk.CTk):
         self.build_focus()
         self.build_subjects()
         self.build_rail()
-        self.notice = self.label(self.content, "Your subjects and study time are stored on this device.", 12, "secondary", wraplength=650)
+        self.notice = self.label(self.content, tr(self, 'Your subjects and study time are stored on this device.'), 12, "secondary", wraplength=650)
         self.notice.grid(row=3, column=0, sticky="w", pady=(22, 4))
 
     def build_focus(self):
-        self.label(self.main, "Today's focus", 16, bold=True).grid(row=0, column=0, sticky="w", pady=(0, 12))
+        self.label(self.main, tr(self, "Today's focus"), 16, bold=True).grid(row=0, column=0, sticky="w", pady=(0, 12))
         focus = self.frame(self.main, card=True)
         focus.grid(row=1, column=0, sticky="ew")
         focus.grid_columnconfigure(0, weight=1)
-        self.label(focus, "Daily goal", 12, "secondary").grid(row=0, column=0, sticky="w", padx=18, pady=(16, 4))
-        self.goal = self.label(focus, "0 / 60 min", 22, bold=True)
+        self.label(focus, tr(self, 'Daily goal'), 12, "secondary").grid(row=0, column=0, sticky="w", padx=18, pady=(16, 4))
+        self.goal = self.label(focus, tr(self, '0 / 60 min'), 22, bold=True)
         self.goal.grid(row=1, column=0, sticky="w", padx=18)
         self.goal_bar = ctk.CTkProgressBar(focus, height=6, fg_color=C["raised"], progress_color=C["accent"])
         self.goal_bar.grid(row=2, column=0, sticky="ew", padx=18, pady=(12, 16))
@@ -228,7 +239,7 @@ class Dashboard(ctk.CTk):
         for row, (key, text, default) in enumerate([("review_subject", "Review a subject", False), ("focus", "Complete a focus session", False)], 3):
             var = ctk.BooleanVar(value=self.store.task(key, default))
             self.task_vars[key] = var
-            check = ctk.CTkCheckBox(focus, text=text, variable=var, font=self.font(14),
+            check = ctk.CTkCheckBox(focus, text=tr(self,text), variable=var, font=self.font(14),
                                    text_color=C["text"], fg_color=C["primary"], hover_color=C["accent"],
                                    border_color=C["border"], checkbox_width=18, checkbox_height=18,
                                    command=lambda k=key, v=var: self.save_task(k, v.get()))
@@ -236,33 +247,33 @@ class Dashboard(ctk.CTk):
         self.timer_frame = self.frame(focus)
         self.timer_frame.grid(row=5, column=0, sticky="ew", padx=18, pady=(0, 16))
         self.timer_frame.grid_columnconfigure(0, weight=1)
-        self.timer_label = self.label(self.timer_frame, f"{self.focus_target // 60:02d}:00 · Focus session", 14, "hover", bold=True)
+        self.timer_label = self.label(self.timer_frame, tr(self, '{v0:02d}:00 · Focus session', v0=self.focus_target // 60), 14, "hover", bold=True)
         self.timer_label.grid(row=0, column=0, sticky="w")
-        self.pause_button = self.button(self.timer_frame, "Pause", self.pause_focus, width=74)
+        self.pause_button = self.button(self.timer_frame, tr(self, 'Pause'), self.pause_focus, width=74)
         self.pause_button.grid(row=0, column=1, padx=(8, 8))
-        self.button(self.timer_frame, "Finish", self.finish_focus, width=70).grid(row=0, column=2)
+        self.button(self.timer_frame, tr(self, 'Finish'), self.finish_focus, width=70).grid(row=0, column=2)
         self.timer_frame.grid_remove()
-        self.label(self.main, "Choose a subject", 16, bold=True).grid(row=2, column=0, sticky="w", pady=(22, 12))
+        self.label(self.main, tr(self, 'Choose a subject'), 16, bold=True).grid(row=2, column=0, sticky="w", pady=(22, 12))
         resume = self.frame(self.main, card=True)
         resume.grid(row=3, column=0, sticky="ew")
         resume.grid_columnconfigure(0, weight=1)
         self.subject_selection = ctk.StringVar(value="Add a subject first")
-        self.subject_picker = ctk.CTkOptionMenu(resume, variable=self.subject_selection,
-                                               values=["Add a subject first"], command=self.select_subject,
+        self.subject_picker = LocalizedOptionMenu(resume,owner=self,translate_values=False,empty_text="Add a subject first", variable=self.subject_selection,
+                                               values=[], command=self.select_subject,
                                                font=self.font(), height=38, fg_color=C["raised"],
                                                button_color=C["primary"], button_hover_color=C["accent"])
         self.subject_picker.grid(row=0, column=0, sticky="ew", padx=18, pady=(16, 8))
-        self.label(resume, "Focus sessions are saved against the selected subject.", 12, "secondary", wraplength=550).grid(row=1, column=0, sticky="w", padx=18, pady=(0, 16))
-        self.button(resume, "Manage subjects", lambda: self.navigate("My Subjects"), width=140).grid(row=0, column=1, padx=(0, 18), pady=(16, 8))
+        self.label(resume, tr(self, 'Focus sessions are saved against the selected subject.'), 12, "secondary", wraplength=550).grid(row=1, column=0, sticky="w", padx=18, pady=(0, 16))
+        self.button(resume, tr(self, 'Manage subjects'), lambda: self.navigate("My Subjects"), width=140).grid(row=0, column=1, padx=(0, 18), pady=(16, 8))
 
     def build_subjects(self):
         header = self.frame(self.main)
         header.grid(row=4, column=0, sticky="ew", pady=(22, 12))
         header.grid_columnconfigure(0, weight=1)
-        self.label(header, "My subjects", 16, bold=True).grid(row=0, column=0, sticky="w")
+        self.label(header, tr(self, 'My subjects'), 16, bold=True).grid(row=0, column=0, sticky="w")
         self.query = ctk.StringVar()
         self.query.trace_add("write", lambda *_: self.filter_subjects())
-        self.search = ctk.CTkEntry(header, placeholder_text="Search subjects…", width=190, height=34,
+        self.search = ctk.CTkEntry(header, placeholder_text=tr(self, 'Search subjects…'), width=190, height=34,
                                   textvariable=self.query, fg_color=C["sidebar"], border_color=C["border"],
                                   text_color=C["text"], font=self.font(12))
         self.search.grid(row=0, column=1, padx=(12, 0))
@@ -273,11 +284,11 @@ class Dashboard(ctk.CTk):
         self.empty = self.label(self.subject_grid, "", 14, "secondary", wraplength=500)
 
     def build_rail(self):
-        self.label(self.rail, "Upcoming exams", 16, bold=True).grid(row=0, column=0, sticky="w", pady=(0, 12))
+        self.label(self.rail, tr(self, 'Upcoming exams'), 16, bold=True).grid(row=0, column=0, sticky="w", pady=(0, 12))
         self.exams = self.frame(self.rail, card=True)
         self.exams.grid(row=1, column=0, sticky="ew")
         self.exams.grid_columnconfigure(0, weight=1)
-        self.label(self.rail, "Recent study sessions", 16, bold=True).grid(row=2, column=0, sticky="w", pady=(22, 12))
+        self.label(self.rail, tr(self, 'Recent study sessions'), 16, bold=True).grid(row=2, column=0, sticky="w", pady=(22, 12))
         self.activity = self.frame(self.rail, card=True)
         self.activity.grid(row=3, column=0, sticky="ew")
         self.activity.grid_columnconfigure(0, weight=1)
@@ -288,20 +299,20 @@ class Dashboard(ctk.CTk):
                 widget.destroy()
         exams = self.store.upcoming_exams()
         if not exams:
-            self.label(self.exams, "No upcoming exams. Add a date in My Subjects.", 13, "secondary", wraplength=250).grid(row=0, column=0, sticky="w", padx=16, pady=16)
+            self.label(self.exams, tr(self, 'No upcoming exams. Add a date in My Subjects.'), 13, "secondary", wraplength=250).grid(row=0, column=0, sticky="w", padx=16, pady=16)
         for i, exam in enumerate(exams):
             days = (date.fromisoformat(exam["exam_date"]) - date.today()).days
             self.label(self.exams, exam["name"], 14, bold=True, wraplength=250).grid(row=i*2, column=0, sticky="w", padx=16, pady=(14, 2))
-            when = "Today" if days == 0 else f"In {days} days"
-            self.label(self.exams, f'{exam["exam_date"]} · {when}', 12, "warning" if days <= 7 else "secondary").grid(row=i*2+1, column=0, sticky="w", padx=16, pady=(0, 12))
+            when = tr(self,'Today') if days == 0 else tr(self,'In {v0} days',v0=days)
+            self.label(self.exams, tr(self, '{v0} · {v1}', v0=exam['exam_date'], v1=when), 12, "warning" if days <= 7 else "secondary").grid(row=i*2+1, column=0, sticky="w", padx=16, pady=(0, 12))
         sessions = self.store.recent_sessions()
         if not sessions:
-            self.label(self.activity, "No saved sessions yet. Start with a short focus session.", 13, "secondary", wraplength=250).grid(row=0, column=0, sticky="w", padx=16, pady=16)
+            self.label(self.activity, tr(self, 'No saved sessions yet. Start with a short focus session.'), 13, "secondary", wraplength=250).grid(row=0, column=0, sticky="w", padx=16, pady=16)
         for i, session in enumerate(sessions):
-            name = session["subject_name"] or "Unassigned session"
+            name = session["subject_name"] or tr(self,"Unassigned session")
             self.label(self.activity, name, 14, wraplength=250).grid(row=i*2, column=0, sticky="w", padx=16, pady=(14, 2))
             seconds = session["seconds"]
-            self.label(self.activity, f'{session["day"]} · {seconds // 60}m {seconds % 60:02d}s', 12, "secondary").grid(row=i*2+1, column=0, sticky="w", padx=16, pady=(0, 12))
+            self.label(self.activity, tr(self, '{v0} · {v1}m {v2:02d}s', v0=session['day'], v1=seconds // 60, v2=seconds % 60), 12, "secondary").grid(row=i*2+1, column=0, sticky="w", padx=16, pady=(0, 12))
 
     def on_resize(self, event):
         if event.widget is self:
@@ -329,22 +340,22 @@ class Dashboard(ctk.CTk):
     def toggle_sidebar(self):
         self.collapsed = not self.collapsed
         self.sidebar.configure(width=72 if self.collapsed else 230)
-        self.brand.configure(text="" if self.collapsed else "▤  SOSkúška")
+        self.brand.configure(text="" if self.collapsed else tr(self, '▤  SOSkúška'))
         self.collapse_btn.configure(text="›" if self.collapsed else "‹")
         for button, (name, icon) in zip(self.nav_buttons, NAV):
-            button.configure(text=icon if self.collapsed else f"{icon}   {name}", anchor="center" if self.collapsed else "w")
-        self.settings_btn.configure(text="⚙" if self.collapsed else "⚙   Settings")
+            button.configure(text=icon if self.collapsed else f"{icon}   {tr(self,name)}", anchor="center" if self.collapsed else "w")
+        self.settings_btn.configure(text="⚙" if self.collapsed else tr(self, '⚙   Settings'))
         self.footer.grid_remove() if self.collapsed else self.footer.grid()
         self.reflow()
 
     def navigate(self, name):
         if self.question_bank.importer.saving or self.flashcard_page.importer.saving:
-            (self.flashcard_page.importer if self.flashcard_page.importer.saving else self.question_bank.importer).status.configure(text='Wait for the CSV import to finish before navigating.')
+            (self.flashcard_page.importer if self.flashcard_page.importer.saving else self.question_bank.importer).status.configure(text=tr(self, 'Wait for the CSV import to finish before navigating.'))
             return
         self.question_bank.importer.cancel()
         self.flashcard_page.importer.cancel()
         if name not in ("Dashboard", "My Subjects", "Practice Tests", "Flashcards", "Statistics", "AI Tutor", "Settings"):
-            self.show_notice(f"{name} will be available in a later version.")
+            self.show_notice(tr(self, '{v0} will be available in a later version.', v0=name))
             return
         self.subject_page.cancel_delete()
         self.settings_page.backups.cancel_pending()
@@ -399,7 +410,7 @@ class Dashboard(ctk.CTk):
         self.flashcard_page.importer.cancel()
         if self.store.subject(subject_id) is None:
             self.navigate("My Subjects")
-            self.show_notice("This subject no longer exists.")
+            self.show_notice(tr(self, 'This subject no longer exists.'))
             return
         self.subject_page.cancel_delete()
         self.content.grid_remove()
@@ -419,20 +430,20 @@ class Dashboard(ctk.CTk):
         self.scroll._parent_canvas.yview_moveto(0)
 
     def show_notice(self, text):
-        self.notice.configure(text=text, text_color=C["hover"])
+        self.notice.configure(text=tr(self,text), text_color=C["hover"])
         if hasattr(self, "subject_page"):
-            self.subject_page.status.configure(text=text)
+            self.subject_page.status.configure(text=tr(self,text))
         if hasattr(self, "question_bank"):
-            self.question_bank.status.configure(text=text)
+            self.question_bank.status.configure(text=tr(self,text))
 
     def save_task(self, key, value):
         try:
             self.store.set_task(key, value)
         except sqlite3.Error:
             self.task_vars[key].set(not value)
-            self.show_notice("Could not save the checklist. Please try again.")
+            self.show_notice(tr(self, 'Could not save the checklist. Please try again.'))
             return
-        self.show_notice("Checklist saved on this device.")
+        self.show_notice(tr(self, 'Checklist saved on this device.'))
 
     def filter_subjects(self):
         for _, card in self.subject_cards:
@@ -448,16 +459,16 @@ class Dashboard(ctk.CTk):
             title = self.label(card, subject["name"], 14, bold=True, wraplength=260)
             title.grid(row=0, column=0, sticky="ew", padx=16, pady=(14, 4))
             card.bind("<Configure>", lambda event, title=title: title.configure(wraplength=max(150, event.width-32)), add="+")
-            self.label(card, f'{subject["session_count"]} sessions · {subject["study_seconds"] // 60} min', 12, "secondary").grid(row=1, column=0, sticky="w", padx=16, pady=(0, 10))
-            self.label(card, f'{subject["topic_count"]} topics · {subject["question_count"]} questions', 12, "secondary").grid(row=2, column=0, sticky="w", padx=16, pady=(0, 10))
+            self.label(card, tr(self, '{v0} sessions · {v1} min', v0=subject['session_count'], v1=subject['study_seconds'] // 60), 12, "secondary").grid(row=1, column=0, sticky="w", padx=16, pady=(0, 10))
+            self.label(card, tr(self, '{v0} topics · {v1} questions', v0=subject['topic_count'], v1=subject['question_count']), 12, "secondary").grid(row=2, column=0, sticky="w", padx=16, pady=(0, 10))
             actions = self.frame(card)
             actions.grid(row=3, column=0, sticky="w", padx=16, pady=(0, 14))
-            self.button(actions, "Study", lambda sid=subject["id"]: self.start_focus(sid), primary=True, width=85).pack(side="left", padx=(0, 8))
-            self.button(actions, "Questions", lambda sid=subject["id"]: self.open_question_bank(sid), width=95).pack(side="left")
+            self.button(actions, tr(self, 'Study'), lambda sid=subject["id"]: self.start_focus(sid), primary=True, width=85).pack(side="left", padx=(0, 8))
+            self.button(actions, tr(self, 'Questions'), lambda sid=subject["id"]: self.open_question_bank(sid), width=95).pack(side="left")
             card.grid(row=i//2, column=i%2, sticky="nsew", padx=(0, 6) if i%2 == 0 else (6, 0), pady=(0, 12))
             self.subject_cards.append((subject["name"], card))
         if not visible:
-            self.empty.configure(text="No matching subjects. Try another name." if subjects else "No subjects yet. Open My Subjects to create your first one.")
+            self.empty.configure(text=tr(self,tr(self, 'No matching subjects. Try another name.') if subjects else tr(self, 'No subjects yet. Open My Subjects to create your first one.')))
             self.empty.grid(row=0, column=0, columnspan=2, sticky="w", pady=20)
 
     def refresh_data(self):
@@ -466,7 +477,7 @@ class Dashboard(ctk.CTk):
         selected = next((s for s in subjects if s["id"] == self.selected_subject_id), None)
         selected = selected or (subjects[0] if subjects else None)
         self.selected_subject_id = selected["id"] if selected else None
-        self.subject_picker.configure(values=list(self.subject_ids) or ["Add a subject first"],
+        self.subject_picker.configure(values=list(self.subject_ids),
                                       state="disabled" if self.session_open or not subjects else "normal")
         self.subject_selection.set(selected["name"] if selected else "Add a subject first")
         self.update_metrics()
@@ -501,37 +512,37 @@ class Dashboard(ctk.CTk):
     def start_focus(self, subject_id=None):
         if self.session_open:
             self.navigate("Dashboard")
-            self.show_notice("A focus session is already open. Use Pause, Resume or Finish.")
+            self.show_notice(tr(self, 'A focus session is already open. Use Pause, Resume or Finish.'))
             return
         subject_id = subject_id if subject_id is not None else self.selected_subject_id
         subject = self.store.subject(subject_id) if subject_id is not None else None
         if subject is None:
             self.navigate("My Subjects")
             self.subject_page.show_form()
-            self.show_notice("Create a subject before starting your first focus session.")
+            self.show_notice(tr(self, 'Create a subject before starting your first focus session.'))
             return
         self.selected_subject_id = subject["id"]
         self.session_subject_id = subject["id"]
         self.session_subject_name = subject["name"]
         self.navigate("Dashboard")
         self.focus_target = self.preferences["focus_minutes"] * 60
-        self.timer_label.configure(text=f"{self.focus_target // 60:02d}:00 · Focus")
+        self.timer_label.configure(text=tr(self, '{v0:02d}:00 · Focus', v0=self.focus_target // 60))
         self.session_open = True
         self.running_since = time.monotonic()
-        self.pause_button.configure(text="Pause")
+        self.pause_button.configure(text=tr(self, 'Pause'))
         self.timer_frame.grid()
         self.subject_picker.configure(state="disabled")
         self.start_button.configure(state="disabled")
-        self.show_notice(f'Focus session started · {subject["name"]}')
+        self.show_notice(tr(self, 'Focus session started · {v0}', v0=subject['name']))
 
     def pause_focus(self):
         if self.running_since is not None:
             self.session_seconds = self.elapsed()
             self.running_since = None
-            self.pause_button.configure(text="Resume")
+            self.pause_button.configure(text=tr(self, 'Resume'))
         else:
             self.running_since = time.monotonic()
-            self.pause_button.configure(text="Pause")
+            self.pause_button.configure(text=tr(self, 'Pause'))
 
     def finish_focus(self):
         if not self.session_open:
@@ -542,7 +553,7 @@ class Dashboard(ctk.CTk):
         except sqlite3.Error:
             self.session_seconds = self.elapsed()
             self.running_since = None
-            self.pause_button.configure(text="Resume")
+            self.pause_button.configure(text=tr(self, 'Resume'))
             self.session_save_failed = True
             self.show_notice(SAVE_RETRY_NOTICE)
             return False
@@ -560,7 +571,7 @@ class Dashboard(ctk.CTk):
                 self.task_vars["focus"].set(True)
             except sqlite3.Error:
                 pass  # The session itself has already been committed successfully.
-        self.show_notice(f"Session saved · {elapsed // 60}m {elapsed % 60:02d}s of focused study.")
+        self.show_notice(tr(self, 'Session saved · {v0}m {v1:02d}s of focused study.', v0=elapsed // 60, v1=elapsed % 60))
         try:
             self.refresh_data()
         except sqlite3.Error:
@@ -577,8 +588,8 @@ class Dashboard(ctk.CTk):
     def update_metrics(self):
         summary = self.store.summary()
         minutes = summary["seconds"] // 60
-        values = [f"{minutes // 60}h {minutes % 60:02d}m", str(summary["sessions"]),
-                  f'{summary["streak"]} days', str(summary["subjects"])]
+        values = [tr(self,'{v0}h {v1:02d}m',v0=minutes//60,v1=minutes%60), str(summary["sessions"]),
+                  tr(self,'{v0} days',v0=summary['streak']), str(summary["subjects"])]
         for label, value in zip(self.metric_values, values):
             label.configure(text=value)
         self.saved_today_seconds = summary["today_seconds"]
@@ -586,7 +597,7 @@ class Dashboard(ctk.CTk):
 
     def update_goal(self):
         goal = self.preferences["daily_goal_minutes"]
-        self.goal.configure(text=f"{self.saved_today_seconds // 60} / {goal} min")
+        self.goal.configure(text=tr(self, '{v0} / {v1} min', v0=self.saved_today_seconds // 60, v1=goal))
         self.goal_bar.set(min(self.saved_today_seconds / (goal * 60), 1))
 
     def validate_preferences_change(self, fields):
@@ -611,7 +622,7 @@ class Dashboard(ctk.CTk):
                 return
             if self.session_open:
                 remaining = max(0, self.focus_target - int(self.elapsed()))
-                self.timer_label.configure(text=f"{remaining // 60:02d}:{remaining % 60:02d} · {'Paused' if self.running_since is None else 'Focus'}")
+                self.timer_label.configure(text=tr(self, '{v0:02d}:{v1:02d} · {v2}', v0=remaining // 60, v1=remaining % 60, v2=tr(self,'Paused' if self.running_since is None else 'Focus')))
                 if remaining == 0 and self.running_since is not None:
                     self.finish_focus()
             today = date.today()
@@ -624,11 +635,11 @@ class Dashboard(ctk.CTk):
                 self.refresh_data()
                 for key, value in tasks.items():
                     self.task_vars[key].set(value)
-                self.date_label.configure(text=today.strftime("%A, %B %d, %Y"))
+                self.date_label.configure(text=self.display_date(today))
                 self.active_day = today
                 self.refresh_pending = False
                 if retrying and not self.session_save_failed:
-                    self.show_notice("Dashboard refreshed.")
+                    self.show_notice(tr(self, 'Dashboard refreshed.'))
         except sqlite3.Error:
             self.defer_refresh()
         finally:
@@ -636,10 +647,10 @@ class Dashboard(ctk.CTk):
 
     def close(self):
         if self.question_bank.importer.saving or self.flashcard_page.importer.saving:
-            (self.flashcard_page.importer if self.flashcard_page.importer.saving else self.question_bank.importer).status.configure(text='Wait for the CSV import to finish before closing.')
+            (self.flashcard_page.importer if self.flashcard_page.importer.saving else self.question_bank.importer).status.configure(text=tr(self, 'Wait for the CSV import to finish before closing.'))
             return
         if self.settings_page.backups.busy:
-            self.settings_page.backups.status.configure(text="Wait for the database operation to finish before closing.")
+            self.settings_page.backups.status.configure(text=tr(self, 'Wait for the database operation to finish before closing.'))
             return
         self.settings_page.backups.cancel_pending()
         if self.session_open and not self.finish_focus():

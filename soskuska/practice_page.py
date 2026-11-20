@@ -1,4 +1,6 @@
 """Saved multiple-choice practice and result review on the Tk main thread."""
+from localization_widgets import LocalizedOptionMenu
+from localization import tr
 import sqlite3
 from datetime import datetime
 
@@ -19,8 +21,8 @@ class PracticePage(ctk.CTkFrame):
         self.topic_ids = {"All topics": "all", "No topic": None}
         self.pending_action = None
         self.grid_columnconfigure(0, weight=1)
-        app.label(self, "Practice Tests", 28, bold=True).grid(row=0, column=0, sticky="w")
-        self.status = app.label(self, "Answers are saved on this device. Results appear after submission.", 13, "secondary", wraplength=650)
+        app.label(self, tr(self.app, 'Practice Tests'), 28, bold=True).grid(row=0, column=0, sticky="w")
+        self.status = app.label(self, tr(self.app, 'Answers are saved on this device. Results appear after submission.'), 13, "secondary", wraplength=650)
         self.status.grid(row=1, column=0, sticky="ew", pady=(6, 18))
         self.setup = app.frame(self)
         self.setup.grid(row=3, column=0, sticky="ew")
@@ -32,8 +34,8 @@ class PracticePage(ctk.CTkFrame):
         self.active_label.grid(row=0, column=0, sticky="ew", padx=18, pady=14)
         actions = app.frame(self.active_panel)
         actions.grid(row=1, column=0, sticky="w", padx=18, pady=(0, 14))
-        app.button(actions, "Resume test", self.resume, primary=True, width=125).pack(side="left", padx=(0, 8))
-        app.button(actions, "Discard test", lambda: self.ask_action("discard"), width=125).pack(side="left")
+        app.button(actions, tr(self.app, 'Resume test'), self.resume, primary=True, width=125).pack(side="left", padx=(0, 8))
+        app.button(actions, tr(self.app, 'Discard test'), lambda: self.ask_action("discard"), width=125).pack(side="left")
         self.subject = ctk.StringVar()
         self.topic = ctk.StringVar(value="All topics")
         self.difficulty = ctk.StringVar(value="All difficulties")
@@ -49,10 +51,10 @@ class PracticePage(ctk.CTkFrame):
         self.available.grid(row=12, column=0, sticky="ew", pady=(4, 12))
         actions = app.frame(self.setup)
         actions.grid(row=13, column=0, sticky="w", pady=(0, 24))
-        self.start_button = app.button(actions, "Start test", self.start, primary=True, width=125)
+        self.start_button = app.button(actions, tr(self.app, 'Start test'), self.start, primary=True, width=125)
         self.start_button.pack(side="left", padx=(0, 8))
-        app.button(actions, "Refresh subjects", self.show_config, width=155).pack(side="left")
-        app.label(self.setup, "Completed tests · most recent 20", 18, bold=True).grid(row=14, column=0, sticky="w", pady=(0, 12))
+        app.button(actions, tr(self.app, 'Refresh subjects'), self.show_config, width=155).pack(side="left")
+        app.label(self.setup, tr(self.app, 'Completed tests · most recent 20'), 18, bold=True).grid(row=14, column=0, sticky="w", pady=(0, 12))
         self.history = app.frame(self.setup)
         self.history.grid(row=15, column=0, sticky="ew")
         self.history.grid_columnconfigure(0, weight=1)
@@ -60,7 +62,7 @@ class PracticePage(ctk.CTkFrame):
         self.run = app.frame(self)
         self.run.grid(row=4, column=0, sticky="ew")
         self.run.grid_columnconfigure(0, weight=1)
-        app.button(self.run, "← Test setup / history", self.show_config, width=195).grid(row=0, column=0, sticky="w", pady=(0, 16))
+        app.button(self.run, tr(self.app, '← Test setup / history'), self.show_config, width=195).grid(row=0, column=0, sticky="w", pady=(0, 16))
         self.progress = app.label(self.run, "", 16, bold=True, wraplength=650)
         self.progress.grid(row=1, column=0, sticky="ew")
         self.timer = app.label(self.run, "", 14, "hover")
@@ -85,13 +87,13 @@ class PracticePage(ctk.CTkFrame):
             self.answer_labels.append(label)
         navigation = app.frame(self.run)
         navigation.grid(row=8, column=0, sticky="w", pady=(8, 12))
-        self.previous_button = app.button(navigation, "Previous", lambda: self.move(-1), width=105)
+        self.previous_button = app.button(navigation, tr(self.app, 'Previous'), lambda: self.move(-1), width=105)
         self.previous_button.pack(side="left", padx=(0, 8))
-        self.next_button = app.button(navigation, "Next", lambda: self.move(1), width=105)
+        self.next_button = app.button(navigation, tr(self.app, 'Next'), lambda: self.move(1), width=105)
         self.next_button.pack(side="left", padx=(0, 8))
-        self.clear_button = app.button(navigation, "Clear answer", lambda: self.click_answer(-1), width=125)
+        self.clear_button = app.button(navigation, tr(self.app, 'Clear answer'), lambda: self.click_answer(-1), width=125)
         self.clear_button.pack(side="left")
-        self.finish_button = app.button(self.run, "Finish test", lambda: self.ask_action("finish"), primary=True, width=150)
+        self.finish_button = app.button(self.run, tr(self.app, 'Finish test'), lambda: self.ask_action("finish"), primary=True, width=150)
         self.finish_button.grid(row=9, column=0, sticky="w", pady=(0, 16))
 
         self.confirm = app.frame(self, card=True)
@@ -101,9 +103,9 @@ class PracticePage(ctk.CTkFrame):
         self.confirm_text.grid(row=0, column=0, sticky="ew", padx=18, pady=14)
         actions = app.frame(self.confirm)
         actions.grid(row=1, column=0, sticky="w", padx=18, pady=(0, 14))
-        self.confirm_button = app.button(actions, "Confirm", self.confirm_action, primary=True, width=125)
+        self.confirm_button = app.button(actions, tr(self.app, 'Confirm'), self.confirm_action, primary=True, width=125)
         self.confirm_button.pack(side="left", padx=(0, 8))
-        app.button(actions, "Cancel", self.cancel_action, width=85).pack(side="left")
+        app.button(actions, tr(self.app, 'Cancel'), self.cancel_action, width=85).pack(side="left")
         self.results = app.frame(self)
         self.results.grid(row=5, column=0, sticky="ew")
         self.results.grid_columnconfigure(0, weight=1)
@@ -121,15 +123,15 @@ class PracticePage(ctk.CTkFrame):
             self.app.scroll.scroll_to_top()
 
     def selector(self, parent, row, text, variable, values, command=None):
-        self.app.label(parent, text, 13, "secondary").grid(row=row*2, column=0, sticky="w", pady=(0, 4))
-        menu = ctk.CTkOptionMenu(parent, variable=variable, values=values, command=command,
+        self.app.label(parent, tr(self.app,text), 13, "secondary").grid(row=row*2, column=0, sticky="w", pady=(0, 4))
+        menu = LocalizedOptionMenu(parent,owner=self.app,translate_values=text!="Subject",empty_text="Add a subject first" if text=="Subject" else None, variable=variable, values=values if text!="Subject" else [], command=command,
                                   dynamic_resizing=False, height=38, font=self.app.font(),
                                   fg_color="#202633", button_color="#6D28D9")
         menu.grid(row=row*2+1, column=0, sticky="ew", pady=(0, 14))
         return menu
 
     def error(self, exc):
-        self.status.configure(text=str(exc) if isinstance(exc, ValueError) else "Could not access practice data. Please try again.")
+        self.status.configure(text=tr(self.app,tr(self.app, str(exc)) if isinstance(exc, ValueError) else tr(self.app, 'Could not access practice data. Please try again.')))
 
     def load(self):
         if self.finishing and self.active_id is not None:
@@ -161,23 +163,23 @@ class PracticePage(ctk.CTkFrame):
                 self.finishing = False
             selected = self.subject_ids.get(self.subject.get())
             self.subject_ids = {s["name"]: s["id"] for s in subjects}
-            self.subject_menu.configure(values=list(self.subject_ids) or ["Add a subject first"])
+            self.subject_menu.configure(values=list(self.subject_ids))
             self.subject.set(next((k for k, v in self.subject_ids.items() if v == selected), next(iter(self.subject_ids), "Add a subject first")))
             self.subject_changed()
             for child in self.history.winfo_children():
                 child.destroy()
             if not history:
-                self.app.label(self.history, "No completed tests yet.", 14, "secondary").grid(row=0, column=0, sticky="w")
+                self.app.label(self.history, tr(self.app, 'No completed tests yet.'), 14, "secondary").grid(row=0, column=0, sticky="w")
             for row, attempt in enumerate(history):
                 card = self.app.frame(self.history, card=True)
                 card.grid(row=row, column=0, sticky="ew", pady=(0, 12))
                 card.grid_columnconfigure(0, weight=1)
-                text = f'{attempt["subject_name"]} · {attempt["correct"]}/{attempt["question_count"]} correct · {self.local_time(attempt["completed_at"])}'
+                text = tr(self.app,'{v0} · {v1}/{v2} correct · {v3}',v0=attempt['subject_name'],v1=attempt['correct'],v2=attempt['question_count'],v3=self.local_time(attempt['completed_at']))
                 label = self.app.label(card, text, 14, wraplength=600)
                 label.grid(row=0, column=0, sticky="ew", padx=18, pady=16)
-                self.app.button(card, "View result", lambda aid=attempt["id"]: self.view_result(aid), width=115).grid(row=1, column=0, sticky="w", padx=18, pady=(0, 14))
+                self.app.button(card, tr(self.app, 'View result'), lambda aid=attempt["id"]: self.view_result(aid), width=115).grid(row=1, column=0, sticky="w", padx=18, pady=(0, 14))
             if active:
-                self.active_label.configure(text=f'Unfinished test: {active["subject_name"]} · {active["answered"]}/{active["question_count"]} answered. Resume or discard it before starting another.')
+                self.active_label.configure(text=tr(self.app, 'Unfinished test: {v0} · {v1}/{v2} answered. Resume or discard it before starting another.', v0=active['subject_name'], v1=active['answered'], v2=active['question_count']))
                 self.active_panel.grid()
             else:
                 self.active_panel.grid_remove()
@@ -217,7 +219,7 @@ class PracticePage(ctk.CTkFrame):
             self.count_menu.configure(values=values)
             if self.count.get() not in values:
                 self.count.set(str(min(10, maximum)))
-            self.available.configure(text=f"{len(pool)} matching questions. Add content through My Subjects → Questions." if not pool else f"{len(pool)} matching questions. Questions will be randomly selected without repeats.")
+            self.available.configure(text=tr(self.app, '{v0} matching questions. Add content through My Subjects → Questions.', v0=len(pool)) if not pool else tr(self.app, '{v0} matching questions. Questions will be randomly selected without repeats.', v0=len(pool)))
             self.start_button.configure(state="normal" if pool and self.active_id is None else "disabled")
         except (ValueError, sqlite3.Error) as exc:
             self.start_button.configure(state="disabled")
@@ -254,7 +256,7 @@ class PracticePage(ctk.CTkFrame):
         self.run.grid()
         self.show_question()
         self.scroll_to_top()
-        self.status.configure(text="Choose an answer to save it. You can change it before submitting.")
+        self.status.configure(text=tr(self.app, 'Choose an answer to save it. You can change it before submitting.'))
         if expired(self.attempt["deadline_at"], utc_now()):
             self.finish()
 
@@ -269,7 +271,7 @@ class PracticePage(ctk.CTkFrame):
 
     def update_progress(self):
         answered = sum(q["selected_option"] is not None for q in self.items)
-        self.progress.configure(text=f'{self.attempt["subject_name"]} · Question {self.attempt["current_index"]+1}/{len(self.items)} · {answered} answered')
+        self.progress.configure(text=tr(self.app, '{v0} · Question {v1}/{v2} · {v3} answered', v0=self.attempt['subject_name'], v1=self.attempt['current_index'] + 1, v2=len(self.items), v3=answered))
 
     def set_controls(self, enabled):
         state = "normal" if enabled else "disabled"
@@ -298,7 +300,7 @@ class PracticePage(ctk.CTkFrame):
         item["selected_option"] = None if value == -1 else value
         self.cancel_action()
         self.update_progress()
-        self.status.configure(text="Answer saved on this device.")
+        self.status.configure(text=tr(self.app, 'Answer saved on this device.'))
 
     def move(self, offset):
         if self.finishing or self.active_id is None:
@@ -320,7 +322,7 @@ class PracticePage(ctk.CTkFrame):
         self.pending_action = action
         unanswered = len(self.items) - sum(q["selected_option"] is not None for q in self.items)
         text = "Discard the unfinished test and its answers? This cannot be undone." if action == "discard" else f"Submit this test? {unanswered} questions are unanswered and will count as incorrect. Answers cannot be changed after submission."
-        self.confirm_text.configure(text=text)
+        self.confirm_text.configure(text=tr(self.app,text))
         self.confirm.grid()
         self.scroll_to_top()
 
@@ -338,7 +340,7 @@ class PracticePage(ctk.CTkFrame):
                     return
                 self.active_id = None
                 self.finishing = False
-                self.status.configure(text="Unfinished test discarded.")
+                self.status.configure(text=tr(self.app, 'Unfinished test discarded.'))
                 self.show_config()
             except MissingPracticeError:
                 self.recover_missing_attempt()
@@ -359,7 +361,7 @@ class PracticePage(ctk.CTkFrame):
         self.start_button.configure(state="disabled")
         self.setup.grid()
         if self.show_config():
-            self.status.configure(text="This test was discarded in another window. Practice setup refreshed.")
+            self.status.configure(text=tr(self.app, 'This test was discarded in another window. Practice setup refreshed.'))
 
     def finish(self):
         if self.active_id is None:
@@ -372,7 +374,7 @@ class PracticePage(ctk.CTkFrame):
         except MissingPracticeError:
             self.recover_missing_attempt()
         except (ValueError, sqlite3.Error) as exc:
-            self.status.configure(text=str(exc) if isinstance(exc, ValueError) else "Could not finish or load the result. Saved answers are kept; retrying automatically.")
+            self.status.configure(text=tr(self.app,tr(self.app, str(exc)) if isinstance(exc, ValueError) else tr(self.app, 'Could not finish or load the result. Saved answers are kept; retrying automatically.')))
 
     def view_result(self, attempt_id):
         try:
@@ -391,23 +393,23 @@ class PracticePage(ctk.CTkFrame):
             raise ValueError("This test has not been completed.")
         for child in self.results.winfo_children():
             child.destroy()
-        self.app.button(self.results, "← Test setup / history", self.show_config, width=195).grid(row=0, column=0, sticky="w", pady=(0, 16))
+        self.app.button(self.results, tr(self.app, '← Test setup / history'), self.show_config, width=195).grid(row=0, column=0, sticky="w", pady=(0, 16))
         score = round(100 * attempt["correct"] / attempt["question_count"], 1)
-        self.app.label(self.results, f'{attempt["subject_name"]} · {attempt["correct"]}/{attempt["question_count"]} correct · {score}%', 24, bold=True, wraplength=650).grid(row=1, column=0, sticky="ew")
-        self.app.label(self.results, f'Completed {self.local_time(attempt["completed_at"])} · {attempt["answered"]} answered · {attempt["question_count"]-attempt["answered"]} unanswered', 13, "secondary", wraplength=650).grid(row=2, column=0, sticky="ew", pady=(8, 20))
+        self.app.label(self.results, tr(self.app, '{v0} · {v1}/{v2} correct · {v3}%', v0=attempt['subject_name'], v1=attempt['correct'], v2=attempt['question_count'], v3=score), 24, bold=True, wraplength=650).grid(row=1, column=0, sticky="ew")
+        self.app.label(self.results, tr(self.app, 'Completed {v0} · {v1} answered · {v2} unanswered', v0=self.local_time(attempt['completed_at']), v1=attempt['answered'], v2=attempt['question_count'] - attempt['answered']), 13, "secondary", wraplength=650).grid(row=2, column=0, sticky="ew", pady=(8, 20))
         for index, item in enumerate(items):
             card = self.app.frame(self.results, card=True)
             card.grid(row=index+3, column=0, sticky="ew", pady=(0, 14))
             card.grid_columnconfigure(0, weight=1)
             selected = item["selected_option"]
             fields = ["option_a", "option_b", "option_c", "option_d"]
-            yours = "Unanswered" if selected is None else f'{"ABCD"[selected]} · {item[fields[selected]]}'
+            yours = tr(self.app,'Unanswered') if selected is None else f'{"ABCD"[selected]} · {item[fields[selected]]}'
             correct = item["correct_option"]
             state = "Correct" if selected == correct else ("Unanswered" if selected is None else "Incorrect")
-            texts = [f'{index+1}. {item["prompt"]}', f'{state} · {item["difficulty"]} · {item["topic_name"] or "No topic"}',
-                     f'Your answer: {yours}', f'Correct answer: {"ABCD"[correct]} · {item[fields[correct]]}']
+            texts = [f'{index+1}. {item["prompt"]}', tr(self.app,'{v0} · {v1} · {v2}',v0=tr(self.app,state),v1=tr(self.app,item['difficulty']),v2=item['topic_name'] or tr(self.app,'No topic')),
+                     tr(self.app,'Your answer: {v0}',v0=yours), tr(self.app,'Correct answer: {v0} · {v1}',v0='ABCD'[correct],v1=item[fields[correct]])]
             if item["explanation"]:
-                texts.append(f'Explanation: {item["explanation"]}')
+                texts.append(tr(self.app, 'Explanation: {v0}', v0=item['explanation']))
             labels = []
             for row, text in enumerate(texts):
                 label = self.app.label(card, text, 14, bold=row == 0, wraplength=600)
@@ -422,7 +424,7 @@ class PracticePage(ctk.CTkFrame):
         self.cancel_action()
         self.results.grid()
         self.scroll_to_top()
-        self.status.configure(text="Result saved. Questions and explanations below are snapshots from this test.")
+        self.status.configure(text=tr(self.app, 'Result saved. Questions and explanations below are snapshots from this test.'))
 
     def tick(self):
         try:
@@ -430,7 +432,7 @@ class PracticePage(ctk.CTkFrame):
                 return
             if self.active_id is not None:
                 remaining = seconds_left(self.attempt["deadline_at"], utc_now())
-                self.timer.configure(text="Untimed · answers saved as you choose" if remaining is None else f'Time left · {remaining // 60:02d}:{remaining % 60:02d}')
+                self.timer.configure(text=tr(self.app, 'Untimed · answers saved as you choose') if remaining is None else tr(self.app, 'Time left · {v0:02d}:{v1:02d}', v0=remaining // 60, v1=remaining % 60))
                 if self.finishing or remaining == 0:
                     self.finish()
         finally:

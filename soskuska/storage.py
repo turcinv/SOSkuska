@@ -12,7 +12,7 @@ from preferences import DEFAULTS, preference_fields
 from database_lock import DatabaseLease
 from csv_import import ImportValidationError, validate_rows, signature
 
-SCHEMA_VERSION = 7
+SCHEMA_VERSION = 8
 
 
 def default_database(base):
@@ -189,7 +189,7 @@ class Store:
                     ollama_endpoint TEXT NOT NULL, ollama_model TEXT NOT NULL,
                     answer_language TEXT NOT NULL,
                     revision INTEGER NOT NULL DEFAULT 0 CHECK(revision>=0))""")
-                self.db.execute("INSERT INTO preferences VALUES (1,?,?,?,?,?,0)", tuple(DEFAULTS.values()))
+                self.db.execute("INSERT INTO preferences VALUES (1,?,?,?,?,?,0)", tuple(DEFAULTS[key] for key in ('focus_minutes','daily_goal_minutes','ollama_endpoint','ollama_model','answer_language')))
             if version < 7:
                 self.db.execute("""CREATE TABLE tutor_conversations (
                     id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL,
@@ -205,6 +205,8 @@ class Store:
                     created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
                     UNIQUE(conversation_id,position))""")
                 self.db.execute('CREATE INDEX tutor_history_recent ON tutor_conversations(updated_at DESC,id DESC)')
+            if version < 8:
+                self.db.execute("ALTER TABLE preferences ADD COLUMN ui_language TEXT NOT NULL DEFAULT 'English' CHECK(ui_language IN ('English','Czech','Slovak','Russian'))")
             self.db.execute(f"PRAGMA user_version = {SCHEMA_VERSION}")
 
     def tutor_conversations(self, offset=0):
@@ -831,11 +833,11 @@ class Store:
             revision = row[0] if row else 0
             if revision != expected_revision:
                 raise ValueError("Settings changed in another window. Your draft is kept; copy it before using Reload to combine changes.")
-            self.db.execute("""INSERT INTO preferences VALUES (1,?,?,?,?,?,?)
+            self.db.execute("""INSERT INTO preferences(id,focus_minutes,daily_goal_minutes,ollama_endpoint,ollama_model,answer_language,ui_language,revision) VALUES (1,?,?,?,?,?,?,?)
                 ON CONFLICT(id) DO UPDATE SET focus_minutes=excluded.focus_minutes,
                 daily_goal_minutes=excluded.daily_goal_minutes,ollama_endpoint=excluded.ollama_endpoint,
                 ollama_model=excluded.ollama_model,answer_language=excluded.answer_language,
-                revision=excluded.revision""", (*normalized.values(), revision+1))
+                ui_language=excluded.ui_language,revision=excluded.revision""", (*normalized.values(), revision+1))
         return dict(normalized, revision=revision+1, invalid=False)
 
     def close(self):

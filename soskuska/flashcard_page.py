@@ -1,4 +1,6 @@
 """Flashcard authoring and saved self-assessment reviews."""
+from localization_widgets import LocalizedOptionMenu
+from localization import tr, duration_text
 import sqlite3
 from datetime import datetime
 from functools import wraps
@@ -15,7 +17,7 @@ def safe(method):
         try:
             return method(self, *args, **kwargs)
         except (ValueError, sqlite3.Error) as exc:
-            self.status.configure(text=str(exc) if isinstance(exc, ValueError) else "Could not access flashcard data. Please retry.")
+            self.status.configure(text=tr(self.app,tr(self.app, str(exc)) if isinstance(exc, ValueError) else tr(self.app, 'Could not access flashcard data. Please retry.')))
     return call
 
 
@@ -37,14 +39,14 @@ class FlashcardPage(ctk.CTkFrame):
         self.review_deck_name = ""
         self.query = ctk.StringVar()
         self.grid_columnconfigure(0, weight=1)
-        app.label(self, "Flashcards", 28, bold=True).grid(row=0, column=0, sticky="w")
-        self.status = app.label(self, "Create cards, reveal the answer, then rate how well you recalled it.", 13, "secondary", wraplength=650)
+        app.label(self, tr(self.app, 'Flashcards'), 28, bold=True).grid(row=0, column=0, sticky="w")
+        self.status = app.label(self, tr(self.app, 'Create cards, reveal the answer, then rate how well you recalled it.'), 13, "secondary", wraplength=650)
         self.status.grid(row=1, column=0, sticky="ew", pady=(6, 14))
         toolbar = app.frame(self)
         toolbar.grid(row=2, column=0, sticky="w", pady=(0, 18))
-        app.button(toolbar, "All decks", self.show_decks, width=110).pack(side="left", padx=(0, 8))
-        app.button(toolbar, "Review history", self.show_history, width=140).pack(side="left", padx=(0, 8))
-        app.button(toolbar, "Refresh", self.refresh, width=90).pack(side="left")
+        app.button(toolbar, tr(self.app, 'All decks'), self.show_decks, width=110).pack(side="left", padx=(0, 8))
+        app.button(toolbar, tr(self.app, 'Review history'), self.show_history, width=140).pack(side="left", padx=(0, 8))
+        app.button(toolbar, tr(self.app, 'Refresh'), self.refresh, width=90).pack(side="left")
         self.importer = CsvImportPanel(self, app, self, cards=True)
         self.importer.grid(row=3, column=0, sticky="ew", pady=(0,18));self.importer.grid_remove()
         self.body = app.frame(self)
@@ -78,9 +80,8 @@ class FlashcardPage(ctk.CTkFrame):
     def local_time(value):
         return datetime.fromisoformat(value).astimezone().strftime("%Y-%m-%d %H:%M")
 
-    @staticmethod
-    def subject_text(deck):
-        return deck["current_subject_name"] or f'{deck["subject_name"]} (subject deleted)'
+    def subject_text(self, deck):
+        return deck["current_subject_name"] or tr(self.app,'{v0} (subject deleted)',v0=deck['subject_name'])
 
     @safe
     def load(self):
@@ -101,9 +102,9 @@ class FlashcardPage(ctk.CTkFrame):
     def refresh(self):
         if self.view == "deck_form" and self.editing_deck is None:
             self.refresh_deck_subjects()
-            self.status.configure(text="Subject list refreshed. Your draft is kept.")
+            self.status.configure(text=tr(self.app, 'Subject list refreshed. Your draft is kept.'))
         elif self.view in ("deck_form", "card_form"):
-            self.status.configure(text="Save or cancel the current draft before refreshing.")
+            self.status.configure(text=tr(self.app, 'Save or cancel the current draft before refreshing.'))
         else:
             self.load()
 
@@ -113,20 +114,20 @@ class FlashcardPage(ctk.CTkFrame):
         self.clear("decks")
         self.queue = []
         self.current_card = None
-        self.new_deck_button = self.app.button(self.body, "+ New deck", self.deck_form, primary=True, width=140)
+        self.new_deck_button = self.app.button(self.body, tr(self.app, '+ New deck'), self.deck_form, primary=True, width=140)
         self.new_deck_button.grid(row=0, column=0, sticky="w", pady=(0, 16))
         if not decks:
-            self.app.label(self.body, "No decks yet. Create a subject in My Subjects, then add your first deck.", 14, "secondary", wraplength=650).grid(row=1, column=0, sticky="ew")
+            self.app.label(self.body, tr(self.app, 'No decks yet. Create a subject in My Subjects, then add your first deck.'), 14, "secondary", wraplength=650).grid(row=1, column=0, sticky="ew")
         for row, deck in enumerate(decks, 1):
             card = self.app.frame(self.body, card=True)
             card.grid(row=row, column=0, sticky="ew", pady=(0, 14))
             card.grid_columnconfigure(0, weight=1)
             self.label(card, deck["name"], 0, 18, True)
-            self.label(card, f'{self.subject_text(deck)} · {deck["card_count"]} cards · {deck["due_count"]} due', 1)
+            self.label(card, tr(self.app, '{v0} · {v1} cards · {v2} due', v0=self.subject_text(deck), v1=deck['card_count'], v2=deck['due_count']), 1)
             actions = self.app.frame(card)
             actions.grid(row=2, column=0, sticky="w", padx=18, pady=(0, 16))
-            self.app.button(actions, "Open deck", lambda did=deck["id"]: self.open_deck(did), width=120).pack(side="left", padx=(0, 8))
-            button = self.app.button(actions, "Study due", lambda did=deck["id"]: self.start_review(did), primary=True, width=120)
+            self.app.button(actions, tr(self.app, 'Open deck'), lambda did=deck["id"]: self.open_deck(did), width=120).pack(side="left", padx=(0, 8))
+            button = self.app.button(actions, tr(self.app, 'Study due'), lambda did=deck["id"]: self.start_review(did), primary=True, width=120)
             button.pack(side="left")
             button.configure(state="normal" if deck["due_count"] else "disabled")
 
@@ -164,36 +165,36 @@ class FlashcardPage(ctk.CTkFrame):
             self.label(head, deck["description"], 2)
         actions = self.app.frame(self.body)
         actions.grid(row=1, column=0, sticky="w", pady=(0, 16))
-        self.new_card_button = self.app.button(actions, "+ New card", self.card_form, primary=True, width=125)
+        self.new_card_button = self.app.button(actions, tr(self.app, '+ New card'), self.card_form, primary=True, width=125)
         self.new_card_button.pack(side="left", padx=(0, 8))
-        self.study_button = self.app.button(actions, f"Study due ({len(due)})", lambda: self.start_review(deck_id), width=155)
+        self.study_button = self.app.button(actions, tr(self.app, 'Study due ({v0})', v0=len(due)), lambda: self.start_review(deck_id), width=155)
         self.study_button.pack(side="left", padx=(0, 8))
         self.study_button.configure(state="normal" if due else "disabled")
-        self.app.button(actions, "Edit deck", lambda: self.deck_form(deck_id), width=100).pack(side="left", padx=(0, 8))
-        self.app.button(actions, "Delete deck", lambda: self.ask_delete("deck", deck_id), width=115).pack(side="left")
-        self.csv_button = self.app.button(actions, "Import CSV", self.importer.open, width=110)
+        self.app.button(actions, tr(self.app, 'Edit deck'), lambda: self.deck_form(deck_id), width=100).pack(side="left", padx=(0, 8))
+        self.app.button(actions, tr(self.app, 'Delete deck'), lambda: self.ask_delete("deck", deck_id), width=115).pack(side="left")
+        self.csv_button = self.app.button(actions, tr(self.app, 'Import CSV'), self.importer.open, width=110)
         self.csv_button.pack(side="left", padx=(8,0))
         search = self.app.frame(self.body)
         search.grid(row=2, column=0, sticky="ew", pady=(0, 14))
         search.grid_columnconfigure(0, weight=1)
-        self.search = ctk.CTkEntry(search, height=38, placeholder_text="Search front or back…", font=self.app.font())
+        self.search = ctk.CTkEntry(search, height=38, placeholder_text=tr(self.app, 'Search front or back…'), font=self.app.font())
         self.search.grid(row=0, column=0, sticky="ew", padx=(0, 8))
         self.search.insert(0, search_draft)
-        self.app.button(search, "Search", self.search_cards, width=90).grid(row=0, column=1)
-        self.app.label(self.body, f"{len(cards)} matching cards · showing up to 100. Narrow the search for more.", 13, "secondary", wraplength=650).grid(row=3, column=0, sticky="ew", pady=(0, 12))
+        self.app.button(search, tr(self.app, 'Search'), self.search_cards, width=90).grid(row=0, column=1)
+        self.app.label(self.body, tr(self.app, '{v0} matching cards · showing up to 100. Narrow the search for more.', v0=len(cards)), 13, "secondary", wraplength=650).grid(row=3, column=0, sticky="ew", pady=(0, 12))
         if not cards:
-            self.app.label(self.body, "No matching cards. Add a card or change the search.", 14, "secondary").grid(row=4, column=0, sticky="w")
+            self.app.label(self.body, tr(self.app, 'No matching cards. Add a card or change the search.'), 14, "secondary").grid(row=4, column=0, sticky="w")
         for row, item in enumerate(cards[:100], 4):
             card = self.app.frame(self.body, card=True)
             card.grid(row=row, column=0, sticky="ew", pady=(0, 14))
             card.grid_columnconfigure(0, weight=1)
             self.label(card, item["front"][:240] + ("…" if len(item["front"]) > 240 else ""), 0, 16, True)
             self.label(card, item["back"][:240] + ("…" if len(item["back"]) > 240 else ""), 1)
-            self.label(card, f'Due {self.local_time(item["due_at"])} · {item["review_count"]} saved reviews', 2)
+            self.label(card, tr(self.app, 'Due {v0} · {v1} saved reviews', v0=self.local_time(item['due_at']), v1=item['review_count']), 2)
             actions = self.app.frame(card)
             actions.grid(row=3, column=0, sticky="w", padx=18, pady=(0, 14))
-            self.app.button(actions, "Edit", lambda cid=item["id"]: self.card_form(cid), width=85).pack(side="left", padx=(0, 8))
-            self.app.button(actions, "Delete", lambda cid=item["id"]: self.ask_delete("card", cid), width=85).pack(side="left")
+            self.app.button(actions, tr(self.app, 'Edit'), lambda cid=item["id"]: self.card_form(cid), width=85).pack(side="left", padx=(0, 8))
+            self.app.button(actions, tr(self.app, 'Delete'), lambda cid=item["id"]: self.ask_delete("card", cid), width=85).pack(side="left")
 
     def search_cards(self):
         # Keep the query outside the recreated CTkEntry: its textvariable trace
@@ -210,8 +211,8 @@ class FlashcardPage(ctk.CTkFrame):
         self.subject_ids = {f'Subject: {s["name"]}': s["id"] for s in subjects}
         self.editing_deck = deck_id
         self.clear("deck_form")
-        self.app.label(self.body, "Edit deck" if deck else "New deck", 22, bold=True).grid(row=0, column=0, sticky="w", pady=(0, 16))
-        self.app.label(self.body, "Name (1–120 characters; unique across decks)", 13, "secondary").grid(row=1, column=0, sticky="w")
+        self.app.label(self.body, tr(self.app, 'Edit deck') if deck else tr(self.app, 'New deck'), 22, bold=True).grid(row=0, column=0, sticky="w", pady=(0, 16))
+        self.app.label(self.body, tr(self.app, 'Name (1–120 characters; unique across decks)'), 13, "secondary").grid(row=1, column=0, sticky="w")
         self.name_entry = ctk.CTkEntry(self.body, height=38, font=self.app.font())
         self.name_entry.grid(row=2, column=0, sticky="ew", pady=(4, 14))
         self.name_entry.insert(0, deck["name"] if deck else "")
@@ -219,18 +220,18 @@ class FlashcardPage(ctk.CTkFrame):
         self.subject_requires_choice = False
         self.subject = ctk.StringVar(value=next(iter(self.subject_ids), "Add a subject first"))
         if not deck:
-            self.app.label(self.body, "Subject", 13, "secondary").grid(row=3, column=0, sticky="w")
-            self.subject_menu = ctk.CTkOptionMenu(self.body, variable=self.subject, values=list(self.subject_ids) or ["Add a subject first"], command=self.select_deck_subject, dynamic_resizing=False, height=38)
+            self.app.label(self.body, tr(self.app, 'Subject'), 13, "secondary").grid(row=3, column=0, sticky="w")
+            self.subject_menu = LocalizedOptionMenu(self.body,owner=self.app,translate_values=True, variable=self.subject, values=list(self.subject_ids) or ["Add a subject first"], command=self.select_deck_subject, dynamic_resizing=False, height=38)
             self.subject_menu.grid(row=4, column=0, sticky="ew", pady=(4, 14))
-        self.app.label(self.body, "Description (optional, up to 1,000 characters)", 13, "secondary").grid(row=5, column=0, sticky="w")
+        self.app.label(self.body, tr(self.app, 'Description (optional, up to 1,000 characters)'), 13, "secondary").grid(row=5, column=0, sticky="w")
         self.description = ctk.CTkTextbox(self.body, height=90, font=self.app.font(), wrap="word")
         self.description.grid(row=6, column=0, sticky="ew", pady=(4, 14))
         self.description.insert("1.0", deck["description"] if deck else "")
         actions = self.app.frame(self.body)
         actions.grid(row=7, column=0, sticky="w")
-        self.save_button = self.app.button(actions, "Save deck", self.save_deck, primary=True, width=125)
+        self.save_button = self.app.button(actions, tr(self.app, 'Save deck'), self.save_deck, primary=True, width=125)
         self.save_button.pack(side="left", padx=(0, 8))
-        self.app.button(actions, "Cancel", self.show_decks, width=85).pack(side="left")
+        self.app.button(actions, tr(self.app, 'Cancel'), self.show_decks, width=85).pack(side="left")
 
     def select_deck_subject(self, label):
         self.subject_choice_id = self.subject_ids.get(label)
@@ -267,7 +268,7 @@ class FlashcardPage(ctk.CTkFrame):
             self.editing_deck = self.app.store.create_deck(self.subject_choice_id, *values)
         else:
             self.app.store.update_deck(self.editing_deck, *values)
-        self.status.configure(text="Deck saved on this device.")
+        self.status.configure(text=tr(self.app, 'Deck saved on this device.'))
         self.show_deck(self.editing_deck)
 
     @safe
@@ -278,21 +279,21 @@ class FlashcardPage(ctk.CTkFrame):
         self.editing_card = card_id
         self.editing_revision = card["revision"] if card else None
         self.clear("card_form")
-        self.app.label(self.body, "Edit card" if card else "New card", 22, bold=True).grid(row=0, column=0, sticky="w", pady=(0, 14))
-        self.app.label(self.body, "Front (1–2,000 characters)", 13, "secondary").grid(row=1, column=0, sticky="w")
+        self.app.label(self.body, tr(self.app, 'Edit card') if card else tr(self.app, 'New card'), 22, bold=True).grid(row=0, column=0, sticky="w", pady=(0, 14))
+        self.app.label(self.body, tr(self.app, 'Front (1–2,000 characters)'), 13, "secondary").grid(row=1, column=0, sticky="w")
         self.front_entry = ctk.CTkTextbox(self.body, height=120, font=self.app.font(), wrap="word")
         self.front_entry.grid(row=2, column=0, sticky="ew", pady=(4, 14))
         self.front_entry.insert("1.0", card["front"] if card else "")
-        self.app.label(self.body, "Back (1–4,000 characters)", 13, "secondary").grid(row=3, column=0, sticky="w")
+        self.app.label(self.body, tr(self.app, 'Back (1–4,000 characters)'), 13, "secondary").grid(row=3, column=0, sticky="w")
         self.back_entry = ctk.CTkTextbox(self.body, height=150, font=self.app.font(), wrap="word")
         self.back_entry.grid(row=4, column=0, sticky="ew", pady=(4, 14))
         self.back_entry.insert("1.0", card["back"] if card else "")
-        self.app.label(self.body, "Editing restarts this card's schedule. Past review records are kept.", 13, "secondary", wraplength=650).grid(row=5, column=0, sticky="ew", pady=(0, 14))
+        self.app.label(self.body, tr(self.app, "Editing restarts this card's schedule. Past review records are kept."), 13, "secondary", wraplength=650).grid(row=5, column=0, sticky="ew", pady=(0, 14))
         actions = self.app.frame(self.body)
         actions.grid(row=6, column=0, sticky="w")
-        self.save_button = self.app.button(actions, "Save card", self.save_card, primary=True, width=125)
+        self.save_button = self.app.button(actions, tr(self.app, 'Save card'), self.save_card, primary=True, width=125)
         self.save_button.pack(side="left", padx=(0, 8))
-        self.app.button(actions, "Cancel", lambda: self.show_deck(self.deck_id), width=85).pack(side="left")
+        self.app.button(actions, tr(self.app, 'Cancel'), lambda: self.show_deck(self.deck_id), width=85).pack(side="left")
 
     @safe
     def save_card(self):
@@ -303,7 +304,7 @@ class FlashcardPage(ctk.CTkFrame):
         else:
             self.app.store.update_flashcard(self.editing_card, front, back, self.editing_revision)
             self.editing_revision += 1
-        self.status.configure(text="Card saved on this device.")
+        self.status.configure(text=tr(self.app, 'Card saved on this device.'))
         self.show_deck(self.deck_id)
 
     @safe
@@ -321,12 +322,12 @@ class FlashcardPage(ctk.CTkFrame):
             text = f'Delete this card permanently? {card["front"][:160]} · Review history will be kept.'
         self.clear("confirm")
         self.pending_delete = (kind, record_id, state)
-        self.app.label(self.body, text, 16, wraplength=650).grid(row=0, column=0, sticky="ew", pady=(0, 18))
+        self.app.label(self.body, tr(self.app,text), 16, wraplength=650).grid(row=0, column=0, sticky="ew", pady=(0, 18))
         actions = self.app.frame(self.body)
         actions.grid(row=1, column=0, sticky="w")
-        self.confirm_button = self.app.button(actions, "Confirm deletion", self.confirm_delete, width=160)
+        self.confirm_button = self.app.button(actions, tr(self.app, 'Confirm deletion'), self.confirm_delete, width=160)
         self.confirm_button.pack(side="left", padx=(0, 8))
-        self.app.button(actions, "Cancel", lambda: self.show_deck(self.deck_id) if self.deck_id is not None else self.show_decks(), width=85).pack(side="left")
+        self.app.button(actions, tr(self.app, 'Cancel'), lambda: self.show_deck(self.deck_id) if self.deck_id is not None else self.show_decks(), width=85).pack(side="left")
 
     @safe
     def confirm_delete(self):
@@ -336,10 +337,10 @@ class FlashcardPage(ctk.CTkFrame):
         deleted = self.app.store.delete_deck(record_id, state) if kind == "deck" else self.app.store.delete_flashcard(record_id, state)
         if not deleted:
             self.ask_delete(kind, record_id)
-            self.status.configure(text="The content changed. Review the updated warning before deleting.")
+            self.status.configure(text=tr(self.app, 'The content changed. Review the updated warning before deleting.'))
             return
         self.pending_delete = None
-        self.status.configure(text="Deleted. Saved review history was kept.")
+        self.status.configure(text=tr(self.app, 'Deleted. Saved review history was kept.'))
         if kind == "deck":
             self.deck_id = None
             self.show_decks()
@@ -373,30 +374,30 @@ class FlashcardPage(ctk.CTkFrame):
         self.app.label(self.body, self.review_deck_name, 22, bold=True, wraplength=650).grid(row=0, column=0, sticky="ew", pady=(0, 14))
         if card is None:
             done = sum(self.rated.values())
-            self.app.label(self.body, f"No more due cards in this batch. {done} reviews saved.", 18, wraplength=650).grid(row=1, column=0, sticky="ew", pady=(0, 12))
-            self.app.label(self.body, " · ".join(f"{key}: {value}" for key, value in self.rated.items()), 13, "secondary", wraplength=650).grid(row=2, column=0, sticky="ew", pady=(0, 16))
-            self.app.button(self.body, "Back to deck", lambda: self.show_deck(self.deck_id), width=150).grid(row=3, column=0, sticky="w")
+            self.app.label(self.body, tr(self.app, 'No more due cards in this batch. {v0} reviews saved.', v0=done), 18, wraplength=650).grid(row=1, column=0, sticky="ew", pady=(0, 12))
+            self.app.label(self.body, " · ".join(f"{tr(self.app,key)}: {value}" for key, value in self.rated.items()), 13, "secondary", wraplength=650).grid(row=2, column=0, sticky="ew", pady=(0, 16))
+            self.app.button(self.body, tr(self.app, 'Back to deck'), lambda: self.show_deck(self.deck_id), width=150).grid(row=3, column=0, sticky="w")
             return
-        self.app.label(self.body, f'{len(self.queue)} cards left · {sum(self.rated.values())} reviews saved this batch', 13, "secondary", wraplength=650).grid(row=1, column=0, sticky="ew", pady=(0, 16))
+        self.app.label(self.body, tr(self.app, '{v0} cards left · {v1} reviews saved this batch', v0=len(self.queue), v1=sum(self.rated.values())), 13, "secondary", wraplength=650).grid(row=1, column=0, sticky="ew", pady=(0, 16))
         panel = self.app.frame(self.body, card=True)
         panel.grid(row=2, column=0, sticky="ew", pady=(0, 16))
         panel.grid_columnconfigure(0, weight=1)
         self.label(panel, card["front"], 0, 21, True)
         self.answer = self.label(panel, "", 1, 17)
         self.answer.grid_remove()
-        self.reveal_button = self.app.button(self.body, "Reveal answer", self.reveal, primary=True, width=165)
+        self.reveal_button = self.app.button(self.body, tr(self.app, 'Reveal answer'), self.reveal, primary=True, width=165)
         self.reveal_button.grid(row=3, column=0, sticky="w", pady=(0, 16))
         actions = self.app.frame(self.body)
         actions.grid(row=4, column=0, sticky="w", pady=(0, 16))
         self.rating_buttons = {}
         for rating in RATINGS:
             _due, _interval, label = next_review(card["interval_days"], rating, utc_now())
-            button = self.app.button(actions, f"{rating} · {label}", lambda r=rating, cid=card["id"], rev=card["revision"]: self.rate(r, cid, rev), width=138)
+            button = self.app.button(actions, tr(self.app, '{v0} · {v1}', v0=tr(self.app,rating), v1=duration_text(self.app,label)), lambda r=rating, cid=card["id"], rev=card["revision"]: self.rate(r, cid, rev), width=138)
             button.pack(side="left", padx=(0, 6))
             button.configure(state="disabled")
             self.rating_buttons[rating] = button
-        self.app.button(self.body, "Refresh card", self.show_review, width=140).grid(row=5, column=0, sticky="w")
-        self.status.configure(text="Ratings are self-assessments, not test scores. Unrated cards remain due after closing.")
+        self.app.button(self.body, tr(self.app, 'Refresh card'), self.show_review, width=140).grid(row=5, column=0, sticky="w")
+        self.status.configure(text=tr(self.app, 'Ratings are self-assessments, not test scores. Unrated cards remain due after closing.'))
 
     def reveal(self):
         if self.app.current_page != "Flashcards" or self.view != "review" or self.current_card is None:
@@ -418,7 +419,7 @@ class FlashcardPage(ctk.CTkFrame):
             self.current_card = None
             self.revealed = False
             self.show_review()
-            self.status.configure(text=str(exc))
+            self.status.configure(text=tr(self.app, str(exc)))
             return
         self.queue.pop(0)
         self.rated[rating] += 1
@@ -430,13 +431,13 @@ class FlashcardPage(ctk.CTkFrame):
     def show_history(self):
         history = self.app.store.flashcard_history()
         self.clear("history")
-        self.app.label(self.body, "Review history · latest 20", 22, bold=True).grid(row=0, column=0, sticky="w", pady=(0, 16))
+        self.app.label(self.body, tr(self.app, 'Review history · latest 20'), 22, bold=True).grid(row=0, column=0, sticky="w", pady=(0, 16))
         if not history:
-            self.app.label(self.body, "No saved reviews yet.", 14, "secondary").grid(row=1, column=0, sticky="w")
+            self.app.label(self.body, tr(self.app, 'No saved reviews yet.'), 14, "secondary").grid(row=1, column=0, sticky="w")
         for row, event in enumerate(history, 1):
             card = self.app.frame(self.body, card=True)
             card.grid(row=row, column=0, sticky="ew", pady=(0, 14))
             card.grid_columnconfigure(0, weight=1)
             for index, text in enumerate([f'{event["deck_name"]} · {event["subject_name"]}',
-                    f'{event["rating"]} · {self.local_time(event["reviewed_at"])} · next {self.local_time(event["due_at"])}', event["front"], event["back"]]):
+                    tr(self.app,'{v0} · {v1} · {v2}',v0=tr(self.app,event['rating']),v1=self.local_time(event['reviewed_at']),v2=self.local_time(event['due_at'])), event["front"], event["back"]]):
                 self.label(card, text, index, 14, index == 0)

@@ -136,7 +136,7 @@ class SettingsUiTests(unittest.TestCase):
         saved = dict(DEFAULTS, revision=0, invalid=False)
         store = Mock()
         store.preferences.side_effect = [sqlite3.OperationalError('busy'), saved]
-        app = SimpleNamespace(store=store, label=Mock(), button=Mock(), frame=Mock(), font=Mock())
+        app = SimpleNamespace(store=store, label=Mock(), button=Mock(), frame=Mock(), font=Mock(), preferences=dict(DEFAULTS))
         language = Entry('Automatic')
 
         with (patch('settings_page.BackupPanel'),
@@ -145,7 +145,8 @@ class SettingsUiTests(unittest.TestCase):
               patch.object(SettingsPage, 'bind'),
               patch.object(ctk, 'CTkEntry', side_effect=lambda *args, **kwargs: Entry()),
               patch.object(ctk, 'CTkOptionMenu'),
-              patch.object(ctk, 'StringVar', return_value=language)):
+              patch('settings_page.LocalizedOptionMenu'),
+              patch.object(ctk, 'StringVar', side_effect=[language,Entry('English')])):
             page = SettingsPage(None, app)
 
         page.load()

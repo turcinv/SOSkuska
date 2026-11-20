@@ -18,7 +18,7 @@ The `@path` references are repository-relative reading instructions. Open the li
 
 ## Essential rules
 
-- Respond in the user's latest language: Czech, Slovak, English or Russian. UI and agent instructions stay English. User documentation is English-primary with separate aligned translations in `docs/cs/`, `docs/sk/`, `docs/ru/`; preserve matching-page language links. Files in `docs/agents/` are English internal agent instructions.
+- Respond in the user's latest language: Czech, Slovak, English or Russian. UI defaults to English with saved Czech/Slovak/Russian choices; agent instructions stay English. User documentation is English-primary with separate aligned translations in `docs/cs/`, `docs/sk/`, `docs/ru/`; preserve matching-page language links. Files in `docs/agents/` are English internal agent instructions.
 - Use a new branch and PR for changes. Never commit/push directly to main. Keep review fixes on the same branch; merge/release only with user authorization. Feature work gets independent Sol review at medium effort and appropriate local/CI checks.
 - Preserve offline study, real user data and editing drafts. Never seed normal databases with samples. Use disposable databases or explicit `--data .local-data/dev.sqlite3` for checks. Never commit databases, environments, caches or secrets. Keep the GitHub repository private.
 - Use `.venv-macos` on the prepared Mac; `.venv-desktop` uses Apple Tk 8.5 and produced a blank window. See Development for setup on each OS; use Windows first-run guides for a machine with nothing installed.
