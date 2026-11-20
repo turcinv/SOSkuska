@@ -1,10 +1,12 @@
 # Build on the target OS; one-folder app plus console JSON helper share resources.
 from pathlib import Path
-from PyInstaller.utils.hooks import collect_data_files
+from PyInstaller.utils.hooks import collect_data_files, copy_metadata
 
 root = Path(SPECPATH).parent
 sources = root / 'soskuska'
 data = collect_data_files('customtkinter') + [(str(sources / 'i18n'), 'i18n')]
+for dependency in ('customtkinter', 'Pillow', 'darkdetect', 'packaging'):
+    data += copy_metadata(dependency)
 app = Analysis([str(sources / 'app.py')], pathex=[str(sources)], datas=data)
 helper = Analysis([str(sources / 'worker_entry.py')], pathex=[str(sources)])
 main_exe = EXE(PYZ(app.pure), app.scripts, [], exclude_binaries=True,

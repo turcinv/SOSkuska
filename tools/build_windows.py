@@ -3,13 +3,14 @@ import hashlib
 import shutil
 import subprocess
 import sys
+import sysconfig
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def main():
-    if sys.platform != 'win32' or sys.maxsize <= 2**32:
+    if sys.platform != 'win32' or sysconfig.get_platform() != 'win-amd64':
         raise SystemExit('Build this Windows x64 bundle using 64-bit Python on Windows.')
     subprocess.run([sys.executable, '-m', 'PyInstaller', '--noconfirm', '--clean',
         '--distpath', str(ROOT/'dist'), '--workpath', str(ROOT/'build'),

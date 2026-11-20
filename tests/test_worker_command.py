@@ -41,4 +41,20 @@ class WorkerLaunchTests(unittest.TestCase):
             self.assertEqual(json.loads(result.stdout)[0],'error')
 
 
+class StartupErrorTests(unittest.TestCase):
+    def test_source_error_remains_visible_in_terminal(self):
+        from io import StringIO
+        from startup_errors import report_startup_error
+        output=StringIO()
+        with patch.object(sys,'frozen',False,create=True),patch.object(sys,'stderr',output):
+            report_startup_error(ValueError('invalid database'))
+        self.assertIn('invalid database',output.getvalue())
+
+    def test_frozen_windowed_error_uses_dialog_without_creating_test_window(self):
+        from startup_errors import report_startup_error
+        with patch.object(sys,'frozen',True,create=True),patch.object(sys,'stderr',None),patch('tkinter.messagebox.showerror') as dialog:
+            report_startup_error(ValueError('newer schema'))
+        dialog.assert_called_once_with('SOSkúška — Startup error','Could not open the study workspace: newer schema')
+
+
 if __name__=='__main__':unittest.main()

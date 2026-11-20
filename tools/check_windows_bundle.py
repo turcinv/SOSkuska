@@ -1,6 +1,8 @@
 """Exercise the extracted frozen Windows bundle with disposable Unicode paths."""
 import argparse
 import ctypes
+from contextlib import closing
+from unittest.mock import patch
 import json
 import os
 import shutil
@@ -15,9 +17,10 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT/'soskuska'))
 from storage import Store, SCHEMA_VERSION
 from preferences import DEFAULTS
+from worker_command import worker_command
 
 
-def visible_window(pid):
+def visible_window(pid, expected_title='SOSkúška'):
     from ctypes import wintypes
     user = ctypes.WinDLL('user32', use_last_error=True)
     callback_type = ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
@@ -31,14 +34,14 @@ def visible_window(pid):
         user.GetWindowThreadProcessId(hwnd, ctypes.byref(owner))
         title = ctypes.create_unicode_buffer(256)
         user.GetWindowTextW(hwnd, title, 256)
-        if owner.value == pid and user.IsWindowVisible(hwnd) and title.value == 'SOSkúška':
+        if owner.value == pid and user.IsWindowVisible(hwnd) and title.value == expected_title:
             found.append(hwnd)
         return True
     user.EnumWindows(callback_type(visit), 0)
     return found[0] if found else None
 
 
-def check_window(exe, database, cwd, env):
+def check_window(exe, database, cwd, env, *, startup_error=False):
     from ctypes import wintypes
     process = subprocess.Popen([str(exe), '--data', str(database)], cwd=cwd, env=env,
         stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -47,7 +50,7 @@ def check_window(exe, database, cwd, env):
         while time.monotonic() < deadline:
             if process.poll() is not None:
                 raise AssertionError(f'Frozen app exited before opening its window: {process.returncode}')
-            hwnd = visible_window(process.pid)
+            hwnd = visible_window(process.pid, 'SOSkúška — Startup error' if startup_error else 'SOSkúška')
             if hwnd:
                 break
             time.sleep(.2)
@@ -59,7 +62,8 @@ def check_window(exe, database, cwd, env):
         user.PostMessageW.argtypes = [wintypes.HWND, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM]
         if not user.PostMessageW(hwnd, 0x0010, 0, 0):
             raise ctypes.WinError(ctypes.get_last_error())
-        assert process.wait(timeout=20) == 0, 'Frozen GUI failed while closing.'
+        expected = 1 if startup_error else 0
+        assert process.wait(timeout=20) == expected, 'Frozen GUI returned an unexpected exit code.'
     finally:
         if process.poll() is None:
             process.kill(); process.wait(timeout=10)
@@ -87,10 +91,14 @@ def main():
         env['PATH'] = str(Path(env['SystemRoot'])/'System32')
         database = folder/'данные skúška.sqlite3'
         check_window(app, database, cwd, env)
-        with sqlite3.connect(database) as db:
+        with closing(sqlite3.connect(database)) as db:
             assert db.execute('PRAGMA user_version').fetchone()[0] == SCHEMA_VERSION
             assert db.execute('SELECT COUNT(*) FROM subjects').fetchone()[0] == 0
         results.append('Empty startup/normal close from extracted ZIP without Python on PATH')
+        corrupt = folder/'corrupt.sqlite3'; corrupt.write_bytes(b'not a database')
+        check_window(app,corrupt,cwd,env,startup_error=True)
+        assert corrupt.read_bytes()==b'not a database'
+        results.append('Corrupt database produces a visible startup error and remains unchanged')
         store = Store(database)
         try:
             sid = store.create_subject('--Математика skúška')
@@ -99,9 +107,14 @@ def main():
         finally:
             store.close()
         def job(kind, *arguments):
-            reply = subprocess.run([str(worker),kind,*(str(arg) for arg in arguments)], cwd=cwd,
-                env=env, capture_output=True, check=True, timeout=45)
-            return json.loads(reply.stdout.decode('utf-8'))
+            with patch.object(sys, 'frozen', True, create=True), patch.object(sys, 'executable', str(app)):
+                command = worker_command(kind, *arguments)
+            with tempfile.TemporaryFile() as output:
+                subprocess.run(command, cwd=cwd, env=env, stdin=subprocess.DEVNULL,
+                    stdout=output, stderr=subprocess.DEVNULL, check=True, timeout=45,
+                    creationflags=subprocess.CREATE_NO_WINDOW)
+                output.seek(0)
+                return json.loads(output.read().decode('utf-8'))
         for kind, headers, row, identity in (
             ('questions', 'prompt,option_a,option_b,option_c,option_d,correct_option,difficulty\n',
                 'Русский вопрос?,a,b,c,d,B,Easy\n', ('--subject-id',sid,'--subject-name=--Математика skúška')),
