@@ -1,3 +1,4 @@
+from worker_command import worker_command
 """Main-thread backup/restore controls with worker-owned SQLite connections."""
 from localization import tr
 import json
@@ -73,7 +74,7 @@ class BackupPanel(ctk.CTkFrame):
             button.configure(state='disabled')
         self.status.configure(text=tr(self.app, 'Working… Wait for completion before closing. Backup and validation leave other screens usable.'))
         try:
-            command = [sys.executable,'-u',str(Path(__file__).with_name('backup_worker.py')),kind,str(active),str(selected)]
+            command = worker_command('backup',kind,active,selected)
             if kind == 'validate':
                 self.validation_cancelled = False
                 self.validation_temp = tempfile.TemporaryDirectory(prefix='soskuska-selection-')

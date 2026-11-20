@@ -201,3 +201,7 @@ AI Tutor nyní ukládá konverzace lokálně včetně původního serveru/modelu
 ## Jazyk rozhraní
 
 Výběr jazyka rozhraní je dostupný ve v0.13.0: angličtina, čeština, slovenština a ruština. Ukládá se zvlášť od jazyka AI a použije se po restartu. Aktuální schéma je 8. [Jazyk rozhraní](UI_LANGUAGES.md).
+
+## Přenosná verze Windows a přejímka
+
+Tato větev přidává nepodepsaný přenosný ZIP pro Windows x64, sestavený a ověřený pátou úlohou CI. Přibalený pomocný program zachová oddělené CSV/zálohovací procesy; cílový počítač nepotřebuje Python. Automatické hostované kontroly a ruční seznam pro čistý počítač jsou oddělené; ruční přejímka zatím není dokončená. Vydaná verze zůstává v0.14.0, schéma 8. [Přenosná verze Windows a přejímka](WINDOWS_PORTABLE.md) · [Checklist](WINDOWS_ACCEPTANCE.md).

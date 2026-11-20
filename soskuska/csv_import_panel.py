@@ -1,3 +1,4 @@
+from worker_command import worker_command
 """Shared question/flashcard CSV preview and isolated jobs, owned by Tk."""
 from localization import tr
 import json
@@ -86,8 +87,8 @@ class CsvImportPanel(ctk.CTkFrame):
         self.kind=kind
         self.status.configure(text=tr(self.app,tr(self.app, 'Importing all {v0}… Wait for completion before closing.', v0=tr(self.app,self.noun)) if kind == 'save' else tr(self.app, 'Reading and validating… You can cancel or navigate away.')))
         try:
-            command=[sys.executable,'-u',str(Path(__file__).with_name('flashcard_csv_import_worker.py' if self.cards else 'csv_import_worker.py')),kind,str(self.app.store.path),str(selected),
-                     '--deck-id' if self.cards else '--subject-id',str(self.subject_id),f'--{"deck" if self.cards else "subject"}-name={self.subject_name}']
+            command=worker_command('flashcards' if self.cards else 'questions',kind,self.app.store.path,selected,
+                     '--deck-id' if self.cards else '--subject-id',self.subject_id,f'--{"deck" if self.cards else "subject"}-name={self.subject_name}')
             self.output=tempfile.TemporaryFile();self.started=time.monotonic()
             self.process=subprocess.Popen(command,stdin=subprocess.DEVNULL,stdout=self.output,stderr=subprocess.DEVNULL,
                                          creationflags=subprocess.CREATE_NO_WINDOW if sys.platform=='win32' else 0)

@@ -17,3 +17,5 @@ sources/
 .env.*
 !.env.example
 *.sqlite3.lock
+build/
+.venv-build/
