@@ -2,9 +2,11 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
-## Unreleased
+## 0.11.0 — 2026-11-20
 
 Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Schema stays 6. [Import flashcards from CSV](docs/FLASHCARD_CSV_IMPORT.md).
+
+Validation: 202 unit tests and all twelve native GUI checks passed locally on macOS. Independent Sol review findings were fixed and re-reviewed. All four feature PR CI jobs passed: unit tests on Linux, Windows and macOS, plus all twelve GUI checks on Ubuntu/Xvfb.
 
 ## 0.10.0 — 2026-11-19
 

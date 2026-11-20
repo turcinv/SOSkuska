@@ -2,7 +2,7 @@
 
 [English](../CURRENT_ARCHITECTURE.md) · [Čeština](CURRENT_ARCHITECTURE.md) · [Slovenčina](../sk/CURRENT_ARCHITECTURE.md) · [Русский](../ru/CURRENT_ARCHITECTURE.md)
 
-Stav k 19. listopadu 2026 (v0.10.0). Implementované jsou Dashboard, My Subjects, Question bank, Practice Tests, Flashcards, Statistics a volitelný AI Tutor a Settings; další kroky popisuje [plánovaná architektura](PLANNED_ARCHITECTURE.md).
+Stav k 20. listopadu 2026 (v0.11.0). Implementované jsou Dashboard, My Subjects, Question bank, Practice Tests, Flashcards, Statistics a volitelný AI Tutor a Settings; další kroky popisuje [plánovaná architektura](PLANNED_ARCHITECTURE.md).
 
 ## Technologie a soubory
 
