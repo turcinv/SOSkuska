@@ -259,7 +259,7 @@ Flashcards teraz podporuje import UTF-8 CSV do existujúceho balíčka: šablón
 
 ## Uložené konverzácie AI Tutor
 
-AI Tutor teraz ukladá konverzácie lokálne vrátane pôvodného servera/modelu a stavu odpovede. Históriu možno otvoriť bez siete, výslovne sa pripojiť na pokračovanie alebo vybranú konverzáciu po potvrdení zmazať. Schéma 7 migruje pôvodné študijné údaje transakčne; vydanou verziou zostáva v0.11.1 do schválenia ďalšieho vydania. [Uložené konverzácie AI Tutor](TUTOR_HISTORY.md).
+AI Tutor teraz ukladá konverzácie lokálne vrátane pôvodného servera/modelu a stavu odpovede. Históriu možno otvoriť bez siete, výslovne sa pripojiť na pokračovanie alebo vybranú konverzáciu po potvrdení zmazať. Vydané vo v0.12.0 so schémou 7, ktorá transakčne migruje pôvodné študijné údaje. [Uložené konverzácie AI Tutor](TUTOR_HISTORY.md).
 
 `tests/test_tutor_history.py`, `soskuska/check_tutor_history.py`.
 

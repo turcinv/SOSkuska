@@ -2,9 +2,9 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
-## Unreleased
+## 0.12.0 — 2026-11-20
 
-AI Tutor now saves conversations locally, including the original server/model and reply status. Open saved history without networking, reconnect explicitly to continue, or delete a selected conversation after confirmation. Schema 7 migrates existing study data transactionally; the published release remains v0.11.1 until a new release is authorized. [Saved AI Tutor conversations](docs/TUTOR_HISTORY.md).
+AI Tutor now saves conversations locally, including the original server/model and reply status. Open saved history without networking, reconnect explicitly to continue, or delete a selected conversation after confirmation. Released in v0.12.0 with schema 7, which migrates existing study data transactionally. [Saved AI Tutor conversations](docs/TUTOR_HISTORY.md).
 
 ## 0.11.1 — 2026-11-20
 

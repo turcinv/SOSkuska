@@ -4,7 +4,7 @@
 
 **Future design, not a description of everything implemented today.** Proposed files/tables exist only where confirmed by [current architecture](CURRENT_ARCHITECTURE.md). A roadmap does not authorize implementing every feature at once.
 
-Published baseline is v0.11.1. This working branch adds saved AI conversations and schema 7; the history guide below describes the new behavior. Settings Save does not start networking.
+Published baseline is v0.12.0, with saved AI conversations and schema 7. The history guide below describes the implemented behavior. Settings Save does not start networking.
 
 ## Direction
 
@@ -112,4 +112,4 @@ Flashcards now supports UTF-8 CSV import into an existing deck: a header-only te
 
 ## Saved AI Tutor conversations
 
-AI Tutor now saves conversations locally, including the original server/model and reply status. Open saved history without networking, reconnect explicitly to continue, or delete a selected conversation after confirmation. Schema 7 migrates existing study data transactionally; the published release remains v0.11.1 until a new release is authorized. [Saved AI Tutor conversations](TUTOR_HISTORY.md).
+AI Tutor now saves conversations locally, including the original server/model and reply status. Open saved history without networking, reconnect explicitly to continue, or delete a selected conversation after confirmation. Released in v0.12.0 with schema 7, which migrates existing study data transactionally. [Saved AI Tutor conversations](TUTOR_HISTORY.md).

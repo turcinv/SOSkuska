@@ -3,9 +3,9 @@
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
 
-## Nevydané
+## 0.12.0 — 2026-11-20
 
-AI Tutor nyní ukládá konverzace lokálně včetně původního serveru/modelu a stavu odpovědi. Historii lze otevřít bez sítě, výslovně se připojit pro pokračování nebo vybranou konverzaci po potvrzení smazat. Schéma 7 migruje původní studijní data transakčně; vydanou verzí zůstává v0.11.1 do schválení dalšího vydání. [Uložené konverzace AI Tutor](TUTOR_HISTORY.md).
+AI Tutor nyní ukládá konverzace lokálně včetně původního serveru/modelu a stavu odpovědi. Historii lze otevřít bez sítě, výslovně se připojit pro pokračování nebo vybranou konverzaci po potvrzení smazat. Vydáno ve v0.12.0 se schématem 7, které transakčně migruje původní studijní data. [Uložené konverzace AI Tutor](TUTOR_HISTORY.md).
 
 ## 0.11.1 — 2026-11-20
 

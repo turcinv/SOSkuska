@@ -2,7 +2,7 @@
 
 [English](CURRENT_ARCHITECTURE.md) · [Čeština](cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](sk/CURRENT_ARCHITECTURE.md) · [Русский](ru/CURRENT_ARCHITECTURE.md)
 
-Working branch includes unreleased local Tutor history (schema 7); published baseline is v0.11.1.
+Status as of 20 November 2026, release v0.12.0. Local Tutor history uses schema 7.
 
 ## Technology and modules
 
@@ -257,4 +257,4 @@ Flashcards now supports UTF-8 CSV import into an existing deck: a header-only te
 
 ## Saved AI Tutor conversations
 
-AI Tutor now saves conversations locally, including the original server/model and reply status. Open saved history without networking, reconnect explicitly to continue, or delete a selected conversation after confirmation. Schema 7 migrates existing study data transactionally; the published release remains v0.11.1 until a new release is authorized. [Saved AI Tutor conversations](TUTOR_HISTORY.md).
+AI Tutor now saves conversations locally, including the original server/model and reply status. Open saved history without networking, reconnect explicitly to continue, or delete a selected conversation after confirmation. Released in v0.12.0 with schema 7, which migrates existing study data transactionally. [Saved AI Tutor conversations](TUTOR_HISTORY.md).
