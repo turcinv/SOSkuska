@@ -108,7 +108,7 @@ class PreferencesTests(unittest.TestCase):
 
     def test_singleton_and_numeric_constraints(self):
         for sql in ['UPDATE preferences SET focus_minutes=0','UPDATE preferences SET daily_goal_minutes=1441',
-                    'INSERT INTO preferences SELECT 2,focus_minutes,daily_goal_minutes,ollama_endpoint,ollama_model,answer_language,revision FROM preferences']:
+                    'INSERT INTO preferences SELECT 2,focus_minutes,daily_goal_minutes,ollama_endpoint,ollama_model,answer_language,revision,ui_language FROM preferences']:
             with self.subTest(sql=sql),self.assertRaises(sqlite3.IntegrityError),self.store.db:
                 self.store.db.execute(sql)
 

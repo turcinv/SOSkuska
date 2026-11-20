@@ -152,7 +152,7 @@ class MigrationTests(unittest.TestCase):
             try:
                 self.assertEqual(store.subjects()[0]['name'],'Keep');self.assertEqual(store.preferences()['focus_minutes'],15)
                 self.assertEqual(store.tutor_conversations(),[])
-                self.assertEqual(store.db.execute('PRAGMA user_version').fetchone()[0],7)
+                self.assertEqual(store.db.execute('PRAGMA user_version').fetchone()[0],SCHEMA_VERSION)
             finally:store.close()
 
     def test_failed_migration_rolls_back_schema_and_rows(self):

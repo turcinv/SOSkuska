@@ -1,4 +1,5 @@
 """Main-thread backup/restore controls with worker-owned SQLite connections."""
+from localization import tr
 import json
 import subprocess
 import sys
@@ -26,22 +27,22 @@ class BackupPanel(ctk.CTkFrame):
         self.validation_cancelled = False
         self.closed = False
         self.grid_columnconfigure(0, weight=1)
-        app.label(self, 'Backup and restore', 20, bold=True).grid(row=0, column=0, sticky='w', pady=(12, 8))
-        self.status = app.label(self, 'Backups contain saved data and preferences, including saved AI conversations, not unsaved drafts. Restore replaces saved data and closes the app. Only schema 7 backups are supported.', 12, 'secondary', wraplength=600)
+        app.label(self, tr(self.app, 'Backup and restore'), 20, bold=True).grid(row=0, column=0, sticky='w', pady=(12, 8))
+        self.status = app.label(self, tr(self.app, 'Backups contain saved data and preferences, including saved AI conversations, not unsaved drafts. Restore replaces saved data and closes the app. Only schema 8 backups are supported.'), 12, 'secondary', wraplength=600)
         self.status.grid(row=1, column=0, sticky='ew', pady=(0, 12))
         actions = app.frame(self)
         actions.grid(row=2, column=0, sticky='w')
-        self.create_button = app.button(actions, 'Create backup', self.create, primary=True, width=135)
+        self.create_button = app.button(actions, tr(self.app, 'Create backup'), self.create, primary=True, width=135)
         self.create_button.pack(side='left', padx=(0, 8))
-        self.restore_button = app.button(actions, 'Choose backup…', self.choose, width=145)
+        self.restore_button = app.button(actions, tr(self.app, 'Choose backup…'), self.choose, width=145)
         self.restore_button.pack(side='left')
         self.confirmation = app.frame(self)
         self.confirmation.grid(row=3, column=0, sticky='ew', pady=(12, 0))
         self.confirmation.grid_remove()
-        app.label(self.confirmation, 'Restore replaces all saved data and preferences. Unsaved forms will be lost; saved conversations are replaced by those in the backup. The app will close; reopen it afterward. A safety copy is saved beside the database in backups/.', 12, 'secondary', wraplength=600).pack(anchor='w', pady=(0, 8))
-        self.confirm_button = app.button(self.confirmation, 'Confirm restore and close', self.confirm, width=210)
+        app.label(self.confirmation, tr(self.app, 'Restore replaces all saved data and preferences. Unsaved forms will be lost; saved conversations are replaced by those in the backup. The app will close; reopen it afterward. A safety copy is saved beside the database in backups/.'), 12, 'secondary', wraplength=600).pack(anchor='w', pady=(0, 8))
+        self.confirm_button = app.button(self.confirmation, tr(self.app, 'Confirm restore and close'), self.confirm, width=210)
         self.confirm_button.pack(side='left', padx=(0, 8))
-        self.cancel_button = app.button(self.confirmation, 'Cancel', self.cancel_pending, width=90)
+        self.cancel_button = app.button(self.confirmation, tr(self.app, 'Cancel'), self.cancel_pending, width=90)
         self.cancel_button.pack(side='left')
         self.bind('<Configure>', lambda event: self.status.configure(wraplength=max(250,event.width-12)), add='+')
         self.poll_id = self.after(50, self.poll)
@@ -52,7 +53,7 @@ class BackupPanel(ctk.CTkFrame):
         if self.pending is not None:
             self.pending.close()
             self.pending = None
-            self.status.configure(text='Restore cancelled. Your saved data is unchanged.')
+            self.status.configure(text=tr(self.app, 'Restore cancelled. Your saved data is unchanged.'))
         self.confirmation.grid_remove()
 
     def guard_restore(self):
@@ -70,7 +71,7 @@ class BackupPanel(ctk.CTkFrame):
         self.kind = kind
         for button in (self.create_button, self.restore_button, self.confirm_button, self.cancel_button):
             button.configure(state='disabled')
-        self.status.configure(text='Working… Wait for completion before closing. Backup and validation leave other screens usable.')
+        self.status.configure(text=tr(self.app, 'Working… Wait for completion before closing. Backup and validation leave other screens usable.'))
         try:
             command = [sys.executable,'-u',str(Path(__file__).with_name('backup_worker.py')),kind,str(active),str(selected)]
             if kind == 'validate':
@@ -92,9 +93,9 @@ class BackupPanel(ctk.CTkFrame):
         if self.busy:
             return
         self.cancel_pending()
-        selected = filedialog.asksaveasfilename(parent=self.app, title='Create SOSkúška backup',
+        selected = filedialog.asksaveasfilename(parent=self.app, title=tr(self.app, 'Create SOSkúška backup'),
                     initialfile='SOSkuska-' + datetime.now().strftime('%Y%m%d-%H%M%S') + '.sqlite3',
-                    defaultextension='.sqlite3', filetypes=[('SQLite database', '*.sqlite3'), ('All files', '*')])
+                    defaultextension='.sqlite3', filetypes=[(tr(self.app,'SQLite database'), '*.sqlite3'), (tr(self.app,'All files'), '*')])
         if selected:
             active = self.app.store.path
             self.launch('backup', active, selected)
@@ -106,10 +107,10 @@ class BackupPanel(ctk.CTkFrame):
         try:
             self.guard_restore()
         except Exception as exc:
-            self.status.configure(text=str(exc))
+            self.status.configure(text=tr(self.app, str(exc)))
             return
-        selected = filedialog.askopenfilename(parent=self.app, title='Choose SOSkúška backup',
-                    filetypes=[('SQLite database', '*.sqlite3'), ('All files', '*')])
+        selected = filedialog.askopenfilename(parent=self.app, title=tr(self.app, 'Choose SOSkúška backup'),
+                    filetypes=[(tr(self.app,'SQLite database'), '*.sqlite3'), (tr(self.app,'All files'), '*')])
         if selected:
             active = self.app.store.path
             self.launch('validate', active, selected)
@@ -120,7 +121,7 @@ class BackupPanel(ctk.CTkFrame):
         try:
             self.guard_restore()  # State may have changed since validation.
         except Exception as exc:
-            self.status.configure(text=str(exc))
+            self.status.configure(text=tr(self.app, str(exc)))
             return
         active = self.app.store.path
         prepared = self.pending
@@ -130,9 +131,9 @@ class BackupPanel(ctk.CTkFrame):
         self.busy = True
         self.app.data_restoring = True
         self.modal = ctk.CTkToplevel(self.app)
-        self.modal.title('Restoring saved data')
+        self.modal.title(tr(self.app, 'Restoring saved data'))
         self.modal.geometry('440x170')
-        self.app.label(self.modal, 'Restoring… Please wait. The app will close when finished.', 14, wraplength=390).pack(padx=20,pady=35)
+        self.app.label(self.modal, tr(self.app, 'Restoring… Please wait. The app will close when finished.'), 14, wraplength=390).pack(padx=20,pady=35)
         self.modal.protocol('WM_DELETE_WINDOW', lambda: None)
         self.modal.grab_set()
         self.app.store.close()
@@ -170,9 +171,9 @@ class BackupPanel(ctk.CTkFrame):
             self.restoring_selection.close()
             try:
                 if state == 'done':
-                    messagebox.showinfo('Restore complete', f'Saved data restored. Reopen SOSkúška to load it.\nSafety copy: {value}', parent=self.modal)
+                    messagebox.showinfo(tr(self.app,'Restore complete'), tr(self.app,f'Saved data restored. Reopen SOSkúška to load it.\nSafety copy: {value}'), parent=self.modal)
                 else:
-                    messagebox.showerror('Restore failed', f'{value}\nThe app will close. Reopen to retry; any safety copy remains in the database’s backups folder.', parent=self.modal)
+                    messagebox.showerror(tr(self.app,'Restore failed'), tr(self.app,f'{tr(self.app,value)}\nThe app will close. Reopen to retry; any safety copy remains in the database’s backups folder.'), parent=self.modal)
             finally:
                 self.busy = False
                 self.app.data_restoring = False
@@ -182,11 +183,11 @@ class BackupPanel(ctk.CTkFrame):
         for button in (self.create_button, self.restore_button, self.confirm_button, self.cancel_button):
             button.configure(state='normal')
         if state == 'error':
-            self.status.configure(text='Could not complete the operation: ' + value)
+            self.status.configure(text=tr(self.app,'Could not complete the operation: ')+tr(self.app,value))
         elif kind == 'backup':
-            self.status.configure(text=f'Backup created: {value}')
+            self.status.configure(text=tr(self.app, 'Backup created: {v0}', v0=value))
         elif self.app.current_page != 'Settings' or self.validation_cancelled:
-            self.status.configure(text='Validation cancelled after navigation. Choose the backup again to restore.')
+            self.status.configure(text=tr(self.app, 'Validation cancelled after navigation. Choose the backup again to restore.'))
         else:
             temp = self.validation_temp
             self.validation_temp = None
@@ -194,7 +195,7 @@ class BackupPanel(ctk.CTkFrame):
                 try:temp.cleanup()
                 except OSError:pass
             self.pending = SimpleNamespace(path=Path(temp.name)/'validated.sqlite3',source=self.selected_source,counts=value,close=cleanup)
-            self.status.configure(text=f'Validated {self.pending.source.name}: {value["subjects"]} subjects, {value["questions"]} questions, {value["sessions"]} focus sessions, {value["flashcards"]} cards. Confirm below to replace current data.')
+            self.status.configure(text=tr(self.app, 'Validated {v0}: {v1} subjects, {v2} questions, {v3} focus sessions, {v4} cards. Confirm below to replace current data.', v0=self.pending.source.name, v1=value['subjects'], v2=value['questions'], v3=value['sessions'], v4=value['flashcards']))
             self.confirmation.grid()
         if self.validation_temp is not None:
             try:self.validation_temp.cleanup()

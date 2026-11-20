@@ -1,4 +1,5 @@
 """Shared question/flashcard CSV preview and isolated jobs, owned by Tk."""
+from localization import tr
 import json
 import sqlite3
 import subprocess
@@ -20,25 +21,25 @@ class CsvImportPanel(ctk.CTkFrame):
         self.app=app;self.bank=bank;self.process=None;self.output=None;self.payload=None
         self.preview=None;self.position=0;self.kind=None;self.subject_id=None;self.subject_name='';self.closed=False;self.abandoned=[];self.saved_message=None
         self.grid_columnconfigure(0,weight=1)
-        self.heading=app.label(self,f'Import {self.noun} from CSV',20,bold=True,wraplength=600)
+        self.heading=app.label(self,tr(self.app, 'Import {v0} from CSV', v0=tr(self.app,self.noun)),20,bold=True,wraplength=600)
         self.heading.grid(row=0,column=0,sticky='ew',pady=(0,8))
-        self.status=app.label(self,f'Choose a UTF-8 comma-separated CSV. Maximum 2 MiB / 500 {self.noun}. Nothing is saved until Import all is confirmed.',12,'secondary',wraplength=600)
+        self.status=app.label(self,tr(self.app, 'Choose a UTF-8 comma-separated CSV. Maximum 2 MiB / 500 {v0}. Nothing is saved until Import all is confirmed.', v0=tr(self.app,self.noun)),12,'secondary',wraplength=600)
         self.status.grid(row=1,column=0,sticky='ew',pady=(0,10))
         actions=app.frame(self);actions.grid(row=2,column=0,sticky='w',pady=(0,10))
-        self.choose_button=app.button(actions,'Choose CSV…',self.choose,primary=True,width=125);self.choose_button.pack(side='left',padx=(0,8))
-        self.template_button=app.button(actions,'Save CSV template',self.save_template,width=155);self.template_button.pack(side='left',padx=(0,8))
-        self.cancel_button=app.button(actions,'Close import',self.cancel,width=115);self.cancel_button.pack(side='left')
+        self.choose_button=app.button(actions,tr(self.app, 'Choose CSV…'),self.choose,primary=True,width=125);self.choose_button.pack(side='left',padx=(0,8))
+        self.template_button=app.button(actions,tr(self.app, 'Save CSV template'),self.save_template,width=155);self.template_button.pack(side='left',padx=(0,8))
+        self.cancel_button=app.button(actions,tr(self.app, 'Close import'),self.cancel,width=115);self.cancel_button.pack(side='left')
         self.errors=ctk.CTkTextbox(self,height=95,font=app.font(),wrap='word',state='disabled')
         self.errors.grid(row=3,column=0,sticky='ew',pady=(0,10));self.errors.grid_remove()
         self.record_label=app.label(self,'',13,'secondary');self.record_label.grid(row=4,column=0,sticky='w')
         self.details=ctk.CTkTextbox(self,height=215,font=app.font(),wrap='word',state='disabled')
         self.details.grid(row=5,column=0,sticky='ew',pady=(4,10))
         pages=app.frame(self);pages.grid(row=6,column=0,sticky='w',pady=(0,10))
-        self.previous_button=app.button(pages,'Previous',lambda:self.move(-1),width=100);self.previous_button.pack(side='left',padx=(0,8))
-        self.next_button=app.button(pages,'Next',lambda:self.move(1),width=90);self.next_button.pack(side='left')
+        self.previous_button=app.button(pages,tr(self.app, 'Previous'),lambda:self.move(-1),width=100);self.previous_button.pack(side='left',padx=(0,8))
+        self.next_button=app.button(pages,tr(self.app, 'Next'),lambda:self.move(1),width=90);self.next_button.pack(side='left')
         save=app.frame(self);save.grid(row=7,column=0,sticky='w')
-        self.import_button=app.button(save,'Import all',self.save,primary=True,width=135);self.import_button.pack(side='left',padx=(0,8))
-        self.refresh_button=app.button(save,'Refresh totals',self.refresh_totals,width=145);self.refresh_button.pack(side='left')
+        self.import_button=app.button(save,tr(self.app, 'Import all'),self.save,primary=True,width=135);self.import_button.pack(side='left',padx=(0,8))
+        self.refresh_button=app.button(save,tr(self.app, 'Refresh totals'),self.refresh_totals,width=145);self.refresh_button.pack(side='left')
         self.buttons=(self.choose_button,self.template_button,self.cancel_button,self.import_button,self.previous_button,self.next_button,self.refresh_button)
         self.bind('<Configure>',lambda event:[label.configure(wraplength=max(250,event.width-12)) for label in (self.heading,self.status)],add='+')
         self.controls();self.poll_id=self.after(50,self.poll)
@@ -48,6 +49,7 @@ class CsvImportPanel(ctk.CTkFrame):
         return self.kind=='save'
 
     def text(self,widget,value):
+        if widget is self.errors:value='\n'.join(tr(self.app,line) for line in value.split('\n'))
         widget.configure(state='normal');widget.delete('1.0','end');widget.insert('1.0',value);widget.configure(state='disabled')
 
     def controls(self):
@@ -64,10 +66,10 @@ class CsvImportPanel(ctk.CTkFrame):
         self.cancel()
         subject=self.bank.deck_snapshot if self.cards else self.bank.subject_snapshot
         if subject is None:
-            self.bank.status.configure(text='This deck no longer exists.' if self.cards else 'This subject no longer exists.');return
+            self.bank.status.configure(text=tr(self.app,tr(self.app, 'This deck no longer exists.') if self.cards else tr(self.app, 'This subject no longer exists.')));return
         self.subject_id=subject['id'];self.subject_name=subject['name']
-        self.heading.configure(text=f'Import into {self.subject_name}')
-        self.status.configure(text=f'Save the header-only template, fill it in, then Choose CSV. Preview every record before Import all. Exact duplicates are rejected; existing {self.noun} are never changed.')
+        self.heading.configure(text=tr(self.app, 'Import into {v0}', v0=self.subject_name))
+        self.status.configure(text=tr(self.app, 'Save the header-only template, fill it in, then Choose CSV. Preview every record before Import all. Exact duplicates are rejected; existing {v0} are never changed.', v0=tr(self.app,self.noun)))
         self.grid();self.app.scroll._parent_canvas.yview_moveto(0)
 
     def cancel(self):
@@ -82,7 +84,7 @@ class CsvImportPanel(ctk.CTkFrame):
 
     def launch(self,kind,selected):
         self.kind=kind
-        self.status.configure(text=f'Importing all {self.noun}… Wait for completion before closing.' if kind=='save' else 'Reading and validating… You can cancel or navigate away.')
+        self.status.configure(text=tr(self.app,tr(self.app, 'Importing all {v0}… Wait for completion before closing.', v0=tr(self.app,self.noun)) if kind == 'save' else tr(self.app, 'Reading and validating… You can cancel or navigate away.')))
         try:
             command=[sys.executable,'-u',str(Path(__file__).with_name('flashcard_csv_import_worker.py' if self.cards else 'csv_import_worker.py')),kind,str(self.app.store.path),str(selected),
                      '--deck-id' if self.cards else '--subject-id',str(self.subject_id),f'--{"deck" if self.cards else "subject"}-name={self.subject_name}']
@@ -96,7 +98,7 @@ class CsvImportPanel(ctk.CTkFrame):
 
     def choose(self):
         if self.process is not None:return
-        selected=filedialog.askopenfilename(parent=self.app,title=f'Choose {self.noun} CSV',filetypes=[('CSV file','*.csv'),('All files','*')])
+        selected=filedialog.askopenfilename(parent=self.app,title=tr(self.app, 'Choose {v0} CSV', v0=tr(self.app,self.noun)),filetypes=[(tr(self.app,'CSV file'),'*.csv'),(tr(self.app,'All files'),'*')])
         if not selected:return
         # A new selection always invalidates the old batch before any fallible work.
         self.preview=None;self.position=0;self.saved_message=None
@@ -106,29 +108,29 @@ class CsvImportPanel(ctk.CTkFrame):
         # rechecks identity/name; a locked database must not block the Tk callback.
         subject=self.bank.deck_snapshot if self.cards else self.bank.subject_snapshot
         if subject is None or subject['id']!=(self.bank.deck_id if self.cards else self.bank.subject_id):
-            self.status.configure(text='Reopen the deck before choosing another CSV.' if self.cards else 'Reload the question bank before choosing another CSV.');return
+            self.status.configure(text=tr(self.app,tr(self.app, 'Reopen the deck before choosing another CSV.') if self.cards else tr(self.app, 'Reload the question bank before choosing another CSV.')));return
         self.subject_id=subject['id'];self.subject_name=subject['name']
-        self.heading.configure(text=f'Import into {self.subject_name}')
+        self.heading.configure(text=tr(self.app, 'Import into {v0}', v0=self.subject_name))
         self.launch('parse',selected)
 
     def save_template(self):
         if self.process is not None:return
-        selected=filedialog.asksaveasfilename(parent=self.app,title='Save header-only CSV template',initialfile='flashcards-template.csv' if self.cards else 'questions-template.csv',
-                     defaultextension='.csv',filetypes=[('CSV file','*.csv')])
+        selected=filedialog.asksaveasfilename(parent=self.app,title=tr(self.app, 'Save header-only CSV template'),initialfile='flashcards-template.csv' if self.cards else 'questions-template.csv',
+                     defaultextension='.csv',filetypes=[(tr(self.app,'CSV file'),'*.csv')])
         if selected:self.launch('template',selected)
 
     def show_record(self):
         rows=self.preview['rows'] if self.preview else []
         if not rows:
-            self.text(self.details,'');self.record_label.configure(text='No valid records to preview.');self.controls();return
+            self.text(self.details,'');self.record_label.configure(text=tr(self.app, 'No valid records to preview.'));self.controls();return
         row=rows[self.position];fields=row['fields']
-        self.record_label.configure(text=f'Preview {self.position+1} / {len(rows)} · CSV record {row["record"]}')
+        self.record_label.configure(text=tr(self.app, 'Preview {v0} / {v1} · CSV record {v2}', v0=self.position + 1, v1=len(rows), v2=row['record']))
         if self.cards:
-            lines=['Front',fields[0],'','Back',fields[1]]
+            lines=[tr(self.app,'Front'),fields[0],'',tr(self.app,'Back'),fields[1]]
         else:
-            lines=[f'Topic: {row["topic"] or "No topic"}',f'Difficulty: {fields[6]}','',fields[0],'']
+            lines=[tr(self.app,'Topic: {v0}',v0=row['topic'] or tr(self.app,'No topic')),tr(self.app,'Difficulty: {v0}',v0=tr(self.app,fields[6])),'',fields[0],'']
             lines += [f'{letter}. {value}' for letter,value in zip('ABCD',fields[1:5])]
-            lines += ['',f'Correct answer: {"ABCD"[fields[5]]}','',f'Explanation: {fields[7] or "—"}']
+            lines += ['',tr(self.app,'Correct answer: {v0}',v0='ABCD'[fields[5]]),'',tr(self.app,'Explanation: {v0}',v0=fields[7] or '—')]
         self.text(self.details,'\n'.join(lines));self.controls()
 
     def move(self,offset):
@@ -142,10 +144,10 @@ class CsvImportPanel(ctk.CTkFrame):
             selected=Path(self.payload.name)/'preview.json'
             selected.write_text(json.dumps(self.preview['rows'],ensure_ascii=False),encoding='utf-8')
         except OSError as exc:
-            self.status.configure(text=f'Could not stage the import: {exc}');return
+            self.status.configure(text=tr(self.app, 'Could not stage the import: {v0}', v0=exc));return
         self.kind='save'
-        self.modal=ctk.CTkToplevel(self.app);self.modal.title(f'Importing {self.noun}');self.modal.geometry('420x150')
-        self.app.label(self.modal,'Importing… Please wait. All records save together.',14,wraplength=370).pack(padx=20,pady=35)
+        self.modal=ctk.CTkToplevel(self.app);self.modal.title(tr(self.app, 'Importing {v0}', v0=tr(self.app,self.noun)));self.modal.geometry('420x150')
+        self.app.label(self.modal,tr(self.app, 'Importing… Please wait. All records save together.'),14,wraplength=370).pack(padx=20,pady=35)
         self.modal.protocol('WM_DELETE_WINDOW',lambda:None);self.modal.grab_set()
         self.launch('save',selected)
 
@@ -153,8 +155,8 @@ class CsvImportPanel(ctk.CTkFrame):
         try:
             (self.bank.refresh_csv_totals() if self.cards else self.bank.refresh());self.app.refresh_data()
         except (sqlite3.Error,ValueError):
-            self.status.configure(text='Could not refresh totals. Retry Refresh totals; this does not import again.');return False
-        if self.saved_message:self.status.configure(text=self.saved_message+' Totals refreshed.')
+            self.status.configure(text=tr(self.app, 'Could not refresh totals. Retry Refresh totals; this does not import again.'));return False
+        if self.saved_message:self.status.configure(text=tr(self.app,self.saved_message)+tr(self.app,' Totals refreshed.'))
         return True
 
     def complete(self,result):
@@ -170,26 +172,26 @@ class CsvImportPanel(ctk.CTkFrame):
             self.preview=value;self.position=0
             self.text(self.errors,'\n'.join(value['errors']))
             self.errors.grid() if value['errors'] else self.errors.grid_remove()
-            self.status.configure(text=f'{value["total"]} CSV records; {len(value["rows"])} valid records to preview; {len(value["errors"])} issues. No rows saved. Fix all issues before Import all.')
+            self.status.configure(text=tr(self.app, '{v0} CSV records; {v1} valid records to preview; {v2} issues. No rows saved. Fix all issues before Import all.', v0=value['total'], v1=len(value['rows']), v2=len(value['errors'])))
             self.show_record()
         elif kind=='save' and state=='done':
             # Consume the batch before any report read; retries must only refresh.
             self.preview=None;self.text(self.details,'');self.errors.grid_remove();self.record_label.configure(text='')
             message=(f'Imported {value["cards"]} flashcards into {value["deck"]}. New cards are due now.' if self.cards else f'Imported {value["questions"]} questions and created {value["topics"]} topics in {value["subject"]}.')
             self.saved_message=message
-            self.status.configure(text=message)
-            if not self.refresh_totals():self.status.configure(text=message+' Could not refresh totals. Retry Refresh totals; do not import again.')
+            self.status.configure(text=tr(self.app, message))
+            if not self.refresh_totals():self.status.configure(text=tr(self.app,message)+tr(self.app,' Could not refresh totals. Retry Refresh totals; do not import again.'))
         elif kind=='save' and state=='unknown':
             self.preview=None;self.text(self.details,'');self.errors.grid_remove();self.record_label.configure(text='')
-            self.status.configure(text='The helper stopped before confirming the result. Import may have completed. Refresh totals before choosing the CSV again.')
+            self.status.configure(text=tr(self.app, 'The helper stopped before confirming the result. Import may have completed. Refresh totals before choosing the CSV again.'))
         elif state=='invalid':
             if self.preview is not None:self.preview['errors']=result['errors']
             self.text(self.errors,'\n'.join(result['errors']));self.errors.grid()
-            self.status.configure(text='Import not saved. The target or content changed. Resolve the listed issues and choose the CSV again.')
+            self.status.configure(text=tr(self.app, 'Import not saved. The target or content changed. Resolve the listed issues and choose the CSV again.'))
         elif state=='error':
-            self.status.configure(text=('Import not saved. Preview is kept; retry or choose CSV again. ' if kind=='save' else 'Could not complete CSV operation: ')+str(value))
-        elif kind=='template' and state=='done':self.status.configure(text=f'Header-only template saved: {value}')
-        else:self.status.configure(text='CSV helper stopped unexpectedly. Choose the file again.')
+            self.status.configure(text=tr(self.app,tr(self.app,'Import not saved. Preview is kept; retry or choose CSV again. ' if kind == 'save' else 'Could not complete CSV operation: ') + tr(self.app,str(value))))
+        elif kind=='template' and state=='done':self.status.configure(text=tr(self.app, 'Header-only template saved: {v0}', v0=value))
+        else:self.status.configure(text=tr(self.app, 'CSV helper stopped unexpectedly. Choose the file again.'))
         self.controls()
 
     def poll(self):

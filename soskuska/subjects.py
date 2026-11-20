@@ -1,4 +1,5 @@
 """Subject management screen; widget work stays on Tk's main thread."""
+from localization import tr
 import sqlite3
 
 import customtkinter as ctk
@@ -16,32 +17,32 @@ class SubjectPage(ctk.CTkFrame):
         header = app.frame(self)
         header.grid(row=0, column=0, sticky="ew", pady=(0, 20))
         header.grid_columnconfigure(0, weight=1)
-        app.label(header, "My Subjects", 28, bold=True).grid(row=0, column=0, sticky="w")
-        app.label(header, "Your subjects, exam dates and focused study time.", 14, "secondary").grid(row=1, column=0, sticky="w", pady=(4, 0))
-        self.add_button = app.button(header, "+ New subject", self.show_form, primary=True, width=140)
+        app.label(header, tr(self.app, 'My Subjects'), 28, bold=True).grid(row=0, column=0, sticky="w")
+        app.label(header, tr(self.app, 'Your subjects, exam dates and focused study time.'), 14, "secondary").grid(row=1, column=0, sticky="w", pady=(4, 0))
+        self.add_button = app.button(header, tr(self.app, '+ New subject'), self.show_form, primary=True, width=140)
         self.add_button.grid(row=0, column=1, rowspan=2, padx=(16, 0))
 
         self.form = app.frame(self, card=True)
         self.form.grid(row=1, column=0, sticky="ew", pady=(0, 20))
         self.form.grid_columnconfigure(0, weight=1)
-        self.form_title = app.label(self.form, "New subject", 18, bold=True)
+        self.form_title = app.label(self.form, tr(self.app, 'New subject'), 18, bold=True)
         self.form_title.grid(row=0, column=0, sticky="w", padx=18, pady=(16, 12))
-        app.label(self.form, "Subject name (required, up to 120 characters)", 12, "secondary").grid(row=1, column=0, sticky="w", padx=18)
-        self.name_entry = ctk.CTkEntry(self.form, height=38, font=app.font(), placeholder_text="e.g. Mathematics")
+        app.label(self.form, tr(self.app, 'Subject name (required, up to 120 characters)'), 12, "secondary").grid(row=1, column=0, sticky="w", padx=18)
+        self.name_entry = ctk.CTkEntry(self.form, height=38, font=app.font(), placeholder_text=tr(self.app, 'e.g. Mathematics'))
         self.name_entry.grid(row=2, column=0, sticky="ew", padx=18, pady=(4, 12))
-        app.label(self.form, "Description (optional)", 12, "secondary").grid(row=3, column=0, sticky="w", padx=18)
+        app.label(self.form, tr(self.app, 'Description (optional)'), 12, "secondary").grid(row=3, column=0, sticky="w", padx=18)
         self.description_entry = ctk.CTkTextbox(self.form, height=65, font=app.font(), wrap="word")
         self.description_entry.grid(row=4, column=0, sticky="ew", padx=18, pady=(4, 12))
-        app.label(self.form, "Exam date (optional, YYYY-MM-DD)", 12, "secondary").grid(row=5, column=0, sticky="w", padx=18)
-        self.exam_entry = ctk.CTkEntry(self.form, height=38, font=app.font(), placeholder_text="YYYY-MM-DD")
+        app.label(self.form, tr(self.app, 'Exam date (optional, YYYY-MM-DD)'), 12, "secondary").grid(row=5, column=0, sticky="w", padx=18)
+        self.exam_entry = ctk.CTkEntry(self.form, height=38, font=app.font(), placeholder_text=tr(self.app, 'YYYY-MM-DD'))
         self.exam_entry.grid(row=6, column=0, sticky="ew", padx=18, pady=(4, 12))
         self.form_error = app.label(self.form, "", 12, "secondary", wraplength=600)
         self.form_error.grid(row=7, column=0, sticky="ew", padx=18)
         actions = app.frame(self.form)
         actions.grid(row=8, column=0, sticky="w", padx=18, pady=(4, 16))
-        self.save_button = app.button(actions, "Save subject", self.save_subject, primary=True, width=130)
+        self.save_button = app.button(actions, tr(self.app, 'Save subject'), self.save_subject, primary=True, width=130)
         self.save_button.pack(side="left", padx=(0, 8))
-        app.button(actions, "Cancel", self.hide_form, width=85).pack(side="left")
+        app.button(actions, tr(self.app, 'Cancel'), self.hide_form, width=85).pack(side="left")
         self.form.grid_remove()
 
         self.delete_panel = app.frame(self, card=True)
@@ -51,14 +52,14 @@ class SubjectPage(ctk.CTkFrame):
         self.delete_label.grid(row=0, column=0, sticky="ew", padx=18, pady=14)
         actions = app.frame(self.delete_panel)
         actions.grid(row=1, column=0, sticky="w", padx=18, pady=(0, 14))
-        self.delete_button = app.button(actions, "Delete subject", self.confirm_delete, width=130)
+        self.delete_button = app.button(actions, tr(self.app, 'Delete subject'), self.confirm_delete, width=130)
         self.delete_button.configure(fg_color="#7F1D1D", hover_color="#991B1B")
         self.delete_button.pack(side="left", padx=(0, 8))
-        app.button(actions, "Cancel", self.cancel_delete, width=85).pack(side="left")
+        app.button(actions, tr(self.app, 'Cancel'), self.cancel_delete, width=85).pack(side="left")
         self.delete_panel.grid_remove()
 
         self.query = ctk.StringVar()
-        self.search = ctk.CTkEntry(self, height=38, textvariable=self.query, font=app.font(), placeholder_text="Search subjects…")
+        self.search = ctk.CTkEntry(self, height=38, textvariable=self.query, font=app.font(), placeholder_text=tr(self.app, 'Search subjects…'))
         self.search.grid(row=3, column=0, sticky="ew", pady=(0, 16))
         self.query.trace_add("write", lambda *_: self.render())
         self.status = app.label(self, "", 12, "secondary", wraplength=650)
@@ -79,10 +80,10 @@ class SubjectPage(ctk.CTkFrame):
         self.cancel_delete()
         subject = self.app.store.subject(subject_id) if subject_id is not None else None
         if subject_id is not None and subject is None:
-            self.status.configure(text="This subject no longer exists.")
+            self.status.configure(text=tr(self.app, 'This subject no longer exists.'))
             return
         self.editing_id = subject_id
-        self.form_title.configure(text="Edit subject" if subject else "New subject")
+        self.form_title.configure(text=tr(self.app, 'Edit subject') if subject else tr(self.app, 'New subject'))
         for entry, value in [(self.name_entry, subject["name"] if subject else ""),
                              (self.exam_entry, (subject["exam_date"] or "") if subject else "")]:
             entry.delete(0, "end")
@@ -106,18 +107,18 @@ class SubjectPage(ctk.CTkFrame):
             else:
                 self.app.store.update_subject(self.editing_id, *fields)
         except ValueError as exc:
-            self.form_error.configure(text=str(exc))
+            self.form_error.configure(text=tr(self.app, str(exc)))
             return
         except sqlite3.Error:
-            self.form_error.configure(text="Could not save the subject. Check disk space and try again.")
+            self.form_error.configure(text=tr(self.app, 'Could not save the subject. Check disk space and try again.'))
             return
         self.hide_form()
         self.app.refresh_data()
-        self.status.configure(text="Subject saved on this device.")
+        self.status.configure(text=tr(self.app, 'Subject saved on this device.'))
 
     def ask_delete(self, subject_id):
         if self.app.session_open and self.app.session_subject_id == subject_id:
-            self.status.configure(text="Finish the active focus session before deleting its subject.")
+            self.status.configure(text=tr(self.app, 'Finish the active focus session before deleting its subject.'))
             return
         state = self.app.store.subject_deletion_state(subject_id)
         if state is None:
@@ -128,8 +129,8 @@ class SubjectPage(ctk.CTkFrame):
         self.deleting_id = subject_id
         self.deleting_state = state
         name, topics, questions = state
-        content_warning = f" This permanently deletes {topics} topics and {questions} questions." if topics or questions else ""
-        self.delete_label.configure(text=f'Delete “{name}”?{content_warning} Saved study time and session history will be kept. Practice results, unfinished tests, flashcard decks and review history will also be kept.')
+        content_warning = tr(self.app,' This permanently deletes {v0} topics and {v1} questions.',v0=topics,v1=questions) if topics or questions else ""
+        self.delete_label.configure(text=tr(self.app, 'Delete “{v0}”?{v1} Saved study time and session history will be kept. Practice results, unfinished tests, flashcard decks and review history will also be kept.', v0=name, v1=content_warning))
         self.delete_panel.grid()
         self.app.scroll._parent_canvas.yview_moveto(0)
 
@@ -142,19 +143,19 @@ class SubjectPage(ctk.CTkFrame):
         if self.deleting_id is None:
             return
         if self.app.session_open and self.app.session_subject_id == self.deleting_id:
-            self.status.configure(text="Finish the active focus session before deleting its subject.")
+            self.status.configure(text=tr(self.app, 'Finish the active focus session before deleting its subject.'))
             return
         try:
             if not self.app.store.delete_subject(self.deleting_id, self.deleting_state):
                 self.ask_delete(self.deleting_id)
-                self.status.configure(text="This subject changed. Review the updated warning before deleting it.")
+                self.status.configure(text=tr(self.app, 'This subject changed. Review the updated warning before deleting it.'))
                 return
         except (ValueError, sqlite3.Error) as exc:
-            self.status.configure(text=str(exc) if isinstance(exc, ValueError) else "Could not delete the subject. Please try again.")
+            self.status.configure(text=tr(self.app,tr(self.app, str(exc)) if isinstance(exc, ValueError) else tr(self.app, 'Could not delete the subject. Please try again.')))
             return
         self.cancel_delete()
         self.app.refresh_data()
-        self.status.configure(text="Subject deleted. Previous study time is preserved.")
+        self.status.configure(text=tr(self.app, 'Subject deleted. Previous study time is preserved.'))
 
     def render(self):
         for child in self.cards.winfo_children():
@@ -166,7 +167,7 @@ class SubjectPage(ctk.CTkFrame):
             self.cards.grid_columnconfigure(col, weight=1 if col < self.card_columns else 0, uniform="subject" if col < self.card_columns else "")
         if not visible:
             message = "No matching subjects. Try another name." if subjects else "No subjects yet. Create your first subject to start studying."
-            self.app.label(self.cards, message, 14, "secondary", wraplength=600).grid(row=0, column=0, columnspan=2, sticky="w", pady=20)
+            self.app.label(self.cards, tr(self.app,message), 14, "secondary", wraplength=600).grid(row=0, column=0, columnspan=2, sticky="w", pady=20)
             return
         for i, subject in enumerate(visible):
             card = self.app.frame(self.cards, card=True)
@@ -174,19 +175,19 @@ class SubjectPage(ctk.CTkFrame):
             card.grid_columnconfigure(0, weight=1)
             title = self.app.label(card, subject["name"], 17, bold=True, wraplength=300)
             title.grid(row=0, column=0, sticky="ew", padx=18, pady=(16, 6))
-            description = self.app.label(card, subject["description"] or "No description yet.", 13, "secondary", wraplength=300)
+            description = self.app.label(card, subject["description"] or tr(self.app,"No description yet."), 13, "secondary", wraplength=300)
             description.grid(row=1, column=0, sticky="ew", padx=18, pady=(0, 10))
             def resize_labels(event, title=title, description=description):
                 title.configure(wraplength=max(200, event.width - 36))
                 description.configure(wraplength=max(200, event.width - 36))
             card.bind("<Configure>", resize_labels, add="+")
-            exam = f'Exam: {subject["exam_date"]}' if subject["exam_date"] else "No exam date set"
+            exam = tr(self.app,'Exam: {v0}',v0=subject['exam_date']) if subject['exam_date'] else tr(self.app,'No exam date set')
             self.app.label(card, exam, 12, "secondary").grid(row=2, column=0, sticky="w", padx=18)
-            self.app.label(card, f'{subject["topic_count"]} topics · {subject["question_count"]} questions · {subject["study_seconds"] // 60} min studied', 12, "secondary").grid(row=3, column=0, sticky="w", padx=18, pady=(4, 12))
+            self.app.label(card, tr(self.app, '{v0} topics · {v1} questions · {v2} min studied', v0=subject['topic_count'], v1=subject['question_count'], v2=subject['study_seconds'] // 60), 12, "secondary").grid(row=3, column=0, sticky="w", padx=18, pady=(4, 12))
             actions = self.app.frame(card)
             actions.grid(row=4, column=0, sticky="w", padx=18, pady=(0, 16))
             for text, callback in [("Questions", lambda sid=subject["id"]: self.app.open_question_bank(sid)),
                                    ("Study", lambda sid=subject["id"]: self.app.start_focus(sid)),
                                    ("Edit", lambda sid=subject["id"]: self.show_form(sid)),
                                    ("Delete", lambda sid=subject["id"]: self.ask_delete(sid))]:
-                self.app.button(actions, text, callback, width=78, primary=text == "Study").pack(side="left", padx=(0, 6))
+                self.app.button(actions, tr(self.app,text), callback, width=78, primary=text == "Study").pack(side="left", padx=(0, 6))

@@ -57,7 +57,7 @@ Feature guides: [Flashcards](docs/FLASHCARDS.md) · [Statistics](docs/STATISTICS
 
 ## Documentation
 
-English is the primary documentation language. Czech, Slovak and Russian are maintained in separate folders; the application UI remains English. Conversation with development assistants may use any of these four languages.
+English is the primary documentation language. Czech, Slovak and Russian are maintained in separate folders; the application UI defaults to English and supports Czech, Slovak and Russian after restart. Conversation with development assistants may use any of these four languages.
 
 | Document | Contents |
 | --- | --- |
@@ -81,20 +81,24 @@ soskuska-local/    Earlier standalone HTML visual reference
 docs/             English guides; cs/, sk/, ru/ contain translations
 ```
 
-Windows/Linux are primary target platforms; macOS is also the current development environment. Unit CI runs on all three systems; GUI CI runs on Ubuntu/Xvfb, with native checks also run locally on macOS. This does not replace manual Windows/Linux UI or physical scrolling-gesture testing. There is no installer, synchronization, UI translation yet.
+Windows/Linux are primary target platforms; macOS is also the current development environment. Unit CI runs on all three systems; GUI CI runs on Ubuntu/Xvfb, with native checks also run locally on macOS. This does not replace manual Windows/Linux UI or physical scrolling-gesture testing. There is no installer or synchronization yet.
 
 ## Backup and restore
 
-Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Current schema is 7. Restore closes the app; reopen it afterward. See [Backup and restore](docs/BACKUP_RESTORE.md).
+Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Current schema is 8. Restore closes the app; reopen it afterward. See [Backup and restore](docs/BACKUP_RESTORE.md).
 
 ## Import questions from CSV
 
-Question bank now supports UTF-8 CSV import into an existing subject, with a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records; question lists show 50 per page. Current schema is 7. [Question CSV import](docs/QUESTION_CSV_IMPORT.md).
+Question bank now supports UTF-8 CSV import into an existing subject, with a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records; question lists show 50 per page. Current schema is 8. [Question CSV import](docs/QUESTION_CSV_IMPORT.md).
 
 ## Import flashcards from CSV
 
-Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Current schema is 7. [Import flashcards from CSV](docs/FLASHCARD_CSV_IMPORT.md).
+Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Current schema is 8. [Import flashcards from CSV](docs/FLASHCARD_CSV_IMPORT.md).
 
 ## Saved AI Tutor conversations
 
 AI Tutor now saves conversations locally, including the original server/model and reply status. Open saved history without networking, reconnect explicitly to continue, or delete a selected conversation after confirmation. Released in v0.12.0 with schema 7, which migrates existing study data transactionally. [Saved AI Tutor conversations](docs/TUTOR_HISTORY.md).
+
+## Interface language
+
+UI language selection is implemented on this branch: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current schema is 8; the published release remains v0.12.0 until release authorization. [Interface language](docs/UI_LANGUAGES.md).

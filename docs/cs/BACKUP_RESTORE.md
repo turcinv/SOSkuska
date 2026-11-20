@@ -12,7 +12,7 @@ Snímek SQLite obsahuje všechna uložená studijní data, nastavení a místní
 
 1. Dokonči focus a dokonči/zahoď test. Počkej na AI nebo použij Stop; ulož potřebné formuláře a vyřeš odpovědi přes Retry save reply nebo Discard unsaved.
 2. Zavři ostatní okna SOSkúška nad stejnou databází, starší verze aplikace a externí SQLite nástroje. Aktuální verze používá sdílený/výhradní zámek; starší aplikace a externí nástroje se tohoto mechanismu neúčastní.
-3. V Settings zvol **Choose backup…** a běžný místní samostatný SQLite soubor schématu **7**. Pracovní WAL soubory, cizí, poškozené, neplatné, starší i novější databáze se odmítnou. WAL databázi nejprve exportuj přes Create backup.
+3. V Settings zvol **Choose backup…** a běžný místní samostatný SQLite soubor schématu **8**. Pracovní WAL soubory, cizí, poškozené, neplatné, starší i novější databáze se odmítnou. WAL databázi nejprve exportuj přes Create backup.
 4. Soukromá kopie projde kontrolou integrity, struktury, omezení, typů, dat/časových zón, konzistence testů a vazeb. Zkontroluj název a počty. **Cancel** nebo navigace výběr zruší bez změny dat. Pozdější změna zdrojového souboru nezmění ověřenou kopii.
 5. **Confirm restore and close** nahradí všechna uložená studijní data, nastavení a konverzace obsahem zálohy. Rozepsané formuláře se ztratí. Ochrany se ověří znovu; editace se zablokuje a databázové callbacky pozastaví.
 6. Před nahrazením vznikne bezpečnostní kopie v `backups/` vedle aktivní databáze: `SOSkuska-before-restore-<datum>-<unikátní-id>.sqlite3`. Úspěšná zpráva ukáže přesnou cestu. Jedna transakce zachová ID sekvence a porovná výsledek s ověřenou kopií; chyba před commitem vrátí původní data. Pokud nelze vytvořit bezpečnostní kopii, data se nenahradí.
@@ -22,7 +22,7 @@ Snímek SQLite obsahuje všechna uložená studijní data, nastavení a místní
 
 Jde o ruční místní zálohy, ne synchronizaci, plánované zálohování, šifrování ani úplnou obnovu po pádu/výpadku proudu. Kopie obsahují soukromá studijní data a AI nastavení; ulož je bezpečně. Běžné studium zůstává offline bez cloudu.
 
-Aktuální schéma je 7; obnova přijímá pouze schéma 7, bez downgradu či automatické migrace. Aktivní databáze s pevnými odkazy se odmítají kvůli spolehlivému zamykání. Aktivní databázi ani její doprovodné soubory nelze použít jako cíl, včetně variant velikosti písmen a Unicode.
+Aktuální schéma je 8; obnova přijímá pouze schéma 8, bez downgradu či automatické migrace. Aktivní databáze s pevnými odkazy se odmítají kvůli spolehlivému zamykání. Aktivní databázi ani její doprovodné soubory nelze použít jako cíl, včetně variant velikosti písmen a Unicode.
 
 Na macOS/Linux vyžaduje atomické zveřejnění bez přepsání podporu pevných odkazů (například běžné místní APFS/ext4). Pokud externí disk zápis odmítne, použij podporovanou místní složku. Windows používá přejmenování bez přepsání. Úlohy běží v pomocných procesech: rozpočet operace 60 sekund, pojistka procesu 90 sekund. Vyhni se síťovým cestám a nevynucuj ukončení. Pokud pomocný proces nečekaně skončí, po spuštění zkontroluj data a bezpečnostní kopie; nelze předpokládat chybu před commitem.
 
