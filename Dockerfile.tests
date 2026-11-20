@@ -1,0 +1,17 @@
+FROM python:3.12-slim-bookworm
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+RUN apt-get update \
+    && apt-get install --yes --no-install-recommends xvfb xauth tk fonts-noto-core \
+    && rm -rf /var/lib/apt/lists/* \
+    && python -c "import tkinter; print('Tk', tkinter.TkVersion)"
+WORKDIR /workspace
+COPY soskuska/requirements.txt /workspace/soskuska/requirements.txt
+RUN python -m pip install --no-cache-dir -r soskuska/requirements.txt \
+    && useradd --create-home tester
+COPY --chown=tester:tester soskuska/ /workspace/soskuska/
+COPY --chown=tester:tester tests/ /workspace/tests/
+COPY --chown=tester:tester tools/run_checks.py /workspace/tools/run_checks.py
+COPY --chown=tester:tester docs/examples/questions-template.csv docs/examples/flashcards-template.csv /workspace/docs/examples/
+RUN chown -R tester:tester /workspace
+USER tester
+CMD ["xvfb-run", "--auto-servernum", "--server-args=-screen 0 1920x1080x24", "python", "tools/run_checks.py"]

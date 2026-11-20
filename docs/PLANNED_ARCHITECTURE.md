@@ -4,7 +4,7 @@
 
 **Future design, not a description of everything implemented today.** Proposed files/tables exist only where confirmed by [current architecture](CURRENT_ARCHITECTURE.md). A roadmap does not authorize implementing every feature at once.
 
-Published baseline is v0.12.0, with saved AI conversations and schema 7. The history guide below describes the implemented behavior. Settings Save does not start networking.
+Published baseline is v0.13.0, with interface languages, saved AI conversations and schema 8. The history guide below describes the implemented behavior. Settings Save does not start networking.
 
 ## Direction
 
@@ -79,11 +79,11 @@ Persist timestamps with explicit zones, preferably UTC, and aggregate calendar d
 
 - **Subjects/Dashboard:** subject/topic/question management, exams and actual session totals are implemented. New databases are empty; practice results and aggregate statistics already exist.
 - **Flashcards:** decks, editing, reveal/rating, saved schedules and history exist. Rules in repetition.py are custom, not SM-2/FSRS. CSV import is implemented; advanced scheduling remains future work.
-- **Practice:** filters, counts, timing, saved attempts, score and answer review exist. Question CSV import is implemented; richer practice history remains future work.
+- **Practice:** filters, counts, timing, saved attempts, score and answer review exist. Question CSV import is implemented; paged history with subject/date filters is implemented.
 - **AI Tutor:** bounded Ollama HTTP client, discovered models, streaming and cancellation exist. Keep default local connection, visible configurable URL and no automatic cloud fallback. Distinguish unavailable service, no models, loading/ready/generating/stopped, memory error and missing model; connection failure alone cannot prove Ollama is not installed.
 - **AI execution:** keep long operations off the Tk thread, results through queue/after, and no worker widget calls. Do not share SQLite connections without a design; short writes may stay on the main thread and future jobs should get their own connections.
 - **Text/languages:** start with plain text, code blocks and Unicode math; advanced HTML/LaTeX is optional future work. Separate UI from AI answer language. UI translations should support English/Czech/Slovak/Russian, long text and Cyrillic; AI already supports these plus Automatic and manual override.
-- **Statistics/settings/data:** basic reports and study/AI preferences exist. Future work includes richer charts (Matplotlib only if needed), appearance/UI-language settings, data management, import validation and scheduled backups. Manual backup/restore is now implemented.  The current manual restore closes the connection and creates a safety copy.
+- **Statistics/settings/data:** basic reports and study/AI preferences exist. Future work includes richer charts (Matplotlib only if needed), appearance settings, data management, import validation and scheduled backups. Manual backup/restore is now implemented.  The current manual restore closes the connection and creates a safety copy.
 
 ## Stages and completion criteria
 
@@ -117,3 +117,7 @@ AI Tutor now saves conversations locally, including the original server/model an
 ## Interface language
 
 UI language selection is available in v0.13.0: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current schema is 8. [Interface language](UI_LANGUAGES.md).
+
+## Practice history
+
+Practice history now supports pages of 20 across all completed attempts, historical subject-name and inclusive local-date filters, and reopening saved answer reviews. Filter drafts and the applied page survive navigation; failed reads keep prior results. Schema remains 8. [Practice history](PRACTICE_HISTORY.md).

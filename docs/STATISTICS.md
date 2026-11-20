@@ -14,7 +14,7 @@ Select Last 7 days, Last 30 days or All time. Statistics shows saved focus time/
 
 The periods include today and the preceding 6 or 29 local calendar days. All time includes everything through today, but the daily chart covers only the latest 30 days. Future calendar days are excluded. Focus sessions use their stored local day; practice/review UTC timestamps convert using the current system time zone. Changing zone may rebucket historical events. A focus session crossing midnight stays entirely on its save day.
 
-Reports include history beyond the other screens' 20-row display limits. Deleting a subject, card or deck does not remove retained historical results. Existing subjects group by ID/current name; unavailable subjects group by saved name, and unnamed legacy sessions appear as Unassigned sessions. Deleted subjects with identical names may merge into one row. At most 50 subject groups are displayed by time; totals include all groups. Bars compare rows, not progress toward a goal.
+Reports include history beyond Flashcards’ 20-row review-history display limit. Deleting a subject, card or deck does not remove retained historical results. Existing subjects group by ID/current name; unavailable subjects group by saved name, and unnamed legacy sessions appear as Unassigned sessions. Deleted subjects with identical names may merge into one row. At most 50 subject groups are displayed by time; totals include all groups. Bars compare rows, not progress toward a goal.
 
 ## Implementation and limits
 

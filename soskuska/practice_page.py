@@ -20,6 +20,9 @@ class PracticePage(ctk.CTkFrame):
         self.subject_ids = {}
         self.topic_ids = {"All topics": "all", "No topic": None}
         self.pending_action = None
+        self.history_filters = (None, "", "")
+        self.history_page = 0
+        self.history_subjects = {tr(self.app, 'All subjects'): None}
         self.grid_columnconfigure(0, weight=1)
         app.label(self, tr(self.app, 'Practice Tests'), 28, bold=True).grid(row=0, column=0, sticky="w")
         self.status = app.label(self, tr(self.app, 'Answers are saved on this device. Results appear after submission.'), 13, "secondary", wraplength=650)
@@ -54,15 +57,47 @@ class PracticePage(ctk.CTkFrame):
         self.start_button = app.button(actions, tr(self.app, 'Start test'), self.start, primary=True, width=125)
         self.start_button.pack(side="left", padx=(0, 8))
         app.button(actions, tr(self.app, 'Refresh subjects'), self.show_config, width=155).pack(side="left")
-        app.label(self.setup, tr(self.app, 'Completed tests · most recent 20'), 18, bold=True).grid(row=14, column=0, sticky="w", pady=(0, 12))
+        app.label(self.setup, tr(self.app, 'Completed tests'), 18, bold=True).grid(row=14, column=0, sticky="w", pady=(0, 12))
+        filters = app.frame(self.setup, card=True)
+        filters.grid(row=15, column=0, sticky="ew", pady=(0, 12))
+        filters.grid_columnconfigure(0, weight=1)
+        app.label(filters, tr(self.app, 'Subject name saved with the test'), 13, "secondary").grid(row=0, column=0, sticky="w", padx=16, pady=(12, 4))
+        self.history_subject = ctk.StringVar(value=tr(self.app, 'All subjects'))
+        self.history_subject_menu = LocalizedOptionMenu(filters, owner=app, variable=self.history_subject,
+            values=[tr(self.app, 'All subjects')], translate_values=False, height=38, font=app.font(), dynamic_resizing=False)
+        self.history_subject_menu.grid(row=1, column=0, sticky="ew", padx=16, pady=(0, 12))
+        self.history_date_entries = []
+        for row, text in enumerate(('Completed from (YYYY-MM-DD, optional)', 'Completed through (YYYY-MM-DD, optional)'), 2):
+            app.label(filters, tr(self.app, text), 13, "secondary").grid(row=row*2-2, column=0, sticky="w", padx=16, pady=(0, 4))
+            entry = ctk.CTkEntry(filters, height=38, font=app.font())
+            entry.grid(row=row*2-1, column=0, sticky="ew", padx=16, pady=(0, 12))
+            entry.bind('<Return>', lambda _event: self.apply_history())
+            self.history_date_entries.append(entry)
+        actions = app.frame(filters)
+        actions.grid(row=6, column=0, sticky="w", padx=16, pady=(0, 14))
+        self.history_apply = app.button(actions, tr(self.app, 'Apply filters'), self.apply_history, primary=True, width=135)
+        self.history_apply.pack(side="left", padx=(0, 8))
+        self.history_reset = app.button(actions, tr(self.app, 'Reset filters'), self.reset_history, width=135)
+        self.history_reset.pack(side="left")
+        self.history_status = app.label(self.setup, "", 13, "secondary", wraplength=650)
+        self.history_status.grid(row=16, column=0, sticky="ew", pady=(0, 12))
+        pagination = app.frame(self.setup)
+        pagination.grid(row=17, column=0, sticky="w", pady=(0, 14))
+        self.history_previous = app.button(pagination, tr(self.app, 'Previous'), lambda: self.move_history(-1), width=110)
+        self.history_previous.pack(side="left", padx=(0, 8))
+        self.history_next = app.button(pagination, tr(self.app, 'Next'), lambda: self.move_history(1), width=110)
+        self.history_next.pack(side="left")
+        self.history_previous.configure(state="disabled")
+        self.history_next.configure(state="disabled")
         self.history = app.frame(self.setup)
-        self.history.grid(row=15, column=0, sticky="ew")
+        self.history.grid(row=18, column=0, sticky="ew")
         self.history.grid_columnconfigure(0, weight=1)
 
         self.run = app.frame(self)
         self.run.grid(row=4, column=0, sticky="ew")
         self.run.grid_columnconfigure(0, weight=1)
-        app.button(self.run, tr(self.app, '← Test setup / history'), self.show_config, width=195).grid(row=0, column=0, sticky="w", pady=(0, 16))
+        self.history_button = app.button(self.run, tr(self.app, '← Test setup / history'), self.show_config, width=195)
+        self.history_button.grid(row=0, column=0, sticky="w", pady=(0, 16))
         self.progress = app.label(self.run, "", 16, bold=True, wraplength=650)
         self.progress.grid(row=1, column=0, sticky="ew")
         self.timer = app.label(self.run, "", 14, "hover")
@@ -152,7 +187,7 @@ class PracticePage(ctk.CTkFrame):
         try:
             subjects = self.app.store.subjects()
             active = self.app.store.active_practice()
-            history = self.app.store.practice_history()
+            history = self.read_history()
             items = self.app.store.practice_items(active["id"]) if active else []
             if active:
                 self.items = items
@@ -166,18 +201,7 @@ class PracticePage(ctk.CTkFrame):
             self.subject_menu.configure(values=list(self.subject_ids))
             self.subject.set(next((k for k, v in self.subject_ids.items() if v == selected), next(iter(self.subject_ids), "Add a subject first")))
             self.subject_changed()
-            for child in self.history.winfo_children():
-                child.destroy()
-            if not history:
-                self.app.label(self.history, tr(self.app, 'No completed tests yet.'), 14, "secondary").grid(row=0, column=0, sticky="w")
-            for row, attempt in enumerate(history):
-                card = self.app.frame(self.history, card=True)
-                card.grid(row=row, column=0, sticky="ew", pady=(0, 12))
-                card.grid_columnconfigure(0, weight=1)
-                text = tr(self.app,'{v0} · {v1}/{v2} correct · {v3}',v0=attempt['subject_name'],v1=attempt['correct'],v2=attempt['question_count'],v3=self.local_time(attempt['completed_at']))
-                label = self.app.label(card, text, 14, wraplength=600)
-                label.grid(row=0, column=0, sticky="ew", padx=18, pady=16)
-                self.app.button(card, tr(self.app, 'View result'), lambda aid=attempt["id"]: self.view_result(aid), width=115).grid(row=1, column=0, sticky="w", padx=18, pady=(0, 14))
+            self.render_history(history)
             if active:
                 self.active_label.configure(text=tr(self.app, 'Unfinished test: {v0} · {v1}/{v2} answered. Resume or discard it before starting another.', v0=active['subject_name'], v1=active['answered'], v2=active['question_count']))
                 self.active_panel.grid()
@@ -192,6 +216,66 @@ class PracticePage(ctk.CTkFrame):
         except (ValueError, sqlite3.Error) as exc:
             self.error(exc)
             return False
+
+    def read_history(self, filters=None, page=None):
+        subject, start, end = self.history_filters if filters is None else filters
+        return self.app.store.practice_history_page(subject_name=subject, date_from=start, date_to=end,
+            page=self.history_page if page is None else page)
+
+    def render_history(self, report):
+        # Preserve an unapplied subject draft across page changes and navigation.
+        selected = self.history_subjects.get(self.history_subject.get())
+        choices = {tr(self.app, 'All subjects'): None}
+        choices.update({tr(self.app, 'Subject: {v0}', v0=name): name for name in report['subjects']})
+        self.history_subjects = choices
+        self.history_subject_menu.configure(values=list(choices))
+        self.history_subject.set(next((label for label, name in choices.items() if name == selected), next(iter(choices))))
+        self.history_page = report['page']
+        for child in self.history.winfo_children():
+            child.destroy()
+        if not report['rows']:
+            self.app.label(self.history, tr(self.app, 'No completed tests match these filters.'), 14, 'secondary').grid(row=0, column=0, sticky='w')
+        for row, attempt in enumerate(report['rows']):
+            card = self.app.frame(self.history, card=True)
+            card.grid(row=row, column=0, sticky='ew', pady=(0, 12))
+            card.grid_columnconfigure(0, weight=1)
+            text = tr(self.app, '{v0} · {v1}/{v2} correct · {v3}', v0=attempt['subject_name'],
+                v1=attempt['correct'], v2=attempt['question_count'], v3=self.local_time(attempt['completed_at']))
+            label = self.app.label(card, text, 14, wraplength=600)
+            label.grid(row=0, column=0, sticky='ew', padx=18, pady=16)
+            card.bind('<Configure>', lambda event, label=label: label.configure(wraplength=max(200,event.width-36)), add='+')
+            self.app.button(card, tr(self.app, 'View result'), lambda aid=attempt['id']: self.view_result(aid), width=115).grid(row=1, column=0, sticky='w', padx=18, pady=(0, 14))
+        self.history_status.configure(text=tr(self.app, 'Page {v0} / {v1} · {v2} completed tests',
+            v0=report['page']+1, v1=report['pages'], v2=report['total']))
+        self.history_previous.configure(state='normal' if report['page'] else 'disabled')
+        self.history_next.configure(state='normal' if report['page']+1 < report['pages'] else 'disabled')
+
+    def refresh_history(self, filters, page):
+        try:
+            report = self.read_history(filters, page)
+        except (ValueError, sqlite3.Error) as exc:
+            self.history_status.configure(text=tr(self.app, str(exc)) if isinstance(exc, ValueError) else
+                tr(self.app, 'Could not load practice history. Previous results are kept; retry the filters or page.'))
+            return False
+        self.history_filters = filters
+        self.render_history(report)
+        return True
+
+    def apply_history(self):
+        if self.history_subject.get() not in self.history_subjects:
+            return
+        filters = (self.history_subjects[self.history_subject.get()],
+            *(entry.get().strip() for entry in self.history_date_entries))
+        self.refresh_history(filters, 0)
+
+    def reset_history(self):
+        if self.refresh_history((None, '', ''), 0):
+            self.history_subject.set(next(iter(self.history_subjects)))
+            for entry in self.history_date_entries:
+                entry.delete(0, 'end')
+
+    def move_history(self, offset):
+        self.refresh_history(self.history_filters, max(0, self.history_page + offset))
 
     @staticmethod
     def local_time(value):

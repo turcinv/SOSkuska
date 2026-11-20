@@ -1,0 +1,25 @@
+# Send only runtime/test code, catalogs and the exact fixtures used by checks.
+*
+!Dockerfile.tests
+!soskuska/
+soskuska/**
+!soskuska/*.py
+!soskuska/requirements.txt
+!soskuska/i18n/
+soskuska/i18n/**
+!soskuska/i18n/*.json
+!tests/
+tests/**
+!tests/*.py
+!tests/fixtures/
+tests/fixtures/**
+!tests/fixtures/*.sql
+!tools/
+tools/**
+!tools/run_checks.py
+!docs/
+docs/**
+!docs/examples/
+docs/examples/**
+!docs/examples/questions-template.csv
+!docs/examples/flashcards-template.csv

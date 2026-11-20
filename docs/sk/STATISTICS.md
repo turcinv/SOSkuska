@@ -14,7 +14,7 @@ V ponuke **Statistics** zvoľ Last 7 days, Last 30 days alebo All time. Prehľad
 
 Obdobie zahŕňa dnešok a predchádzajúcich 6 alebo 29 miestnych kalendárnych dní. All time zahŕňa všetko až do dneška, denný graf však iba posledných 30 dní. Budúce kalendárne dni sa nezapočítajú. Relácie používajú uložený miestny dátum; testy a hodnotenia prevádzajú UTC čas do aktuálneho systémového pásma. Zmena pásma môže presunúť historickú udalosť medzi dňami. Relácia cez polnoc zostáva celá v dni uloženia.
 
-História sa neobmedzuje na posledných 20 položiek z ostatných obrazoviek. Zmazanie predmetu, kartičky či balíčka neodstráni uložené historické výsledky. Živé predmety sa zoskupujú podľa ID a aktuálneho názvu; záznamy bez dostupného predmetu podľa uloženého názvu, pôvodné bez názvu ako Unassigned sessions. Po zmazaní môžu rovnako pomenované predmety splynúť do jedného riadka. Zobrazuje sa najviac 50 skupín podľa času, celkové súčty zahŕňajú všetky. Pruhy porovnávajú hodnoty medzi riadkami, nie pokrok voči cieľu.
+História zahŕňa aj záznamy nad limit posledných 20 hodnotení na obrazovke Flashcards. Zmazanie predmetu, kartičky či balíčka neodstráni uložené historické výsledky. Živé predmety sa zoskupujú podľa ID a aktuálneho názvu; záznamy bez dostupného predmetu podľa uloženého názvu, pôvodné bez názvu ako Unassigned sessions. Po zmazaní môžu rovnako pomenované predmety splynúť do jedného riadka. Zobrazuje sa najviac 50 skupín podľa času, celkové súčty zahŕňajú všetky. Pruhy porovnávajú hodnoty medzi riadkami, nie pokrok voči cieľu.
 
 ## Implementácia a obmedzenia
 

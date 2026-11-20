@@ -4,7 +4,7 @@
 
 **Budúci návrh, nie dnešná implementácia.** Uvedené moduly a tabuľky zatiaľ neexistujú, ak ich nepotvrdzuje [súčasná architektúra](CURRENT_ARCHITECTURE.md). Tento plán sám osebe neznamená začatie implementácie všetkých funkcií.
 
-**Aktuálny postup (18. novembra 2026):** V AI Tutor pripoj vlastný server Ollama cez Connect / refresh, vyber model a jazyk odpovede a zadaj otázku. Odpoveď prichádza priebežne; Stop ju zastaví. Ostatné obrazovky zostávajú použiteľné počas generovania aj bez Ollamy. Chat sa ukladá do miestnej databázy a možno ho otvoriť po reštarte; pozri sprievodcu históriou.
+Vydaná základná verzia je v0.13.0 s jazykmi rozhrania, uloženými konverzáciami AI a schémou 8. Sprievodcovia nižšie opisujú implementované funkcie. Uloženie nastavení nespúšťa sieťové pripojenie.
 
 Nastavenia sa ukladajú do rovnakej databázy ako študijné údaje. [Settings](SETTINGS.md). Nastavenia sa ukladajú transakčne v schéme 6 s ochranou pred prepísaním zmien iného okna. Migrácia z verzie 5 zachová všetky predchádzajúce tabuľky aj údaje; staršia aplikácia novšiu schému odmietne otvoriť.
 ## Smer
@@ -84,7 +84,7 @@ Konkrétne schémy musia doplniť cudzie kľúče, pravidlá mazania, indexy a t
 
 **Kartičky:** balíčky, editor, odhalenie odpovede, Again / Hard / Good / Easy, uložený termín a história sú implementované. Pravidlá sú v repetition.py a dokumente FLASHCARDS.md; nejde o SM-2 ani FSRS. CSV import je implementovaný; pokročilejšie plánovanie zostáva možnosťou do budúcna.
 
-**Testy:** výber témy, náročnosti, počtu a času; uložený pokus, skóre a rozbor odpovedí sú implementované. Import otázok z CSV je implementovaný; bohatšia história zostáva ďalším rozšírením.
+**Testy:** výber témy, náročnosti, počtu a času; uložený pokus, skóre a rozbor odpovedí sú implementované. Import otázok z CSV je implementovaný; stránkovaná história s filtrami predmetu a dátumov je implementovaná.
 
 **AI Tutor:** samostatný klient Ollama s časovým limitom, zoznamom dostupných modelov, priebežným prijímaním odpovede a zrušením generovania. Predvolené spojenie miestne, adresa nastaviteľná a viditeľná; žiadny automatický prechod na cloud. Modely načítať z Ollamy, nevyžadovať jeden pevný model.
 
@@ -134,3 +134,7 @@ AI Tutor teraz ukladá konverzácie lokálne vrátane pôvodného servera/modelu
 ## Jazyk rozhrania
 
 Výber jazyka rozhrania je dostupný vo v0.13.0: angličtina, čeština, slovenčina a ruština. Ukladá sa osobitne od jazyka AI a použije sa po reštarte. Aktuálna schéma je 8. [Jazyk rozhrania](UI_LANGUAGES.md).
+
+## História testov
+
+História testov teraz ponúka všetky dokončené pokusy po 20 na stránku, filter uloženého názvu predmetu a miestnych dátumov vrátane oboch hraníc a otvorenie uloženého rozboru odpovedí. Koncepty filtrov a použitá stránka prežijú navigáciu; chyba čítania zachová predchádzajúce výsledky. Schéma zostáva 8. [História testov](PRACTICE_HISTORY.md).

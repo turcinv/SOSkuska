@@ -2,6 +2,13 @@
 
 [English](../../CONTRIBUTING.md) · [Čeština](../cs/CONTRIBUTING.md) · [Slovenčina](../sk/CONTRIBUTING.md) · [Русский](CONTRIBUTING.md)
 
+[Тесты в контейнере](CONTAINER_TESTS.md).
+
+```sh
+docker build -f Dockerfile.tests -t soskuska-tests .
+docker run --rm --init --network none --cpus 2 --memory 2g soskuska-tests
+```
+
 
 ## Перед началом
 
@@ -18,7 +25,7 @@
 .venv-macos/bin/python -m unittest discover -s tests -v
 ```
 
-На Windows/Linux используй соответствующий путь к Python своего окружения. При изменении UI, таймера или прокрутки запусти также нативную проверку и вручную проверь затронутое поведение:
+Для обычных проверок UI, таймера и прокрутки используй контейнер выше. Команды ниже открывают нативные окна и нужны только для обязательной платформенной/ручной проверки; сначала согласуй видимый запуск с пользователем. На Windows/Linux используй соответствующий Python:
 
 ```sh
 .venv-macos/bin/python soskuska/check_dashboard.py
@@ -44,7 +51,7 @@ GUI-проверка открывает окно и требует графич�
 
 ## Непрерывная интеграция (CI)
 
-CI: Python 3.12, модульные тесты на трёх системах и четырнадцать GUI-проверок на Ubuntu/Xvfb. [Результаты](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
+CI: Python 3.12, модульные тесты на трёх системах и пятнадцать GUI-проверок на Ubuntu/Xvfb. [Результаты](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
 
 ## Статистика (v0.6.0)
 

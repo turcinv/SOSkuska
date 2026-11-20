@@ -20,6 +20,7 @@ Commands below are relative to the project root:
 .venv-macos/bin/python soskuska/check_question_bank.py
 .venv-macos/bin/python soskuska/check_review_fixes.py
 .venv-macos/bin/python soskuska/check_practice.py
+.venv-macos/bin/python soskuska/check_practice_history.py
 .venv-macos/bin/python soskuska/check_flashcards.py
 .venv-macos/bin/python soskuska/check_statistics.py
 .venv-macos/bin/python soskuska/check_state_fixes.py
@@ -65,3 +66,7 @@ If `.codegraph/` exists at the repository root, use `codegraph_explore` or `code
 - New-deck draft subject choices refresh in place on load, Refresh and Save. Keep selected subject by ID across rename. If it was deleted, require an explicit replacement; preserve title/description on every refresh/read failure.
 - Run check_state_fixes.py and the complete unit/native suite with temporary databases. CI includes this seventh native check. These fixes were released in v0.6.2.
 
+
+## Uninterrupted desktop testing
+
+The user prefers GUI checks inside the Linux test container because native windows interrupt their work. Default to `docker build -f Dockerfile.tests -t soskuska-tests .` followed by `docker run --rm --init --network none --cpus 2 --memory 2g soskuska-tests`. No host display/data mounts; use disposable databases. Rebuild after source changes. See [Container tests](../CONTAINER_TESTS.md). Run native Mac UI checks only for required Aqua/Tk9/platform coverage and arrange the visible run with the user first. Container coverage is Linux only. CI shares the bounded GUI script list in `tools/run_checks.py`; keep new checks in that list.

@@ -162,7 +162,7 @@ CREATE UNIQUE INDEX practice_one_active
                     ON practice_attempts(status) WHERE status='in_progress';
 ```
 
-Discard obtains the write lock before checking the clock. An expired attempt is completed and retained rather than deleted. MissingPracticeError is terminal: clear stale state and show usable setup rather than retrying forever. SQLite errors remain retryable; Refresh subjects/navigation can recover a setup-read failure. History displays 20 results; older rows remain stored.
+Discard obtains the write lock before checking the clock. An expired attempt is completed and retained rather than deleted. MissingPracticeError is terminal: clear stale state and show usable setup rather than retrying forever. SQLite errors remain retryable; Refresh subjects/navigation can recover a setup-read failure. History provides all completed results in pages of 20, with saved subject-name and local-date filters.
 
 ## Flashcards (introduced in v0.5.0)
 
@@ -241,7 +241,7 @@ Settings now includes manual local backup and validated restore, with a pre-rest
 
 backup.py and backup_validation.py validate private standalone snapshots and application domains, then replace rows in one write transaction without copying source DDL. database_lock.py provides shared Store leases and exclusive restore leases (flock / Windows LockFileEx). backup_worker.py runs in an isolated process; backup_panel.py polls a temporary output file on Tk, avoiding pipe deadlocks and worker-thread Tk finalization. The current Store is closed and periodic callbacks pause for actual restore. The safety copy is taken while the write lock is held; final rows and ID sequences must match before commit.
 
-Backup/restore validation: 156 unit tests and ten native macOS checks with disposable data. Tests include the independently reproduced review failures. CI runs the fourteen GUI checks on Ubuntu/Xvfb; Windows/macOS unit jobs exercise platform leases.
+Backup/restore validation: 156 unit tests and ten native macOS checks with disposable data. Tests include the independently reproduced review failures. CI runs the fifteen GUI checks on Ubuntu/Xvfb; Windows/macOS unit jobs exercise platform leases.
 
 ## Import questions from CSV
 
@@ -264,3 +264,7 @@ AI Tutor now saves conversations locally, including the original server/model an
 UI language selection is available in v0.13.0: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current schema is 8. [Interface language](UI_LANGUAGES.md).
 
 `localization.py` owns pure catalog lookup/formatting; `localization_widgets.py` maps translated dropdown labels to canonical variables and cleans up traces. `i18n/en.json`, `cs.json`, `sk.json`, `ru.json` ship with the source. `preferences.ui_language` is a checked text field; startup builds the Translator once. No new external dependencies are required.
+
+## Practice history
+
+Practice history now supports pages of 20 across all completed attempts, historical subject-name and inclusive local-date filters, and reopening saved answer reviews. Filter drafts and the applied page survive navigation; failed reads keep prior results. Schema remains 8. [Practice history](PRACTICE_HISTORY.md).

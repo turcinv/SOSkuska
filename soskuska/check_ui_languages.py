@@ -63,6 +63,11 @@ def check(path,language,reopen=False):
                 difficulty.selected(tr('Medium'));assert page.difficulty.get()=='Medium'
                 assert page.subject.get()=='Settings'
                 assert page.subject_menu.display_variable.get()=='Settings'
+                assert page.history_apply.cget('text')==tr('Apply filters')
+                assert page.history_subject_menu.display_variable.get()==tr('All subjects')
+                app.update_idletasks()
+                for button in (page.history_apply,page.history_reset):
+                    assert button.winfo_rootx()+button.winfo_width()<=app.winfo_rootx()+app.winfo_width()
                 app.navigate('Flashcards');cards=app.flashcard_page;cards.open_deck(deck);cards.start_review(deck)
                 assert cards.current_card['front']=='Cancel';cards.reveal()
                 assert cards.answer.cget('text')=='Settings'
