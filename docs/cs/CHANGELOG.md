@@ -3,9 +3,11 @@
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
 
-## Nevydané
+## 0.14.0 — 2026-11-20
 
 Historie testů nyní nabízí všechny dokončené pokusy po 20 na stránku, filtr uloženého názvu předmětu a místních dat včetně obou hranic a otevření uloženého rozboru odpovědí. Koncepty filtrů a použitá stránka přežijí navigaci; chyba čtení zachová předchozí výsledky. Schéma zůstává 8. [Historie testů](PRACTICE_HISTORY.md).
+
+Přidány offline testy v kontejneru s Xvfb, společný GUI spouštěč s časovými limity pro CI, kontext sestavení pouze se zdroji a popsané limity CPU/paměti. Běžné kontroly už nepotřebují okna na ploše hostitele. [Testy v kontejneru](CONTAINER_TESTS.md).
 
 ## 0.13.0 — 2026-11-20
 

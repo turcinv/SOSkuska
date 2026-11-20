@@ -2,9 +2,11 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
-## Unreleased
+## 0.14.0 — 2026-11-20
 
 Practice history now supports pages of 20 across all completed attempts, historical subject-name and inclusive local-date filters, and reopening saved answer reviews. Filter drafts and the applied page survive navigation; failed reads keep prior results. Schema remains 8. [Practice history](docs/PRACTICE_HISTORY.md).
+
+Added offline container testing with Xvfb, a shared bounded GUI runner for CI, source-only build context and documented CPU/memory limits. Routine checks no longer need host desktop windows. [Container tests](docs/CONTAINER_TESTS.md).
 
 ## 0.13.0 — 2026-11-20
 
