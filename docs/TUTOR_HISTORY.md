@@ -2,7 +2,7 @@
 
 [English](TUTOR_HISTORY.md) · [Čeština](cs/TUTOR_HISTORY.md) · [Slovenčina](sk/TUTOR_HISTORY.md) · [Русский](ru/TUTOR_HISTORY.md)
 
-AI Tutor now saves conversations locally, including the original server/model and reply status. Open saved history without networking, reconnect explicitly to continue, or delete a selected conversation after confirmation. Schema 7 migrates existing study data transactionally; the published release remains v0.11.1 until a new release is authorized.
+AI Tutor now saves conversations locally, including the original server/model and reply status. Open saved history without networking, reconnect explicitly to continue, or delete a selected conversation after confirmation. Released in v0.12.0 with schema 7, which migrates existing study data transactionally.
 
 ## Use saved history
 
