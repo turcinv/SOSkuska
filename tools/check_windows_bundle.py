@@ -88,7 +88,7 @@ def main():
         env = dict(os.environ)
         env.pop('PYTHONPATH', None); env.pop('PYTHONHOME', None)
         # No installed Python or tools may be discovered via PATH by either EXE.
-        env['PATH'] = str(Path(env['SystemRoot'])/'System32')
+        env['PATH'] = str(Path(os.environ['SystemRoot'])/'System32')
         database = folder/'данные skúška.sqlite3'
         check_window(app, database, cwd, env)
         with closing(sqlite3.connect(database)) as db:

@@ -97,7 +97,7 @@ Use the corresponding environment executable on Windows/Linux. For example:
 
 Checks print `PASS` and close their windows on success. They never use the normal user database. The Dashboard script has a 12-second Tk safeguard, not a hard process timeout if the event loop freezes; use Ctrl+C in that case. CI adds a 60-second external timeout per script.
 
-Backup/restore validation on this branch passed 251 unit tests and fifteen native checks locally. Do not present old results as validation of untested code changes. Coverage includes:
+Backup/restore validation on this branch passed 244 unit tests and fifteen native checks locally. Do not present old results as validation of untested code changes. Coverage includes:
 
 | Check / tests | Main coverage |
 | --- | --- |
@@ -219,3 +219,5 @@ python soskuska/check_practice_history.py
 ## Windows portable build and acceptance
 
 This branch adds an unsigned Windows x64 portable ZIP, built and checked by a fifth CI job. Bundled helper executables preserve isolated CSV/backup jobs; Python is not required on the target machine. Automated hosted Windows checks and the manual clean-machine checklist are separate; manual acceptance is not yet completed. Published version remains v0.14.0, schema 8. [Windows portable build and acceptance](WINDOWS_PORTABLE.md) · [Checklist](WINDOWS_ACCEPTANCE.md).
+
+Current packaging work: 251 unit tests passed locally. The Linux container passed all 15 GUI scripts (250 unit tests at that source snapshot, two filesystem-specific skips). No native Mac GUI suite was run for this branch. Hosted Windows build evidence is recorded separately; manual acceptance remains NOT RUN.
