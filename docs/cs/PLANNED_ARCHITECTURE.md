@@ -82,7 +82,7 @@ Konkrétní schémata musí doplnit cizí klíče, mazací pravidla, indexy a tr
 
 **Předměty a skutečný Dashboard:** správa předmětů, témat/otázek a skutečné součty sezení jsou implementované. Úspěšnost jednotlivých pokusů je v Practice Tests; základní celkové statistiky jsou implementované. Nová databáze je prázdná.
 
-**Kartičky:** balíčky, editor, odhalení odpovědi, Again / Hard / Good / Easy, uložený termín a historie jsou implementované. Pravidla jsou v repetition.py a dokumentu FLASHCARDS.md; nejde o SM-2 ani FSRS. Import a pokročilejší plánování jsou další možnosti.
+**Kartičky:** balíčky, editor, odhalení odpovědi, Again / Hard / Good / Easy, uložený termín a historie jsou implementované. Pravidla jsou v repetition.py a dokumentu FLASHCARDS.md; nejde o SM-2 ani FSRS. CSV import je implementovaný; pokročilejší plánování zůstává možností do budoucna.
 
 **Testy:** výběr tématu, obtížnosti, počtu a času; uložený pokus, skóre a rozbor odpovědí jsou implementované. Import otázek z CSV je implementovaný; bohatší historie zůstává dalším rozšířením.
 
@@ -122,3 +122,7 @@ Settings nyní nabízí ruční místní zálohu a ověřenou obnovu s bezpečno
 ## Import otázek z CSV
 
 Banka otázek nyní podporuje import UTF-8 CSV do existujícího předmětu: šablona s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů; seznam ukazuje 50 otázek na stránku. Schéma zůstává 6. [Import otázek z CSV](QUESTION_CSV_IMPORT.md).
+
+## Import kartiček z CSV
+
+Flashcards nyní podporuje import UTF-8 CSV do existujícího balíčku: šablonu s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů. Nové kartičky jsou ihned splatné; původní termíny a historie hodnocení zůstávají zachované. Schéma zůstává 6. [Import kartiček z CSV](FLASHCARD_CSV_IMPORT.md).

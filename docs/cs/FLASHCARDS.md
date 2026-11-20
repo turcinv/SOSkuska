@@ -23,4 +23,8 @@ Maximum je 365 dní. Termíny jsou UTC; v aplikaci se zobrazují v místním ča
 
 Review history zobrazuje posledních 20 hodnocení s kopiemi obou stran, názvu balíčku, předmětu a termínů. Starší řádky zůstávají uložené. Smazání předmětu ponechá jeho balíčky a kartičky s původním názvem předmětu. Smazání kartičky nebo balíčku vyžaduje potvrzení a ponechá historii hodnocení. Změněný počet kartiček nebo název balíčku vyžaduje nové potvrzení smazání. Zastaralá úprava nebo hodnocení kartičky se odmítne místo přepsání novější verze. Při chybě zápisu se obsah formuláře a odhalená odpověď zachovají pro opakování.
 
-Funkce je dostupná od v0.5.0. Import, převod z otázek, propojení materiálů s AI zůstává plánované; souhrnný přehled je ve Statistics.
+Funkce je dostupná od v0.5.0. Převod z otázek, propojení materiálů s AI zůstává plánované; souhrnný přehled je ve Statistics.
+
+## Import kartiček z CSV
+
+Flashcards nyní podporuje import UTF-8 CSV do existujícího balíčku: šablonu s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů. Nové kartičky jsou ihned splatné; původní termíny a historie hodnocení zůstávají zachované. Schéma zůstává 6. [Import kartiček z CSV](FLASHCARD_CSV_IMPORT.md).

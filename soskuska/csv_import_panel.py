@@ -1,4 +1,4 @@
-"""Question CSV preview and isolated file/transaction jobs, owned by Tk."""
+"""Shared question/flashcard CSV preview and isolated jobs, owned by Tk."""
 import json
 import sqlite3
 import subprocess
@@ -12,14 +12,17 @@ import customtkinter as ctk
 
 
 class CsvImportPanel(ctk.CTkFrame):
-    def __init__(self,parent,app,bank):
+    cards = False
+    noun = "questions"
+    def __init__(self,parent,app,bank,*,cards=False):
         super().__init__(parent,fg_color='transparent')
+        self.cards=cards;self.noun="flashcards" if cards else "questions"
         self.app=app;self.bank=bank;self.process=None;self.output=None;self.payload=None
         self.preview=None;self.position=0;self.kind=None;self.subject_id=None;self.subject_name='';self.closed=False;self.abandoned=[];self.saved_message=None
         self.grid_columnconfigure(0,weight=1)
-        self.heading=app.label(self,'Import questions from CSV',20,bold=True,wraplength=600)
+        self.heading=app.label(self,f'Import {self.noun} from CSV',20,bold=True,wraplength=600)
         self.heading.grid(row=0,column=0,sticky='ew',pady=(0,8))
-        self.status=app.label(self,'Choose an existing subject and a UTF-8 comma-separated CSV. Maximum 2 MiB / 500 questions. Nothing is saved until Import all is confirmed.',12,'secondary',wraplength=600)
+        self.status=app.label(self,f'Choose a UTF-8 comma-separated CSV. Maximum 2 MiB / 500 {self.noun}. Nothing is saved until Import all is confirmed.',12,'secondary',wraplength=600)
         self.status.grid(row=1,column=0,sticky='ew',pady=(0,10))
         actions=app.frame(self);actions.grid(row=2,column=0,sticky='w',pady=(0,10))
         self.choose_button=app.button(actions,'Choose CSV…',self.choose,primary=True,width=125);self.choose_button.pack(side='left',padx=(0,8))
@@ -59,12 +62,12 @@ class CsvImportPanel(ctk.CTkFrame):
     def open(self):
         if self.saving:return
         self.cancel()
-        subject=self.bank.subject_snapshot
+        subject=self.bank.deck_snapshot if self.cards else self.bank.subject_snapshot
         if subject is None:
-            self.bank.status.configure(text='This subject no longer exists.');return
+            self.bank.status.configure(text='This deck no longer exists.' if self.cards else 'This subject no longer exists.');return
         self.subject_id=subject['id'];self.subject_name=subject['name']
         self.heading.configure(text=f'Import into {self.subject_name}')
-        self.status.configure(text='Save the header-only template, fill it in, then Choose CSV. Preview every question before Import all. Exact duplicates are rejected; existing questions are never changed.')
+        self.status.configure(text=f'Save the header-only template, fill it in, then Choose CSV. Preview every record before Import all. Exact duplicates are rejected; existing {self.noun} are never changed.')
         self.grid();self.app.scroll._parent_canvas.yview_moveto(0)
 
     def cancel(self):
@@ -79,10 +82,10 @@ class CsvImportPanel(ctk.CTkFrame):
 
     def launch(self,kind,selected):
         self.kind=kind
-        self.status.configure(text='Importing all questions… Wait for completion before closing.' if kind=='save' else 'Reading and validating… You can cancel or navigate away.')
+        self.status.configure(text=f'Importing all {self.noun}… Wait for completion before closing.' if kind=='save' else 'Reading and validating… You can cancel or navigate away.')
         try:
-            command=[sys.executable,'-u',str(Path(__file__).with_name('csv_import_worker.py')),kind,str(self.app.store.path),str(selected),
-                     '--subject-id',str(self.subject_id),f'--subject-name={self.subject_name}']
+            command=[sys.executable,'-u',str(Path(__file__).with_name('flashcard_csv_import_worker.py' if self.cards else 'csv_import_worker.py')),kind,str(self.app.store.path),str(selected),
+                     '--deck-id' if self.cards else '--subject-id',str(self.subject_id),f'--{"deck" if self.cards else "subject"}-name={self.subject_name}']
             self.output=tempfile.TemporaryFile();self.started=time.monotonic()
             self.process=subprocess.Popen(command,stdin=subprocess.DEVNULL,stdout=self.output,stderr=subprocess.DEVNULL,
                                          creationflags=subprocess.CREATE_NO_WINDOW if sys.platform=='win32' else 0)
@@ -93,24 +96,24 @@ class CsvImportPanel(ctk.CTkFrame):
 
     def choose(self):
         if self.process is not None:return
-        selected=filedialog.askopenfilename(parent=self.app,title='Choose question CSV',filetypes=[('CSV file','*.csv'),('All files','*')])
+        selected=filedialog.askopenfilename(parent=self.app,title=f'Choose {self.noun} CSV',filetypes=[('CSV file','*.csv'),('All files','*')])
         if not selected:return
         # A new selection always invalidates the old batch before any fallible work.
         self.preview=None;self.position=0;self.saved_message=None
         self.text(self.details,'');self.text(self.errors,'');self.errors.grid_remove()
         self.record_label.configure(text='');self.controls()
-        # Capture the subject already displayed by the bank. The read-only helper
+        # Capture the target already displayed by the host. The read-only helper
         # rechecks identity/name; a locked database must not block the Tk callback.
-        subject=self.bank.subject_snapshot
-        if subject is None or subject['id']!=self.bank.subject_id:
-            self.status.configure(text='Reload the question bank before choosing another CSV.');return
+        subject=self.bank.deck_snapshot if self.cards else self.bank.subject_snapshot
+        if subject is None or subject['id']!=(self.bank.deck_id if self.cards else self.bank.subject_id):
+            self.status.configure(text='Reopen the deck before choosing another CSV.' if self.cards else 'Reload the question bank before choosing another CSV.');return
         self.subject_id=subject['id'];self.subject_name=subject['name']
         self.heading.configure(text=f'Import into {self.subject_name}')
         self.launch('parse',selected)
 
     def save_template(self):
         if self.process is not None:return
-        selected=filedialog.asksaveasfilename(parent=self.app,title='Save header-only CSV template',initialfile='questions-template.csv',
+        selected=filedialog.asksaveasfilename(parent=self.app,title='Save header-only CSV template',initialfile='flashcards-template.csv' if self.cards else 'questions-template.csv',
                      defaultextension='.csv',filetypes=[('CSV file','*.csv')])
         if selected:self.launch('template',selected)
 
@@ -120,9 +123,12 @@ class CsvImportPanel(ctk.CTkFrame):
             self.text(self.details,'');self.record_label.configure(text='No valid records to preview.');self.controls();return
         row=rows[self.position];fields=row['fields']
         self.record_label.configure(text=f'Preview {self.position+1} / {len(rows)} · CSV record {row["record"]}')
-        lines=[f'Topic: {row["topic"] or "No topic"}',f'Difficulty: {fields[6]}','',fields[0],'']
-        lines += [f'{letter}. {value}' for letter,value in zip('ABCD',fields[1:5])]
-        lines += ['',f'Correct answer: {"ABCD"[fields[5]]}','',f'Explanation: {fields[7] or "—"}']
+        if self.cards:
+            lines=['Front',fields[0],'','Back',fields[1]]
+        else:
+            lines=[f'Topic: {row["topic"] or "No topic"}',f'Difficulty: {fields[6]}','',fields[0],'']
+            lines += [f'{letter}. {value}' for letter,value in zip('ABCD',fields[1:5])]
+            lines += ['',f'Correct answer: {"ABCD"[fields[5]]}','',f'Explanation: {fields[7] or "—"}']
         self.text(self.details,'\n'.join(lines));self.controls()
 
     def move(self,offset):
@@ -138,15 +144,15 @@ class CsvImportPanel(ctk.CTkFrame):
         except OSError as exc:
             self.status.configure(text=f'Could not stage the import: {exc}');return
         self.kind='save'
-        self.modal=ctk.CTkToplevel(self.app);self.modal.title('Importing questions');self.modal.geometry('420x150')
+        self.modal=ctk.CTkToplevel(self.app);self.modal.title(f'Importing {self.noun}');self.modal.geometry('420x150')
         self.app.label(self.modal,'Importing… Please wait. All records save together.',14,wraplength=370).pack(padx=20,pady=35)
         self.modal.protocol('WM_DELETE_WINDOW',lambda:None);self.modal.grab_set()
         self.launch('save',selected)
 
     def refresh_totals(self):
         try:
-            self.bank.refresh();self.app.refresh_data()
-        except sqlite3.Error:
+            (self.bank.refresh_csv_totals() if self.cards else self.bank.refresh());self.app.refresh_data()
+        except (sqlite3.Error,ValueError):
             self.status.configure(text='Could not refresh totals. Retry Refresh totals; this does not import again.');return False
         if self.saved_message:self.status.configure(text=self.saved_message+' Totals refreshed.')
         return True
@@ -169,7 +175,7 @@ class CsvImportPanel(ctk.CTkFrame):
         elif kind=='save' and state=='done':
             # Consume the batch before any report read; retries must only refresh.
             self.preview=None;self.text(self.details,'');self.errors.grid_remove();self.record_label.configure(text='')
-            message=f'Imported {value["questions"]} questions and created {value["topics"]} topics in {value["subject"]}.'
+            message=(f'Imported {value["cards"]} flashcards into {value["deck"]}. New cards are due now.' if self.cards else f'Imported {value["questions"]} questions and created {value["topics"]} topics in {value["subject"]}.')
             self.saved_message=message
             self.status.configure(text=message)
             if not self.refresh_totals():self.status.configure(text=message+' Could not refresh totals. Retry Refresh totals; do not import again.')
@@ -179,7 +185,7 @@ class CsvImportPanel(ctk.CTkFrame):
         elif state=='invalid':
             if self.preview is not None:self.preview['errors']=result['errors']
             self.text(self.errors,'\n'.join(result['errors']));self.errors.grid()
-            self.status.configure(text='Import not saved. The subject or questions changed. Resolve the listed issues and choose the CSV again.')
+            self.status.configure(text='Import not saved. The target or content changed. Resolve the listed issues and choose the CSV again.')
         elif state=='error':
             self.status.configure(text=('Import not saved. Preview is kept; retry or choose CSV again. ' if kind=='save' else 'Could not complete CSV operation: ')+str(value))
         elif kind=='template' and state=='done':self.status.configure(text=f'Header-only template saved: {value}')

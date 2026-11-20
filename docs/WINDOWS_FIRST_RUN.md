@@ -133,7 +133,7 @@ It prints `PASS` and closes the window on success. If launch or a check fails, i
 | Double-click window closes immediately | Launch from PowerShell so the error remains visible |
 | Dependency download fails | Check internet or organizational proxy settings; do not disable certificate verification |
 
-Continue with [Development](DEVELOPMENT.md) and [How it works](HOW_IT_WORKS.md). Feature guides: [Flashcards](FLASHCARDS.md), [Statistics](STATISTICS.md), [AI Tutor](AI_TUTOR.md) and [Settings](SETTINGS.md). Questions are authored through My Subjects → Questions; Practice Tests uses those questions and keeps saved snapshots/results. Question CSV import is available; images and flashcard import are not implemented.
+Continue with [Development](DEVELOPMENT.md) and [How it works](HOW_IT_WORKS.md). Feature guides: [Flashcards](FLASHCARDS.md), [Statistics](STATISTICS.md), [AI Tutor](AI_TUTOR.md) and [Settings](SETTINGS.md). Questions are authored through My Subjects → Questions; Practice Tests uses those questions and keeps saved snapshots/results. Question and flashcard CSV imports are available in their respective screens; images are not implemented.
 
 ## Backup and restore
 
@@ -142,3 +142,7 @@ Settings now includes manual local backup and validated restore, with a pre-rest
 ## Import questions from CSV
 
 Question bank now supports UTF-8 CSV import into an existing subject, with a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records; question lists show 50 per page. Schema stays 6. [Question CSV import](QUESTION_CSV_IMPORT.md).
+
+## Import flashcards from CSV
+
+Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Schema stays 6. [Import flashcards from CSV](FLASHCARD_CSV_IMPORT.md).
