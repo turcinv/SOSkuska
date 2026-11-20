@@ -2,6 +2,8 @@
 
 [English](../CURRENT_ARCHITECTURE.md) · [Čeština](../cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](CURRENT_ARCHITECTURE.md) · [Русский](../ru/CURRENT_ARCHITECTURE.md)
 
+**Vydaná verzia: v0.14.0 · schéma 8.** História testov a testy v kontajneri sú implementované.
+
 Výber jazyka rozhrania je dostupný vo v0.13.0: angličtina, čeština, slovenčina a ruština. Ukladá sa osobitne od jazyka AI a použije sa po reštarte. Aktuálna schéma je 8.
 
 ## Technológie a súbory
