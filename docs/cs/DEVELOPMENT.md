@@ -115,7 +115,7 @@ Integrační kontrola nově ověřuje také skutečné přepnutí sloupců při 
 
 ## Banka témat a otázek
 
-Kontrolu banky otázek spustíš příkazem níže. Používá dočasnou databázi a krátce otevře okno. Ověřuje CRUD, validaci, kombinované filtry, kompaktní editor a posouvání, izolaci předmětů, mazání a opětovné otevření. `tests/test_questions.py` navíc ověřuje migraci ze schématu 2, Unicode a konzistenci počtů. Celkem je 202 testů bez GUI a dvanáct nativních kontrol. Všechny prošly na macOS; Windows/Linux a fyzický trackpad nejsou tímto ověřené.
+Kontrolu banky otázek spustíš příkazem níže. Používá dočasnou databázi a krátce otevře okno. Ověřuje CRUD, validaci, kombinované filtry, kompaktní editor a posouvání, izolaci předmětů, mazání a opětovné otevření. `tests/test_questions.py` navíc ověřuje migraci ze schématu 2, Unicode a konzistenci počtů. Celkem je 221 testů bez GUI a třináct nativních kontrol. Všechny prošly na macOS; Windows/Linux a fyzický trackpad nejsou tímto ověřené.
 
 ```sh
 .venv-macos/bin/python soskuska/check_question_bank.py
@@ -123,7 +123,7 @@ Kontrolu banky otázek spustíš příkazem níže. Používá dočasnou databá
 
 ## Opravy po kontrole hlavní větve
 
-Nová kontrola `check_review_fixes.py` používá dočasné databáze a ověřuje zrušení starého potvrzení, změnu obsahu z druhého připojení, skutečný exkluzivní SQLite zámek při půlnoci, opakování obnovy, datum, dokončení časovače a syntetické posouvání v dlouhém i krátkém poli. Na macOS navíc v odděleném procesu vyvolá skutečnou položku Quit, ověří zachování sezení při chybě zápisu a uložení při opakování. Celkem je 202 testů bez GUI a dvanáct nativních kontrol. Prošly na macOS; Windows/Linux a fyzický trackpad nejsou tímto ověřené.
+Nová kontrola `check_review_fixes.py` používá dočasné databáze a ověřuje zrušení starého potvrzení, změnu obsahu z druhého připojení, skutečný exkluzivní SQLite zámek při půlnoci, opakování obnovy, datum, dokončení časovače a syntetické posouvání v dlouhém i krátkém poli. Na macOS navíc v odděleném procesu vyvolá skutečnou položku Quit, ověří zachování sezení při chybě zápisu a uložení při opakování. Celkem je 221 testů bez GUI a třináct nativních kontrol. Prošly na macOS; Windows/Linux a fyzický trackpad nejsou tímto ověřené.
 
 ```sh
 .venv-macos/bin/python soskuska/check_review_fixes.py
@@ -133,7 +133,7 @@ Kontrola navíc ověřuje současné selhání uložení sezení a půlnočního
 
 ## Practice Tests — procvičování (v0.4.0)
 
-Nová kontrola check_practice.py ověřuje konfiguraci, filtry, ukládání odpovědí včetně chyby zápisu, potvrzení/opakování dokončení, neměnnou historii, automatické dokončení po limitu, kompaktní okno a pokračování v novém procesu. test_practice.py ověřuje migraci schématu 3, uchování obsahu, skóre, idempotenci, termíny, validaci a rollback. Celkem je 202 testů a dvanáct nativních kontrol. Změna je ověřená na macOS; Windows/Linux a fyzická gesta nejsou prakticky ověřené.
+Nová kontrola check_practice.py ověřuje konfiguraci, filtry, ukládání odpovědí včetně chyby zápisu, potvrzení/opakování dokončení, neměnnou historii, automatické dokončení po limitu, kompaktní okno a pokračování v novém procesu. test_practice.py ověřuje migraci schématu 3, uchování obsahu, skóre, idempotenci, termíny, validaci a rollback. Celkem je 221 testů a třináct nativních kontrol. Změna je ověřená na macOS; Windows/Linux a fyzická gesta nejsou prakticky ověřené.
 
 ```sh
 .venv-macos/bin/python soskuska/check_practice.py
@@ -143,7 +143,7 @@ Kontrola také ověřuje, že dokončení testu na pozadí neposune otevřenou b
 
 ## Průběžná integrace (CI)
 
-GitHub Actions kontroluje pull requesty do main, nové commity na main a ruční spuštění. Workflow `.github/workflows/ci.yml` instaluje závislosti, ověřuje jejich kompatibilitu, syntaxi Pythonu a všechny jednotkové testy s Pythonem 3.12 na Ubuntu, Windows a macOS. Samostatná úloha spouští dvanáct nativních kontrolních skriptů na Ubuntu pod virtuálním displejem Xvfb; každý proces má limit 60 sekund. Celá úloha má limit 10 minut. Novější běh stejné větve zruší předchozí. Token má pouze čtení obsahu; workflow nic nenasazuje ani nevydává.
+GitHub Actions kontroluje pull requesty do main, nové commity na main a ruční spuštění. Workflow `.github/workflows/ci.yml` instaluje závislosti, ověřuje jejich kompatibilitu, syntaxi Pythonu a všechny jednotkové testy s Pythonem 3.12 na Ubuntu, Windows a macOS. Samostatná úloha spouští třináct nativních kontrolních skriptů na Ubuntu pod virtuálním displejem Xvfb; každý proces má limit 60 sekund. Celá úloha má limit 10 minut. Novější běh stejné větve zruší předchozí. Token má pouze čtení obsahu; workflow nic nenasazuje ani nevydává.
 
 Výsledky a logy jsou v [Actions](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml) a v kontrolách PR. Červený stav otevři a přečti první neúspěšný krok. Po opravě pushni do stejné větve a kontroly se spustí znovu. Ruční spuštění Run workflow je dostupné po sloučení workflow do výchozí větve. Branch protection tímto není zapnutá.
 
@@ -151,7 +151,7 @@ Automatické testy nejsou ruční ověření Windows/macOS/Linux ani fyzického 
 
 ## Kartičky a opakování (v0.5.0)
 
-check_flashcards.py ověřuje formuláře, opakované hledání, zachování rozepsaného textu při navigaci, odhalení před hodnocením, odmítnutí zastaralého hodnocení, opakování po chybě zápisu, termíny, uchování historie a nové spuštění procesu. test_flashcards.py a historický fixtures/schema_v4.sql ověřují migraci a transakce. Celkem je 202 jednotkových testů a dvanáct nativních kontrol; CI spouští testy na třech systémech a GUI na Ubuntu/Xvfb.
+check_flashcards.py ověřuje formuláře, opakované hledání, zachování rozepsaného textu při navigaci, odhalení před hodnocením, odmítnutí zastaralého hodnocení, opakování po chybě zápisu, termíny, uchování historie a nové spuštění procesu. test_flashcards.py a historický fixtures/schema_v4.sql ověřují migraci a transakce. Celkem je 221 jednotkových testů a třináct nativních kontrol; CI spouští testy na třech systémech a GUI na Ubuntu/Xvfb.
 
 [Podrobný návod a pravidla](FLASHCARDS.md).
 
@@ -166,7 +166,7 @@ check_flashcards.py ověřuje formuláře, opakované hledání, zachování roz
 
 V nabídce **Statistics** zvol Last 7 days, Last 30 days nebo All time. Přehled ukazuje uložený čas a sezení, otázkami váženou úspěšnost dokončených testů, počty vlastních hodnocení kartiček, čas podle předmětu a denní aktivitu. Refresh nebo návrat na obrazovku načte nový snímek. Nejde o měření zvládnutí učiva.
 
-Nových 16 testů ověřuje období, místní dny, váhu otázek, úplnou historii, zachování po smazání, pouze čtení, souběžný snímek a opakování po chybě. Nativní kontrola ověřuje prázdný stav, filtry, chybu a opakování, navigaci, kompaktní rozložení, posouvání a otevření v novém procesu. Celkem 202 jednotkových testů a dvanáct nativních kontrol; používají dočasná data.
+Nových 16 testů ověřuje období, místní dny, váhu otázek, úplnou historii, zachování po smazání, pouze čtení, souběžný snímek a opakování po chybě. Nativní kontrola ověřuje prázdný stav, filtry, chybu a opakování, navigaci, kompaktní rozložení, posouvání a otevření v novém procesu. Celkem 221 jednotkových testů a třináct nativních kontrol; používají dočasná data.
 
 ```sh
 .venv-macos/bin/python soskuska/check_statistics.py
@@ -178,7 +178,7 @@ Nových 16 testů ověřuje období, místní dny, váhu otázek, úplnou histor
 
 ## Opravy souběžných změn (v0.6.2)
 
-Nových osm jednotkových testů pokrývá termíny včetně čekání na zámek, rollback, konflikty otázek a odlišení odstraněného testu. check_state_fixes.py navíc ověřuje skutečné formuláře, zachování rozepsaného obsahu, konflikt a nové načtení, zachování výsledku po termínu a obnovu po odstranění z jiné instance. Celkem 202 jednotkových testů a dvanáct nativních kontrol s dočasnými daty.
+Nových osm jednotkových testů pokrývá termíny včetně čekání na zámek, rollback, konflikty otázek a odlišení odstraněného testu. check_state_fixes.py navíc ověřuje skutečné formuláře, zachování rozepsaného obsahu, konflikt a nové načtení, zachování výsledku po termínu a obnovu po odstranění z jiné instance. Celkem 221 jednotkových testů a třináct nativních kontrol s dočasnými daty.
 
 ```sh
 .venv-macos/bin/python soskuska/check_state_fixes.py
@@ -187,9 +187,9 @@ Nových osm jednotkových testů pokrývá termíny včetně čekání na zámek
 
 ## AI Tutor s Ollamou (v0.7.0)
 
-V AI Tutor připoj vlastní Ollama server přes Connect / refresh, vyber model a jazyk odpovědi a zadej otázku. Odpověď přichází průběžně; Stop ji zastaví. Ostatní obrazovky zůstávají použitelné během generování i bez Ollamy. Chat je pouze pro aktuální spuštění aplikace, neukládá se do databáze.
+V AI Tutor připoj vlastní Ollama server přes Connect / refresh, vyber model a jazyk odpovědi a zadej otázku. Odpověď přichází průběžně; Stop ji zastaví. Ostatní obrazovky zůstávají použitelné během generování i bez Ollamy. Chat se ukládá do místní databáze a lze jej otevřít po restartu; viz průvodce historií.
 
-23 nových testů a check_tutor.py používají výhradně fake Ollama server na loopbacku a dočasná data. Ověřují protokol, Unicode, chybné odpovědi, přerušení streamu/TLS handshake, limity, kontext, navigaci a zavření při generování. Celkem 202 jednotkových testů a dvanáct GUI kontrol. Tyto testy neověřují kvalitu skutečného modelu ani jeho hardwarové nároky.
+23 nových testů a check_tutor.py používají výhradně fake Ollama server na loopbacku a dočasná data. Ověřují protokol, Unicode, chybné odpovědi, přerušení streamu/TLS handshake, limity, kontext, navigaci a zavření při generování. Celkem 221 jednotkových testů a třináct GUI kontrol. Tyto testy neověřují kvalitu skutečného modelu ani jeho hardwarové nároky.
 
 ```sh
 .venv-macos/bin/python soskuska/check_tutor.py
@@ -199,7 +199,7 @@ V AI Tutor připoj vlastní Ollama server přes Connect / refresh, vyber model a
 
 ## Nastavení
 
-Chat zůstává jen v paměti a zavřením se odstraní. Volby spojení lze výslovně uložit v [Settings](SETTINGS.md); bez Save jsou dočasné.
+Konverzace se ukládají do místní databáze a záloh. Volby spojení lze výslovně uložit v [Settings](SETTINGS.md); bez Save jsou dočasné.
 
 [Nastavení](SETTINGS.md).
 
@@ -217,7 +217,7 @@ Nastavení se ukládá transakčně ve schématu 6 s ochranou před přepsáním
 
 ## Záloha a obnova
 
-Settings nyní nabízí ruční místní zálohu a ověřenou obnovu s bezpečnostní kopií před nahrazením. Schéma zůstává 6. Obnova zavře aplikaci; potom ji spusť znovu. Viz [Záloha a obnova](BACKUP_RESTORE.md).
+Settings nyní nabízí ruční místní zálohu a ověřenou obnovu s bezpečnostní kopií před nahrazením. Aktuální schéma je 7. Obnova zavře aplikaci; potom ji spusť znovu. Viz [Záloha a obnova](BACKUP_RESTORE.md).
 
 `tests/test_backup.py`, `tests/test_backup_review.py`, `soskuska/check_backup.py`.
 
@@ -231,7 +231,7 @@ Settings nyní nabízí ruční místní zálohu a ověřenou obnovu s bezpečno
 
 ## Import otázek z CSV
 
-Banka otázek nyní podporuje import UTF-8 CSV do existujícího předmětu: šablona s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů; seznam ukazuje 50 otázek na stránku. Schéma zůstává 6. [Import otázek z CSV](QUESTION_CSV_IMPORT.md).
+Banka otázek nyní podporuje import UTF-8 CSV do existujícího předmětu: šablona s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů; seznam ukazuje 50 otázek na stránku. Aktuální schéma je 7. [Import otázek z CSV](QUESTION_CSV_IMPORT.md).
 
 `tests/test_csv_import.py`, `soskuska/check_csv_import.py`.
 
@@ -245,7 +245,7 @@ Banka otázek nyní podporuje import UTF-8 CSV do existujícího předmětu: ša
 
 ## Import kartiček z CSV
 
-Flashcards nyní podporuje import UTF-8 CSV do existujícího balíčku: šablonu s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů. Nové kartičky jsou ihned splatné; původní termíny a historie hodnocení zůstávají zachované. Schéma zůstává 6. [Import kartiček z CSV](FLASHCARD_CSV_IMPORT.md).
+Flashcards nyní podporuje import UTF-8 CSV do existujícího balíčku: šablonu s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů. Nové kartičky jsou ihned splatné; původní termíny a historie hodnocení zůstávají zachované. Aktuální schéma je 7. [Import kartiček z CSV](FLASHCARD_CSV_IMPORT.md).
 
 `tests/test_flashcard_csv_import.py`, `soskuska/check_flashcard_import.py`.
 
@@ -255,4 +255,18 @@ Flashcards nyní podporuje import UTF-8 CSV do existujícího balíčku: šablon
 
 ```powershell
 .\.venv\Scripts\python.exe soskuska/check_flashcard_import.py
+```
+
+## Uložené konverzace AI Tutor
+
+AI Tutor nyní ukládá konverzace lokálně včetně původního serveru/modelu a stavu odpovědi. Historii lze otevřít bez sítě, výslovně se připojit pro pokračování nebo vybranou konverzaci po potvrzení smazat. Schéma 7 migruje původní studijní data transakčně; vydanou verzí zůstává v0.11.1 do schválení dalšího vydání. [Uložené konverzace AI Tutor](TUTOR_HISTORY.md).
+
+`tests/test_tutor_history.py`, `soskuska/check_tutor_history.py`.
+
+```sh
+.venv-macos/bin/python soskuska/check_tutor_history.py
+```
+
+```powershell
+.\.venv\Scripts\python.exe soskuska/check_tutor_history.py
 ```

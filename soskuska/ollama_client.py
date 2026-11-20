@@ -7,6 +7,7 @@ import time
 import socket
 import ssl
 import threading
+from csv_import import safe_text
 from contextlib import contextmanager
 from urllib.parse import urlsplit
 
@@ -272,7 +273,7 @@ class OllamaClient:
                     text = message.get('content', '')
                     if not isinstance(message, dict) or not isinstance(text, str) or type(data.get('done')) is not bool:
                         raise ValueError
-                    text.encode('utf-8')
+                    safe_text(text)
                 except (ValueError, AttributeError) as exc:
                     if isinstance(exc, OllamaError):
                         raise

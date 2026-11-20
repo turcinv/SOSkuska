@@ -4,7 +4,7 @@ English instructions for development agents, referenced by [AGENTS.md](../../AGE
 
 ## Question bank
 
-Open Questions from a subject card. Questions have four distinct answers, one correct answer (0–3), difficulty and optional explanation/topic. Topics are unique within a subject. Deleting a topic keeps its questions unassigned; deleting a subject explicitly warns and cascades its content while retaining session history. Schema 3 migrates existing data transactionally. Use `tests/test_questions.py` and `check_question_bank.py` for verification; all automated checks use disposable data. Practice execution, saved answers, resume, deadlines and snapshot scoring are implemented in `practice_page.py`, `practice.py` and Store; flashcards are implemented in flashcard_page.py with pure rules in repetition.py; session-only AI Tutor is implemented.
+Open Questions from a subject card. Questions have four distinct answers, one correct answer (0–3), difficulty and optional explanation/topic. Topics are unique within a subject. Deleting a topic keeps its questions unassigned; deleting a subject explicitly warns and cascades its content while retaining session history. Schema 3 migrates existing data transactionally. Use `tests/test_questions.py` and `check_question_bank.py` for verification; all automated checks use disposable data. Practice execution, saved answers, resume, deadlines and snapshot scoring are implemented in `practice_page.py`, `practice.py` and Store; flashcards are implemented in flashcard_page.py with pure rules in repetition.py; AI Tutor with local history is implemented.
 
 ## Practice safeguards
 
@@ -28,7 +28,7 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 
 ## Statistics safeguards
 
-- StatisticsPage uses Store.statistics() / study_statistics.py. Keep all four read aggregates in one deferred SQLite transaction; no writes or migration. Statistics introduced no schema change (schema 5 in v0.6.0; current schema is 6).
+- StatisticsPage uses Store.statistics() / study_statistics.py. Keep all four read aggregates in one deferred SQLite transaction; no writes or migration. Statistics introduced no schema change (schema 5 in v0.6.0; current schema is 7).
 - Last 7/30 days includes today and previous 6/29 local calendar days; all-time totals exclude future days and chart only the latest 30 days. Focus uses stored local day; UTC completion/review times use SQLite localtime. Time-zone changes can rebucket events.
 - Practice accuracy is total correct / total questions from completed snapshots; unanswered questions count incorrect, unfinished/discarded tests excluded. Include full retained history beyond the other screens' 20-row display limits.
 - Flashcard ratings are self-assessments, not accuracy/mastery. Never infer focus time from tests/reviews. Empty history has zero counts and no percentage. Keep deleted/unassigned focus history visible and document name-based grouping after deletion.

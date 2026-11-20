@@ -2,7 +2,7 @@
 
 [English](../CURRENT_ARCHITECTURE.md) · [Čeština](CURRENT_ARCHITECTURE.md) · [Slovenčina](../sk/CURRENT_ARCHITECTURE.md) · [Русский](../ru/CURRENT_ARCHITECTURE.md)
 
-Stav k 20. listopadu 2026 (v0.11.1). Implementované jsou Dashboard, My Subjects, Question bank, Practice Tests, Flashcards, Statistics a volitelný AI Tutor a Settings; další kroky popisuje [plánovaná architektura](PLANNED_ARCHITECTURE.md).
+Pracovní větev obsahuje nevydanou místní historii Tutor (schéma 7); vydaný základ je v0.11.1.
 
 ## Technologie a soubory
 
@@ -17,7 +17,7 @@ Python, CustomTkinter 5.2.2, Pillow a standardní SQLite. Jeden proces a hlavní
 | `tests/test_storage.py`, `tests/test_subjects.py` | Úložiště, kompatibilita původní databáze, migrace a pravidla předmětů |
 | `soskuska/check_dashboard.py` | Nativní integrační kontrola s dočasnými daty |
 | `soskuska/statistics_page.py` / `soskuska/study_statistics.py` | Obrazovka Statistics a konzistentní agregace uložené historie |
-| `soskuska/tutor_page.py`, `soskuska/tutor.py`, `soskuska/ollama_client.py` | Session chat, fronta úloh a volitelný Ollama klient |
+| `soskuska/tutor_page.py`, `soskuska/tutor.py`, `soskuska/ollama_client.py` | Místní historie chatu, fronta úloh a volitelný Ollama klient |
 | `soskuska-local/index.html` | Historický vizuální návrh; není součástí běhu aplikace |
 
 ## Datový tok
@@ -53,7 +53,7 @@ Obrazovky volají `Store` přímo. Samostatná servisní/doménová vrstva a sd�
 
 ## Schéma a migrace
 
-`PRAGMA user_version` nyní označuje verzi **6**. Otevření původní databáze verze 0 vytvoří/uzná původní tabulky a v jedné transakci doplní předměty a vazby. Databáze s novější verzí se odmítne otevřít místo pokusu o downgrade. Cizí klíče jsou zapnuté pro každé připojení.
+`PRAGMA user_version` nyní označuje verzi **7**. Otevření původní databáze verze 0 vytvoří/uzná původní tabulky a v jedné transakci doplní předměty a vazby. Databáze s novější verzí se odmítne otevřít místo pokusu o downgrade. Cizí klíče jsou zapnuté pro každé připojení.
 
 ```sql
 CREATE TABLE tasks (
@@ -131,7 +131,7 @@ Obrazovky mají nezávislé vyhledávání přes `casefold()`. Ctrl+K / Cmd+K za
 
 188 testů úložiště prošlo; integrační skript prošel na macOS s Pythonem 3.12.13 / Tk 9.0 a dočasnou databází. Ověřil CRUD přes formulář, Unicode, hledání, prázdné stavy, navázání časovače, zachování historie, opětovné otevření, kompaktní režim a syntetické posouvání. Nenahrazuje ruční vizuální/hardwarové ověření; Windows/Linux nejsou ověřené.
 
-Zbývá ukládání AI konverzací, překlady UI, úplná obnova po pádu, balíčky a komplexní logování. První databázové operace mají chybová hlášení, ale úplné zpracování chyb při každém čtení ještě chybí.
+Zbývají překlady UI, úplná obnova po pádu, balíčky a komplexní logování. První databázové operace mají chybová hlášení, ale úplné zpracování chyb při každém čtení ještě chybí.
 
 
 Verze schématu se čte až po získání `BEGIN IMMEDIATE`, aby souběžné starty nepoužily zastaralou hodnotu. Rozložení My Subjects zpracovává skutečné Configure události CustomTkinteru; integrační kontrola ověřuje dva sloupce ve velkém okně a jeden v kompaktním.
@@ -192,7 +192,7 @@ CREATE UNIQUE INDEX practice_one_active
 
 ## Průběžná integrace (CI)
 
-GitHub Actions kontroluje pull requesty do main, nové commity na main a ruční spuštění. Workflow `.github/workflows/ci.yml` instaluje závislosti, ověřuje jejich kompatibilitu, syntaxi Pythonu a všechny jednotkové testy s Pythonem 3.12 na Ubuntu, Windows a macOS. Samostatná úloha spouští dvanáct nativních kontrolních skriptů na Ubuntu pod virtuálním displejem Xvfb; každý proces má limit 60 sekund. Celá úloha má limit 10 minut. Novější běh stejné větve zruší předchozí. Token má pouze čtení obsahu; workflow nic nenasazuje ani nevydává.
+GitHub Actions kontroluje pull requesty do main, nové commity na main a ruční spuštění. Workflow `.github/workflows/ci.yml` instaluje závislosti, ověřuje jejich kompatibilitu, syntaxi Pythonu a všechny jednotkové testy s Pythonem 3.12 na Ubuntu, Windows a macOS. Samostatná úloha spouští třináct nativních kontrolních skriptů na Ubuntu pod virtuálním displejem Xvfb; každý proces má limit 60 sekund. Celá úloha má limit 10 minut. Novější běh stejné větve zruší předchozí. Token má pouze čtení obsahu; workflow nic nenasazuje ani nevydává.
 
 Výsledky a logy jsou v [Actions](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml) a v kontrolách PR. Červený stav otevři a přečti první neúspěšný krok. Po opravě pushni do stejné větve a kontroly se spustí znovu. Ruční spuštění Run workflow je dostupné po sloučení workflow do výchozí větve. Branch protection tímto není zapnutá.
 
@@ -234,7 +234,7 @@ CREATE INDEX review_events_deck ON review_events(deck_id,id);
 
 ## Statistiky (v0.6.0)
 
-StatisticsPage volá Store.statistics(); study_statistics.py čte sessions, dokončené practice_attempts s practice_items a review_events v jedné konzistentní čtecí transakci. Nemění schéma 5 ani data. UI se obnovuje při návratu nebo přes Refresh, při chybě ponechá předchozí report. Vazby Configure mají životnost svých widgetů. Ctrl+K / Cmd+K a Escape nemění hledání skrytých obrazovek.
+StatisticsPage volá Store.statistics(); study_statistics.py čte sessions, dokončené practice_attempts s practice_items a review_events v jedné konzistentní čtecí transakci. Nemění strukturu databáze ani data. UI se obnovuje při návratu nebo přes Refresh, při chybě ponechá předchozí report. Vazby Configure mají životnost svých widgetů. Ctrl+K / Cmd+K a Escape nemění hledání skrytých obrazovek.
 
 [Podrobná pravidla](STATISTICS.md).
 
@@ -242,19 +242,19 @@ StatisticsPage volá Store.statistics(); study_statistics.py čte sessions, doko
 
 Discard test získá zápisový zámek a potom ověří termín. Pokud mezitím vypršel, pokus i odpovědi se zachovají jako dokončený výsledek místo smazání; selhání zápisu ponechá původní data pro opakování. Pokud jiná instance rozpracovaný test odstraní, Finish zastaví opakování a obnoví nastavení. Chyby SQLite se dál dají opakovat; po chybě načtení nastavení použij Refresh subjects nebo návrat na obrazovku.
 
-Editor otázek ukládá kopii původního obsahu. Při uložení ji porovná s aktuální otázkou pod zápisovým zámkem. Novější text, možnosti, správná odpověď, obtížnost, téma nebo vysvětlení se nepřepíšou starým formulářem. Při konfliktu zůstane rozepsaný obsah; před opětovným otevřením Edit si jej zkopíruj a změny spoj s aktuální verzí. Schéma databáze zůstává 5.
+Editor otázek ukládá kopii původního obsahu. Při uložení ji porovná s aktuální otázkou pod zápisovým zámkem. Novější text, možnosti, správná odpověď, obtížnost, téma nebo vysvětlení se nepřepíšou starým formulářem. Při konfliktu zůstane rozepsaný obsah; před opětovným otevřením Edit si jej zkopíruj a změny spoj s aktuální verzí. Tato oprava nepřidává migraci; aktuální schéma je 7.
 
 Formulář New deck obnoví nabídku předmětů při návratu, přes Refresh i před uložením, bez ztráty názvu a popisu. Přejmenovaný předmět zůstane vybraný podle ID. Pokud byl vybraný předmět smazán, Choose a subject vyžaduje výslovně zvolit jiný; formulář jej sám nenahradí jiným existujícím předmětem.
 
 ## AI Tutor s Ollamou (v0.7.0)
 
-tutor_page.py drží session chat a widgety. tutor.py sestavuje omezený kontext a spouští daemon pracovní vlákno; výsledky předává přes queue, zpracovanou Tk after každých 50 ms. ollama_client.py používá standardní http.client/ssl, GET /api/tags a streamované POST /api/chat. Pracovní vlákna nevolají Tk ani SQLite. Ukončení přeruší síťový úkol bez čekání v UI; neúspěšné uložení focus sezení dál brání zavření. Schéma zůstává 5, nové externí závislosti nejsou potřeba.
+tutor_page.py drží místní chat a widgety. tutor.py sestavuje omezený kontext a spouští daemon pracovní vlákno; výsledky předává přes queue, zpracovanou Tk after každých 50 ms. ollama_client.py používá standardní http.client/ssl, GET /api/tags a streamované POST /api/chat. Pracovní vlákna nevolají Tk ani SQLite. Ukončení přeruší síťový úkol bez čekání v UI; neúspěšné uložení focus sezení dál brání zavření. Historie používá schéma 7 bez nové externí závislosti.
 
 [Návod AI Tutor](AI_TUTOR.md).
 
 ## Nastavení
 
-Chat zůstává jen v paměti a zavřením se odstraní. Volby spojení lze výslovně uložit v [Settings](SETTINGS.md); bez Save jsou dočasné.
+Konverzace se ukládají do místní databáze a záloh. Volby spojení lze výslovně uložit v [Settings](SETTINGS.md); bez Save jsou dočasné.
 
 [Nastavení](SETTINGS.md).
 
@@ -275,18 +275,22 @@ CREATE TABLE preferences (
 
 ## Záloha a obnova
 
-Settings nyní nabízí ruční místní zálohu a ověřenou obnovu s bezpečnostní kopií před nahrazením. Schéma zůstává 6. Obnova zavře aplikaci; potom ji spusť znovu. Viz [Záloha a obnova](BACKUP_RESTORE.md).
+Settings nyní nabízí ruční místní zálohu a ověřenou obnovu s bezpečnostní kopií před nahrazením. Aktuální schéma je 7. Obnova zavře aplikaci; potom ji spusť znovu. Viz [Záloha a obnova](BACKUP_RESTORE.md).
 
 backup.py a backup_validation.py ověřují soukromé samostatné snímky a aplikační hodnoty; řádky nahrazují v jedné transakci bez převzetí cizího DDL. database_lock.py drží sdílené zámky Store a výhradní zámek obnovy (flock / Windows LockFileEx). backup_worker.py běží v odděleném procesu; backup_panel.py přes Tk čte dočasný výstupní soubor, takže nehrozí plná roura ani finalizace Tk z pracovního vlákna. Při obnově se Store zavře a periodické callbacky pozastaví. Bezpečnostní kopie vznikne pod zápisovým zámkem; před commitem se ověří konečné řádky a ID sekvence.
 
 ## Import otázek z CSV
 
-Banka otázek nyní podporuje import UTF-8 CSV do existujícího předmětu: šablona s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů; seznam ukazuje 50 otázek na stránku. Schéma zůstává 6. [Import otázek z CSV](QUESTION_CSV_IMPORT.md).
+Banka otázek nyní podporuje import UTF-8 CSV do existujícího předmětu: šablona s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů; seznam ukazuje 50 otázek na stránku. Aktuální schéma je 7. [Import otázek z CSV](QUESTION_CSV_IMPORT.md).
 
 csv_import.py ověřuje omezené normalizované záznamy; csv_import_worker.py izoluje parsování, kontrolu pouze pro čtení, uložení a šablonu s výstupem do souboru. Store.open_existing používá mode=ro/rw bez vytváření či migrace. Store.import_questions znovu ověří dávku pod BEGIN IMMEDIATE a uloží témata/otázky jednou transakcí. Úspěšná dávka se zneplatní před čtením přehledů; opakovaná obnova nic neimportuje. Stránkování filtruje celý seznam a pak vykreslí 50 karet.
 
 ## Import kartiček z CSV
 
-Flashcards nyní podporuje import UTF-8 CSV do existujícího balíčku: šablonu s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů. Nové kartičky jsou ihned splatné; původní termíny a historie hodnocení zůstávají zachované. Schéma zůstává 6. [Import kartiček z CSV](FLASHCARD_CSV_IMPORT.md).
+Flashcards nyní podporuje import UTF-8 CSV do existujícího balíčku: šablonu s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů. Nové kartičky jsou ihned splatné; původní termíny a historie hodnocení zůstávají zachované. Aktuální schéma je 7. [Import kartiček z CSV](FLASHCARD_CSV_IMPORT.md).
 
 `flashcard_csv_import.py` validuje omezené záznamy front/back; `flashcard_csv_import_worker.py` izoluje čtení, kontrolu pouze pro čtení a uložení. `CsvImportPanel` sdílí životní cyklus a publikaci šablon s importem otázek. `Store.import_flashcards` pod BEGIN IMMEDIATE znovu ověří zobrazený název balíčku a duplicity v celém balíčku a vloží všechny kartičky jednou s aktuálním UTC termínem. Původní termíny a hodnocení nemění.
+
+## Uložené konverzace AI Tutor
+
+AI Tutor nyní ukládá konverzace lokálně včetně původního serveru/modelu a stavu odpovědi. Historii lze otevřít bez sítě, výslovně se připojit pro pokračování nebo vybranou konverzaci po potvrzení smazat. Schéma 7 migruje původní studijní data transakčně; vydanou verzí zůstává v0.11.1 do schválení dalšího vydání. [Uložené konverzace AI Tutor](TUTOR_HISTORY.md).

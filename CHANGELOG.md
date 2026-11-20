@@ -2,6 +2,10 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
+## Unreleased
+
+AI Tutor now saves conversations locally, including the original server/model and reply status. Open saved history without networking, reconnect explicitly to continue, or delete a selected conversation after confirmation. Schema 7 migrates existing study data transactionally; the published release remains v0.11.1 until a new release is authorized. [Saved AI Tutor conversations](docs/TUTOR_HISTORY.md).
+
 ## 0.11.1 — 2026-11-20
 
 Root AGENTS.md is about 86% smaller (27.4 KB to 3.9 KB), with explicit `@` file references and a routing table. All 20 previous instruction sections are preserved across five focused English agent guides. References instruct the agent to read the files; they do not rely on automatic transclusion.

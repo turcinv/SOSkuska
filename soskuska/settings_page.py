@@ -32,7 +32,7 @@ class SettingsPage(ctk.CTkFrame):
         self.language = ctk.StringVar(value='Automatic')
         self.language_menu = ctk.CTkOptionMenu(self, variable=self.language, values=list(LANGUAGES), dynamic_resizing=False, height=38, font=app.font())
         self.language_menu.grid(row=11, column=0, sticky='ew', pady=(0, 14))
-        info = app.label(self, 'Saving never connects to Ollama. AI chats still last only for this app session. Active focus sessions keep their original duration. Use New chat before switching an existing chat to a different server.', 12, 'secondary', wraplength=600)
+        info = app.label(self, 'Saving never connects to Ollama. AI conversations are saved locally and included in backups. Active focus sessions keep their original duration. Use New chat before switching an existing chat to a different server.', 12, 'secondary', wraplength=600)
         info.grid(row=12, column=0, sticky='ew', pady=(0, 14))
         actions = app.frame(self)
         actions.grid(row=13, column=0, sticky='w')

@@ -27,4 +27,4 @@ Conversion from questions and AI material integration remain planned. Aggregate 
 
 ## Import flashcards from CSV
 
-Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Schema stays 6. [Import flashcards from CSV](FLASHCARD_CSV_IMPORT.md).
+Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Current schema is 7. [Import flashcards from CSV](FLASHCARD_CSV_IMPORT.md).

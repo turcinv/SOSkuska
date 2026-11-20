@@ -2,7 +2,7 @@
 
 [English](../AI_TUTOR.md) · [Čeština](../cs/AI_TUTOR.md) · [Slovenčina](AI_TUTOR.md) · [Русский](../ru/AI_TUTOR.md)
 
-V AI Tutor pripoj vlastný server Ollama cez Connect / refresh, vyber model a jazyk odpovede a zadaj otázku. Odpoveď prichádza priebežne; Stop ju zastaví. Ostatné obrazovky zostávajú použiteľné počas generovania aj bez Ollamy. Chat je iba pre aktuálne spustenie aplikácie, neukladá sa do databázy.
+V AI Tutor pripoj vlastný server Ollama cez Connect / refresh, vyber model a jazyk odpovede a zadaj otázku. Odpoveď prichádza priebežne; Stop ju zastaví. Ostatné obrazovky zostávajú použiteľné počas generovania aj bez Ollamy. Chat sa ukladá do miestnej databázy a možno ho otvoriť po reštarte; pozri sprievodcu históriou.
 
 ## Prvé použitie
 
@@ -16,9 +16,13 @@ V AI Tutor pripoj vlastný server Ollama cez Connect / refresh, vyber model a ja
 
 Sieťová požiadavka začína iba po Connect alebo Send; spustenie aplikácie ani navigácia nič neposiela. Na zvolený server ide otázka a obmedzený kontext tohto chatu, nie obsah SQLite, predmety, výsledky či súbory. Predvolený server je miestny; pri zmene adresy rozhoduje zvolený server/model o spracovaní údajov. Pred pripojením k inému serveru je potrebné New chat. Automatický prechod na cloud neexistuje.
 
-Chat zostáva iba v pamäti. Voľby spojenia možno uložiť cez [Settings](SETTINGS.md); zatvorenie odstráni chat; ak chceš text uchovať, skopíruj ho pred zatvorením. Limit je 12 dotazov na chat, otázka 4 000 znakov, odpoveď 16 000 znakov. Kontext zahŕňa najviac šesť posledných úplných dvojíc, spolu 24 000 znakov; starší obsah model nemusí poznať. Text je obyčajný, bez vykresľovania Markdown/LaTeX či pripojených materiálov. Nejde o overené správne odpovede ani automatické hodnotenie učiva.
+Konverzácie sa ukladajú do miestnej databázy. Voľby spojenia možno uložiť osobitne cez [Settings](SETTINGS.md). Limit je 12 dotazov na chat, otázka 4 000 znakov, odpoveď 16 000 znakov. Kontext zahŕňa najviac šesť posledných úplných dvojíc, spolu 24 000 znakov; starší obsah model nemusí poznať. Text je obyčajný, bez vykresľovania Markdown/LaTeX či pripojených materiálov. Nejde o overené správne odpovede ani automatické hodnotenie učiva.
 
 Adresa podporuje HTTP/HTTPS bez vložených prihlasovacích údajov, cesty, query a fragmentu. Certifikáty HTTPS sa overujú, presmerovania a systémové HTTP proxy sa nepoužívajú. Autentizované servery zatiaľ nie sú podporované. Časový limit socketu je 30 sekúnd, celková požiadavka má poistku 180 sekúnd; systémové DNS/pripájanie môže oddialiť zastavenie. Chyba spojenia neznamená istotu, že Ollama nie je nainštalovaná.
 
 
 API: [models](https://docs.ollama.com/api/tags) · [chat](https://docs.ollama.com/api/chat) · [streaming](https://docs.ollama.com/api/streaming).
+
+## Uložené konverzácie AI Tutor
+
+AI Tutor teraz ukladá konverzácie lokálne vrátane pôvodného servera/modelu a stavu odpovede. Históriu možno otvoriť bez siete, výslovne sa pripojiť na pokračovanie alebo vybranú konverzáciu po potvrdení zmazať. Schéma 7 migruje pôvodné študijné údaje transakčne; vydanou verziou zostáva v0.11.1 do schválenia ďalšieho vydania. [Uložené konverzácie AI Tutor](TUTOR_HISTORY.md).

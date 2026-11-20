@@ -77,6 +77,9 @@ class FakeOllama:
                         fixture.gate.wait(3)
                     if mode == 'eof':
                         return
+                    if mode == 'control':
+                        self.wfile.write((json.dumps({'message':{'content':'bad\x1b'},'done':True})+'\n').encode())
+                        return
                     self.wfile.write((json.dumps({'message': {'content': 'svět / мир'}, 'done': True}, ensure_ascii=False)+'\n').encode())
                     self.wfile.flush()
                 except (OSError, BrokenPipeError):

@@ -1,5 +1,6 @@
-"""Optional Ollama chat. Session-only; all widget access stays on the Tk thread."""
+"""Optional Ollama chat with local history; all widget access stays on the Tk thread."""
 import queue
+import sqlite3
 
 import customtkinter as ctk
 from ollama_client import OllamaError, endpoint_url
@@ -7,6 +8,10 @@ from tutor import LANGUAGES, TutorTask, chat_messages
 
 
 class TutorPage(ctk.CTkFrame):
+    conversation_id = None
+    conversation_endpoint = None
+    conversation_model = None
+    unsaved_reply = False
     def __init__(self, parent, app):
         super().__init__(parent, fg_color='transparent', corner_radius=0)
         self.app = app
@@ -16,12 +21,27 @@ class TutorPage(ctk.CTkFrame):
         self.connected_endpoint = None
         self.models = []
         self.pending_clear = False
+        self.conversation_id = None; self.conversation_revision = 0
+        self.conversation_endpoint = None; self.conversation_model = None
+        self.unsaved_reply = False; self.pending_discard = False; self.pending_delete = None; self.pending_recover = False
+        self.history_offset = 0; self.history_rows = {}; self.history_has_next = False
         self.grid_columnconfigure(0, weight=1)
         app.label(self, 'AI Tutor', 28, bold=True).grid(row=0, column=0, sticky='w')
         self.status = app.label(self, 'Not connected. Start Ollama, then connect to load its models.', 13, 'secondary', wraplength=600)
         self.status.grid(row=1, column=0, sticky='ew', pady=(6, 14))
+        history = app.frame(self); history.grid(row=2,column=0,sticky='ew',pady=(0,12));history.grid_columnconfigure(0,weight=1)
+        self.history_choice = ctk.StringVar(value='Choose saved conversation')
+        self.history_menu = ctk.CTkOptionMenu(history,variable=self.history_choice,values=[self.history_choice.get()],dynamic_resizing=False,height=36,font=app.font(),command=lambda _:self.cancel_delete())
+        self.history_menu.grid(row=0,column=0,sticky='ew',padx=(0,8))
+        self.open_button = app.button(history,'Open',self.open_history,width=70);self.open_button.grid(row=0,column=1,padx=(0,8))
+        self.history_refresh_button = app.button(history,'Refresh',self.refresh_history,width=85);self.history_refresh_button.grid(row=0,column=2,padx=(0,8))
+        self.delete_button = app.button(history,'Delete',self.delete_history,width=85);self.delete_button.grid(row=0,column=3)
+        pages = app.frame(history);pages.grid(row=1,column=0,columnspan=4,sticky='w',pady=(8,0))
+        self.history_previous = app.button(pages,'Previous chats',lambda:self.history_page(-1),width=125);self.history_previous.pack(side='left',padx=(0,8))
+        self.history_next = app.button(pages,'Next chats',lambda:self.history_page(1),width=110);self.history_next.pack(side='left')
+        self.owner = app.label(history,'New chat — saved locally when you Send.',12,'secondary',wraplength=600);self.owner.grid(row=2,column=0,columnspan=4,sticky='ew',pady=(8,0))
         connection = app.frame(self)
-        connection.grid(row=2, column=0, sticky='ew', pady=(0, 12))
+        connection.grid(row=3, column=0, sticky='ew', pady=(0, 12))
         connection.grid_columnconfigure(0, weight=1)
         self.endpoint = ctk.CTkEntry(connection, height=38, font=app.font())
         self.endpoint.insert(0, app.preferences['ollama_endpoint'])
@@ -29,7 +49,7 @@ class TutorPage(ctk.CTkFrame):
         self.connect_button = app.button(connection, 'Connect / refresh', self.connect, width=155)
         self.connect_button.grid(row=0, column=1)
         options = app.frame(self)
-        options.grid(row=3, column=0, sticky='ew', pady=(0, 12))
+        options.grid(row=4, column=0, sticky='ew', pady=(0, 12))
         options.grid_columnconfigure(0, weight=1)
         self.preferred_model = app.preferences['ollama_model']
         self.model = ctk.StringVar(value=self.preferred_model or 'Connect to load models')
@@ -40,32 +60,39 @@ class TutorPage(ctk.CTkFrame):
         self.language_menu = ctk.CTkOptionMenu(options, variable=self.language, values=list(LANGUAGES), dynamic_resizing=False, font=app.font(), height=38, width=125)
         app.label(options, 'Answer language', 12, 'secondary').grid(row=0, column=1, sticky='w')
         self.language_menu.grid(row=1, column=1)
-        self.info = app.label(self, 'Only this chat is sent to the displayed server. Chat stays in this app session and is cleared when the app closes. AI answers may be incorrect; check important facts.', 12, 'secondary', wraplength=600)
-        self.info.grid(row=4, column=0, sticky='ew', pady=(0, 12))
+        self.info = app.label(self, 'Chats are saved in the local database and included in backups. Only this chat is sent after Send; opening history never connects. AI answers may be incorrect; check important facts.', 12, 'secondary', wraplength=600)
+        self.info.grid(row=5, column=0, sticky='ew', pady=(0, 12))
         self.transcript = ctk.CTkTextbox(self, height=330, font=app.font(), wrap='word', state='disabled')
-        self.transcript.grid(row=5, column=0, sticky='ew', pady=(0, 12))
+        self.transcript.grid(row=6, column=0, sticky='ew', pady=(0, 12))
         self.prompt = ctk.CTkTextbox(self, height=100, font=app.font(), wrap='word')
-        app.label(self, 'Your question (up to 4,000 characters)', 12, 'secondary').grid(row=6, column=0, sticky='w')
-        self.prompt.grid(row=7, column=0, sticky='ew', pady=(0, 12))
+        app.label(self, 'Your question (up to 4,000 characters)', 12, 'secondary').grid(row=7, column=0, sticky='w')
+        self.prompt.grid(row=8, column=0, sticky='ew', pady=(0, 12))
         actions = app.frame(self)
-        actions.grid(row=8, column=0, sticky='ew')
+        actions.grid(row=9, column=0, sticky='ew')
         self.send_button = app.button(actions, 'Send', self.send, primary=True, width=95)
         self.send_button.pack(side='left', padx=(0, 8))
         self.stop_button = app.button(actions, 'Stop', self.stop, width=85)
         self.stop_button.pack(side='left', padx=(0, 8))
         self.clear_button = app.button(actions, 'New chat', self.new_chat, width=120)
         self.clear_button.pack(side='left')
+        recovery = app.frame(self);recovery.grid(row=10,column=0,sticky='w',pady=(10,0))
+        self.retry_button = app.button(recovery,'Retry save reply',self.retry_save,width=145);self.retry_button.pack(side='left',padx=(0,8))
+        self.discard_button = app.button(recovery,'Discard unsaved',self.discard_unsaved,width=155);self.discard_button.pack(side='left',padx=(0,8))
+        self.recover_button = app.button(recovery,'Mark interrupted',self.recover_pending,width=155);self.recover_button.pack(side='left')
         self.bind('<Configure>', self.resize, add='+')
         self.controls()
         self.poll_job = self.after(50, self.poll)
 
     def resize(self, event):
-        for label in (self.status, self.info):
+        for label in (self.status, self.info, self.owner):
             label.configure(wraplength=max(250, event.width - 12))
 
     def load(self):
         self.pending_clear = False  # Navigation preserves chat; cancels clear confirmation.
         self.clear_button.configure(text='New chat')
+        self.cancel_delete()
+        self.pending_recover=False;self.recover_button.configure(text='Mark interrupted')
+        self.refresh_history()
 
     def apply_preferences(self, saved, previous):
         # Called only after explicit Settings Save; never starts networking.
@@ -96,7 +123,15 @@ class TutorPage(ctk.CTkFrame):
         self.language_menu.configure(state='disabled' if busy else 'normal')
         self.send_button.configure(state='normal' if self.models and not busy else 'disabled')
         self.stop_button.configure(state='normal' if busy else 'disabled')
-        self.clear_button.configure(state='disabled' if busy else 'normal')
+        self.clear_button.configure(state='disabled' if busy or self.unsaved_reply else 'normal')
+        for button in (self.open_button,self.history_refresh_button,self.delete_button,self.history_menu):
+            button.configure(state='disabled' if busy or self.unsaved_reply else 'normal')
+        self.history_previous.configure(state='normal' if self.history_offset and not busy and not self.unsaved_reply else 'disabled')
+        self.history_next.configure(state='normal' if self.history_has_next and not busy and not self.unsaved_reply else 'disabled')
+        self.retry_button.configure(state='normal' if self.unsaved_reply and not busy else 'disabled')
+        self.discard_button.configure(state='normal' if self.unsaved_reply and not busy else 'disabled')
+        self.recover_button.configure(state='normal' if self.turns and self.turns[-1]['status']=='pending' and not busy and not self.unsaved_reply else 'disabled')
+        if self.unsaved_reply:self.send_button.configure(state='disabled')
         self.prompt.configure(state='disabled' if busy else 'normal')
 
     def append(self, text):
@@ -113,7 +148,8 @@ class TutorPage(ctk.CTkFrame):
         self.clear_button.configure(text='New chat')
         try:
             endpoint = endpoint_url(self.endpoint.get())
-            if self.turns and self.connected_endpoint and endpoint != self.connected_endpoint:
+            owner = self.conversation_endpoint or self.connected_endpoint
+            if self.turns and owner and endpoint != owner:
                 raise OllamaError('Start a new chat before connecting to a different server.')
             task = TutorTask('models', endpoint)
         except OllamaError as exc:
@@ -126,7 +162,7 @@ class TutorPage(ctk.CTkFrame):
         task.start()
 
     def send(self):
-        if self.task is not None:
+        if self.task is not None or self.unsaved_reply:
             return
         self.pending_clear = False
         self.clear_button.configure(text='New chat')
@@ -135,6 +171,8 @@ class TutorPage(ctk.CTkFrame):
                 raise OllamaError('Connect to the displayed server before sending.')
             if self.model.get() not in self.models:
                 raise OllamaError('Connect and choose an available model.')
+            if self.conversation_id is not None and (self.connected_endpoint,self.model.get()) != (self.conversation_endpoint,self.conversation_model):
+                raise OllamaError('Start a New chat before changing this conversation’s server or model.')
             messages = chat_messages(self.turns, self.prompt.get('1.0', 'end-1c'), self.language.get())
             if len(self.turns) >= 12:
                 raise OllamaError('This session has 12 turns. Start a new chat to continue.')
@@ -143,13 +181,23 @@ class TutorPage(ctk.CTkFrame):
             self.status.configure(text=str(exc))
             return
         question = messages[-1]['content']
-        self.turns.append({'prompt': question, 'answer': '', 'status': 'pending'})
+        try:
+            saved = self.app.store.begin_tutor_turn(self.conversation_id,self.connected_endpoint,self.model.get(),question,self.language.get(),expected_revision=self.conversation_revision)
+        except (ValueError,sqlite3.Error) as exc:
+            self.status.configure(text=str(exc) if isinstance(exc,ValueError) else 'Could not save the question. Your draft is kept; retry Send.');return
+        self.conversation_id=saved['id'];self.conversation_revision=saved['revision']
+        self.conversation_endpoint=saved['endpoint'];self.conversation_model=saved['model']
+        self.owner.configure(text=f'{saved["title"]} · {self.conversation_endpoint} · {self.conversation_model}')
+        self.turns.append({'id':saved['turn_id'],'prompt':question,'answer':'','status':'pending'})
         self.prompt.delete('1.0', 'end')
         self.append(f'\nYou\n{question}\n\nTutor ({self.model.get()})\n')
         self.task = task
         self.status.configure(text='Generating… You can Stop or use another screen.')
         self.controls()
-        task.start()
+        try:task.start()
+        except RuntimeError:
+            self.task=None;self.turns[-1]['status']='failed';self.unsaved_reply=True
+            self.status.configure(text='Could not start the request.');self.persist_reply();self.controls()
 
     def stop(self):
         if self.task is not None:
@@ -158,20 +206,24 @@ class TutorPage(ctk.CTkFrame):
             self.stop_button.configure(state='disabled')
 
     def new_chat(self):
-        if self.task is not None:
+        if self.task is not None or self.unsaved_reply:
             return
-        if self.turns and not self.pending_clear:
+        if (self.turns or self.prompt.get('1.0','end-1c').strip()) and not self.pending_clear:
             self.pending_clear = True
             self.clear_button.configure(text='Confirm clear')
-            self.status.configure(text='Click Confirm clear again to remove this session chat. Send or Connect cancels this confirmation.')
+            self.status.configure(text='Click Confirm clear again to start a new chat and clear the prompt draft. Saved history is kept. Send or Connect cancels this confirmation.')
             return
         self.pending_clear = False
         self.turns.clear()
+        self.conversation_id=None;self.conversation_revision=0;self.conversation_endpoint=None;self.conversation_model=None
+        self.prompt.delete('1.0','end');self.owner.configure(text='New chat — saved locally when you Send.')
+        self.cancel_delete()
         self.transcript.configure(state='normal')
         self.transcript.delete('1.0', 'end')
         self.transcript.configure(state='disabled')
         self.clear_button.configure(text='New chat')
-        self.status.configure(text='New session chat. Connect if you changed the server.')
+        self.status.configure(text='New chat. Saved history is kept. Connect if you changed the server.')
+        self.controls()
 
     def poll(self):
         if self.closed:
@@ -217,12 +269,125 @@ class TutorPage(ctk.CTkFrame):
                             notice = 'Reply complete.' if state == 'completed' else ('Stopped. Partial text is kept.' if stopped else value)
                             self.append(f'\n[{notice}]\n')
                             self.status.configure(text=notice)
+                            self.unsaved_reply=True
+                            self.persist_reply()
                         self.task = None
                         self.controls()
+                        if task.kind=="chat":self.refresh_history()
                         break
         finally:
             if not self.closed:
                 self.poll_job = self.after(50, self.poll)
+
+    def refresh_history(self, offset=None):
+        if self.task is not None or self.unsaved_reply:return
+        candidate=self.history_offset if offset is None else offset
+        try:
+            rows=self.app.store.tutor_conversations(candidate)
+            if not rows and candidate:
+                candidate=0;rows=self.app.store.tutor_conversations(candidate)
+        except sqlite3.Error:
+            self.status.configure(text='Could not read history. Retry Refresh; your current chat is kept.');return
+        self.history_offset=candidate
+        self.history_has_next=len(rows)>20
+        self.history_rows={f'{r["id"]} · {r["title"][:40]}':r for r in rows[:20]}
+        values=list(self.history_rows) or ['No saved conversations']
+        previous=self.history_choice.get()
+        self.history_menu.configure(values=values)
+        self.history_choice.set(previous if previous in values else values[0])
+        self.cancel_delete();self.controls()
+
+    def history_page(self, direction):
+        if self.task is not None or self.unsaved_reply:return
+        self.refresh_history(offset=max(0,self.history_offset+direction*20))
+
+    def cancel_delete(self):
+        self.pending_delete=None;self.delete_button.configure(text='Delete')
+
+    def open_history(self):
+        if self.task is not None or self.unsaved_reply:return
+        selected=self.history_rows.get(self.history_choice.get())
+        if selected is None:return
+        if self.prompt.get('1.0','end-1c').strip() and self.conversation_id!=selected['id']:
+            self.status.configure(text='Your question draft is kept. Clear it explicitly before opening another conversation.');return
+        try:saved=self.app.store.tutor_conversation(selected['id'])
+        except (ValueError,sqlite3.Error) as exc:
+            self.status.configure(text=str(exc) if isinstance(exc,ValueError) else 'Could not open history. Retry Open; current chat is kept.');return
+        self.conversation_id=saved['id'];self.conversation_revision=saved['revision']
+        self.conversation_endpoint=saved['endpoint'];self.conversation_model=saved['model']
+        self.turns=saved['turns'];self.cancel_delete();self.pending_clear=False;self.pending_recover=False
+        self.clear_button.configure(text='New chat');self.recover_button.configure(text='Mark interrupted')
+        self.endpoint.delete(0,'end');self.endpoint.insert(0,saved['endpoint'])
+        self.connected_endpoint=None;self.models=[];self.preferred_model=saved['model'];self.model.set(saved['model'])
+        self.app.ai_status.configure(text='○  AI not connected')
+        if self.turns:self.language.set(self.turns[-1]['language'])
+        self.owner.configure(text=f'{saved["title"]} · {saved["endpoint"]} · {saved["model"]}')
+        self.transcript.configure(state='normal');self.transcript.delete('1.0','end');self.transcript.configure(state='disabled')
+        for turn in self.turns:
+            self.append(f'\nYou\n{turn["prompt"]}\n\nTutor ({saved["model"]})\n{turn["answer"]}\n[{turn["status"]}]\n')
+        self.status.configure(text='Saved chat opened offline. Connect to its server/model to continue. An unfinished reply may belong to another window; Mark interrupted only if you intend to abandon it.')
+        self.controls()
+
+    def delete_history(self):
+        if self.task is not None or self.unsaved_reply:return
+        selected=self.history_rows.get(self.history_choice.get())
+        if selected is None:return
+        identity=(selected['id'],selected['revision'])
+        if self.pending_delete!=identity:
+            self.pending_delete=identity;self.delete_button.configure(text='Confirm')
+            self.status.configure(text=f'Delete saved chat "{selected["title"]}" and all its turns? Click Confirm again. This also invalidates a reply running in another window.');return
+        try:self.app.store.delete_tutor_conversation(identity[0],expected_revision=identity[1])
+        except (ValueError,sqlite3.Error) as exc:
+            self.cancel_delete();self.status.configure(text=str(exc) if isinstance(exc,ValueError) else 'Could not delete history. Nothing was removed; retry.');return
+        if self.conversation_id==identity[0]:
+            # Current chat is already saved; detach it without losing a prompt draft.
+            self.turns=[];self.conversation_id=None;self.conversation_revision=0;self.conversation_endpoint=None;self.conversation_model=None
+            self.transcript.configure(state='normal');self.transcript.delete('1.0','end');self.transcript.configure(state='disabled')
+            self.owner.configure(text='New chat — saved locally when you Send.')
+        self.refresh_history();self.status.configure(text='Conversation deleted. Other chats and any prompt draft are kept.')
+
+    def persist_reply(self):
+        if not self.unsaved_reply:return True
+        turn=self.turns[-1]
+        try:revision=self.app.store.finish_tutor_turn(self.conversation_id,turn['id'],turn['answer'],turn['status'],expected_revision=self.conversation_revision)
+        except (ValueError,sqlite3.Error) as exc:
+            reason=str(exc) if isinstance(exc,ValueError) else 'Could not save the reply.'
+            self.status.configure(text=reason+' Unsaved text is kept. Retry save reply, or copy it before Discard unsaved.');return False
+        self.conversation_revision=revision;self.unsaved_reply=False;self.pending_discard=False
+        self.discard_button.configure(text='Discard unsaved');return True
+
+    def retry_save(self):
+        if self.task is not None:return
+        if self.persist_reply():self.status.configure(text='Reply saved locally.');self.refresh_history()
+        self.controls()
+
+    def discard_unsaved(self):
+        if self.task is not None or not self.unsaved_reply:return
+        if not self.pending_discard:
+            self.pending_discard=True;self.discard_button.configure(text='Confirm discard')
+            self.status.configure(text='Copy the unsaved reply first. Click Confirm discard to clear it; saved history (possibly unfinished) is kept.');return
+        self.unsaved_reply=False;self.pending_discard=False
+        draft=self.prompt.get('1.0','end-1c')
+        self.turns=[];self.prompt.delete('1.0','end');self.new_chat()
+        self.prompt.insert('1.0',draft);self.discard_button.configure(text='Discard unsaved')
+        self.status.configure(text='Unsaved reply discarded. Your question draft and saved history are kept.')
+
+    def recover_pending(self):
+        if self.task is not None or self.unsaved_reply or not self.turns or self.turns[-1]['status']!='pending':return
+        if not self.pending_recover:
+            self.pending_recover=True;self.recover_button.configure(text='Confirm interruption')
+            self.status.configure(text='This reply might be running in another window. Confirm interruption to abandon its saved pending turn; a late response cannot overwrite it.');return
+        self.turns[-1]['status']='interrupted';self.unsaved_reply=True
+        if self.persist_reply():self.status.configure(text='Marked interrupted. Connect to continue; incomplete turns are excluded from context.')
+        self.pending_recover=False;self.recover_button.configure(text='Mark interrupted');self.controls()
+
+    def prepare_close(self):
+        if self.task is not None and self.task.kind=='chat':
+            self.turns[-1]['status']='interrupted';self.unsaved_reply=True
+        if not self.persist_reply():
+            if self.task is not None:self.task.cancel()
+            self.controls();return False
+        return True
 
     def shutdown(self):
         self.closed = True

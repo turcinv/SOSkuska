@@ -15,7 +15,7 @@ from storage import SCHEMA_VERSION, Store
 from backup_validation import validate_records
 
 TABLES = ('tasks', 'subjects', 'sessions', 'topics', 'questions', 'practice_attempts',
-          'practice_items', 'decks', 'flashcards', 'review_events', 'preferences', 'sqlite_sequence')
+          'practice_items', 'decks', 'flashcards', 'review_events', 'preferences', 'tutor_conversations', 'tutor_turns', 'sqlite_sequence')
 TIMEOUT = 60
 
 

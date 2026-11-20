@@ -2,7 +2,7 @@
 
 [English](CURRENT_ARCHITECTURE.md) · [Čeština](cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](sk/CURRENT_ARCHITECTURE.md) · [Русский](ru/CURRENT_ARCHITECTURE.md)
 
-Status as of 20 November 2026, release v0.11.1. Dashboard, My Subjects, Question bank, Practice Tests, Flashcards, Statistics, optional AI Tutor, Settings, local backup/restore, and CSV question import are implemented. See [planned architecture](PLANNED_ARCHITECTURE.md) for future proposals.
+Working branch includes unreleased local Tutor history (schema 7); published baseline is v0.11.1.
 
 ## Technology and modules
 
@@ -17,7 +17,7 @@ Python, CustomTkinter 5.2.2, Pillow and standard-library SQLite. One process own
 | `soskuska/practice.py` / `practice_page.py` | Pure practice/deadline rules and test UI |
 | `soskuska/repetition.py` / `flashcard_page.py` | Pure card rules/scheduling and flashcard UI |
 | `soskuska/study_statistics.py` / `statistics_page.py` | Consistent history aggregates and report UI |
-| `soskuska/ollama_client.py`, `tutor.py`, `tutor_page.py` | HTTP/HTTPS, bounded context/background jobs and session-chat UI |
+| `soskuska/ollama_client.py`, `tutor.py`, `tutor_page.py` | HTTP/HTTPS, bounded context/background jobs and local-history UI |
 | `soskuska/preferences.py` / `settings_page.py` | Pure preference validation and explicit-save UI |
 | `soskuska/scrolling.py` | Mouse wheel and Tk 9 trackpad compatibility |
 | `tests/` / `soskuska/check_*.py` | Unit tests, frozen migration fixtures and native GUI checks using temporary data |
@@ -50,7 +50,7 @@ Screens call Store directly; separate service/domain layers and a shared theme m
 
 ## Schema and migrations
 
-`PRAGMA user_version` is **6**. Store obtains `BEGIN IMMEDIATE` before reading the version so concurrent launches cannot migrate from stale metadata. Migrations are transactional and preserve old tasks/sessions plus newer content/history. Foreign keys are enabled per connection. A newer schema is rejected rather than downgraded. Source of truth: `storage.py`; the SQL below describes the main tables and indexes.
+`PRAGMA user_version` is **7**. Store obtains `BEGIN IMMEDIATE` before reading the version so concurrent launches cannot migrate from stale metadata. Migrations are transactional and preserve old tasks/sessions plus newer content/history. Foreign keys are enabled per connection. A newer schema is rejected rather than downgraded. Source of truth: `storage.py`; the SQL below describes the main tables and indexes.
 
 ### Tasks, subjects and question bank
 
@@ -204,11 +204,11 @@ Store.statistics() reads sessions, completed attempts/items and review_events in
 
 ## AI Tutor (introduced in v0.7.0)
 
-`tutor_page.py` owns widgets/session chat; `tutor.py` builds bounded context and starts daemon jobs. `ollama_client.py` uses standard-library http.client/ssl for GET /api/tags and streaming POST /api/chat. Tk polls the queue every 50 ms. Shutdown cancels without joining on the UI thread; failed focus saves still prevent closing. This feature added no schema change or external dependency.
+`tutor_page.py` owns widgets and local chat history; `tutor.py` builds bounded context and starts daemon jobs. `ollama_client.py` uses standard-library http.client/ssl for GET /api/tags and streaming POST /api/chat. Tk polls the queue every 50 ms. Shutdown cancels without joining on the UI thread; failed focus saves still prevent closing. The original v0.7.0 chat added no schema change; current history adds schema 7 without an external dependency.
 
 No request starts on startup/navigation. Only this chat is sent to the visible server; no automatic database/files or cloud fallback. Endpoint changes require clearing existing chat. Stop signals cancellation; nonblocking socket reads/writes/TLS handshake poll at most every 100 ms. Only workers mutate/close sockets; DNS/TCP setup can delay cancellation. Keep one task active until its terminal event and ignore stale task events. Partial failed/stopped text remains visible but is excluded from later context.
 
-See [AI Tutor](AI_TUTOR.md) for protocol/security choices, chat/model bounds, 30/180-second limits and session loss on close. Tests use FakeOllama on loopback, not real models.
+See [AI Tutor](AI_TUTOR.md) for protocol/security choices, chat/model bounds, 30/180-second limits and saved history and interruption recovery. Tests use FakeOllama on loopback, not real models.
 
 ## Settings (introduced in v0.8.0)
 
@@ -233,24 +233,28 @@ Changed AI preferences require an idle Tutor. A different server requires New ch
 
 The v0.8.0 baseline passed 126 unit tests and nine native macOS checks using disposable data (Python 3.12.13 / Tk 9.0). CI tests Python 3.12 on Ubuntu/Windows/macOS and GUI on Ubuntu/Xvfb. Processes are bounded at 60 seconds, jobs at 10 minutes; superseded ref runs cancel. Actions are pinned, token contents access is read-only, and there is no deployment/release step or automatic branch protection. See [Development](DEVELOPMENT.md).
 
-Automated/synthetic checks do not establish manual platform UI or hardware gesture correctness; Linux does not test Aqua Quit/Tk 9 hardware behavior. Real Ollama quality/performance is unverified. Remaining work includes saved AI conversations, UI translations, full crash recovery, installers and comprehensive logging/error handling at every read.
+Automated/synthetic checks do not establish manual platform UI or hardware gesture correctness; Linux does not test Aqua Quit/Tk 9 hardware behavior. Real Ollama quality/performance is unverified. Remaining work includes UI translations, full crash recovery, installers and comprehensive logging/error handling at every read.
 
 ## Backup and restore
 
-Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Schema stays 6. Restore closes the app; reopen it afterward. See [Backup and restore](BACKUP_RESTORE.md).
+Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Current schema is 7. Restore closes the app; reopen it afterward. See [Backup and restore](BACKUP_RESTORE.md).
 
 backup.py and backup_validation.py validate private standalone snapshots and application domains, then replace rows in one write transaction without copying source DDL. database_lock.py provides shared Store leases and exclusive restore leases (flock / Windows LockFileEx). backup_worker.py runs in an isolated process; backup_panel.py polls a temporary output file on Tk, avoiding pipe deadlocks and worker-thread Tk finalization. The current Store is closed and periodic callbacks pause for actual restore. The safety copy is taken while the write lock is held; final rows and ID sequences must match before commit.
 
-Backup/restore validation: 156 unit tests and ten native macOS checks with disposable data. Tests include the independently reproduced review failures. CI runs the twelve GUI checks on Ubuntu/Xvfb; Windows/macOS unit jobs exercise platform leases.
+Backup/restore validation: 156 unit tests and ten native macOS checks with disposable data. Tests include the independently reproduced review failures. CI runs the thirteen GUI checks on Ubuntu/Xvfb; Windows/macOS unit jobs exercise platform leases.
 
 ## Import questions from CSV
 
-Question bank now supports UTF-8 CSV import into an existing subject, with a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records; question lists show 50 per page. Schema stays 6. [Question CSV import](QUESTION_CSV_IMPORT.md).
+Question bank now supports UTF-8 CSV import into an existing subject, with a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records; question lists show 50 per page. Current schema is 7. [Question CSV import](QUESTION_CSV_IMPORT.md).
 
 csv_import.py validates bounded canonical records; csv_import_worker.py runs isolated parse/read-only preflight/save/template jobs with file-backed output. Store.open_existing uses mode=ro/rw without creation or migration. Store.import_questions revalidates under BEGIN IMMEDIATE and inserts topics/questions in one transaction. A successful batch is consumed before UI report reads; refresh retry never imports again. Question-bank pagination applies filtering before selecting 50 visible cards.
 
 ## Import flashcards from CSV
 
-Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Schema stays 6. [Import flashcards from CSV](FLASHCARD_CSV_IMPORT.md).
+Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Current schema is 7. [Import flashcards from CSV](FLASHCARD_CSV_IMPORT.md).
 
 `flashcard_csv_import.py` validates bounded front/back records; `flashcard_csv_import_worker.py` isolates parse/read-only preflight/save jobs. `CsvImportPanel` shares lifecycle and template publication with question import. `Store.import_flashcards` uses BEGIN IMMEDIATE, rechecks the displayed deck name and full-deck duplicates, then inserts all cards once with a shared current UTC due time. No existing schedule or review row is modified.
+
+## Saved AI Tutor conversations
+
+AI Tutor now saves conversations locally, including the original server/model and reply status. Open saved history without networking, reconnect explicitly to continue, or delete a selected conversation after confirmation. Schema 7 migrates existing study data transactionally; the published release remains v0.11.1 until a new release is authorized. [Saved AI Tutor conversations](TUTOR_HISTORY.md).

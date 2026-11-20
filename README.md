@@ -46,7 +46,7 @@ For development, keep test data separate:
 | Practice Tests | Randomized tests, optional deadlines, saved answers and resume, immutable results and answer review |
 | Flashcards | Deck/card editing, reveal-before-rating, deterministic review scheduling and retained review history |
 | Statistics | Stored focus time, weighted practice accuracy, flashcard self-ratings and daily activity |
-| AI Tutor | Optional streamed Ollama chat, model discovery, answer language and cancellation; chat lasts only for the current app session |
+| AI Tutor | Optional streamed Ollama chat, model discovery, answer language and cancellation; chat is saved locally and can be reopened |
 | Settings | Persist focus duration, daily goal, Ollama URL/model and AI answer language; explicit Save without automatic connection |
 
 Open **My Subjects → Questions** to author questions. Questions require four different answers A–D, exactly one correct answer, Easy/Medium/Hard difficulty and optional topic/explanation. Search combines text, topic and difficulty. Deleting a topic keeps its questions unassigned. Deleting a subject warns before removing its questions/topics and retains study history.
@@ -81,16 +81,20 @@ soskuska-local/    Earlier standalone HTML visual reference
 docs/             English guides; cs/, sk/, ru/ contain translations
 ```
 
-Windows/Linux are primary target platforms; macOS is also the current development environment. Unit CI runs on all three systems; GUI CI runs on Ubuntu/Xvfb, with native checks also run locally on macOS. This does not replace manual Windows/Linux UI or physical scrolling-gesture testing. There is no installer, synchronization, UI translation or saved AI conversation support yet.
+Windows/Linux are primary target platforms; macOS is also the current development environment. Unit CI runs on all three systems; GUI CI runs on Ubuntu/Xvfb, with native checks also run locally on macOS. This does not replace manual Windows/Linux UI or physical scrolling-gesture testing. There is no installer, synchronization, UI translation yet.
 
 ## Backup and restore
 
-Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Schema stays 6. Restore closes the app; reopen it afterward. See [Backup and restore](docs/BACKUP_RESTORE.md).
+Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Current schema is 7. Restore closes the app; reopen it afterward. See [Backup and restore](docs/BACKUP_RESTORE.md).
 
 ## Import questions from CSV
 
-Question bank now supports UTF-8 CSV import into an existing subject, with a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records; question lists show 50 per page. Schema stays 6. [Question CSV import](docs/QUESTION_CSV_IMPORT.md).
+Question bank now supports UTF-8 CSV import into an existing subject, with a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records; question lists show 50 per page. Current schema is 7. [Question CSV import](docs/QUESTION_CSV_IMPORT.md).
 
 ## Import flashcards from CSV
 
-Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Schema stays 6. [Import flashcards from CSV](docs/FLASHCARD_CSV_IMPORT.md).
+Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Current schema is 7. [Import flashcards from CSV](docs/FLASHCARD_CSV_IMPORT.md).
+
+## Saved AI Tutor conversations
+
+AI Tutor now saves conversations locally, including the original server/model and reply status. Open saved history without networking, reconnect explicitly to continue, or delete a selected conversation after confirmation. Schema 7 migrates existing study data transactionally; the published release remains v0.11.1 until a new release is authorized. [Saved AI Tutor conversations](docs/TUTOR_HISTORY.md).

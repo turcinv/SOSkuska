@@ -36,7 +36,7 @@ English instructions for development agents, referenced by [AGENTS.md](../../AGE
 
 ## Continuous integration
 
-- `.github/workflows/ci.yml` runs for PRs targeting main, pushes to main and manual dispatch. Python 3.12 unit tests/syntax/dependency checks run on Linux, Windows and macOS; twelve GUI checks run under Xvfb on Ubuntu.
+- `.github/workflows/ci.yml` runs for PRs targeting main, pushes to main and manual dispatch. Python 3.12 unit tests/syntax/dependency checks run on Linux, Windows and macOS; thirteen GUI checks run under Xvfb on Ubuntu.
 - Keep action references pinned to verified release commit SHAs, contents permission read-only, and process/job timeouts. CI does not publish releases or deploy. Avoid duplicate feature-branch push and PR runs.
 - CI results are automated coverage, not manual platform or hardware verification. Native Aqua Quit and Tk 9 trackpad behavior still require the Mac checks. Do not claim those are tested by the Linux GUI job.
 - Read failed job logs, fix the cause and keep fixes on the same PR branch. Do not disable a meaningful failing check to obtain a green status. Branch protection is not configured by this workflow.

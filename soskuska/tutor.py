@@ -1,4 +1,4 @@
-"""Session chat rules and background jobs. Workers never access Tk or SQLite."""
+"""Bounded chat context rules and background jobs. Workers never access Tk or SQLite."""
 import queue
 import threading
 

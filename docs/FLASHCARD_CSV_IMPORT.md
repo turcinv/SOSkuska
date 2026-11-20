@@ -2,7 +2,7 @@
 
 [English](FLASHCARD_CSV_IMPORT.md) · [Čeština](cs/FLASHCARD_CSV_IMPORT.md) · [Slovenčina](sk/FLASHCARD_CSV_IMPORT.md) · [Русский](ru/FLASHCARD_CSV_IMPORT.md)
 
-Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Schema stays 6.
+Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Current schema is 7.
 
 1. Open **Flashcards → Open deck → Import CSV**. Create the subject/deck first if needed.
 2. Use **Save CSV template**, choose an unused filename, then fill its `front,back` columns in a text editor or spreadsheet. Export comma-separated UTF-8 CSV (an optional BOM is supported).

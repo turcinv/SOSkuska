@@ -8,14 +8,18 @@ V **Settings** nastav délku příštího focus sezení (1–180 minut, výchoz�
 
 **Use Tutor choices** jen zkopíruje do formuláře aktuální volby AI Tutor; potom použij Save settings. Přímé změny v AI Tutor jsou dočasné. Uložení, spuštění ani návrat na obrazovku nevytváří síťové spojení. Připoj se výslovně přes Connect / refresh. Nedostupný preferovaný model se nenahradí jiným bez výběru uživatele. Jazyk platí pro AI odpovědi, nikoli rozhraní aplikace.
 
-Při aktivním AI požadavku nejprve počkej nebo použij Stop, než změníš AI preference. Studijní hodnoty lze uložit dál. Pokud chat patří jinému serveru, nejprve jej vymaž přes New chat a potvrzení. Zapamatování právě připojeného serveru jeho chat zachová. Chat se při zavření stále ztratí.
+Při aktivním AI požadavku nejprve počkej nebo použij Stop, než změníš AI preference. Studijní hodnoty lze uložit dál. Pokud chat patří jinému serveru, nejprve jej odpoj přes New chat a potvrzení; uložená historie zůstane. Zapamatování právě připojeného serveru jeho chat zachová. Konverzace zůstává uložená po zavření aplikace.
 
 Chyba zápisu ani konflikt s jiným oknem neodstraní rozepsané hodnoty. Před Reload si je zkopíruj; u změněného formuláře je nutné potvrdit nahrazení druhým kliknutím. Změny jiného okna se nepoužijí živě: v tomto okně je použije Save nebo restart. Save použije všechny načtené hodnoty, včetně AI nastavení z druhého okna, proto mohou platit výše uvedené ochrany. Neplatná uložená nastavení zobrazí bezpečné výchozí hodnoty; opraví se až výslovným Save.
 
-Nastavení je místní pro vybranou databázi (`--data`), bez synchronizace a šifrování. Chybí volba vzhledu, překlady UI a ukládání AI konverzací.
+Nastavení je místní pro vybranou databázi (`--data`), bez synchronizace a šifrování. Chybí volba vzhledu a překlady UI.
 
 Při připojení k jinému serveru se model vybere znovu podle uložené preference. Obnova stejného serveru zachová ručně vybraný dostupný model.
 
 ## Záloha a obnova
 
-Settings nyní nabízí ruční místní zálohu a ověřenou obnovu s bezpečnostní kopií před nahrazením. Schéma zůstává 6. Obnova zavře aplikaci; potom ji spusť znovu. Viz [Záloha a obnova](BACKUP_RESTORE.md).
+Settings nyní nabízí ruční místní zálohu a ověřenou obnovu s bezpečnostní kopií před nahrazením. Aktuální schéma je 7. Obnova zavře aplikaci; potom ji spusť znovu. Viz [Záloha a obnova](BACKUP_RESTORE.md).
+
+## Uložené konverzace AI Tutor
+
+AI Tutor nyní ukládá konverzace lokálně včetně původního serveru/modelu a stavu odpovědi. Historii lze otevřít bez sítě, výslovně se připojit pro pokračování nebo vybranou konverzaci po potvrzení smazat. Schéma 7 migruje původní studijní data transakčně; vydanou verzí zůstává v0.11.1 do schválení dalšího vydání. [Uložené konverzace AI Tutor](TUTOR_HISTORY.md).
