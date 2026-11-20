@@ -4,7 +4,7 @@
 
 **Future design, not a description of everything implemented today.** Proposed files/tables exist only where confirmed by [current architecture](CURRENT_ARCHITECTURE.md). A roadmap does not authorize implementing every feature at once.
 
-As of 18 November 2026, v0.8.0 includes subjects/questions, focus sessions, practice, flashcards, statistics, optional session-only Ollama chat and persisted study/AI preferences. Schema 6 migration preserves previous data. [Settings](SETTINGS.md) does not automatically connect or save chat.
+Published baseline is v0.11.1. This working branch adds saved AI conversations and schema 7; the history guide below describes the new behavior. Settings Save does not start networking.
 
 ## Direction
 
@@ -100,12 +100,16 @@ Some stages are partly or substantially complete; use current architecture for s
 
 ## Backup and restore
 
-Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Schema stays 6. Restore closes the app; reopen it afterward. See [Backup and restore](BACKUP_RESTORE.md).
+Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Current schema is 7. Restore closes the app; reopen it afterward. See [Backup and restore](BACKUP_RESTORE.md).
 
 ## Import questions from CSV
 
-Question bank now supports UTF-8 CSV import into an existing subject, with a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records; question lists show 50 per page. Schema stays 6. [Question CSV import](QUESTION_CSV_IMPORT.md).
+Question bank now supports UTF-8 CSV import into an existing subject, with a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records; question lists show 50 per page. Current schema is 7. [Question CSV import](QUESTION_CSV_IMPORT.md).
 
 ## Import flashcards from CSV
 
-Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Schema stays 6. [Import flashcards from CSV](FLASHCARD_CSV_IMPORT.md).
+Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Current schema is 7. [Import flashcards from CSV](FLASHCARD_CSV_IMPORT.md).
+
+## Saved AI Tutor conversations
+
+AI Tutor now saves conversations locally, including the original server/model and reply status. Open saved history without networking, reconnect explicitly to continue, or delete a selected conversation after confirmation. Schema 7 migrates existing study data transactionally; the published release remains v0.11.1 until a new release is authorized. [Saved AI Tutor conversations](TUTOR_HISTORY.md).

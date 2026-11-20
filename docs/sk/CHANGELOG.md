@@ -3,6 +3,10 @@
 [English](../../CHANGELOG.md) · [Čeština](../cs/CHANGELOG.md) · [Slovenčina](CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
 
+## Nevydané
+
+AI Tutor teraz ukladá konverzácie lokálne vrátane pôvodného servera/modelu a stavu odpovede. Históriu možno otvoriť bez siete, výslovne sa pripojiť na pokračovanie alebo vybranú konverzáciu po potvrdení zmazať. Schéma 7 migruje pôvodné študijné údaje transakčne; vydanou verziou zostáva v0.11.1 do schválenia ďalšieho vydania. [Uložené konverzácie AI Tutor](TUTOR_HISTORY.md).
+
 ## 0.11.1 — 2026-11-20
 
 Koreňový AGENTS.md je približne o 86 % menší (z 27,4 KB na 3,9 KB), s výslovnými odkazmi `@` a tabuľkou načítania pokynov. Všetkých 20 pôvodných sekcií zostáva zachovaných v piatich anglických súboroch pre agentov. Odkazy vyžadujú prečítanie súborov; nespoliehajú sa na automatické vloženie.

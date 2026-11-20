@@ -4,7 +4,7 @@ English instructions for development agents, referenced by [AGENTS.md](../../AGE
 
 ## AI Tutor safeguards
 
-- tutor_page.py owns session-only chat; tutor.py builds bounded context and runs daemon jobs; ollama_client.py uses direct standard-library HTTP/HTTPS. No SQLite chat persistence or schema changes. Make session loss on app close explicit.
+- tutor_page.py owns locally saved chat; tutor.py builds bounded context and runs daemon jobs; ollama_client.py uses direct standard-library HTTP/HTTPS. Schema 7 persists local conversation/turn snapshots on the Tk thread. Keep explicit server/model ownership and interruption/save-retry states.
 - No request on startup/navigation. Connect loads /api/tags; Send streams /api/chat to the visible endpoint. Never automatically attach database records/files or fall back to a cloud service. Endpoint changes require clearing the prior chat. Backend/model processing is determined by the selected server.
 - Workers must never call Tk or SQLite; queue events are handled by the main-thread after poll. Hidden updates must not scroll shared pages or alter another screen's draft. Shutdown cancels networking without joining a worker on the UI thread; failed focus saves must still keep the window open.
 - Stop sets a cancellation event; nonblocking reads/writes/TLS handshakes poll it at most every100ms. Only the worker may mutate or close sockets/TLS state. Preserve partial text but exclude stopped/failed turns from future context. Keep one task active until its terminal event; do not consume events from an old task as a new answer. System DNS/TCP setup can delay cancellation.
@@ -15,7 +15,7 @@ English instructions for development agents, referenced by [AGENTS.md](../../AGE
 ## Settings safeguards
 
 - preferences.py validates focus 1–180 minutes, daily goal 1–1440, Ollama URL/model and AI answer language. settings_page.py saves explicitly through Store; schema 6 adds the singleton preferences row and revision. Migration is transactional and must preserve schema 5 content/history; use the frozen schema_v5.sql fixture.
-- Never connect on startup, navigation or Settings Save. Use Tutor choices copies into a draft; only Save persists it. UI remains English; answer language only changes AI replies. Chat remains session-only.
+- Never connect on startup, navigation or Settings Save. Use Tutor choices copies into a draft; only Save persists it. UI remains English; answer language only changes AI replies. Conversations save separately in the local database.
 - Active/paused/unsaved focus sessions retain their original target; next session uses saved duration. Goal changes immediately without changing history. Applying committed settings must not depend on another SQLite read.
 - Reject stale revision under the write lock. Failed Save/Reload and navigation preserve drafts, including a failed initial load. Reload needs confirmation when dirty. Invalid saved preferences fall back safely and repair only on explicit Save.
 - AI preference changes wait for an idle Tutor. Different servers require New chat when chat exists. Remembering the already-connected server must retain its connection identity and chat isolation. Prefer the saved model when available; never silently substitute an unavailable preferred model. Study-only saves preserve temporary Tutor choices when persisted AI fields are unchanged.
@@ -26,3 +26,11 @@ English instructions for development agents, referenced by [AGENTS.md](../../AGE
 
 - English-primary documentation with Czech/Slovak/Russian translations was introduced in v0.8.1. Keep published version labels aligned across the app footer, root README, all localized READMEs and changelogs.
 
+
+## Local history safeguards (unreleased)
+
+- Schema 7 adds tutor_conversations/tutor_turns. A chat's endpoint/model are immutable; new owner requires New chat. Opening history never connects. Use the displayed saved owner even before a connection exists. Send stores a pending question before starting HTTP, then terminal reply saves atomically with a conversation revision check. No worker SQLite/Tk calls.
+- New chat keeps history; delete confirms and checks revision. Keep drafts on failed writes/reads and same-conversation reload. A terminal save failure retains reply text, blocks Send/history changes and normal Quit until Retry save reply or confirmed Discard unsaved. Discard keeps the next prompt. Quit brings hidden save errors to AI Tutor.
+- Normal close saves visible partial text as interrupted. Abrupt crashes can leave pending questions and lose uncheckpointed stream text. Recovery is explicit, confirms that another window may be active and invalidates late writers. Never feed pending/stopped/failed/interrupted text into model context. Validate chunks before enqueue so unsupported controls cannot create an unsaveable reply.
+- Titles trim after truncation. Backup validation includes text, exact ordered 1–12 turns, pending-only-last/empty-answer and revision = 2*turn_count - pending_last. Preserve both new tables and sequences on backup/restore. Restore accepts current schema 7 only; migrate a separate copy of an older trusted backup via startup before exporting a current backup.
+- Run test_tutor_history.py, check_tutor_history.py and affected Tutor/Settings/backup checks. CI includes thirteen native scripts. Keep TUTOR_HISTORY.md and related user guides aligned in all four languages; published labels stay v0.11.1 until release authorization.

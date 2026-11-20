@@ -18,6 +18,6 @@ Reports include history beyond the other screens' 20-row display limits. Deletin
 
 ## Implementation and limits
 
-`statistics_page.py` renders the report; `study_statistics.py` runs queries through `Store.statistics()`. Four aggregates share one read transaction. The feature introduced no schema change (schema 5 at v0.6.0; current schema is 6) or new dependencies and does not write data. Refresh is manual or on reopening, without a background timer. Read failures keep the previous report with a retry notice; it may be stale.
+`statistics_page.py` renders the report; `study_statistics.py` runs queries through `Store.statistics()`. Four aggregates share one read transaction. The feature introduced no schema change (schema 5 at v0.6.0; current schema is 7) or new dependencies and does not write data. Refresh is manual or on reopening, without a background timer. Read failures keep the previous report with a retry notice; it may be stale.
 
-Export, custom date ranges, subject filters and advanced charts remain future work. AI Tutor provides separate optional session chat through Ollama.
+Export, custom date ranges, subject filters and advanced charts remain future work. AI Tutor provides separate optional chat with local history through Ollama.

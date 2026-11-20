@@ -103,6 +103,12 @@ class OllamaClientTests(unittest.TestCase):
             self.client.models(control)
         self.assertEqual(self.fixture.requests, [])
 
+    def test_control_character_reply_is_rejected_before_emitting_invalid_text(self):
+        self.fixture.mode='control';received=[]
+        with self.assertRaisesRegex(OllamaError,'invalid streamed'):
+            OllamaClient(self.fixture.url).chat('m',[],RequestControl(),received.append)
+        self.assertEqual(received,['Hello '])
+
     def test_stop_interrupts_read_even_when_server_closes_connection(self):
         self.fixture.mode = 'slow'
         task = TutorTask('chat', self.fixture.url, model='m', messages=[])

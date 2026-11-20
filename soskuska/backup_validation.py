@@ -65,7 +65,7 @@ def validate_records(store, tables, check):
     if len({r[0] for r in sequences}) != len(sequences):
         raise ValueError('Duplicate saved ID sequences.')
     for name, seq in sequences:
-        if name not in ('subjects','topics','questions','practice_attempts','decks','flashcards','review_events'):
+        if name not in ('subjects','topics','questions','practice_attempts','decks','flashcards','review_events','tutor_conversations','tutor_turns'):
             raise ValueError('Unexpected saved ID sequence.')
         if seq < db.execute(f'SELECT COALESCE(MAX(id),0) FROM "{name}"').fetchone()[0]:
             raise ValueError('Saved ID sequence is behind existing data.')
@@ -74,6 +74,27 @@ def validate_records(store, tables, check):
         raise ValueError('The backup contains invalid preferences.')
 
     names = {r[0] for r in sequences}
-    for name in ('subjects','topics','questions','practice_attempts','decks','flashcards','review_events'):
+    for name in ('subjects','topics','questions','practice_attempts','decks','flashcards','review_events','tutor_conversations','tutor_turns'):
         if name not in names and db.execute(f'SELECT 1 FROM "{name}" LIMIT 1').fetchone():
             raise ValueError('Missing saved ID sequence.')
+
+    from tutor_history import owner_fields, turn_fields
+    from csv_import import safe_text
+    for conversation in db.execute('SELECT * FROM tutor_conversations'):
+        check()
+        if owner_fields(conversation['endpoint'],conversation['model']) != (conversation['endpoint'],conversation['model']):
+            raise ValueError('Invalid conversation owner.')
+        title = safe_text(conversation['title'])
+        if not title or len(title)>80 or ' '.join(title.split())!=title or conversation['revision']<0:
+            raise ValueError('Invalid conversation title or revision.')
+        turns = list(db.execute('SELECT * FROM tutor_turns WHERE conversation_id=? ORDER BY position',(conversation['id'],)))
+        if not 1 <= len(turns) <= 12 or [r['position'] for r in turns]!=list(range(len(turns))):
+            raise ValueError('Invalid conversation turn positions.')
+        if conversation['revision'] != 2*len(turns)-int(turns[-1]['status']=='pending'):
+            raise ValueError('Invalid conversation revision.')
+        for index, turn in enumerate(turns):
+            check()
+            if turn_fields(turn['prompt'],turn['answer'],turn['language'],turn['status']) != (turn['prompt'],turn['answer'],turn['language'],turn['status']):
+                raise ValueError('Invalid conversation text.')
+            if turn['status']=='pending' and (index!=len(turns)-1 or turn['answer']):
+                raise ValueError('Invalid unfinished conversation reply.')

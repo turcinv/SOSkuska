@@ -33,8 +33,8 @@ Each answer and navigation position saves immediately. Use Clear answer, Previou
 
 - [Flashcards](FLASHCARDS.md): create a deck for a subject, edit cards, Study due, reveal and self-rate Again / Hard / Good / Easy. The app saves next due dates and history. This is custom scheduling, not measured mastery.
 - [Statistics](STATISTICS.md): choose Last 7 days, Last 30 days or All time to inspect saved focus time, question-weighted completed-test accuracy, self-rating counts and daily activity. Refresh or reopening gets a new snapshot.
-- [AI Tutor](AI_TUTOR.md): explicitly Connect / refresh your Ollama server, choose model/language and Send. Replies stream; Stop cancels. Other screens remain usable without Ollama. Chat is in memory and disappears on closing.
-- [Settings](SETTINGS.md): explicitly save the next focus duration, daily goal and AI choices. No automatic connection occurs. Active/paused sessions keep their original duration; only the next session changes. Preferences persist, chat does not.
+- [AI Tutor](AI_TUTOR.md): explicitly Connect / refresh your Ollama server, choose model/language and Send. Replies stream; Stop cancels. Other screens remain usable without Ollama. Chat is saved locally and can be reopened after closing.
+- [Settings](SETTINGS.md): explicitly save the next focus duration, daily goal and AI choices. No automatic connection occurs. Active/paused sessions keep their original duration; only the next session changes. Preferences and conversations persist separately.
 
 ## Deletion and error recovery
 
@@ -50,16 +50,20 @@ Long text editors contain their own scrolling, including at boundaries and over 
 
 On macOS, the default is `~/Library/Application Support/SOSkuska/dashboard.sqlite3`; Windows uses `%LOCALAPPDATA%\SOSkuska\dashboard.sqlite3`, Linux uses `$XDG_DATA_HOME/SOSkuska/dashboard.sqlite3` or `~/.local/share/SOSkuska/dashboard.sqlite3`. If no new database exists but legacy `ExamPrep/dashboard.sqlite3` does, the app continues using that file without moving it. Migration preserves records without assigning invented subjects to old sessions. `--data` selects another file.
 
-There is no automatic synchronization, encryption or backup. Focus time is not continuously persisted, so a crash may lose the active session. Sessions crossing midnight belong entirely to their save day. UI translations, saved AI conversations and installers remain future work. See [current architecture](CURRENT_ARCHITECTURE.md) for details.
+There is no automatic synchronization, encryption or backup. Focus time is not continuously persisted, so a crash may lose the active session. Sessions crossing midnight belong entirely to their save day. UI translations and installers remain future work. See [current architecture](CURRENT_ARCHITECTURE.md) for details.
 
 ## Backup and restore
 
-Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Schema stays 6. Restore closes the app; reopen it afterward. See [Backup and restore](BACKUP_RESTORE.md).
+Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Current schema is 7. Restore closes the app; reopen it afterward. See [Backup and restore](BACKUP_RESTORE.md).
 
 ## Import questions from CSV
 
-Question bank now supports UTF-8 CSV import into an existing subject, with a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records; question lists show 50 per page. Schema stays 6. [Question CSV import](QUESTION_CSV_IMPORT.md).
+Question bank now supports UTF-8 CSV import into an existing subject, with a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records; question lists show 50 per page. Current schema is 7. [Question CSV import](QUESTION_CSV_IMPORT.md).
 
 ## Import flashcards from CSV
 
-Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Schema stays 6. [Import flashcards from CSV](FLASHCARD_CSV_IMPORT.md).
+Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Current schema is 7. [Import flashcards from CSV](FLASHCARD_CSV_IMPORT.md).
+
+## Saved AI Tutor conversations
+
+AI Tutor now saves conversations locally, including the original server/model and reply status. Open saved history without networking, reconnect explicitly to continue, or delete a selected conversation after confirmation. Schema 7 migrates existing study data transactionally; the published release remains v0.11.1 until a new release is authorized. [Saved AI Tutor conversations](TUTOR_HISTORY.md).

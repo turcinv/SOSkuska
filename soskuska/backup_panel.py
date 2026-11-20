@@ -27,7 +27,7 @@ class BackupPanel(ctk.CTkFrame):
         self.closed = False
         self.grid_columnconfigure(0, weight=1)
         app.label(self, 'Backup and restore', 20, bold=True).grid(row=0, column=0, sticky='w', pady=(12, 8))
-        self.status = app.label(self, 'Backups contain saved data and preferences, not unsaved drafts or AI chat. Restore replaces saved data and closes the app. Only schema 6 backups are supported.', 12, 'secondary', wraplength=600)
+        self.status = app.label(self, 'Backups contain saved data and preferences, including saved AI conversations, not unsaved drafts. Restore replaces saved data and closes the app. Only schema 7 backups are supported.', 12, 'secondary', wraplength=600)
         self.status.grid(row=1, column=0, sticky='ew', pady=(0, 12))
         actions = app.frame(self)
         actions.grid(row=2, column=0, sticky='w')
@@ -38,7 +38,7 @@ class BackupPanel(ctk.CTkFrame):
         self.confirmation = app.frame(self)
         self.confirmation.grid(row=3, column=0, sticky='ew', pady=(12, 0))
         self.confirmation.grid_remove()
-        app.label(self.confirmation, 'Restore replaces all saved data and preferences. Unsaved forms and this session’s AI chat will be lost. The app will close; reopen it afterward. A safety copy is saved beside the database in backups/.', 12, 'secondary', wraplength=600).pack(anchor='w', pady=(0, 8))
+        app.label(self.confirmation, 'Restore replaces all saved data and preferences. Unsaved forms will be lost; saved conversations are replaced by those in the backup. The app will close; reopen it afterward. A safety copy is saved beside the database in backups/.', 12, 'secondary', wraplength=600).pack(anchor='w', pady=(0, 8))
         self.confirm_button = app.button(self.confirmation, 'Confirm restore and close', self.confirm, width=210)
         self.confirm_button.pack(side='left', padx=(0, 8))
         self.cancel_button = app.button(self.confirmation, 'Cancel', self.cancel_pending, width=90)
@@ -58,6 +58,8 @@ class BackupPanel(ctk.CTkFrame):
     def guard_restore(self):
         if self.app.session_open:
             raise ValueError('Finish the current focus session before restoring.')
+        if self.app.tutor_page.unsaved_reply:
+            raise ValueError('Retry save reply or Discard unsaved in AI Tutor before restoring.')
         if self.app.tutor_page.task is not None:
             raise ValueError('Wait for or stop the Tutor request before restoring.')
         if self.app.store.active_practice() is not None:

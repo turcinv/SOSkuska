@@ -147,7 +147,7 @@ class PreferencesMigrationTests(unittest.TestCase):
     def test_schema_five_migration_keeps_all_content_and_history(self):
         store=Store(self.path)
         try:
-            self.assertEqual(store.db.execute('PRAGMA user_version').fetchone()[0],6)
+            self.assertEqual(store.db.execute('PRAGMA user_version').fetchone()[0],SCHEMA_VERSION)
             for table,rows in self.before.items():
                 self.assertEqual([tuple(r) for r in store.db.execute(f'SELECT * FROM {table}')],rows,table)
             self.assertEqual(store.preferences()['revision'],0)

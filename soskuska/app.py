@@ -594,7 +594,7 @@ class Dashboard(ctk.CTk):
         if any(fields[key] != self.preferences[key] for key in AI_KEYS) and tutor.task is not None:
             raise ValueError("Wait for or stop the Tutor request before changing AI preferences.")
         if (fields["ollama_endpoint"] != self.preferences["ollama_endpoint"] and tutor.turns
-                and fields["ollama_endpoint"] != tutor.connected_endpoint):
+                and fields["ollama_endpoint"] != (tutor.conversation_endpoint or tutor.connected_endpoint)):
             raise ValueError("Start a New chat in AI Tutor before saving a different server.")
 
     def apply_preferences(self, saved):
@@ -643,6 +643,9 @@ class Dashboard(ctk.CTk):
             return
         self.settings_page.backups.cancel_pending()
         if self.session_open and not self.finish_focus():
+            return
+        if not self.tutor_page.prepare_close():
+            self.navigate("AI Tutor")
             return
         self.tutor_page.shutdown()
         self.store.close()

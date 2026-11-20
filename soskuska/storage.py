@@ -12,7 +12,7 @@ from preferences import DEFAULTS, preference_fields
 from database_lock import DatabaseLease
 from csv_import import ImportValidationError, validate_rows, signature
 
-SCHEMA_VERSION = 6
+SCHEMA_VERSION = 7
 
 
 def default_database(base):
@@ -190,7 +190,98 @@ class Store:
                     answer_language TEXT NOT NULL,
                     revision INTEGER NOT NULL DEFAULT 0 CHECK(revision>=0))""")
                 self.db.execute("INSERT INTO preferences VALUES (1,?,?,?,?,?,0)", tuple(DEFAULTS.values()))
+            if version < 7:
+                self.db.execute("""CREATE TABLE tutor_conversations (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL,
+                    endpoint TEXT NOT NULL, model TEXT NOT NULL,
+                    revision INTEGER NOT NULL DEFAULT 0 CHECK(revision>=0),
+                    created_at TEXT NOT NULL, updated_at TEXT NOT NULL)""")
+                self.db.execute("""CREATE TABLE tutor_turns (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    conversation_id INTEGER NOT NULL REFERENCES tutor_conversations(id) ON DELETE CASCADE,
+                    position INTEGER NOT NULL CHECK(position BETWEEN 0 AND 11),
+                    prompt TEXT NOT NULL, answer TEXT NOT NULL DEFAULT '', language TEXT NOT NULL,
+                    status TEXT NOT NULL CHECK(status IN ('pending','completed','stopped','failed','interrupted')),
+                    created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+                    UNIQUE(conversation_id,position))""")
+                self.db.execute('CREATE INDEX tutor_history_recent ON tutor_conversations(updated_at DESC,id DESC)')
             self.db.execute(f"PRAGMA user_version = {SCHEMA_VERSION}")
+
+    def tutor_conversations(self, offset=0):
+        if type(offset) is not int or offset < 0:
+            raise ValueError('Invalid conversation page.')
+        return [dict(row) for row in self.db.execute(
+            'SELECT * FROM tutor_conversations ORDER BY updated_at DESC,id DESC LIMIT 21 OFFSET ?', (offset,))]
+
+    def tutor_conversation(self, conversation_id):
+        with self.db:
+            self.db.execute('BEGIN')
+            row = self.db.execute('SELECT * FROM tutor_conversations WHERE id=?', (conversation_id,)).fetchone()
+            if row is None:
+                raise ValueError('This conversation was deleted. Start a New chat or refresh history.')
+            result = dict(row)
+            result['turns'] = [dict(r) for r in self.db.execute(
+                'SELECT * FROM tutor_turns WHERE conversation_id=? ORDER BY position', (conversation_id,))]
+        return result
+
+    def begin_tutor_turn(self, conversation_id, endpoint, model, prompt, language, *, expected_revision=0):
+        from tutor_history import owner_fields, turn_fields
+        endpoint, model = owner_fields(endpoint, model)
+        prompt, _, language, _ = turn_fields(prompt, '', language, 'pending')
+        now = utc_now().isoformat()
+        with self.db:
+            self.db.execute('BEGIN IMMEDIATE')
+            if conversation_id is None:
+                title = ' '.join(prompt.split())[:80].rstrip()
+                conversation_id = self.db.execute(
+                    'INSERT INTO tutor_conversations(title,endpoint,model,created_at,updated_at) VALUES (?,?,?,?,?)',
+                    (title, endpoint, model, now, now)).lastrowid
+                revision = 0
+            else:
+                row = self.db.execute('SELECT * FROM tutor_conversations WHERE id=?', (conversation_id,)).fetchone()
+                if row is None or row['revision'] != expected_revision:
+                    raise ValueError('This conversation changed. Reopen it before sending; your prompt is kept.')
+                if (row['endpoint'], row['model']) != (endpoint, model):
+                    raise ValueError('Start a New chat before changing this conversation’s server or model.')
+                revision = row['revision']; title = row['title']
+            turns = self.db.execute('SELECT status FROM tutor_turns WHERE conversation_id=? ORDER BY position', (conversation_id,)).fetchall()
+            if len(turns) >= 12:
+                raise ValueError('This conversation has 12 turns. Start a New chat to continue.')
+            if any(row['status']=='pending' for row in turns):
+                raise ValueError('This conversation has an unfinished reply. Mark it interrupted before continuing.')
+            turn_id = self.db.execute(
+                'INSERT INTO tutor_turns(conversation_id,position,prompt,language,status,created_at,updated_at) VALUES (?,?,?,?,?,?,?)',
+                (conversation_id,len(turns),prompt,language,'pending',now,now)).lastrowid
+            self.db.execute('UPDATE tutor_conversations SET revision=?,updated_at=? WHERE id=?', (revision+1,now,conversation_id))
+        return {'id':conversation_id,'turn_id':turn_id,'revision':revision+1,'title':title,'endpoint':endpoint,'model':model}
+
+    def finish_tutor_turn(self, conversation_id, turn_id, answer, status, *, expected_revision):
+        from tutor_history import TERMINAL
+        from csv_import import safe_text
+        answer = safe_text(answer)
+        if len(answer)>16000 or status not in TERMINAL:
+            raise ValueError('Invalid saved reply.')
+        with self.db:
+            self.db.execute('BEGIN IMMEDIATE')
+            row = self.db.execute('SELECT revision FROM tutor_conversations WHERE id=?', (conversation_id,)).fetchone()
+            turn = self.db.execute('SELECT * FROM tutor_turns WHERE id=? AND conversation_id=?', (turn_id,conversation_id)).fetchone()
+            # A retry after a known terminal save cannot append or change another reply.
+            if row and turn and row['revision']==expected_revision+1 and turn['answer']==answer and turn['status']==status:
+                return row['revision']
+            if row is None or turn is None or row['revision']!=expected_revision or turn['status']!='pending':
+                raise ValueError('This conversation changed or was deleted. Copy the unsaved reply, then Discard unsaved and reopen history.')
+            now = utc_now().isoformat()
+            self.db.execute('UPDATE tutor_turns SET answer=?,status=?,updated_at=? WHERE id=?', (answer,status,now,turn_id))
+            self.db.execute('UPDATE tutor_conversations SET revision=revision+1,updated_at=? WHERE id=?', (now,conversation_id))
+        return expected_revision+1
+
+    def delete_tutor_conversation(self, conversation_id, *, expected_revision):
+        with self.db:
+            self.db.execute('BEGIN IMMEDIATE')
+            row = self.db.execute('SELECT revision FROM tutor_conversations WHERE id=?', (conversation_id,)).fetchone()
+            if row is None or row['revision']!=expected_revision:
+                raise ValueError('This conversation changed or was deleted. Refresh history and confirm again.')
+            self.db.execute('DELETE FROM tutor_conversations WHERE id=?', (conversation_id,))
 
     def task(self, name, default=False):
         row = self.db.execute("SELECT done FROM tasks WHERE day=? AND name=?",

@@ -14,7 +14,7 @@ import backup
 from backup import TABLES, PreparedBackup, create_backup, restore_backup
 from database_lock import DatabaseLease
 from preferences import DEFAULTS
-from storage import Store
+from storage import Store, SCHEMA_VERSION
 
 
 class BackupTests(unittest.TestCase):
@@ -148,7 +148,7 @@ class BackupTests(unittest.TestCase):
 
     def test_old_future_and_unrelated_backups_are_rejected_without_changing_current(self):
         before=self.rows(self.active)
-        for version in [5,7]:
+        for version in [SCHEMA_VERSION-1,SCHEMA_VERSION+1]:
             path=self.folder/f'v{version}.sqlite3';s=Store(path);s.close()
             with closing(sqlite3.connect(path)) as db, db:db.execute(f'PRAGMA user_version={version}')
             with self.assertRaises(ValueError):PreparedBackup(path,self.active)
