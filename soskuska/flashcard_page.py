@@ -6,6 +6,7 @@ from functools import wraps
 import customtkinter as ctk
 from practice import utc_now
 from repetition import RATINGS, next_review
+from csv_import_panel import CsvImportPanel
 
 
 def safe(method):
@@ -24,6 +25,7 @@ class FlashcardPage(ctk.CTkFrame):
         self.app = app
         self.view = "decks"
         self.deck_id = None
+        self.deck_snapshot = None
         self.editing_deck = None
         self.editing_card = None
         self.editing_revision = None
@@ -43,11 +45,19 @@ class FlashcardPage(ctk.CTkFrame):
         app.button(toolbar, "All decks", self.show_decks, width=110).pack(side="left", padx=(0, 8))
         app.button(toolbar, "Review history", self.show_history, width=140).pack(side="left", padx=(0, 8))
         app.button(toolbar, "Refresh", self.refresh, width=90).pack(side="left")
+        self.importer = CsvImportPanel(self, app, self, cards=True)
+        self.importer.grid(row=3, column=0, sticky="ew", pady=(0,18));self.importer.grid_remove()
         self.body = app.frame(self)
-        self.body.grid(row=3, column=0, sticky="ew")
+        self.body.grid(row=4, column=0, sticky="ew")
         self.body.grid_columnconfigure(0, weight=1)
 
-    def clear(self, view):
+    def clear(self, view, *, preserve_import=False):
+        if self.importer.saving:
+            raise ValueError("Wait for the flashcard import to finish.")
+        if not preserve_import:
+            self.importer.cancel()
+        if view != "deck":
+            self.deck_snapshot = None
         for child in self.body.winfo_children():
             child.destroy()
         self.view = view
@@ -126,14 +136,23 @@ class FlashcardPage(ctk.CTkFrame):
 
     @safe
     def show_deck(self, deck_id):
+        self._show_deck(deck_id)
+
+    def refresh_csv_totals(self):
+        self._show_deck(self.deck_id, preserve_import=True)
+
+    def _show_deck(self, deck_id, *, preserve_import=False):
+        search_draft = self.search.get() if preserve_import and self.view == "deck" else self.query.get()
         deck = self.app.store.deck(deck_id)
         if deck is None:
-            self.show_decks()
+            if not preserve_import:
+                self.show_decks()
             raise ValueError("This deck no longer exists.")
         cards = self.app.store.flashcards(deck_id, self.query.get())
         due = self.app.store.due_flashcards(deck_id)
         self.deck_id = deck_id
-        self.clear("deck")
+        self.clear("deck", preserve_import=preserve_import)
+        self.deck_snapshot = dict(deck)
         self.queue = []
         self.current_card = None
         head = self.app.frame(self.body, card=True)
@@ -152,12 +171,14 @@ class FlashcardPage(ctk.CTkFrame):
         self.study_button.configure(state="normal" if due else "disabled")
         self.app.button(actions, "Edit deck", lambda: self.deck_form(deck_id), width=100).pack(side="left", padx=(0, 8))
         self.app.button(actions, "Delete deck", lambda: self.ask_delete("deck", deck_id), width=115).pack(side="left")
+        self.csv_button = self.app.button(actions, "Import CSV", self.importer.open, width=110)
+        self.csv_button.pack(side="left", padx=(8,0))
         search = self.app.frame(self.body)
         search.grid(row=2, column=0, sticky="ew", pady=(0, 14))
         search.grid_columnconfigure(0, weight=1)
         self.search = ctk.CTkEntry(search, height=38, placeholder_text="Search front or back…", font=self.app.font())
         self.search.grid(row=0, column=0, sticky="ew", padx=(0, 8))
-        self.search.insert(0, self.query.get())
+        self.search.insert(0, search_draft)
         self.app.button(search, "Search", self.search_cards, width=90).grid(row=0, column=1)
         self.app.label(self.body, f"{len(cards)} matching cards · showing up to 100. Narrow the search for more.", 13, "secondary", wraplength=650).grid(row=3, column=0, sticky="ew", pady=(0, 12))
         if not cards:

@@ -109,7 +109,7 @@ def parse_csv(text):
     return {'rows':rows,'errors':errors,'total':total}
 
 
-def read_csv(path):
+def read_csv(path, *, parser=parse_csv):
     path=Path(path)
     if not path.is_file():
         raise ValueError('Choose a regular local CSV file.')
@@ -120,7 +120,7 @@ def read_csv(path):
     try:text=data.decode('utf-8-sig')
     except UnicodeError:
         raise ValueError('Save the CSV as UTF-8 (an optional BOM is supported).') from None
-    return parse_csv(text)
+    return parser(text)
 
 
 def template_text():

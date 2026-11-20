@@ -80,7 +80,7 @@ soskuska-local/    Earlier standalone HTML visual reference
 docs/             English guides; cs/, sk/, ru/ contain translations
 ```
 
-Windows/Linux are primary target platforms; macOS is also the current development environment. Unit CI runs on all three systems; GUI CI runs on Ubuntu/Xvfb, with native checks also run locally on macOS. This does not replace manual Windows/Linux UI or physical scrolling-gesture testing. There is no installer, flashcard import, synchronization, UI translation or saved AI conversation support yet.
+Windows/Linux are primary target platforms; macOS is also the current development environment. Unit CI runs on all three systems; GUI CI runs on Ubuntu/Xvfb, with native checks also run locally on macOS. This does not replace manual Windows/Linux UI or physical scrolling-gesture testing. There is no installer, synchronization, UI translation or saved AI conversation support yet.
 
 ## Backup and restore
 
@@ -89,3 +89,7 @@ Settings now includes manual local backup and validated restore, with a pre-rest
 ## Import questions from CSV
 
 Question bank now supports UTF-8 CSV import into an existing subject, with a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records; question lists show 50 per page. Schema stays 6. [Question CSV import](docs/QUESTION_CSV_IMPORT.md).
+
+## Import flashcards from CSV
+
+Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Schema stays 6. [Import flashcards from CSV](docs/FLASHCARD_CSV_IMPORT.md).

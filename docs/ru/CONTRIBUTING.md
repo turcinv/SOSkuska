@@ -44,10 +44,12 @@ GUI-проверка открывает окно и требует графич�
 
 ## Непрерывная интеграция (CI)
 
-CI: Python 3.12, модульные тесты на трёх системах и одиннадцать GUI-проверок на Ubuntu/Xvfb. [Результаты](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
+CI: Python 3.12, модульные тесты на трёх системах и двенадцать GUI-проверок на Ubuntu/Xvfb. [Результаты](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
 
 ## Статистика (v0.6.0)
 
 В меню **Statistics** выбери Last 7 days, Last 30 days или All time. Экран показывает сохранённое время и занятия, точность завершённых тестов с равным весом вопросов, число собственных оценок карточек, время по предметам и активность по дням. Refresh или возвращение на экран загружает новый снимок. Это не измерение освоения материала.
 
 [Подробные правила](STATISTICS.md).
+
+`tests/test_flashcard_csv_import.py`, `soskuska/check_flashcard_import.py`.

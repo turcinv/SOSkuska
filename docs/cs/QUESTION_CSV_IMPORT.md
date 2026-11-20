@@ -25,4 +25,6 @@ Close import nebo navigace zruší čtení/náhled; samostatné formuláře otá
 
 Banka zobrazuje **50 otázek na stránku**. Hledání/filtry platí pro celý předmět. Úprava či obnova pokud možno zachová stránku; změna filtrů/předmětu vrátí první. Aktivní filtr může skrýt importované otázky.
 
-Šablona se zveřejní atomicky bez přepsání souborů či doprovodných databázových cest. POSIX vyžaduje podporu pevných odkazů; pokud externí disk selže, použij podporovanou místní složku. Schéma zůstává **6**, snímky testů a historie se nemění. Nejde o synchronizaci, aktualizaci/slučování otázek, vyhodnocení tabulkových vzorců ani import kartiček.
+Šablona se zveřejní atomicky bez přepsání souborů či doprovodných databázových cest. POSIX vyžaduje podporu pevných odkazů; pokud externí disk selže, použij podporovanou místní složku. Schéma zůstává **6**, snímky testů a historie se nemění. Nejde o synchronizaci, aktualizaci/slučování otázek, vyhodnocení tabulkových vzorců ani import kartiček na této obrazovce.
+
+[Import kartiček z CSV](FLASHCARD_CSV_IMPORT.md)

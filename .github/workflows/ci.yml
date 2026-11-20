@@ -88,6 +88,7 @@ jobs:
               'check_settings.py',
               'check_backup.py',
               'check_csv_import.py',
+              'check_flashcard_import.py',
           ):
               print(f'Running {script}', flush=True)
               subprocess.run([sys.executable, '-u', f'soskuska/{script}'], check=True, timeout=60)

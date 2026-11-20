@@ -10,19 +10,23 @@ from csv_import import ImportValidationError, read_csv, template_text
 from storage import Store
 
 
+def publish_template(active, selected, contents):
+    target=protect_path(selected,active)
+    if target.exists():
+        raise FileExistsError('Choose an unused filename; existing files are never overwritten.')
+    with tempfile.TemporaryDirectory(prefix='.soskuska-csv-template-',dir=target.parent) as folder:
+        staging=Path(folder)/'template.csv'
+        staging.write_bytes(contents.encode('utf-8'))
+        if os.name=='nt':os.rename(staging,target)
+        else:
+            os.link(staging,target)
+            staging.unlink()
+    return str(target)
+
+
 def run(kind, active, selected, subject_id, subject_name):
     if kind=='template':
-        target=protect_path(selected,active)
-        if target.exists():
-            raise FileExistsError('Choose an unused filename; existing files are never overwritten.')
-        with tempfile.TemporaryDirectory(prefix='.soskuska-csv-template-',dir=target.parent) as folder:
-            staging=Path(folder)/'template.csv'
-            staging.write_bytes(template_text().encode('utf-8'))
-            if os.name=='nt':os.rename(staging,target)
-            else:
-                os.link(staging,target)
-                staging.unlink()
-        return str(target)
+        return publish_template(active,selected,template_text())
     if not Path(active).is_file():
         raise ValueError('The active database file is missing. Reopen the app before importing.')
     if kind=='parse':

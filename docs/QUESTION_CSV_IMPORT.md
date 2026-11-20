@@ -2,7 +2,7 @@
 
 [English](QUESTION_CSV_IMPORT.md) · [Čeština](cs/QUESTION_CSV_IMPORT.md) · [Slovenčina](sk/QUESTION_CSV_IMPORT.md) · [Русский](ru/QUESTION_CSV_IMPORT.md)
 
-Open **My Subjects → Questions → Import CSV** in an existing subject. The file adds questions to that subject only; it never creates a subject or edits existing questions. This first import feature does not import flashcards.
+Open **My Subjects → Questions → Import CSV** in an existing subject. The file adds questions to that subject only; it never creates a subject or edits existing questions. Flashcard CSV import is available separately in Flashcards.
 
 ## Prepare a file
 
@@ -25,4 +25,6 @@ Close import or navigation cancels a file-read preview and preserves separate qu
 
 The question bank now displays **50 questions per page**. Search and filters apply to the entire subject, not just the current page. Editing/refresh preserves the current page where possible; changing filters or subjects returns to page 1. Existing filters can hide newly imported questions.
 
-Template files are published atomically without overwriting existing files or database companion paths. On POSIX, no-overwrite publication requires a filesystem supporting hard links; if an external drive rejects it, use a supported local folder. Schema stays **6** and existing practice snapshots/history are unaffected. Import is not synchronization, merge/update, spreadsheet-formula evaluation or flashcard import.
+Template files are published atomically without overwriting existing files or database companion paths. On POSIX, no-overwrite publication requires a filesystem supporting hard links; if an external drive rejects it, use a supported local folder. Schema stays **6** and existing practice snapshots/history are unaffected. Import is not synchronization, merge/update, spreadsheet-formula evaluation or flashcard import in this screen.
+
+[Import flashcards from CSV](FLASHCARD_CSV_IMPORT.md)

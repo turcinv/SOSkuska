@@ -23,4 +23,8 @@ The maximum is 365 days. Due dates are UTC and displayed in local time. System-c
 
 Review history shows the latest 20 ratings with front/back, deck/subject names and due-date snapshots. Older rows remain stored. Deleting a subject keeps its decks/cards and historical subject name. Deleting a card or deck needs confirmation and retains review history. A changed deck name/card count requires a refreshed deletion confirmation. Stale edits/ratings are rejected instead of overwriting newer content. Write errors preserve form drafts and revealed answers for retry.
 
-Import, conversion from questions and AI material integration remain planned. Aggregate activity is in [Statistics](STATISTICS.md).
+Conversion from questions and AI material integration remain planned. Aggregate activity is in [Statistics](STATISTICS.md).
+
+## Import flashcards from CSV
+
+Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Schema stays 6. [Import flashcards from CSV](FLASHCARD_CSV_IMPORT.md).

@@ -568,6 +568,40 @@ class Store:
         row = self.db.execute("SELECT * FROM flashcards WHERE id=?", (card_id,)).fetchone()
         return dict(row) if row else None
 
+    def _check_flashcard_import(self, deck_id, rows, expected_deck_name):
+        from flashcard_csv_import import validate_rows
+        normalized, errors = validate_rows(rows)
+        deck = self.deck(deck_id)
+        if deck is None or deck['name'] != expected_deck_name:
+            errors.append('The deck was renamed or deleted. Reopen it and choose the CSV again.')
+            return normalized, errors
+        signatures = {tuple(row['fields']): row['record'] for row in normalized}
+        fronts = list(dict.fromkeys(row['fields'][0] for row in normalized))
+        if fronts:
+            marks = ','.join('?' for _ in fronts)
+            for card in self.db.execute(f'SELECT front,back FROM flashcards WHERE deck_id=? AND front IN ({marks})', [deck_id, *fronts]):
+                key = (card['front'], card['back'])
+                if key in signatures:
+                    errors.append(f'CSV record {signatures[key]}: This front and back already exist in the deck.')
+        return normalized, errors
+
+    def check_flashcard_import(self, deck_id, rows, *, expected_deck_name):
+        with self.db:
+            self.db.execute('BEGIN')
+            return self._check_flashcard_import(deck_id, rows, expected_deck_name)[1]
+
+    def import_flashcards(self, deck_id, rows, *, expected_deck_name):
+        from csv_import import ImportValidationError
+        with self.db:
+            self.db.execute('BEGIN IMMEDIATE')
+            normalized, errors = self._check_flashcard_import(deck_id, rows, expected_deck_name)
+            if errors:
+                raise ImportValidationError(errors)
+            due = utc_now().isoformat()
+            self.db.executemany('INSERT INTO flashcards(deck_id,front,back,due_at) VALUES (?,?,?,?)',
+                                [(deck_id, *row['fields'], due) for row in normalized])
+        return {'cards': len(normalized), 'deck': expected_deck_name}
+
     def create_flashcard(self, deck_id, front, back):
         front, back = card_fields(front, back)
         with self.db:
