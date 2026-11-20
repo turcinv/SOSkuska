@@ -2,6 +2,14 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
+## 0.11.1 — 2026-11-20
+
+Root AGENTS.md is about 86% smaller (27.4 KB to 3.9 KB), with explicit `@` file references and a routing table. All 20 previous instruction sections are preserved across five focused English agent guides. References instruct the agent to read the files; they do not rely on automatic transclusion.
+
+Dated session lessons record project preferences, review/release flow and safeguards for imports, Tk processes and unfinished drafts. English, Czech, Slovak and Russian versions are linked from their READMEs. The v0.11.0 handoff remains a historical baseline. Application study behavior and schema 6 are unchanged.
+
+Validation: documentation review found no blocking issues; all original sections, local links/fences, `@` targets and language navigation were checked. All four documentation PR CI jobs passed. Release-label changes passed version, syntax and documentation checks.
+
 ## 0.11.0 — 2026-11-20
 
 Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Schema stays 6. [Import flashcards from CSV](docs/FLASHCARD_CSV_IMPORT.md).
