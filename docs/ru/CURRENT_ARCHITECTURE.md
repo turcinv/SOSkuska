@@ -2,7 +2,7 @@
 
 [English](../CURRENT_ARCHITECTURE.md) · [Čeština](../cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](../sk/CURRENT_ARCHITECTURE.md) · [Русский](CURRENT_ARCHITECTURE.md)
 
-Состояние на 19 ноября 2026 года (v0.10.0). Реализованы Dashboard, My Subjects, Question bank, Practice Tests, Flashcards, Statistics и необязательный AI Tutor и Settings; следующие шаги описаны в [планируемой архитектуре](PLANNED_ARCHITECTURE.md).
+Состояние на 20 ноября 2026 года (v0.11.0). Реализованы Dashboard, My Subjects, Question bank, Practice Tests, Flashcards, Statistics и необязательный AI Tutor и Settings; следующие шаги описаны в [планируемой архитектуре](PLANNED_ARCHITECTURE.md).
 
 ## Технологии и файлы
 

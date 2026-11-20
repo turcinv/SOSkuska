@@ -3,9 +3,11 @@
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
 
-## Nevydané
+## 0.11.0 — 2026-11-20
 
 Flashcards nyní podporuje import UTF-8 CSV do existujícího balíčku: šablonu s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů. Nové kartičky jsou ihned splatné; původní termíny a historie hodnocení zůstávají zachované. Schéma zůstává 6. [Import kartiček z CSV](FLASHCARD_CSV_IMPORT.md).
+
+Ověření: 202 jednotkových testů a všech dvanáct nativních GUI kontrol prošlo lokálně na macOS. Nálezy nezávislé kontroly Sol byly opravené a znovu zkontrolované. Všechny čtyři CI úlohy funkčního PR prošly: jednotkové testy na Linuxu, Windows a macOS a všech dvanáct GUI kontrol na Ubuntu/Xvfb.
 
 ## 0.10.0 — 2026-11-19
 
