@@ -97,7 +97,7 @@ Use the corresponding environment executable on Windows/Linux. For example:
 
 Checks print `PASS` and close their windows on success. They never use the normal user database. The Dashboard script has a 12-second Tk safeguard, not a hard process timeout if the event loop freezes; use Ctrl+C in that case. CI adds a 60-second external timeout per script.
 
-Backup/restore validation on this branch passed 244 unit tests and fifteen native checks locally. Do not present old results as validation of untested code changes. Coverage includes:
+Backup/restore validation on this branch passed 251 unit tests and fifteen native checks locally. Do not present old results as validation of untested code changes. Coverage includes:
 
 | Check / tests | Main coverage |
 | --- | --- |

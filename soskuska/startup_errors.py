@@ -4,7 +4,7 @@ import sys
 
 def report_startup_error(error):
     message = f'Could not open the study workspace: {error}'
-    if getattr(sys, 'frozen', False) and sys.stderr is None:
+    if getattr(sys, 'frozen', False):
         from tkinter import messagebox
         messagebox.showerror('SOSkúška — Startup error', message)
     else:

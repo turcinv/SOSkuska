@@ -122,7 +122,7 @@ Integračná kontrola po novom overuje aj skutočné prepnutie stĺpcov pri zmen
 
 ## Banka tém a otázok
 
-Kontrolu banky otázok spustíš príkazom nižšie. Používa dočasnú databázu a krátko otvorí okno. Overuje CRUD, validáciu, kombinované filtre, kompaktný editor a posúvanie, izoláciu predmetov, mazanie a opätovné otvorenie. `tests/test_questions.py` navyše overuje migráciu zo schémy 2, Unicode a konzistenciu počtov. Spolu je 244 testov bez GUI a pätnásť natívnych kontrol. Všetky prešli na macOS; Windows/Linux a fyzický trackpad týmto nie sú overené.
+Kontrolu banky otázok spustíš príkazom nižšie. Používa dočasnú databázu a krátko otvorí okno. Overuje CRUD, validáciu, kombinované filtre, kompaktný editor a posúvanie, izoláciu predmetov, mazanie a opätovné otvorenie. `tests/test_questions.py` navyše overuje migráciu zo schémy 2, Unicode a konzistenciu počtov. Spolu je 251 testov bez GUI a pätnásť natívnych kontrol. Všetky prešli na macOS; Windows/Linux a fyzický trackpad týmto nie sú overené.
 
 ```sh
 .venv-macos/bin/python soskuska/check_question_bank.py
@@ -130,7 +130,7 @@ Kontrolu banky otázok spustíš príkazom nižšie. Používa dočasnú databá
 
 ## Opravy po kontrole hlavnej vetvy
 
-Nová kontrola `check_review_fixes.py` používa dočasné databázy a overuje zrušenie starého potvrdenia, zmenu obsahu z druhého pripojenia, skutočný exkluzívny SQLite zámok pri polnoci, opakovanie obnovy, dátum, dokončenie časovača a syntetické posúvanie v dlhom aj krátkom poli. Na macOS navyše v oddelenom procese vyvolá skutočnú položku Quit, overí zachovanie relácie pri chybe zápisu a uloženie pri opakovaní. Spolu je 244 testov bez GUI a pätnásť natívnych kontrol. Prešli na macOS; Windows/Linux a fyzický trackpad týmto nie sú overené.
+Nová kontrola `check_review_fixes.py` používa dočasné databázy a overuje zrušenie starého potvrdenia, zmenu obsahu z druhého pripojenia, skutočný exkluzívny SQLite zámok pri polnoci, opakovanie obnovy, dátum, dokončenie časovača a syntetické posúvanie v dlhom aj krátkom poli. Na macOS navyše v oddelenom procese vyvolá skutočnú položku Quit, overí zachovanie relácie pri chybe zápisu a uloženie pri opakovaní. Spolu je 251 testov bez GUI a pätnásť natívnych kontrol. Prešli na macOS; Windows/Linux a fyzický trackpad týmto nie sú overené.
 
 ```sh
 .venv-macos/bin/python soskuska/check_review_fixes.py
@@ -140,7 +140,7 @@ Kontrola navyše overuje súčasné zlyhanie uloženia relácie a polnočného �
 
 ## Practice Tests — precvičovanie (v0.4.0)
 
-Nová kontrola check_practice.py overuje konfiguráciu, filtre, ukladanie odpovedí vrátane chyby zápisu, potvrdenie/opakovanie dokončenia, nemennú históriu, automatické dokončenie po limite, kompaktné okno a pokračovanie v novom procese. test_practice.py overuje migráciu schémy 3, uchovanie obsahu, skóre, idempotenciu, termíny, validáciu a rollback. Spolu je 244 testov a pätnásť natívnych kontrol. Zmena je overená na macOS; Windows/Linux a fyzické gestá nie sú prakticky overené.
+Nová kontrola check_practice.py overuje konfiguráciu, filtre, ukladanie odpovedí vrátane chyby zápisu, potvrdenie/opakovanie dokončenia, nemennú históriu, automatické dokončenie po limite, kompaktné okno a pokračovanie v novom procese. test_practice.py overuje migráciu schémy 3, uchovanie obsahu, skóre, idempotenciu, termíny, validáciu a rollback. Spolu je 251 testov a pätnásť natívnych kontrol. Zmena je overená na macOS; Windows/Linux a fyzické gestá nie sú prakticky overené.
 
 ```sh
 .venv-macos/bin/python soskuska/check_practice.py
@@ -159,7 +159,7 @@ Automatické testy nie sú ručným overením Windows/macOS/Linux ani fyzického
 
 ## Kartičky a opakovanie (v0.5.0)
 
-check_flashcards.py overuje formuláre, opakované hľadanie, zachovanie rozpísaného textu pri navigácii, odhalenie pred hodnotením, odmietnutie zastaraného hodnotenia, opakovanie po chybe zápisu, termíny, uchovanie histórie a nové spustenie procesu. test_flashcards.py a historický fixtures/schema_v4.sql overujú migráciu a transakcie. Spolu je 244 jednotkových testov a pätnásť natívnych kontrol; CI spúšťa testy na troch systémoch a GUI na Ubuntu/Xvfb.
+check_flashcards.py overuje formuláre, opakované hľadanie, zachovanie rozpísaného textu pri navigácii, odhalenie pred hodnotením, odmietnutie zastaraného hodnotenia, opakovanie po chybe zápisu, termíny, uchovanie histórie a nové spustenie procesu. test_flashcards.py a historický fixtures/schema_v4.sql overujú migráciu a transakcie. Spolu je 251 jednotkových testov a pätnásť natívnych kontrol; CI spúšťa testy na troch systémoch a GUI na Ubuntu/Xvfb.
 
 [Podrobný návod a pravidlá](FLASHCARDS.md).
 
@@ -174,7 +174,7 @@ check_flashcards.py overuje formuláre, opakované hľadanie, zachovanie rozpís
 
 V ponuke **Statistics** zvoľ Last 7 days, Last 30 days alebo All time. Prehľad ukazuje uložený čas a relácie, úspešnosť dokončených testov váženú otázkami, počty vlastných hodnotení kartičiek, čas podľa predmetu a dennú aktivitu. Refresh alebo návrat na obrazovku načíta novú snímku. Nejde o meranie zvládnutia učiva.
 
-Nových 16 testov overuje obdobia, miestne dni, váhu otázok, úplnú históriu, zachovanie po zmazaní, iba čítanie, súbežnú snímku a opakovanie po chybe. Natívna kontrola overuje prázdny stav, filtre, chybu a opakovanie, navigáciu, kompaktné rozloženie, posúvanie a otvorenie v novom procese. Celkovo 244 jednotkových testov a pätnásť natívnych kontrol; používajú dočasné údaje.
+Nových 16 testov overuje obdobia, miestne dni, váhu otázok, úplnú históriu, zachovanie po zmazaní, iba čítanie, súbežnú snímku a opakovanie po chybe. Natívna kontrola overuje prázdny stav, filtre, chybu a opakovanie, navigáciu, kompaktné rozloženie, posúvanie a otvorenie v novom procese. Celkovo 251 jednotkových testov a pätnásť natívnych kontrol; používajú dočasné údaje.
 
 ```sh
 .venv-macos/bin/python soskuska/check_statistics.py
@@ -186,7 +186,7 @@ Nových 16 testov overuje obdobia, miestne dni, váhu otázok, úplnú históriu
 
 ## Opravy súbežných zmien (v0.6.2)
 
-Osem nových jednotkových testov pokrýva termíny vrátane čakania na zámok, rollback, konflikty otázok a odlíšenie odstráneného testu. check_state_fixes.py navyše overuje skutočné formuláre, zachovanie rozpísaného obsahu, konflikt a nové načítanie, zachovanie výsledku po termíne a obnovu po odstránení z inej inštancie. Celkovo 244 jednotkových testov a pätnásť natívnych kontrol s dočasnými údajmi.
+Osem nových jednotkových testov pokrýva termíny vrátane čakania na zámok, rollback, konflikty otázok a odlíšenie odstráneného testu. check_state_fixes.py navyše overuje skutočné formuláre, zachovanie rozpísaného obsahu, konflikt a nové načítanie, zachovanie výsledku po termíne a obnovu po odstránení z inej inštancie. Celkovo 251 jednotkových testov a pätnásť natívnych kontrol s dočasnými údajmi.
 
 ```sh
 .venv-macos/bin/python soskuska/check_state_fixes.py
@@ -197,7 +197,7 @@ Osem nových jednotkových testov pokrýva termíny vrátane čakania na zámok,
 
 V AI Tutor pripoj vlastný server Ollama cez Connect / refresh, vyber model a jazyk odpovede a zadaj otázku. Odpoveď prichádza priebežne; Stop ju zastaví. Ostatné obrazovky zostávajú použiteľné počas generovania aj bez Ollamy. Chat sa ukladá do miestnej databázy a možno ho otvoriť po reštarte; pozri sprievodcu históriou.
 
-23 nových testov a check_tutor.py používajú výhradne fake server Ollama na loopbacku a dočasné údaje. Overujú protokol, Unicode, chybné odpovede, prerušenie streamu/TLS handshake, limity, kontext, navigáciu a zatvorenie počas generovania. Celkovo 244 jednotkových testov a pätnásť GUI kontrol. Tieto testy neoverujú kvalitu skutočného modelu ani jeho hardvérové nároky.
+23 nových testov a check_tutor.py používajú výhradne fake server Ollama na loopbacku a dočasné údaje. Overujú protokol, Unicode, chybné odpovede, prerušenie streamu/TLS handshake, limity, kontext, navigáciu a zatvorenie počas generovania. Celkovo 251 jednotkových testov a pätnásť GUI kontrol. Tieto testy neoverujú kvalitu skutočného modelu ani jeho hardvérové nároky.
 
 ```sh
 .venv-macos/bin/python soskuska/check_tutor.py
@@ -303,4 +303,4 @@ python soskuska/check_practice_history.py
 
 ## Prenosná verzia Windows a preberacia kontrola
 
-Táto vetva pridáva nepodpísaný prenosný ZIP pre Windows x64, zostavený a overený piatou úlohou CI. Pribalený pomocný program zachová oddelené CSV/zálohovacie procesy; cieľový počítač nepotrebuje Python. Automatické hostované kontroly a ručný zoznam pre čistý počítač sú oddelené; ručná preberacia kontrola zatiaľ nie je dokončená. Vydaná verzia zostáva v0.14.0, schéma 8. [Prenosná verzia Windows a preberacia kontrola](WINDOWS_PORTABLE.md) · [Checklist](WINDOWS_ACCEPTANCE.md).
+Táto vetva pridáva nepodpísaný prenosný ZIP pre Windows x64, zostavený a overený piatou úlohou CI. Pribalený pomocný program zachová oddelené CSV/zálohovacie procesy; cieľový počítač nepotrebuje Python. Automatické hostované kontroly a ručný zoznam pre čistý počítač sú oddelené; ručná preberacia kontrola zatiaľ nie je dokončená. Vydaná verzia zostáva v0.14.0, schéma 8. [Prenosná verzia Windows a preberacia kontrola](WINDOWS_PORTABLE.md) · [Kontrolný zoznam](WINDOWS_ACCEPTANCE.md).

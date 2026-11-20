@@ -2,6 +2,8 @@
 
 [English](WINDOWS_FIRST_RUN.md) · [Čeština](cs/WINDOWS_FIRST_RUN.md) · [Slovenčina](sk/WINDOWS_FIRST_RUN.md) · [Русский](ru/WINDOWS_FIRST_RUN.md)
 
+For the portable EXE route without Python, see [Windows portable](WINDOWS_PORTABLE.md).
+
 For Windows 10/11 users without Python or development tools. You need internet for initial installation and the SOSkuska source files. Git, VS Code, Node.js, Ollama and paid services are not required for normal study.
 
 This guide follows the project's setup instructions; the complete manual Windows walkthrough has not yet been verified. The app has no `.exe` installer. Automated Windows unit checks do not replace a manual first run.

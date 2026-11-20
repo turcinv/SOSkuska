@@ -50,6 +50,13 @@ class StartupErrorTests(unittest.TestCase):
             report_startup_error(ValueError('invalid database'))
         self.assertIn('invalid database',output.getvalue())
 
+    def test_frozen_error_is_visible_even_when_standard_handles_are_redirected(self):
+        from io import StringIO
+        from startup_errors import report_startup_error
+        with patch.object(sys,'frozen',True,create=True),patch.object(sys,'stderr',StringIO()),patch('tkinter.messagebox.showerror') as dialog:
+            report_startup_error(ValueError('locked database'))
+        dialog.assert_called_once()
+
     def test_frozen_windowed_error_uses_dialog_without_creating_test_window(self):
         from startup_errors import report_startup_error
         with patch.object(sys,'frozen',True,create=True),patch.object(sys,'stderr',None),patch('tkinter.messagebox.showerror') as dialog:

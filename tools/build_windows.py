@@ -25,6 +25,12 @@ def main():
         destination.mkdir(exist_ok=True)
         for name in ('WINDOWS_PORTABLE.md', 'WINDOWS_ACCEPTANCE.md'):
             shutil.copy2(source/name, destination/name)
+    notices = bundle/'THIRD_PARTY_NOTICES'
+    notices.mkdir(exist_ok=True)
+    candidates = [Path(sys.base_prefix)/'LICENSE.txt', *Path(sys.base_prefix).glob('tcl/*/license.terms')]
+    for index, notice in enumerate(candidates):
+        if notice.is_file():
+            shutil.copy2(notice, notices/f'{index}-{notice.parent.name}-{notice.name}')
     archive = Path(shutil.make_archive(str(ROOT/'dist/SOSkuska-windows-x64'), 'zip', ROOT/'dist', 'SOSkuska'))
     with archive.open('rb') as source:
         digest = hashlib.file_digest(source, 'sha256').hexdigest()
