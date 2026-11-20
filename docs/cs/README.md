@@ -116,3 +116,5 @@ Banka otázek nyní podporuje import UTF-8 CSV do existujícího předmětu: ša
 ## Import kartiček z CSV
 
 Flashcards nyní podporuje import UTF-8 CSV do existujícího balíčku: šablonu s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů. Nové kartičky jsou ihned splatné; původní termíny a historie hodnocení zůstávají zachované. Schéma zůstává 6. [Import kartiček z CSV](FLASHCARD_CSV_IMPORT.md).
+
+[Poznatky ze sezení a předání projektu](SESSION_LESSONS.md)

@@ -69,6 +69,7 @@ English is the primary documentation language. Czech, Slovak and Russian are mai
 | [Git basics](docs/GIT_GUIDE.md) | Clone, authenticate, branch, commit and update |
 | [Contributing](CONTRIBUTING.md) | Checks, pull requests and issue reports |
 | [Changelog](CHANGELOG.md) | Release history |
+| [Session lessons and project handoff](docs/SESSION_LESSONS.md) | Dated project context and lessons for future development sessions |
 | [Agent instructions](AGENTS.md) | English instructions for future development sessions |
 
 ## Repository layout and limitations
