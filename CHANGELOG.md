@@ -2,9 +2,9 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
-## Unreleased
+## 0.13.0 — 2026-11-20
 
-UI language selection is implemented on this branch: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current schema is 8; the published release remains v0.12.0 until release authorization. [Interface language](docs/UI_LANGUAGES.md).
+UI language selection is available in v0.13.0: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current schema is 8. [Interface language](docs/UI_LANGUAGES.md).
 
 ## 0.12.0 — 2026-11-20
 

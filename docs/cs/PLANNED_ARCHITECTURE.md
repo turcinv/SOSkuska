@@ -133,4 +133,4 @@ AI Tutor nyní ukládá konverzace lokálně včetně původního serveru/modelu
 
 ## Jazyk rozhraní
 
-Výběr jazyka rozhraní je v této větvi implementovaný: angličtina, čeština, slovenština a ruština. Ukládá se zvlášť od jazyka AI a použije se po restartu. Aktuální schéma je 8; vydaná verze zůstává v0.12.0 do schválení vydání. [Jazyk rozhraní](UI_LANGUAGES.md).
+Výběr jazyka rozhraní je dostupný ve v0.13.0: angličtina, čeština, slovenština a ruština. Ukládá se zvlášť od jazyka AI a použije se po restartu. Aktuální schéma je 8. [Jazyk rozhraní](UI_LANGUAGES.md).

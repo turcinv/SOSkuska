@@ -2,7 +2,7 @@
 
 [English](../../README.md) · [Čeština](README.md) · [Slovenčina](../sk/README.md) · [Русский](../ru/README.md)
 
-**Vydání: [v0.12.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.12.0)** — zdrojový kód funkčního prototypu. Přehled funkcí a oprav je v [historii změn](CHANGELOG.md). Instalátor zatím není součástí vydání.
+**Vydání: [v0.13.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.13.0)** — zdrojový kód funkčního prototypu. Přehled funkcí a oprav je v [historii změn](CHANGELOG.md). Instalátor zatím není součástí vydání.
 
 Název aplikace je **SOSkúška**. Repozitář a kořenová složka jsou **SOSkuska**, zdrojový adresář `soskuska/`; technické názvy používají podobu bez diakritiky.
 
@@ -125,4 +125,4 @@ AI Tutor nyní ukládá konverzace lokálně včetně původního serveru/modelu
 
 ## Jazyk rozhraní
 
-Výběr jazyka rozhraní je v této větvi implementovaný: angličtina, čeština, slovenština a ruština. Ukládá se zvlášť od jazyka AI a použije se po restartu. Aktuální schéma je 8; vydaná verze zůstává v0.12.0 do schválení vydání. [Jazyk rozhraní](UI_LANGUAGES.md).
+Výběr jazyka rozhraní je dostupný ve v0.13.0: angličtina, čeština, slovenština a ruština. Ukládá se zvlášť od jazyka AI a použije se po restartu. Aktuální schéma je 8. [Jazyk rozhraní](UI_LANGUAGES.md).

@@ -2,7 +2,7 @@
 
 [English](CURRENT_ARCHITECTURE.md) · [Čeština](cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](sk/CURRENT_ARCHITECTURE.md) · [Русский](ru/CURRENT_ARCHITECTURE.md)
 
-UI language selection is implemented on this branch: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current schema is 8; the published release remains v0.12.0 until release authorization.
+UI language selection is available in v0.13.0: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current schema is 8.
 
 ## Technology and modules
 
@@ -261,6 +261,6 @@ AI Tutor now saves conversations locally, including the original server/model an
 
 ## Interface language
 
-UI language selection is implemented on this branch: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current schema is 8; the published release remains v0.12.0 until release authorization. [Interface language](UI_LANGUAGES.md).
+UI language selection is available in v0.13.0: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current schema is 8. [Interface language](UI_LANGUAGES.md).
 
 `localization.py` owns pure catalog lookup/formatting; `localization_widgets.py` maps translated dropdown labels to canonical variables and cleans up traces. `i18n/en.json`, `cs.json`, `sk.json`, `ru.json` ship with the source. `preferences.ui_language` is a checked text field; startup builds the Translator once. No new external dependencies are required.
