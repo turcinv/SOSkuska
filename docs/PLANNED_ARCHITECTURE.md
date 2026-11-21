@@ -6,6 +6,16 @@
 
 Published baseline is v0.15.0, with interface languages, saved AI conversations and schema 8. The history guide below describes the implemented behavior. Settings Save does not start networking.
 
+## Decision · 21 November 2026: parallel development and baseline testing
+
+The user agreed to continue feature development while manually testing released **v0.15.0**. Keep that release as the stable test baseline; do not mix unreleased changes into its Windows acceptance evidence.
+
+The next planned feature is **appearance settings: Light, Dark and System**. Save the choice independently of interface and AI answer languages. Preserve editing drafts, active focus/practice sessions and Tutor work. Check readability and control states across all screens and all four interface languages, including compact layouts. This is planned work, not an implemented feature or authorization to merge/release it.
+
+Use a separate feature branch and PR. Run appropriate unit/container checks, Windows packaging checks where affected, and an independent Sol review at medium effort. Keep the feature PR unmerged until the user confirms v0.15.0 testing is complete and explicitly approves the merge. Green CI alone does not lift this gate. Any v0.15.0 defects get separate fix PRs; bring relevant fixes into the feature branch and revalidate before merging.
+
+Next actions: implement appearance settings on its feature branch while the user follows [Windows acceptance](WINDOWS_ACCEPTANCE.md); resolve any baseline defects separately; finish the feature review/CI; then request merge approval after baseline testing is confirmed. Publishing a release remains a separate authorized step. GUI checks default to the container; arrange any necessary visible native runs with the user first.
+
 ## Direction
 
 Keep Python + CustomTkinter, local SQLite and optional Ollama. Windows/Linux remain primary targets with working macOS development. Ordinary study must not require a cloud account, paid API or running AI. Evolve the current Dashboard's visual style. Separate UI, study rules and persistence gradually as features need it; avoid introducing another UI framework or web backend.

@@ -39,3 +39,13 @@ Conversation may switch between Czech, Slovak, English and Russian. Reply in the
 Use the short root `AGENTS.md` as a routing index. Read the required `@docs/agents/...` topic files before editing the corresponding area; avoid loading unrelated safeguards. These are explicit file-reading references, not a promise of automatic transclusion. The official [Codex AGENTS.md guide](https://developers.openai.com/codex/guides/agents-md) documents hierarchical instruction discovery; this repository therefore explicitly tells the agent to open its referenced files.
 
 Record durable rules in the relevant topic file and new dated evidence here. Keep detailed release history in the changelog. When behavior changes, update the applicable safeguard and all language versions of user documentation.
+
+## Decision · 21 November 2026: parallel development and baseline testing
+
+The user agreed to continue feature development while manually testing released **v0.15.0**. Keep that release as the stable test baseline; do not mix unreleased changes into its Windows acceptance evidence.
+
+The next planned feature is **appearance settings: Light, Dark and System**. Save the choice independently of interface and AI answer languages. Preserve editing drafts, active focus/practice sessions and Tutor work. Check readability and control states across all screens and all four interface languages, including compact layouts. This is planned work, not an implemented feature or authorization to merge/release it.
+
+Use a separate feature branch and PR. Run appropriate unit/container checks, Windows packaging checks where affected, and an independent Sol review at medium effort. Keep the feature PR unmerged until the user confirms v0.15.0 testing is complete and explicitly approves the merge. Green CI alone does not lift this gate. Any v0.15.0 defects get separate fix PRs; bring relevant fixes into the feature branch and revalidate before merging.
+
+Next actions: implement appearance settings on its feature branch while the user follows [Windows acceptance](WINDOWS_ACCEPTANCE.md); resolve any baseline defects separately; finish the feature review/CI; then request merge approval after baseline testing is confirmed. Publishing a release remains a separate authorized step. GUI checks default to the container; arrange any necessary visible native runs with the user first.

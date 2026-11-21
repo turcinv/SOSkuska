@@ -39,3 +39,13 @@ Konverzace může střídat češtinu, slovenštinu, angličtinu a ruštinu; odp
 Kořenový `AGENTS.md` slouží jako stručný rozcestník. Před úpravou oblasti načti požadované soubory `@docs/agents/...`; ostatní pravidla načítej až podle potřeby. Jde o výslovné pokyny ke čtení souborů, nikoli příslib automatického vložení. Oficiální [návod Codex k AGENTS.md](https://developers.openai.com/codex/guides/agents-md) popisuje hierarchické načítání pokynů; projekt proto výslovně požaduje otevření odkazovaných souborů.
 
 Trvalá pravidla patří do příslušného souboru pokynů, nové datované ověření sem a historie vydání do changelogu. Změny chování promítni do pravidel a všech jazyků uživatelské dokumentace.
+
+## Rozhodnutí · 21. listopadu 2026: vývoj souběžně s testováním vydání
+
+Uživatel souhlasí s pokračováním vývoje funkcí během ručního testování vydané **v0.15.0**. Toto vydání zůstává stabilním základem kontroly; nevydané změny nepatří do jeho důkazů přejímky Windows.
+
+Další plánovaná funkce je **nastavení vzhledu: Light, Dark a System**. Volba se uloží nezávisle na jazyku rozhraní i odpovědí AI. Zachovat rozepsané formuláře, běžící soustředění/testy a práci AI Tutor. Ověřit čitelnost a stavy ovládacích prvků na všech obrazovkách ve čtyřech jazycích včetně kompaktního okna. Jde o plán, nikoli implementovanou funkci či schválení sloučení/vydání.
+
+Použít samostatnou větev a PR. Spustit odpovídající jednotkové/kontejnerové kontroly, při dotčeném balení i Windows kontroly a nezávislou revizi Sol se středním úsilím. PR funkce neslučovat, dokud uživatel nepotvrdí dokončení testování v0.15.0 a výslovně neschválí sloučení. Zelené CI tuto podmínku neruší. Chyby v0.15.0 opravovat samostatnými PR; relevantní opravy převzít do větve funkce a znovu ověřit.
+
+Další kroky: implementovat vzhled ve vlastní větvi, zatímco uživatel projde [přejímku Windows](WINDOWS_ACCEPTANCE.md); chyby základu řešit samostatně; dokončit revizi/CI funkce; po potvrzení testování požádat o sloučení. Vydání vyžaduje samostatné schválení. GUI kontroly standardně v kontejneru; potřebný viditelný nativní běh nejprve domluvit.

@@ -39,3 +39,13 @@ Konverzácia môže striedať češtinu, slovenčinu, angličtinu a ruštinu; od
 Koreňový `AGENTS.md` slúži ako stručný rozcestník. Pred úpravou oblasti načítaj požadované súbory `@docs/agents/...`; ostatné pravidlá načítaj podľa potreby. Ide o výslovné pokyny na čítanie súborov, nie prísľub automatického vloženia. Oficiálny [návod Codex k AGENTS.md](https://developers.openai.com/codex/guides/agents-md) opisuje hierarchické načítanie pokynov; projekt preto výslovne požaduje otvorenie odkazovaných súborov.
 
 Trvalé pravidlá patria do príslušného súboru pokynov, nové datované overenie sem a história vydaní do changelogu. Zmeny správania premietni do pravidiel a všetkých jazykov používateľskej dokumentácie.
+
+## Rozhodnutie · 21. novembra 2026: vývoj súbežne s testovaním vydania
+
+Používateľ súhlasí s pokračovaním vývoja funkcií počas ručného testovania vydanej **v0.15.0**. Toto vydanie zostáva stabilným základom kontroly; nevydané zmeny nepatria do jeho dôkazov preberacej kontroly Windows.
+
+Ďalšia plánovaná funkcia je **nastavenie vzhľadu: Light, Dark a System**. Voľba sa uloží nezávisle od jazyka rozhrania aj odpovedí AI. Zachovať rozpísané formuláre, bežiace sústredenie/testy a prácu AI Tutor. Overiť čitateľnosť a stavy ovládacích prvkov na všetkých obrazovkách v štyroch jazykoch vrátane kompaktného okna. Ide o plán, nie implementovanú funkciu ani schválenie zlúčenia/vydania.
+
+Použiť samostatnú vetvu a PR. Spustiť zodpovedajúce jednotkové/kontajnerové kontroly, pri dotknutom balení aj Windows kontroly a nezávislú revíziu Sol so stredným úsilím. PR funkcie nezlučovať, kým používateľ nepotvrdí dokončenie testovania v0.15.0 a výslovne neschváli zlúčenie. Zelené CI túto podmienku neruší. Chyby v0.15.0 opravovať samostatnými PR; relevantné opravy prevziať do vetvy funkcie a znovu overiť.
+
+Ďalšie kroky: implementovať vzhľad vo vlastnej vetve, zatiaľ čo používateľ prejde [kontrolu Windows](WINDOWS_ACCEPTANCE.md); chyby základu riešiť samostatne; dokončiť revíziu/CI funkcie; po potvrdení testovania požiadať o zlúčenie. Vydanie vyžaduje samostatné schválenie. GUI kontroly štandardne v kontajneri; potrebný viditeľný natívny beh najprv dohodnúť.

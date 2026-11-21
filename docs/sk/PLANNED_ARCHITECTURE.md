@@ -6,6 +6,16 @@
 
 Vydaná základná verzia je v0.15.0 s jazykmi rozhrania, uloženými konverzáciami AI a schémou 8. Sprievodcovia nižšie opisujú implementované funkcie. Uloženie nastavení nespúšťa sieťové pripojenie.
 
+## Rozhodnutie · 21. novembra 2026: vývoj súbežne s testovaním vydania
+
+Používateľ súhlasí s pokračovaním vývoja funkcií počas ručného testovania vydanej **v0.15.0**. Toto vydanie zostáva stabilným základom kontroly; nevydané zmeny nepatria do jeho dôkazov preberacej kontroly Windows.
+
+Ďalšia plánovaná funkcia je **nastavenie vzhľadu: Light, Dark a System**. Voľba sa uloží nezávisle od jazyka rozhrania aj odpovedí AI. Zachovať rozpísané formuláre, bežiace sústredenie/testy a prácu AI Tutor. Overiť čitateľnosť a stavy ovládacích prvkov na všetkých obrazovkách v štyroch jazykoch vrátane kompaktného okna. Ide o plán, nie implementovanú funkciu ani schválenie zlúčenia/vydania.
+
+Použiť samostatnú vetvu a PR. Spustiť zodpovedajúce jednotkové/kontajnerové kontroly, pri dotknutom balení aj Windows kontroly a nezávislú revíziu Sol so stredným úsilím. PR funkcie nezlučovať, kým používateľ nepotvrdí dokončenie testovania v0.15.0 a výslovne neschváli zlúčenie. Zelené CI túto podmienku neruší. Chyby v0.15.0 opravovať samostatnými PR; relevantné opravy prevziať do vetvy funkcie a znovu overiť.
+
+Ďalšie kroky: implementovať vzhľad vo vlastnej vetve, zatiaľ čo používateľ prejde [kontrolu Windows](WINDOWS_ACCEPTANCE.md); chyby základu riešiť samostatne; dokončiť revíziu/CI funkcie; po potvrdení testovania požiadať o zlúčenie. Vydanie vyžaduje samostatné schválenie. GUI kontroly štandardne v kontajneri; potrebný viditeľný natívny beh najprv dohodnúť.
+
 Nastavenia sa ukladajú do rovnakej databázy ako študijné údaje. [Settings](SETTINGS.md). Nastavenia sa ukladajú transakčne v schéme 6 s ochranou pred prepísaním zmien iného okna. Migrácia z verzie 5 zachová všetky predchádzajúce tabuľky aj údaje; staršia aplikácia novšiu schému odmietne otvoriť.
 ## Smer
 
