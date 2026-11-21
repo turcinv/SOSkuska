@@ -3,9 +3,9 @@
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
 
-## Nevydané
+## 0.15.0 — 2026-11-21
 
-Tato větev přidává nepodepsaný přenosný ZIP pro Windows x64, sestavený a ověřený pátou úlohou CI. Přibalený pomocný program zachová oddělené CSV/zálohovací procesy; cílový počítač nepotřebuje Python. Automatické hostované kontroly a ruční seznam pro čistý počítač jsou oddělené; ruční přejímka zatím není dokončená. Vydaná verze zůstává v0.14.0, schéma 8. [Přenosná verze Windows a přejímka](WINDOWS_PORTABLE.md).
+v0.15.0 přidává nepodepsaný přenosný ZIP pro Windows x64, sestavený a ověřený pátou úlohou CI. Přibalený pomocný program zachová oddělené CSV/zálohovací procesy; cílový počítač nepotřebuje Python. Automatické hostované kontroly a ruční seznam pro čistý počítač jsou oddělené; ruční přejímka zatím není dokončená. Vydaná verze je v0.15.0, schéma 8. [Přenosná verze Windows a přejímka](WINDOWS_PORTABLE.md).
 
 ## 0.14.0 — 2026-11-20
 
