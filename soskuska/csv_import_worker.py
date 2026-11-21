@@ -55,11 +55,11 @@ def run(kind, active, selected, subject_id, subject_name):
     return result
 
 
-def main():
+def main(argv=None):
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('kind',choices=['parse','save','template']);parser.add_argument('active',type=Path);parser.add_argument('selected',type=Path)
     parser.add_argument('--subject-id',type=int);parser.add_argument('--subject-name',default='')
-    args=parser.parse_args()
+    args=parser.parse_args(argv)
     try:
         result={'state':'done','value':run(args.kind,args.active,args.selected,args.subject_id,args.subject_name)}
     except ImportValidationError as exc:

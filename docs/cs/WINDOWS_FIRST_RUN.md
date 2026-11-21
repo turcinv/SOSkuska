@@ -2,6 +2,8 @@
 
 [English](../WINDOWS_FIRST_RUN.md) · [Čeština](WINDOWS_FIRST_RUN.md) · [Slovenčina](../sk/WINDOWS_FIRST_RUN.md) · [Русский](../ru/WINDOWS_FIRST_RUN.md)
 
+Pro přenosné EXE bez Pythonu viz [Windows portable](WINDOWS_PORTABLE.md).
+
 Návod pro člověka, který na Windows 10/11 zatím nemá Python ani vývojové nástroje. Potřebuješ internet pro první instalaci a zdrojové soubory SOSkuska. Git, VS Code, Node.js, Ollama ani placené služby nejsou pro současný Dashboard potřeba.
 
 **Důležité:** postup vychází z aktuálního kódu a oficiální dokumentace Pythonu. Na skutečných Windows ještě nebyl celý průchod ověřený; aplikace zatím nemá vlastní instalátor `.exe`.
@@ -201,3 +203,7 @@ AI Tutor nyní ukládá konverzace lokálně včetně původního serveru/modelu
 ## Jazyk rozhraní
 
 Výběr jazyka rozhraní je dostupný ve v0.13.0: angličtina, čeština, slovenština a ruština. Ukládá se zvlášť od jazyka AI a použije se po restartu. Aktuální schéma je 8. [Jazyk rozhraní](UI_LANGUAGES.md).
+
+## Přenosná verze Windows a přejímka
+
+Tato větev přidává nepodepsaný přenosný ZIP pro Windows x64, sestavený a ověřený pátou úlohou CI. Přibalený pomocný program zachová oddělené CSV/zálohovací procesy; cílový počítač nepotřebuje Python. Automatické hostované kontroly a ruční seznam pro čistý počítač jsou oddělené; ruční přejímka zatím není dokončená. Vydaná verze zůstává v0.14.0, schéma 8. [Přenosná verze Windows a přejímka](WINDOWS_PORTABLE.md) · [Kontrolní seznam](WINDOWS_ACCEPTANCE.md).

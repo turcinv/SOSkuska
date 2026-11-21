@@ -56,3 +56,7 @@ English instructions for development agents, referenced by [AGENTS.md](../../AGE
 ## Uninterrupted desktop testing
 
 The user prefers GUI checks inside the Linux test container because native windows interrupt their work. Default to `docker build -f Dockerfile.tests -t soskuska-tests .` followed by `docker run --rm --init --network none --cpus 2 --memory 2g soskuska-tests`. No host display/data mounts; use disposable databases. Rebuild after source changes. See [Container tests](../CONTAINER_TESTS.md). Run native Mac UI checks only for required Aqua/Tk9/platform coverage and arrange the visible run with the user first. Container coverage is Linux only. CI shares the bounded GUI script list in `tools/run_checks.py`; keep new checks in that list.
+
+## Windows build evidence
+
+The fifth CI job builds the Windows x64 portable ZIP on Windows, extracts that exact archive, checks the frozen GUI and console helpers from isolated temporary paths, and uploads ZIP/checksum/report for 14 days. It does not publish releases. Manual clean-machine, hardware/DPI and real-model acceptance remain separate unchecked evidence in docs/WINDOWS_ACCEPTANCE.md. Keep portable guides in all four languages. Do not call a hosted smoke check a manual Windows acceptance pass.

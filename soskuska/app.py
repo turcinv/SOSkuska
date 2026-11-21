@@ -32,6 +32,7 @@ from statistics_page import StatisticsPage
 from tutor_page import TutorPage
 from settings_page import SettingsPage
 from preferences import AI_KEYS
+from startup_errors import report_startup_error
 
 APP_VERSION = '0.14.0'
 
@@ -672,5 +673,5 @@ if __name__ == "__main__":
     try:
         Dashboard(args.data).mainloop()
     except (sqlite3.Error, ValueError) as exc:
-        print(f"Could not open the study workspace: {exc}", file=sys.stderr)
+        report_startup_error(exc)
         raise SystemExit(1) from None

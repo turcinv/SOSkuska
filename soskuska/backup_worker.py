@@ -7,13 +7,13 @@ from types import SimpleNamespace
 from backup import PreparedBackup, create_backup, restore_backup
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('kind', choices=['backup','validate','restore'])
     parser.add_argument('active', type=Path)
     parser.add_argument('selected', type=Path)
     parser.add_argument('--staging', type=Path)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     try:
         if args.kind == 'backup':
             result = str(create_backup(args.active,args.selected))
