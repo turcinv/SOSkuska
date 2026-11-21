@@ -84,6 +84,12 @@ def check(path,language,reopen=False):
                 assert tutor.model_menu.display_variable.get()=='Hard'
                 assert tutor.language.get()=='Russian'
                 app.navigate('Settings');settings=app.settings_page
+                for mode in ('Light','Dark'):
+                    settings.appearance_menu.selected(tr(mode));assert settings.appearance_mode.get()==mode
+                    settings.save();app.update_idletasks();assert ctk.get_appearance_mode()==mode
+                    assert app.store.preferences()['ui_language']==language
+                    for button in (settings.save_button,settings.reload_button,settings.copy_button):
+                        assert button.winfo_rootx()+button.winfo_width()<=app.winfo_rootx()+app.winfo_width()
                 settings.ui_language.set(next_language)
                 settings.entries['focus_minutes'].delete(0,'end');settings.entries['focus_minutes'].insert(0,'27')
                 app.navigate('Dashboard');app.navigate('Settings')
