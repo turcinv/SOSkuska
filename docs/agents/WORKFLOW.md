@@ -36,7 +36,7 @@ English instructions for development agents, referenced by [AGENTS.md](../../AGE
 
 ## Continuous integration
 
-- `.github/workflows/ci.yml` runs for PRs targeting main, pushes to main and manual dispatch. Python 3.12 unit tests/syntax/dependency checks run on Linux, Windows and macOS; fifteen GUI checks run under Xvfb on Ubuntu.
+- `.github/workflows/ci.yml` runs for PRs targeting main, pushes to main and manual dispatch. Python 3.12 unit tests/syntax/dependency checks run on Linux, Windows and macOS; sixteen GUI checks run under Xvfb on Ubuntu.
 - Keep action references pinned to verified release commit SHAs, contents permission read-only, and process/job timeouts. CI does not publish releases or deploy. Avoid duplicate feature-branch push and PR runs.
 - CI results are automated coverage, not manual platform or hardware verification. Native Aqua Quit and Tk 9 trackpad behavior still require the Mac checks. Do not claim those are tested by the Linux GUI job.
 - Read failed job logs, fix the cause and keep fixes on the same PR branch. Do not disable a meaningful failing check to obtain a green status. Branch protection is not configured by this workflow.
@@ -62,3 +62,5 @@ The user prefers GUI checks inside the Linux test container because native windo
 The fifth CI job builds the Windows x64 portable ZIP on Windows, extracts that exact archive, checks the frozen GUI and console helpers from isolated temporary paths, and uploads ZIP/checksum/report for 14 days. It does not publish releases. Manual clean-machine, hardware/DPI and real-model acceptance remain separate unchecked evidence in docs/WINDOWS_ACCEPTANCE.md. Keep portable guides in all four languages. Do not call a hosted smoke check a manual Windows acceptance pass.
 
 When publishing a Windows release, align labels via PR first, then obtain the checked portable ZIP/checksum/report from the main CI run for the exact merged tag target. Verify the run head SHA and ZIP checksum before uploading assets. Do not reuse a PR synthetic-merge artifact or earlier-version binary. Wait for the Windows build/acceptance job; publishing sources alone is insufficient when promising a portable download.
+
+Appearance work is gated: continue stable v0.15.0 acceptance separately, use isolated feature data, resolve baseline bugs via separate PRs, and wait for user confirmation of completed baseline testing plus explicit merge approval. Passing CI does not remove this gate. See [Appearance](../APPEARANCE.md).

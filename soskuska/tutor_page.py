@@ -1,4 +1,5 @@
 """Optional Ollama chat with local history; all widget access stays on the Tk thread."""
+from theme import COLORS as C
 from localization_widgets import LocalizedOptionMenu
 from localization import tr
 import queue
@@ -45,7 +46,7 @@ class TutorPage(ctk.CTkFrame):
         connection = app.frame(self)
         connection.grid(row=3, column=0, sticky='ew', pady=(0, 12))
         connection.grid_columnconfigure(0, weight=1)
-        self.endpoint = ctk.CTkEntry(connection, height=38, font=app.font())
+        self.endpoint = ctk.CTkEntry(connection, height=38, font=app.font(), placeholder_text_color=C["secondary"])
         self.endpoint.insert(0, app.preferences['ollama_endpoint'])
         self.endpoint.grid(row=0, column=0, sticky='ew', padx=(0, 8))
         self.connect_button = app.button(connection, tr(self.app, 'Connect / refresh'), self.connect, width=155)

@@ -63,6 +63,8 @@ def check(path,language,reopen=False):
                 difficulty.selected(tr('Medium'));assert page.difficulty.get()=='Medium'
                 assert page.subject.get()=='Settings'
                 assert page.subject_menu.display_variable.get()=='Settings'
+                assert app.settings_page.appearance_menu.cget('values')==[tr(mode) for mode in ('Light','Dark','System')]
+                assert any(isinstance(w,ctk.CTkLabel) and w.cget('text')==tr('System follows Windows/macOS appearance; on Linux it uses Light.') for w in widgets(app.settings_page))
                 assert page.history_apply.cget('text')==tr('Apply filters')
                 assert page.history_subject_menu.display_variable.get()==tr('All subjects')
                 app.update_idletasks()
@@ -88,7 +90,7 @@ def check(path,language,reopen=False):
                 assert settings.entries['focus_minutes'].get()=='27' and settings.ui_language.get()==next_language
                 settings.save();assert app.store.preferences()['ui_language']==next_language
                 assert app.translator.language==language and app.preferences['answer_language']=='Russian'
-                assert settings.status.cget('text')==tr('Settings saved. Restart the app to apply an interface language change. Active focus duration is unchanged; Ollama connects only after Connect.')
+                assert settings.status.cget('text')==tr('Settings saved. Appearance applied. Restart the app to apply an interface language change. Active focus duration is unchanged; Ollama connects only after Connect.')
                 app.update_idletasks();right=app.winfo_rootx()+app.winfo_width()
                 for button in (settings.save_button,settings.reload_button,settings.copy_button):
                     assert button.winfo_rootx()+button.winfo_width()<=right

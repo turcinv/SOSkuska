@@ -2,7 +2,7 @@
 
 [English](../FLASHCARD_CSV_IMPORT.md) · [Čeština](FLASHCARD_CSV_IMPORT.md) · [Slovenčina](../sk/FLASHCARD_CSV_IMPORT.md) · [Русский](../ru/FLASHCARD_CSV_IMPORT.md)
 
-Flashcards nyní podporuje import UTF-8 CSV do existujícího balíčku: šablonu s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů. Nové kartičky jsou ihned splatné; původní termíny a historie hodnocení zůstávají zachované. Aktuální schéma je 8.
+Flashcards nyní podporuje import UTF-8 CSV do existujícího balíčku: šablonu s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů. Nové kartičky jsou ihned splatné; původní termíny a historie hodnocení zůstávají zachované. Aktuální schéma je 9.
 
 1. Otevři **Flashcards → Open deck → Import CSV**. Cílový balíček musí existovat; pro vytvoření nového nejprve založ předmět.
 2. Přes **Save CSV template** vyber nepoužitý název. Vyplň sloupce `front,back` v editoru nebo tabulce a exportuj čárkami oddělené UTF-8 CSV; BOM je volitelný.

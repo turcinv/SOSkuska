@@ -25,6 +25,6 @@ Close import alebo navigácia zruší čítanie/náhľad; samostatné formuláre
 
 Banka zobrazuje **50 otázok na stránku**. Hľadanie/filtre platia pre celý predmet. Úprava či obnova podľa možností zachová stránku; zmena filtrov/predmetu vráti prvú. Aktívny filter môže skryť importované otázky.
 
-Šablóna sa zverejní atomicky bez prepísania súborov či sprievodných databázových ciest. POSIX vyžaduje podporu pevných odkazov; ak externý disk zlyhá, použi podporovaný miestny priečinok. Aktuálna schéma je **8**, snímky testov a história sa nemenia. Nejde o synchronizáciu, aktualizáciu/zlučovanie otázok, vyhodnocovanie tabuľkových vzorcov ani import kartičiek na tejto obrazovke.
+Šablóna sa zverejní atomicky bez prepísania súborov či sprievodných databázových ciest. POSIX vyžaduje podporu pevných odkazov; ak externý disk zlyhá, použi podporovaný miestny priečinok. Aktuálna schéma je **9**, snímky testov a história sa nemenia. Nejde o synchronizáciu, aktualizáciu/zlučovanie otázok, vyhodnocovanie tabuľkových vzorcov ani import kartičiek na tejto obrazovke.
 
 [Import kartičiek z CSV](FLASHCARD_CSV_IMPORT.md)

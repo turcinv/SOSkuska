@@ -1,10 +1,11 @@
 """Persistent preferences with explicit Save, stale-write checks and kept drafts."""
+from theme import COLORS as C
 from localization_widgets import LocalizedOptionMenu
 from localization import tr
 import sqlite3
 
 import customtkinter as ctk
-from preferences import preference_fields, UI_LANGUAGES
+from preferences import preference_fields, UI_LANGUAGES, APPEARANCE_MODES
 from tutor import LANGUAGES
 from backup_panel import BackupPanel
 
@@ -27,7 +28,7 @@ class SettingsPage(ctk.CTkFrame):
                   ('ollama_model','Preferred model name (optional; checked when you connect)')]
         for index, (key, title) in enumerate(labels):
             app.label(self, tr(self.app,title), 13, 'secondary').grid(row=2+index*2, column=0, sticky='w', pady=(4, 4))
-            entry = ctk.CTkEntry(self, height=38, font=app.font())
+            entry = ctk.CTkEntry(self, height=38, font=app.font(), placeholder_text_color=C["secondary"])
             entry.grid(row=3+index*2, column=0, sticky='ew', pady=(0, 10))
             self.entries[key] = entry
         app.label(self, tr(self.app, 'AI answer language'), 13, 'secondary').grid(row=10, column=0, sticky='w', pady=(4, 4))
@@ -38,10 +39,16 @@ class SettingsPage(ctk.CTkFrame):
         self.ui_language = ctk.StringVar(value=app.preferences.get('ui_language','English'))
         self.ui_language_menu = LocalizedOptionMenu(self,owner=self.app,variable=self.ui_language,translate_values="language_names",values=list(UI_LANGUAGES),dynamic_resizing=False,height=38,font=app.font())
         self.ui_language_menu.grid(row=13,column=0,sticky='ew',pady=(0,14))
+        app.label(self, tr(self.app, 'Appearance (applies on Save)'), 13, 'secondary').grid(row=14,column=0,sticky='w',pady=(4,4))
+        self.appearance_mode = ctk.StringVar(value=app.preferences.get('appearance_mode','Dark'))
+        self.appearance_menu = LocalizedOptionMenu(self,owner=app,variable=self.appearance_mode,
+            values=list(APPEARANCE_MODES),dynamic_resizing=False,height=38,font=app.font())
+        self.appearance_menu.grid(row=15,column=0,sticky='ew',pady=(0,14))
+        app.label(self, tr(self.app, 'System follows Windows/macOS appearance; on Linux it uses Light.'), 12, 'secondary', wraplength=600).grid(row=16,column=0,sticky='ew',pady=(0,14))
         info = app.label(self, tr(self.app, 'Saving never connects to Ollama. AI conversations are saved locally and included in backups. Active focus sessions keep their original duration. Use New chat before switching an existing chat to a different server.'), 12, 'secondary', wraplength=600)
-        info.grid(row=14, column=0, sticky='ew', pady=(0, 14))
+        info.grid(row=17, column=0, sticky='ew', pady=(0, 14))
         actions = app.frame(self)
-        actions.grid(row=15, column=0, sticky='w')
+        actions.grid(row=18, column=0, sticky='w')
         self.save_button = app.button(actions, tr(self.app, 'Save settings'), self.save, primary=True, width=125)
         self.save_button.pack(side='left', padx=(0, 8))
         self.reload_button = app.button(actions, tr(self.app, 'Reload'), self.reload, width=110)
@@ -49,12 +56,12 @@ class SettingsPage(ctk.CTkFrame):
         self.copy_button = app.button(actions, tr(self.app, 'Use Tutor choices'), self.copy_tutor, width=155)
         self.copy_button.pack(side='left')
         self.backups = BackupPanel(self, app)
-        self.backups.grid(row=16, column=0, sticky='ew', pady=(20, 0))
+        self.backups.grid(row=19, column=0, sticky='ew', pady=(20, 0))
         self.baseline = self.values()  # Even a failed first read must preserve later edits.
         self.bind('<Configure>', lambda event: [label.configure(wraplength=max(250,event.width-12)) for label in (self.status,info)], add='+')
 
     def values(self):
-        return tuple(self.entries[k].get() for k in self.entries) + (self.language.get(), self.ui_language.get())
+        return tuple(self.entries[k].get() for k in self.entries) + (self.language.get(), self.ui_language.get(), self.appearance_mode.get())
 
     def dirty(self):
         return self.baseline is not None and self.values() != self.baseline
@@ -78,6 +85,7 @@ class SettingsPage(ctk.CTkFrame):
             entry.insert(0, str(saved[key]))
         self.language.set(saved['answer_language'])
         self.ui_language.set(saved['ui_language'])
+        self.appearance_mode.set(saved['appearance_mode'])
         self.snapshot = saved
         self.baseline = self.values()
         self.status.configure(text=tr(self.app,tr(self.app, 'Saved preferences were invalid; safe defaults are shown. Save to repair them.') if saved['invalid'] else tr(self.app, 'Saved settings loaded. Changes apply only after Save.')))
@@ -116,7 +124,7 @@ class SettingsPage(ctk.CTkFrame):
             except ValueError:
                 raise ValueError('Focus duration and daily goal must be whole numbers.') from None
             fields = preference_fields(focus, goal, self.entries['ollama_endpoint'].get(),
-                                       self.entries['ollama_model'].get(), self.language.get(), self.ui_language.get())
+                                       self.entries['ollama_model'].get(), self.language.get(), self.ui_language.get(), self.appearance_mode.get())
             self.app.validate_preferences_change(fields)
             saved = self.app.store.save_preferences(fields, expected_revision=self.snapshot['revision'])
         except (ValueError, sqlite3.Error) as exc:
@@ -130,5 +138,6 @@ class SettingsPage(ctk.CTkFrame):
             entry.insert(0, str(saved[key]))
         self.language.set(saved['answer_language'])
         self.ui_language.set(saved['ui_language'])
+        self.appearance_mode.set(saved['appearance_mode'])
         self.baseline = self.values()
-        self.status.configure(text=tr(self.app, 'Settings saved. Restart the app to apply an interface language change. Active focus duration is unchanged; Ollama connects only after Connect.'))
+        self.status.configure(text=tr(self.app, 'Settings saved. Appearance applied. Restart the app to apply an interface language change. Active focus duration is unchanged; Ollama connects only after Connect.'))

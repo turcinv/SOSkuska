@@ -132,7 +132,7 @@ Read the first failing step in [Actions](https://github.com/turcinv/SOSkuska/act
 
 ## Data and further development
 
-If no fresh `SOSkuska` database exists but legacy `ExamPrep/dashboard.sqlite3` does, the app uses that file without copying, moving or overwriting it. Explicit `--data` wins. Schema 8 migration preserves prior records; older apps refuse newer schemas. [Settings](SETTINGS.md) explains revision conflicts and explicit preference application.
+If no fresh `SOSkuska` database exists but legacy `ExamPrep/dashboard.sqlite3` does, the app uses that file without copying, moving or overwriting it. Explicit `--data` wins. Schema 9 migration preserves prior records; older apps refuse newer schemas. [Settings](SETTINGS.md) explains revision conflicts and explicit preference application.
 
 `app.py` owns Dashboard/timer/navigation; `storage.py` owns SQL and migrations; `scrolling.py` owns scrolling compatibility. Other screens have their own modules. HTML under `soskuska-local/` is only a visual reference. See [planned architecture](PLANNED_ARCHITECTURE.md) for gradual restructuring, [Flashcards](FLASHCARDS.md), [Statistics](STATISTICS.md) and [AI Tutor](AI_TUTOR.md) for feature rules.
 
@@ -140,7 +140,7 @@ Keep environments, SQLite files, caches and local tool configuration out of Git.
 
 ## Backup and restore
 
-Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Current schema is 8. Restore closes the app; reopen it afterward. See [Backup and restore](BACKUP_RESTORE.md).
+Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Current schema is 9. Restore closes the app; reopen it afterward. See [Backup and restore](BACKUP_RESTORE.md).
 
 `tests/test_backup.py`, `tests/test_backup_review.py`, `soskuska/check_backup.py`.
 
@@ -154,7 +154,7 @@ Settings now includes manual local backup and validated restore, with a pre-rest
 
 ## Import questions from CSV
 
-Question bank now supports UTF-8 CSV import into an existing subject, with a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records; question lists show 50 per page. Current schema is 8. [Question CSV import](QUESTION_CSV_IMPORT.md).
+Question bank now supports UTF-8 CSV import into an existing subject, with a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records; question lists show 50 per page. Current schema is 9. [Question CSV import](QUESTION_CSV_IMPORT.md).
 
 `tests/test_csv_import.py`, `soskuska/check_csv_import.py`.
 
@@ -168,7 +168,7 @@ Question bank now supports UTF-8 CSV import into an existing subject, with a hea
 
 ## Import flashcards from CSV
 
-Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Current schema is 8. [Import flashcards from CSV](FLASHCARD_CSV_IMPORT.md).
+Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Current schema is 9. [Import flashcards from CSV](FLASHCARD_CSV_IMPORT.md).
 
 `tests/test_flashcard_csv_import.py`, `soskuska/check_flashcard_import.py`.
 
@@ -196,7 +196,7 @@ AI Tutor now saves conversations locally, including the original server/model an
 
 ## Interface language
 
-UI language selection is available in v0.13.0: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current schema is 8. [Interface language](UI_LANGUAGES.md).
+UI language selection is available in v0.13.0: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current schema is 9. [Interface language](UI_LANGUAGES.md).
 
 `tests/test_localization.py`, `soskuska/check_ui_languages.py`.
 
@@ -221,3 +221,11 @@ python soskuska/check_practice_history.py
 v0.15.0 adds an unsigned Windows x64 portable ZIP, built and checked by a fifth CI job. Bundled helper executables preserve isolated CSV/backup jobs; Python is not required on the target machine. Automated hosted Windows checks and the manual clean-machine checklist are separate; manual acceptance is not yet completed. Published version is v0.15.0, schema 8. [Windows portable build and acceptance](WINDOWS_PORTABLE.md) · [Checklist](WINDOWS_ACCEPTANCE.md).
 
 Current packaging work: 251 unit tests passed locally. The Linux container passed all 15 GUI scripts (250 unit tests at that source snapshot, two filesystem-specific skips). No native Mac GUI suite was run for this branch. Hosted Windows build evidence is recorded separately; manual acceptance remains NOT RUN.
+
+## Appearance settings
+
+Unreleased appearance settings add saved Light/Dark/System choices, applied on Save without rebuilding screens or losing active work. System follows Windows/macOS and uses Light on Linux. Branch schema is 9; published v0.15.0 stays on schema 8. Keep the feature PR unmerged until baseline testing is confirmed complete and the user approves merging. [Appearance settings](APPEARANCE.md).
+
+```sh
+python soskuska/check_appearance.py
+```

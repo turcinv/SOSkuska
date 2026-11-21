@@ -91,6 +91,14 @@ def check(path):
         wait_for(lambda: page.turns[-1]['answer'] == 'Hello ', partial)
 
     def partial():
+        task=page.task
+        transcript=page.transcript.get('1.0','end-1c')
+        app.navigate('Settings')
+        for mode in ('Light','Dark'):
+            app.settings_page.appearance_mode.set(mode);app.settings_page.save_button.invoke()
+            assert ctk.get_appearance_mode()==mode and page.task is task
+            assert page.transcript.get('1.0','end-1c')==transcript
+        assert page.turns[-1]['answer']=='Hello '
         app.navigate('Dashboard')
         before = app.scroll._parent_canvas.yview()[0]
         app.after(100, lambda: heartbeat.append(True))

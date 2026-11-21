@@ -12,7 +12,7 @@ from preferences import DEFAULTS, preference_fields
 from database_lock import DatabaseLease
 from csv_import import ImportValidationError, validate_rows, signature
 
-SCHEMA_VERSION = 8
+SCHEMA_VERSION = 9
 
 
 def default_database(base):
@@ -207,6 +207,8 @@ class Store:
                 self.db.execute('CREATE INDEX tutor_history_recent ON tutor_conversations(updated_at DESC,id DESC)')
             if version < 8:
                 self.db.execute("ALTER TABLE preferences ADD COLUMN ui_language TEXT NOT NULL DEFAULT 'English' CHECK(ui_language IN ('English','Czech','Slovak','Russian'))")
+            if version < 9:
+                self.db.execute("ALTER TABLE preferences ADD COLUMN appearance_mode TEXT NOT NULL DEFAULT 'Dark' CHECK(appearance_mode IN ('Light','Dark','System'))")
             self.db.execute(f"PRAGMA user_version = {SCHEMA_VERSION}")
 
     def tutor_conversations(self, offset=0):
@@ -878,11 +880,11 @@ class Store:
             revision = row[0] if row else 0
             if revision != expected_revision:
                 raise ValueError("Settings changed in another window. Your draft is kept; copy it before using Reload to combine changes.")
-            self.db.execute("""INSERT INTO preferences(id,focus_minutes,daily_goal_minutes,ollama_endpoint,ollama_model,answer_language,ui_language,revision) VALUES (1,?,?,?,?,?,?,?)
+            self.db.execute("""INSERT INTO preferences(id,focus_minutes,daily_goal_minutes,ollama_endpoint,ollama_model,answer_language,ui_language,appearance_mode,revision) VALUES (1,?,?,?,?,?,?,?,?)
                 ON CONFLICT(id) DO UPDATE SET focus_minutes=excluded.focus_minutes,
                 daily_goal_minutes=excluded.daily_goal_minutes,ollama_endpoint=excluded.ollama_endpoint,
                 ollama_model=excluded.ollama_model,answer_language=excluded.answer_language,
-                ui_language=excluded.ui_language,revision=excluded.revision""", (*normalized.values(), revision+1))
+                ui_language=excluded.ui_language,appearance_mode=excluded.appearance_mode,revision=excluded.revision""", (*normalized.values(), revision+1))
         return dict(normalized, revision=revision+1, invalid=False)
 
     def close(self):

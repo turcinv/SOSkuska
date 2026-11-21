@@ -4,7 +4,7 @@
 
 **Published version: v0.15.0 · schema 8.** Practice history and container tests are implemented.
 
-UI language selection is available in v0.13.0: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current schema is 8.
+UI language selection is available in v0.13.0: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current schema is 9.
 
 ## Technology and modules
 
@@ -52,7 +52,7 @@ Screens call Store directly; separate service/domain layers and a shared theme m
 
 ## Schema and migrations
 
-`PRAGMA user_version` is **8**. Store obtains `BEGIN IMMEDIATE` before reading the version so concurrent launches cannot migrate from stale metadata. Migrations are transactional and preserve old tasks/sessions plus newer content/history. Foreign keys are enabled per connection. A newer schema is rejected rather than downgraded. Source of truth: `storage.py`; the SQL below describes the main tables and indexes.
+`PRAGMA user_version` is **9**. Store obtains `BEGIN IMMEDIATE` before reading the version so concurrent launches cannot migrate from stale metadata. Migrations are transactional and preserve old tasks/sessions plus newer content/history. Foreign keys are enabled per connection. A newer schema is rejected rather than downgraded. Source of truth: `storage.py`; the SQL below describes the main tables and indexes.
 
 ### Tasks, subjects and question bank
 
@@ -218,13 +218,12 @@ SettingsPage validates through `preferences.py` and Store.preferences()/save_pre
 
 ```sql
 CREATE TABLE preferences (
-    id INTEGER PRIMARY KEY CHECK(id = 1),
-    focus_minutes INTEGER NOT NULL CHECK(focus_minutes BETWEEN 1 AND 180),
-    daily_goal_minutes INTEGER NOT NULL CHECK(daily_goal_minutes BETWEEN 1 AND 1440),
-    ollama_endpoint TEXT NOT NULL, ollama_model TEXT NOT NULL,
-    answer_language TEXT NOT NULL,
-    revision INTEGER NOT NULL DEFAULT 0 CHECK(revision >= 0)
-);
+                    id INTEGER PRIMARY KEY CHECK(id=1),
+                    focus_minutes INTEGER NOT NULL CHECK(focus_minutes BETWEEN 1 AND 180),
+                    daily_goal_minutes INTEGER NOT NULL CHECK(daily_goal_minutes BETWEEN 1 AND 1440),
+                    ollama_endpoint TEXT NOT NULL, ollama_model TEXT NOT NULL,
+                    answer_language TEXT NOT NULL,
+                    revision INTEGER NOT NULL DEFAULT 0 CHECK(revision>=0), ui_language TEXT NOT NULL DEFAULT 'English' CHECK(ui_language IN ('English','Czech','Slovak','Russian')), appearance_mode TEXT NOT NULL DEFAULT 'Dark' CHECK(appearance_mode IN ('Light','Dark','System')));
 ```
 
 Save explicitly applies the whole form without requiring post-commit reads or network activity. Invalid stored values fall back safely and repair only on Save. Failed reads/writes/conflicts and navigation preserve drafts, including after first-load failure; Reload confirms replacement. Active/paused/unsaved focus sessions keep their target; the next session uses the new duration. Goal changes immediately without rewriting history.
@@ -239,7 +238,7 @@ Automated/synthetic checks do not establish manual platform UI or hardware gestu
 
 ## Backup and restore
 
-Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Current schema is 8. Restore closes the app; reopen it afterward. See [Backup and restore](BACKUP_RESTORE.md).
+Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Current schema is 9. Restore closes the app; reopen it afterward. See [Backup and restore](BACKUP_RESTORE.md).
 
 backup.py and backup_validation.py validate private standalone snapshots and application domains, then replace rows in one write transaction without copying source DDL. database_lock.py provides shared Store leases and exclusive restore leases (flock / Windows LockFileEx). backup_worker.py runs in an isolated process; backup_panel.py polls a temporary output file on Tk, avoiding pipe deadlocks and worker-thread Tk finalization. The current Store is closed and periodic callbacks pause for actual restore. The safety copy is taken while the write lock is held; final rows and ID sequences must match before commit.
 
@@ -247,13 +246,13 @@ Backup/restore validation: 156 unit tests and ten native macOS checks with dispo
 
 ## Import questions from CSV
 
-Question bank now supports UTF-8 CSV import into an existing subject, with a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records; question lists show 50 per page. Current schema is 8. [Question CSV import](QUESTION_CSV_IMPORT.md).
+Question bank now supports UTF-8 CSV import into an existing subject, with a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records; question lists show 50 per page. Current schema is 9. [Question CSV import](QUESTION_CSV_IMPORT.md).
 
 csv_import.py validates bounded canonical records; csv_import_worker.py runs isolated parse/read-only preflight/save/template jobs with file-backed output. Store.open_existing uses mode=ro/rw without creation or migration. Store.import_questions revalidates under BEGIN IMMEDIATE and inserts topics/questions in one transaction. A successful batch is consumed before UI report reads; refresh retry never imports again. Question-bank pagination applies filtering before selecting 50 visible cards.
 
 ## Import flashcards from CSV
 
-Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Current schema is 8. [Import flashcards from CSV](FLASHCARD_CSV_IMPORT.md).
+Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Current schema is 9. [Import flashcards from CSV](FLASHCARD_CSV_IMPORT.md).
 
 `flashcard_csv_import.py` validates bounded front/back records; `flashcard_csv_import_worker.py` isolates parse/read-only preflight/save jobs. `CsvImportPanel` shares lifecycle and template publication with question import. `Store.import_flashcards` uses BEGIN IMMEDIATE, rechecks the displayed deck name and full-deck duplicates, then inserts all cards once with a shared current UTC due time. No existing schedule or review row is modified.
 
@@ -263,7 +262,7 @@ AI Tutor now saves conversations locally, including the original server/model an
 
 ## Interface language
 
-UI language selection is available in v0.13.0: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current schema is 8. [Interface language](UI_LANGUAGES.md).
+UI language selection is available in v0.13.0: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current schema is 9. [Interface language](UI_LANGUAGES.md).
 
 `localization.py` owns pure catalog lookup/formatting; `localization_widgets.py` maps translated dropdown labels to canonical variables and cleans up traces. `i18n/en.json`, `cs.json`, `sk.json`, `ru.json` ship with the source. `preferences.ui_language` is a checked text field; startup builds the Translator once. No new external dependencies are required.
 
@@ -274,3 +273,7 @@ Practice history now supports pages of 20 across all completed attempts, histori
 ## Windows portable build and acceptance
 
 v0.15.0 adds an unsigned Windows x64 portable ZIP, built and checked by a fifth CI job. Bundled helper executables preserve isolated CSV/backup jobs; Python is not required on the target machine. Automated hosted Windows checks and the manual clean-machine checklist are separate; manual acceptance is not yet completed. Published version is v0.15.0, schema 8. [Windows portable build and acceptance](WINDOWS_PORTABLE.md) · [Checklist](WINDOWS_ACCEPTANCE.md).
+
+## Appearance settings
+
+Unreleased appearance settings add saved Light/Dark/System choices, applied on Save without rebuilding screens or losing active work. System follows Windows/macOS and uses Light on Linux. Branch schema is 9; published v0.15.0 stays on schema 8. Keep the feature PR unmerged until baseline testing is confirmed complete and the user approves merging. [Appearance settings](APPEARANCE.md).

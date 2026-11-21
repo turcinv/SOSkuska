@@ -631,5 +631,14 @@
   "Choose a valid history page.": "Choose a valid history page.",
   "Choose a subject from practice history.": "Choose a subject from practice history.",
   "Use valid history dates in YYYY-MM-DD format, or leave them empty.": "Use valid history dates in YYYY-MM-DD format, or leave them empty.",
-  "History start date must not be after the end date.": "History start date must not be after the end date."
+  "History start date must not be after the end date.": "History start date must not be after the end date.",
+  "Appearance (applies on Save)": "Appearance (applies on Save)",
+  "Light": "Light",
+  "Dark": "Dark",
+  "System": "System",
+  "Choose Light, Dark or System appearance.": "Choose Light, Dark or System appearance.",
+  "System uses OS detection; choose Light or Dark if your desktop is not detected.": "System uses OS detection; choose Light or Dark if your desktop is not detected.",
+  "Settings saved. Appearance applied. Restart the app to apply an interface language change. Active focus duration is unchanged; Ollama connects only after Connect.": "Settings saved. Appearance applied. Restart the app to apply an interface language change. Active focus duration is unchanged; Ollama connects only after Connect.",
+  "Backups contain saved data and preferences, including saved AI conversations, not unsaved drafts. Restore replaces saved data and closes the app. Only schema 9 backups are supported.": "Backups contain saved data and preferences, including saved AI conversations, not unsaved drafts. Restore replaces saved data and closes the app. Only schema 9 backups are supported.",
+  "System follows Windows/macOS appearance; on Linux it uses Light.": "System follows Windows/macOS appearance; on Linux it uses Light."
 }
