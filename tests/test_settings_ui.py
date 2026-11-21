@@ -146,7 +146,7 @@ class SettingsUiTests(unittest.TestCase):
               patch.object(ctk, 'CTkEntry', side_effect=lambda *args, **kwargs: Entry()),
               patch.object(ctk, 'CTkOptionMenu'),
               patch('settings_page.LocalizedOptionMenu'),
-              patch.object(ctk, 'StringVar', side_effect=[language,Entry('English')])):
+              patch.object(ctk, 'StringVar', side_effect=[language,Entry('English'),Entry('Dark')])):
             page = SettingsPage(None, app)
 
         page.load()

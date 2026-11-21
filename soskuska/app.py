@@ -33,12 +33,12 @@ from tutor_page import TutorPage
 from settings_page import SettingsPage
 from preferences import AI_KEYS
 from startup_errors import report_startup_error
+from appearance import apply_appearance
 
 APP_VERSION = '0.15.0'
 
-C = dict(bg="#0D1117", sidebar="#11151C", card="#181D27", raised="#202633",
-         border="#2A303C", accent="#8B5CF6", hover="#A78BFA", primary="#6D28D9",
-         text="#F3F4F6", secondary="#9CA3AF", green="#22C55E", warning="#F59E0B")
+from theme import COLORS as C
+
 SAVE_RETRY_NOTICE = "This session could not be saved. Press Finish to retry saving it."
 REFRESH_RETRY_NOTICE = "Could not refresh the Dashboard. Retrying automatically."
 
@@ -58,6 +58,7 @@ def data_path():
 
 class Dashboard(ctk.CTk):
     def __init__(self, database=None):
+        ctk.set_appearance_mode("Dark")  # Disable implicit OS polling before constructing Tk.
         super().__init__()
         self.title(tr(self, 'SOSkúška'))
         self.geometry("1440x900")
@@ -66,6 +67,7 @@ class Dashboard(ctk.CTk):
         self.family = "Segoe UI" if platform.system() == "Windows" else "Helvetica" if sys.platform == "darwin" else "Noto Sans"
         self.store = Store(database or data_path())
         self.preferences = self.store.preferences()
+        apply_appearance(self.preferences["appearance_mode"])
         self.translator = Translator(self.preferences["ui_language"])
         self.saved_today_seconds = 0
         self.data_restoring = False
@@ -143,8 +145,9 @@ class Dashboard(ctk.CTk):
         return ctk.CTkButton(parent, text=text, command=command, height=38,
                              corner_radius=8, font=self.font(14, primary),
                              fg_color=C["primary"] if primary else C["raised"],
-                             hover_color="#7C3AED" if primary else C["border"],
-                             text_color=C["text"], border_width=0 if primary else 1,
+                             hover_color=C["primary_hover"] if primary else C["border"],
+                             text_color=C["on_primary"] if primary else C["text"],
+                             text_color_disabled=C["disabled_on_primary"] if primary else C["secondary"], border_width=0 if primary else 1,
                              border_color=C["border"], **kwargs)
 
     def build_sidebar(self):
@@ -166,7 +169,7 @@ class Dashboard(ctk.CTk):
         for i, (name, icon) in enumerate(NAV):
             b = ctk.CTkButton(nav, text=f"{icon}   {tr(self,name)}", anchor="w", height=42,
                              font=self.font(14, i == 0), corner_radius=8,
-                             fg_color="#211B35" if i == 0 else "transparent",
+                             fg_color=C["selected"] if i == 0 else "transparent",
                              hover_color=C["raised"],
                              text_color=C["hover"] if i == 0 else C["secondary"],
                              command=lambda name=name: self.navigate(name))
@@ -241,7 +244,7 @@ class Dashboard(ctk.CTk):
             var = ctk.BooleanVar(value=self.store.task(key, default))
             self.task_vars[key] = var
             check = ctk.CTkCheckBox(focus, text=tr(self,text), variable=var, font=self.font(14),
-                                   text_color=C["text"], fg_color=C["primary"], hover_color=C["accent"],
+                                   text_color=C["text"], checkmark_color=C["on_primary"], fg_color=C["primary"], hover_color=C["primary_hover"],
                                    border_color=C["border"], checkbox_width=18, checkbox_height=18,
                                    command=lambda k=key, v=var: self.save_task(k, v.get()))
             check.grid(row=row, column=0, sticky="w", padx=18, pady=(0, 14))
@@ -262,7 +265,7 @@ class Dashboard(ctk.CTk):
         self.subject_picker = LocalizedOptionMenu(resume,owner=self,translate_values=False,empty_text="Add a subject first", variable=self.subject_selection,
                                                values=[], command=self.select_subject,
                                                font=self.font(), height=38, fg_color=C["raised"],
-                                               button_color=C["primary"], button_hover_color=C["accent"])
+                                               button_color=C["border"], button_hover_color=C["selected"])
         self.subject_picker.grid(row=0, column=0, sticky="ew", padx=18, pady=(16, 8))
         self.label(resume, tr(self, 'Focus sessions are saved against the selected subject.'), 12, "secondary", wraplength=550).grid(row=1, column=0, sticky="w", padx=18, pady=(0, 16))
         self.button(resume, tr(self, 'Manage subjects'), lambda: self.navigate("My Subjects"), width=140).grid(row=0, column=1, padx=(0, 18), pady=(16, 8))
@@ -276,7 +279,7 @@ class Dashboard(ctk.CTk):
         self.query.trace_add("write", lambda *_: self.filter_subjects())
         self.search = ctk.CTkEntry(header, placeholder_text=tr(self, 'Search subjects…'), width=190, height=34,
                                   textvariable=self.query, fg_color=C["sidebar"], border_color=C["border"],
-                                  text_color=C["text"], font=self.font(12))
+                                  text_color=C["text"], font=self.font(12), placeholder_text_color=C["secondary"])
         self.search.grid(row=0, column=1, padx=(12, 0))
         self.subject_grid = self.frame(self.main)
         self.subject_grid.grid(row=5, column=0, sticky="ew")
@@ -402,7 +405,7 @@ class Dashboard(ctk.CTk):
             self.refresh_data()
         self.scroll._parent_canvas.yview_moveto(0)
         for button, (item, _) in zip(self.nav_buttons, NAV):
-            button.configure(fg_color="#211B35" if item == name else "transparent",
+            button.configure(fg_color=C["selected"] if item == name else "transparent",
                              text_color=C["hover"] if item == name else C["secondary"])
 
     def open_question_bank(self, subject_id):
@@ -426,7 +429,7 @@ class Dashboard(ctk.CTk):
         self.current_page = "Question Bank"
         for button, (item, _) in zip(self.nav_buttons, NAV):
             active = item == "My Subjects"
-            button.configure(fg_color="#211B35" if active else "transparent",
+            button.configure(fg_color=C["selected"] if active else "transparent",
                              text_color=C["hover"] if active else C["secondary"])
         self.scroll._parent_canvas.yview_moveto(0)
 
@@ -616,6 +619,8 @@ class Dashboard(ctk.CTk):
             self.focus_target = saved["focus_minutes"] * 60
         self.update_goal()
         self.tutor_page.apply_preferences(saved, previous)
+        if saved["appearance_mode"] != previous["appearance_mode"]:
+            apply_appearance(saved["appearance_mode"])
 
     def tick(self):
         try:

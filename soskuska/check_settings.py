@@ -92,7 +92,7 @@ def run_check(path,endpoint_url,reopen=False):
         assert app.store.preferences()['focus_minutes']==25
         other=Store(path)
         try:
-            fields={key:app.store.preferences()[key] for key in ['focus_minutes','daily_goal_minutes','ollama_endpoint','ollama_model','answer_language','ui_language']}
+            fields={key:app.store.preferences()[key] for key in ['focus_minutes','daily_goal_minutes','ollama_endpoint','ollama_model','answer_language','ui_language','appearance_mode']}
             fields['daily_goal_minutes']=100
             other.save_preferences(fields,expected_revision=app.store.preferences()['revision'])
         finally:other.close()

@@ -1,4 +1,5 @@
 """Flashcard authoring and saved self-assessment reviews."""
+from theme import COLORS as C
 from localization_widgets import LocalizedOptionMenu
 from localization import tr, duration_text
 import sqlite3
@@ -177,7 +178,7 @@ class FlashcardPage(ctk.CTkFrame):
         search = self.app.frame(self.body)
         search.grid(row=2, column=0, sticky="ew", pady=(0, 14))
         search.grid_columnconfigure(0, weight=1)
-        self.search = ctk.CTkEntry(search, height=38, placeholder_text=tr(self.app, 'Search front or back…'), font=self.app.font())
+        self.search = ctk.CTkEntry(search, height=38, placeholder_text=tr(self.app, 'Search front or back…'), font=self.app.font(), placeholder_text_color=C["secondary"])
         self.search.grid(row=0, column=0, sticky="ew", padx=(0, 8))
         self.search.insert(0, search_draft)
         self.app.button(search, tr(self.app, 'Search'), self.search_cards, width=90).grid(row=0, column=1)
@@ -213,7 +214,7 @@ class FlashcardPage(ctk.CTkFrame):
         self.clear("deck_form")
         self.app.label(self.body, tr(self.app, 'Edit deck') if deck else tr(self.app, 'New deck'), 22, bold=True).grid(row=0, column=0, sticky="w", pady=(0, 16))
         self.app.label(self.body, tr(self.app, 'Name (1–120 characters; unique across decks)'), 13, "secondary").grid(row=1, column=0, sticky="w")
-        self.name_entry = ctk.CTkEntry(self.body, height=38, font=self.app.font())
+        self.name_entry = ctk.CTkEntry(self.body, height=38, font=self.app.font(), placeholder_text_color=C["secondary"])
         self.name_entry.grid(row=2, column=0, sticky="ew", pady=(4, 14))
         self.name_entry.insert(0, deck["name"] if deck else "")
         self.subject_choice_id = next(iter(self.subject_ids.values()), None)

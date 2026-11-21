@@ -10,6 +10,6 @@ Navigace, formuláře, tlačítka, stavové zprávy, potvrzení, hlavičky náhl
 
 Názvy předmětů/témat/balíčků, otázky, odpovědi, vysvětlení, obsah chatů, identifikátory modelů, URL, cesty, CSV hlavičky a uložená ISO data se nepřekládají. Přehled používá mimo angličtinu číselné datum. Jazyk procesu se globálně nemění. Tlačítka se rozšíří podle textu; minimum zůstává 1024 × 700 a spodní obsah je dostupný posouváním.
 
-Schéma **8** přidává `preferences.ui_language` s anglickou výchozí hodnotou. Migrace zachová obsah, historii chatů, jazyk AI a revize nastavení. Uložení zůstává výslovné, atomické a chráněné před starým formulářem. Obnova přijímá samostatné zálohy schématu 8; starší originál uchovej, samostatnou kopii otevři novou aplikací přes `--data` pro migraci a vyexportuj novou zálohu. Viz [Záloha a obnova](BACKUP_RESTORE.md).
+Schéma **8** přidává `preferences.ui_language` s anglickou výchozí hodnotou. Migrace zachová obsah, historii chatů, jazyk AI a revize nastavení. Uložení zůstává výslovné, atomické a chráněné před starým formulářem. Obnova přijímá samostatné zálohy schématu 9; starší originál uchovej, samostatnou kopii otevři novou aplikací přes `--data` pro migraci a vyexportuj novou zálohu. Viz [Záloha a obnova](BACKUP_RESTORE.md).
 
 Průvodci používají anglické UI popisky jako společný odkaz. Aplikace při jiném jazyce ukazuje odpovídající překlady.

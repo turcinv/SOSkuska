@@ -1,4 +1,5 @@
 """Statistics screen for saved focus, test results and self-assessed reviews."""
+from theme import COLORS as C
 from localization_widgets import LocalizedOptionMenu
 from localization import tr, duration_text
 import sqlite3
@@ -88,7 +89,7 @@ class StatisticsPage(ctk.CTkFrame):
             if row["subject_id"] is None and row["name"]:
                 name += tr(self.app," (subject deleted / unavailable)")
             self.text(subjects, tr(self.app, '{v0}\n{v1} · {v2} sessions', v0=name, v1=duration(row['seconds']), v2=row['sessions']), index * 2 + 1)
-            bar = ctk.CTkProgressBar(subjects, height=8, progress_color="#8B5CF6")
+            bar = ctk.CTkProgressBar(subjects, height=8, progress_color=C["accent"])
             bar.grid(row=index * 2 + 2, column=0, sticky="ew", padx=18, pady=(0, 12))
             bar.set(row["seconds"] / maximum)
             self.subject_bars.append(bar)
@@ -100,7 +101,7 @@ class StatisticsPage(ctk.CTkFrame):
         maximum = max((row["seconds"] for row in report["daily"]), default=0) or 1
         for index, row in enumerate(reversed(report["daily"])):
             self.text(daily, tr(self.app, '{v0} · {v1} · {v2} tests · {v3} reviews', v0=row['day'], v1=duration(row['seconds']), v2=row['practice'], v3=row['reviews']), index * 2 + 2, 13)
-            bar = ctk.CTkProgressBar(daily, height=8, progress_color="#8B5CF6")
+            bar = ctk.CTkProgressBar(daily, height=8, progress_color=C["accent"])
             bar.grid(row=index * 2 + 3, column=0, sticky="ew", padx=18, pady=(0, 12))
             bar.set(row["seconds"] / maximum)
             self.daily_bars.append(bar)

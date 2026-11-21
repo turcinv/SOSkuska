@@ -3,6 +3,10 @@
 [English](../../CHANGELOG.md) · [Čeština](../cs/CHANGELOG.md) · [Slovenčina](CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
 
+## Nevydané
+
+Nevydané nastavenie vzhľadu pridáva uložené Light/Dark/System, použité po Save bez obnovy obrazoviek a straty aktívnej práce. System sleduje Windows/macOS, na Linuxe používa Light. Vetva má schému 9; vydaná v0.15.0 zostáva na schéme 8. PR nezlučovať do potvrdenia dokončeného testovania základu a schválenia používateľom. [Nastavenie vzhľadu](APPEARANCE.md).
+
 ## 0.15.0 — 2026-11-21
 
 v0.15.0 pridáva nepodpísaný prenosný ZIP pre Windows x64, zostavený a overený piatou úlohou CI. Pribalený pomocný program zachová oddelené CSV/zálohovacie procesy; cieľový počítač nepotrebuje Python. Automatické hostované kontroly a ručný zoznam pre čistý počítač sú oddelené; ručná preberacia kontrola zatiaľ nie je dokončená. Vydaná verzia je v0.15.0, schéma 8. [Prenosná verzia Windows a preberacia kontrola](WINDOWS_PORTABLE.md).

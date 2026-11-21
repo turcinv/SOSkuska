@@ -1,4 +1,5 @@
 """Saved multiple-choice practice and result review on the Tk main thread."""
+from theme import COLORS as C
 from localization_widgets import LocalizedOptionMenu
 from localization import tr
 import sqlite3
@@ -69,7 +70,7 @@ class PracticePage(ctk.CTkFrame):
         self.history_date_entries = []
         for row, text in enumerate(('Completed from (YYYY-MM-DD, optional)', 'Completed through (YYYY-MM-DD, optional)'), 2):
             app.label(filters, tr(self.app, text), 13, "secondary").grid(row=row*2-2, column=0, sticky="w", padx=16, pady=(0, 4))
-            entry = ctk.CTkEntry(filters, height=38, font=app.font())
+            entry = ctk.CTkEntry(filters, height=38, font=app.font(), placeholder_text_color=C["secondary"])
             entry.grid(row=row*2-1, column=0, sticky="ew", padx=16, pady=(0, 12))
             entry.bind('<Return>', lambda _event: self.apply_history())
             self.history_date_entries.append(entry)
@@ -161,7 +162,7 @@ class PracticePage(ctk.CTkFrame):
         self.app.label(parent, tr(self.app,text), 13, "secondary").grid(row=row*2, column=0, sticky="w", pady=(0, 4))
         menu = LocalizedOptionMenu(parent,owner=self.app,translate_values=text!="Subject",empty_text="Add a subject first" if text=="Subject" else None, variable=variable, values=values if text!="Subject" else [], command=command,
                                   dynamic_resizing=False, height=38, font=self.app.font(),
-                                  fg_color="#202633", button_color="#6D28D9")
+                                  fg_color=C["raised"], button_color=C["border"])
         menu.grid(row=row*2+1, column=0, sticky="ew", pady=(0, 14))
         return menu
 
