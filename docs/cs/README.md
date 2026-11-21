@@ -2,7 +2,7 @@
 
 [English](../../README.md) · [Čeština](README.md) · [Slovenčina](../sk/README.md) · [Русский](../ru/README.md)
 
-**Vydání: [v0.14.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.14.0)** — zdrojový kód funkčního prototypu. Přehled funkcí a oprav je v [historii změn](CHANGELOG.md). Instalátor zatím není součástí vydání.
+**Vydání: [v0.15.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.15.0)** — zdrojový kód a přenosný ZIP pro Windows x64. Přehled je v [historii změn](CHANGELOG.md). Instalátor není součástí.
 
 Název aplikace je **SOSkúška**. Repozitář a kořenová složka jsou **SOSkuska**, zdrojový adresář `soskuska/`; technické názvy používají podobu bez diakritiky.
 
@@ -133,4 +133,4 @@ Historie testů nyní nabízí všechny dokončené pokusy po 20 na stránku, fi
 
 ## Přenosná verze Windows a přejímka
 
-Tato větev přidává nepodepsaný přenosný ZIP pro Windows x64, sestavený a ověřený pátou úlohou CI. Přibalený pomocný program zachová oddělené CSV/zálohovací procesy; cílový počítač nepotřebuje Python. Automatické hostované kontroly a ruční seznam pro čistý počítač jsou oddělené; ruční přejímka zatím není dokončená. Vydaná verze zůstává v0.14.0, schéma 8. [Přenosná verze Windows a přejímka](WINDOWS_PORTABLE.md) · [Kontrolní seznam](WINDOWS_ACCEPTANCE.md).
+v0.15.0 přidává nepodepsaný přenosný ZIP pro Windows x64, sestavený a ověřený pátou úlohou CI. Přibalený pomocný program zachová oddělené CSV/zálohovací procesy; cílový počítač nepotřebuje Python. Automatické hostované kontroly a ruční seznam pro čistý počítač jsou oddělené; ruční přejímka zatím není dokončená. Vydaná verze je v0.15.0, schéma 8. [Přenosná verze Windows a přejímka](WINDOWS_PORTABLE.md) · [Kontrolní seznam](WINDOWS_ACCEPTANCE.md).

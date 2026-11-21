@@ -2,7 +2,7 @@
 
 [English](README.md) · [Čeština](docs/cs/README.md) · [Slovenčina](docs/sk/README.md) · [Русский](docs/ru/README.md)
 
-**Release: [v0.14.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.14.0)** — a working source-code prototype. See the [changelog](CHANGELOG.md). An installer is not included yet.
+**Release: [v0.15.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.15.0)** — source code and a Windows x64 portable ZIP. See the [changelog](CHANGELOG.md). An installer is not included.
 
 SOSkúška is a local desktop study assistant built with Python, CustomTkinter and SQLite for a semester project. The product name uses accents; repository, source and data-folder names use `SOSkuska` / `soskuska`.
 
@@ -109,4 +109,4 @@ Practice history now supports pages of 20 across all completed attempts, histori
 
 ## Windows portable build and acceptance
 
-This branch adds an unsigned Windows x64 portable ZIP, built and checked by a fifth CI job. Bundled helper executables preserve isolated CSV/backup jobs; Python is not required on the target machine. Automated hosted Windows checks and the manual clean-machine checklist are separate; manual acceptance is not yet completed. Published version remains v0.14.0, schema 8. [Windows portable build and acceptance](docs/WINDOWS_PORTABLE.md) · [Checklist](docs/WINDOWS_ACCEPTANCE.md).
+v0.15.0 adds an unsigned Windows x64 portable ZIP, built and checked by a fifth CI job. Bundled helper executables preserve isolated CSV/backup jobs; Python is not required on the target machine. Automated hosted Windows checks and the manual clean-machine checklist are separate; manual acceptance is not yet completed. Published version is v0.15.0, schema 8. [Windows portable build and acceptance](docs/WINDOWS_PORTABLE.md) · [Checklist](docs/WINDOWS_ACCEPTANCE.md).

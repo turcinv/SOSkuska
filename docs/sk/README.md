@@ -2,7 +2,7 @@
 
 [English](../../README.md) · [Čeština](../cs/README.md) · [Slovenčina](README.md) · [Русский](../ru/README.md)
 
-**Vydanie: [v0.14.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.14.0)** — zdrojový kód funkčného prototypu. Prehľad funkcií a opráv je v [histórii zmien](CHANGELOG.md). Inštalátor zatiaľ nie je súčasťou vydania.
+**Vydanie: [v0.15.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.15.0)** — zdrojový kód a prenosný ZIP pre Windows x64. Prehľad je v [histórii zmien](CHANGELOG.md). Inštalátor nie je súčasťou.
 
 Lokálny desktopový študijný asistent v Pythone a CustomTkinteri. Implementované sú Dashboard a My Subjects: správa predmetov a termínov skúšok, denný zoznam úloh, vyhľadávanie a časovač prepojený s predmetom. Úlohy a odštudovaný čas sa ukladajú do SQLite na zariadení používateľa.
 
@@ -130,4 +130,4 @@ História testov teraz ponúka všetky dokončené pokusy po 20 na stránku, fil
 
 ## Prenosná verzia Windows a preberacia kontrola
 
-Táto vetva pridáva nepodpísaný prenosný ZIP pre Windows x64, zostavený a overený piatou úlohou CI. Pribalený pomocný program zachová oddelené CSV/zálohovacie procesy; cieľový počítač nepotrebuje Python. Automatické hostované kontroly a ručný zoznam pre čistý počítač sú oddelené; ručná preberacia kontrola zatiaľ nie je dokončená. Vydaná verzia zostáva v0.14.0, schéma 8. [Prenosná verzia Windows a preberacia kontrola](WINDOWS_PORTABLE.md) · [Kontrolný zoznam](WINDOWS_ACCEPTANCE.md).
+v0.15.0 pridáva nepodpísaný prenosný ZIP pre Windows x64, zostavený a overený piatou úlohou CI. Pribalený pomocný program zachová oddelené CSV/zálohovacie procesy; cieľový počítač nepotrebuje Python. Automatické hostované kontroly a ručný zoznam pre čistý počítač sú oddelené; ručná preberacia kontrola zatiaľ nie je dokončená. Vydaná verzia je v0.15.0, schéma 8. [Prenosná verzia Windows a preberacia kontrola](WINDOWS_PORTABLE.md) · [Kontrolný zoznam](WINDOWS_ACCEPTANCE.md).

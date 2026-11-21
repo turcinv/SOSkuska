@@ -60,3 +60,5 @@ The user prefers GUI checks inside the Linux test container because native windo
 ## Windows build evidence
 
 The fifth CI job builds the Windows x64 portable ZIP on Windows, extracts that exact archive, checks the frozen GUI and console helpers from isolated temporary paths, and uploads ZIP/checksum/report for 14 days. It does not publish releases. Manual clean-machine, hardware/DPI and real-model acceptance remain separate unchecked evidence in docs/WINDOWS_ACCEPTANCE.md. Keep portable guides in all four languages. Do not call a hosted smoke check a manual Windows acceptance pass.
+
+When publishing a Windows release, align labels via PR first, then obtain the checked portable ZIP/checksum/report from the main CI run for the exact merged tag target. Verify the run head SHA and ZIP checksum before uploading assets. Do not reuse a PR synthetic-merge artifact or earlier-version binary. Wait for the Windows build/acceptance job; publishing sources alone is insufficient when promising a portable download.
