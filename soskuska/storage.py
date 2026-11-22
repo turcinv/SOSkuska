@@ -335,10 +335,16 @@ class Store(FocusStoreMixin):
         except sqlite3.IntegrityError:
             raise ValueError("A subject with this name already exists.") from None
 
-    def update_subject(self, subject_id, name, description="", exam_date=""):
+    def update_subject(self, subject_id, name, description="", exam_date="", *, expected_state=None):
         fields = subject_fields(name, description, exam_date)
         try:
             with self.db:
+                self.db.execute("BEGIN IMMEDIATE")
+                current = self.subject(subject_id)
+                if current is None:
+                    raise ValueError("This subject no longer exists. Refresh the subject list.")
+                if expected_state is not None and any(current[key] != expected_state[key] for key in ("id", "name", "description", "exam_date")):
+                    raise ValueError("This subject changed in another window. Your draft is kept. Reopen Edit to load the latest version before saving.")
                 cursor = self.db.execute("""UPDATE subjects
                     SET name=?,name_key=?,description=?,exam_date=?,updated_at=CURRENT_TIMESTAMP
                     WHERE id=?""", (*fields, subject_id))
@@ -399,11 +405,16 @@ class Store(FocusStoreMixin):
         except sqlite3.IntegrityError:
             raise ValueError("A topic with this name already exists in this subject.") from None
 
-    def delete_topic(self, topic_id):
+    def delete_topic(self, topic_id, *, expected_state=None):
         with self.db:
-            cursor = self.db.execute("DELETE FROM topics WHERE id=?", (topic_id,))
-            if cursor.rowcount == 0:
+            self.db.execute("BEGIN IMMEDIATE")
+            current = self.topic(topic_id)
+            if current is None:
                 raise ValueError("This topic no longer exists.")
+            if expected_state is not None and any(current[key] != expected_state[key] for key in ("id", "subject_id", "name")):
+                return False
+            self.db.execute("DELETE FROM topics WHERE id=?", (topic_id,))
+        return True
 
     def questions(self, subject_id):
         return [dict(row) for row in self.db.execute("""SELECT q.*, t.name AS topic_name
@@ -499,11 +510,18 @@ class Store(FocusStoreMixin):
             if cursor.rowcount == 0:
                 raise ValueError("This question no longer exists.")
 
-    def delete_question(self, question_id):
+    def delete_question(self, question_id, *, expected_state=None):
         with self.db:
-            cursor = self.db.execute("DELETE FROM questions WHERE id=?", (question_id,))
-            if cursor.rowcount == 0:
+            self.db.execute("BEGIN IMMEDIATE")
+            current = self.question(question_id)
+            if current is None:
                 raise ValueError("This question no longer exists.")
+            keys = ("id", "subject_id", "topic_id", "prompt", "option_a", "option_b",
+                    "option_c", "option_d", "correct_option", "difficulty", "explanation")
+            if expected_state is not None and any(current[key] != expected_state[key] for key in keys):
+                return False
+            self.db.execute("DELETE FROM questions WHERE id=?", (question_id,))
+        return True
 
     def practice_pool(self, subject_id, topic="all", difficulty=None):
         practice_settings(1, None, difficulty)

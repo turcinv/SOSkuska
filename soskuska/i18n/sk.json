@@ -692,5 +692,11 @@
   "Backup settings changed in another window. Reload before saving.": "Nastavenia záloh zmenilo iné okno. Pred uložením ich načítaj znovu.",
   "The daily backup folder is unavailable. Choose an existing local folder and retry.": "Priečinok denných záloh nie je dostupný. Vyber existujúci miestny priečinok a zopakuj akciu.",
   "Another window is backing up. Retry after it finishes.": "Iné okno vytvára zálohu. Zopakuj akciu po dokončení.",
-  "No daily backup needed now; the schedule will be checked again.": "Denná záloha teraz nie je potrebná; plán sa skontroluje znovu."
+  "No daily backup needed now; the schedule will be checked again.": "Denná záloha teraz nie je potrebná; plán sa skontroluje znovu.",
+  "This subject changed in another window. Your draft is kept. Reopen Edit to load the latest version before saving.": "Predmet zmenilo iné okno. Koncept zostáva. Pred uložením znovu otvor úpravy a načítaj najnovšiu verziu.",
+  "This record changed. Review the updated warning before deleting it.": "Záznam sa zmenil. Pred vymazaním skontroluj nové upozornenie.",
+  "Could not refresh the question bank. Your draft is kept; reopen Questions to retry.": "Banku otázok nemožno obnoviť. Koncept zostáva; pre opakovanie znovu otvor otázky.",
+  "Delete question “{v0}” permanently? This cannot be undone.": "Natrvalo vymazať otázku „{v0}“? Akciu nemožno vrátiť.",
+  "The selected topic no longer exists. Choose another topic or No topic before saving.": "Vybraná téma už neexistuje. Pred uložením vyber inú tému alebo možnosť Bez témy.",
+  "Unavailable topic: {v0}": "Nedostupná téma: {v0}"
 }

@@ -2,6 +2,11 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
+## Unreleased
+
+- Fix stale subject saves and question/topic delete confirmations; preserve same-subject question drafts and unavailable topic selections.
+- Reconcile daily-backup failures with another window’s successful receipt. Track and verify all four Astra findings in docs/REVIEW_FINDINGS.md; schema remains 10.
+
 ## 0.18.0 — 2026-11-22
 
 - Opt-in daily local backups with machine-specific folder settings, exclusive multi-window coordination and visible save/retry results.

@@ -3,6 +3,11 @@
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
 
+## Nevydané
+
+- Oprava zastaralého ukládání předmětů a potvrzení smazání otázek/témat; zachování konceptů stejného předmětu a nedostupných témat.
+- Zohlednění úspěšné zálohy jiného okna při starém oznámení chyby. Čtyři nálezy Astra sleduje REVIEW_FINDINGS.md; schéma zůstává 10.
+
 ## 0.18.0 — 2026-11-22
 
 - Volitelné denní místní zálohy se složkou pro daný počítač, koordinací oken a viditelnými výsledky/opakováním.

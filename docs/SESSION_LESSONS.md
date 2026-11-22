@@ -53,3 +53,7 @@ Independent Sol medium review resolved its findings. Local Linux/Docker verifica
 ## Scheduled backups review · 22 November 2026
 
 Keep a machine's backup consent/folder out of exported study data. Separate editable-plan identity from automatic success receipts so background completion cannot authorize stale controls or invalidate valid drafts. Treat another helper's lease as temporary busy. Keep runtime failures separate from form-load notices, and show blocked Close without navigating away or cancelling an import preview. Validate canonical paths and bounded UTF-8 receipts before snapshot publication; invalid sidecars must never prevent startup or enable automation. PR #36 is merged; this feature is released in v0.18.0 with schema 10.
+
+## Astra main review fixes · 22 November 2026
+
+The Astra 6.2 low-effort review of main/v0.18.0 identified three P2 issues and one P3 issue. Track them with stable IDs A62-01 through A62-04 in [Review findings](REVIEW_FINDINGS.md), initially committed Open before implementation. Keep the tracker after resolution as evidence; mark fixes verified on their branch separately from merge/release status. Compare editable source snapshots atomically, keep changed-delete warnings beside Confirm, preserve same-subject editor identities and unavailable topic IDs, and reconcile background backup success across windows without another write.

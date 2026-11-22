@@ -37,3 +37,7 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 - Refresh or reopening loads a new snapshot. Read failure preserves the previous report with a retry notice. Resize bindings must die with their labels; do not accumulate Configure callbacks on persistent report containers. Statistics shortcuts must not modify hidden search drafts.
 - Run tests/test_statistics.py and check_statistics.py with disposable data. CI includes the sixth native check. Statistics was released in v0.6.0.
 
+
+## Main review findings (unreleased)
+
+SubjectPage passes its original editable subject snapshot to update_subject; compare actual values under BEGIN IMMEDIATE, never only updated_at. Conflicts keep the form/draft. Question/topic delete callbacks retain the displayed snapshot and recheck atomically; stale data returns False, clears the old confirmation and displays a changed warning beside Confirm with a fresh snapshot. Missing records clear pending state. Reopening the same subject must retain the question/topic editor, original edit snapshot, filters and text. Preserve selected topic IDs through rename; deleted choices remain unavailable and block Save until explicit replacement, including when a new topic reuses the old name. Entry-point and refresh errors must reopen the retained editor with a retry notice. New subject navigation may reset the single-subject editor. Run test_review_findings.py/check_state_fixes.py and affected checks. Track status and evidence in docs/REVIEW_FINDINGS.md.

@@ -18,6 +18,7 @@ class QuestionBankPage(ctk.CTkFrame):
         self.subject_snapshot = None
         self.editing_question_id = None
         self.question_snapshot = None
+        self.unavailable_topic_id = None
         self.editing_topic_id = None
         self.pending_delete = None
         self.filter_topics = {"All topics": "all", "No topic": None}
@@ -152,6 +153,14 @@ class QuestionBankPage(ctk.CTkFrame):
     def load_subject(self, subject_id):
         if self.importer.saving:return
         self.importer.cancel()
+        if self.subject_id == subject_id:
+            self.cancel_delete()
+            try:
+                self.refresh()
+                self.status.configure(text='')
+            except sqlite3.Error:
+                self.status.configure(text=tr(self.app, 'Could not refresh the question bank. Your draft is kept; reopen Questions to retry.'))
+            return
         self.subject_id = subject_id
         self.subject_snapshot = None
         self.hide_question_form()
@@ -181,11 +190,19 @@ class QuestionBankPage(ctk.CTkFrame):
             self.add_topic_button.configure(state="normal")
             self.csv_button.configure(state="normal")
         selected_filter = self.filter_topics.get(self.topic_filter.get(), "all")
-        selected_form = self.form_topics.get(self.question_topic.get())
+        selected_label = self.question_topic.get()
+        selected_form = self.form_topics.get(selected_label)
         topics = self.app.store.topics(self.subject_id) if subject else []
         choices = {f'Topic: {topic["name"]}': topic["id"] for topic in topics}
         self.filter_topics = {"All topics": "all", "No topic": None, **choices}
         self.form_topics = {"No topic": None, **choices}
+        self.unavailable_topic_id = None
+        if selected_form is not None and selected_form not in self.form_topics.values():
+            self.unavailable_topic_id = selected_form
+            # Keep the selected identity until the user explicitly replaces it.
+            unavailable_label = selected_label if selected_label.startswith('Unavailable topic: ') else 'Unavailable topic: ' + selected_label.removeprefix('Topic: ')
+            self.form_topics[unavailable_label] = selected_form
+            self.question_error.configure(text=tr(self.app, 'The selected topic no longer exists. Choose another topic or No topic before saving.'))
         self.topic_filter_menu.configure(values=list(self.filter_topics))
         self.question_topic_menu.configure(values=list(self.form_topics))
         self.topic_filter.set(next((k for k, v in self.filter_topics.items() if v == selected_filter), "All topics"))
@@ -249,6 +266,8 @@ class QuestionBankPage(ctk.CTkFrame):
             return
         self.hide_topic_form()
         self.cancel_delete()
+        self.question_topic.set('No topic')
+        self.unavailable_topic_id = None
         self.refresh()
         self.editing_question_id = question_id
         self.question_snapshot = question
@@ -273,12 +292,16 @@ class QuestionBankPage(ctk.CTkFrame):
         self.question_form.grid_remove()
         self.editing_question_id = None
         self.question_snapshot = None
+        self.question_topic.set('No topic')
+        self.unavailable_topic_id = None
 
     def save_question(self):
         values = (self.prompt_entry.get("1.0", "end-1c"), [entry.get() for entry in self.option_entries],
                   "ABCD".index(self.correct.get()), self.difficulty.get(),
                   self.form_topics.get(self.question_topic.get()), self.explanation_entry.get("1.0", "end-1c"))
         try:
+            if self.unavailable_topic_id is not None and values[4] == self.unavailable_topic_id:
+                raise ValueError('The selected topic no longer exists. Choose another topic or No topic before saving.')
             if self.editing_question_id is None:
                 self.app.store.create_question(self.subject_id, *values)
             else:
@@ -296,18 +319,23 @@ class QuestionBankPage(ctk.CTkFrame):
         if isinstance(selected, int):
             self.ask_delete("topic", selected)
 
-    def ask_delete(self, kind, record_id):
+    def ask_delete(self, kind, record_id, *, changed=False):
         record = self.app.store.topic(record_id) if kind == "topic" else self.app.store.question(record_id)
         if record is None or record["subject_id"] != self.subject_id:
+            self.cancel_delete()
             self.refresh()
-            return
+            self.status.configure(text=tr(self.app, 'This topic no longer exists in this subject.' if kind == 'topic' else 'This question no longer exists in this subject.'))
+            return False
         self.hide_question_form()
         self.hide_topic_form()
-        self.pending_delete = (kind, record_id)
-        message = f'Delete topic “{record["name"]}”? Its questions will be kept without a topic.' if kind == "topic" else "Delete this question permanently? This cannot be undone."
-        self.delete_text.configure(text=tr(self.app, message))
+        self.pending_delete = (kind, record_id, dict(record))
+        message = tr(self.app, 'Delete topic “{v0}”? Its questions will be kept without a topic.', v0=record["name"]) if kind == "topic" else tr(self.app, 'Delete question “{v0}” permanently? This cannot be undone.', v0=record["prompt"][:200])
+        if changed:
+            message = tr(self.app, 'This record changed. Review the updated warning before deleting it.') + '\n\n' + message
+        self.delete_text.configure(text=message)
         self.delete_panel.grid()
         self.app.scroll._parent_canvas.yview_moveto(0)
+        return True
 
     def cancel_delete(self):
         self.delete_panel.grid_remove()
@@ -316,12 +344,18 @@ class QuestionBankPage(ctk.CTkFrame):
     def confirm_delete(self):
         if self.pending_delete is None:
             return
-        kind, record_id = self.pending_delete
+        kind, record_id, snapshot = self.pending_delete
         try:
             if kind == "topic":
-                self.app.store.delete_topic(record_id)
+                deleted = self.app.store.delete_topic(record_id, expected_state=snapshot)
             else:
-                self.app.store.delete_question(record_id)
+                deleted = self.app.store.delete_question(record_id, expected_state=snapshot)
+            if not deleted:
+                self.cancel_delete()
+                self.refresh()
+                if self.ask_delete(kind, record_id, changed=True):
+                    self.status.configure(text=tr(self.app, 'This record changed. Review the updated warning before deleting it.'))
+                return
         except (ValueError, sqlite3.Error) as exc:
             self.status.configure(text=tr(self.app,tr(self.app, str(exc)) if isinstance(exc, ValueError) else tr(self.app, 'Could not delete the record. Please try again.')))
             return
