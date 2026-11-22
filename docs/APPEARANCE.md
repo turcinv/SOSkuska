@@ -2,7 +2,7 @@
 
 [English](APPEARANCE.md) · [Čeština](cs/APPEARANCE.md) · [Slovenčina](sk/APPEARANCE.md) · [Русский](ru/APPEARANCE.md)
 
-This feature is implemented on the appearance branch and is **not part of released v0.15.0**. Keep the feature PR unmerged until the user confirms v0.15.0 testing is complete and explicitly approves merging. Baseline defects go through separate fix PRs.
+Appearance settings were released in **v0.16.0** after the user confirmed v0.15.0 baseline testing complete and approved merging PR #32 on 22 November 2026. Future changes still require their own review and merge/release authorization.
 
 Open **Settings → Appearance (applies on Save)** and choose Light, Dark or System. Save settings to apply the choice immediately and remember it for this database. Merely selecting a mode is a draft; navigation keeps that draft, while Reload confirms replacing it. Failed or stale saves keep the current appearance and draft. Existing databases default to Dark. Saving the whole Settings form retains its existing validation and AI-change guards.
 
@@ -12,8 +12,8 @@ System follows native Windows/macOS appearance and responds to OS changes while 
 
 `theme.py` provides paired colors shared by frames, text, controls, dropdowns, placeholders, disabled primary buttons and destructive controls. `appearance.py` uses the public CustomTkinter appearance API. Automated checks audit visible text/background contrast across screens, but do not establish complete accessibility or manual platform verification.
 
-Schema **9** adds `preferences.appearance_mode` with allowed canonical values Light/Dark/System and a Dark default. Migration preserves existing content, conversation history, languages and revision; failed migrations roll back. Backups include the choice. This branch accepts schema 9 standalone backups; opening an older trusted backup copy through startup migrates it, after which a new backup can be exported. Keep originals: v0.15.0 uses schema 8 and cannot reopen schema 9 data.
+Schema **9** adds `preferences.appearance_mode` with allowed canonical values Light/Dark/System and a Dark default. Migration preserves existing content, conversation history, languages and revision; failed migrations roll back. Backups include the choice. This release accepts schema 9 standalone backups; opening an older trusted backup copy through startup migrates it, after which a new backup can be exported. Keep originals: v0.15.0 uses schema 8 and cannot reopen schema 9 data.
 
-To test this branch while keeping v0.15.0 acceptance separate, use a new disposable `--data .local-data/appearance.sqlite3` database or a separate copy. Do not open the baseline test database with the feature build. The [Windows acceptance checklist](WINDOWS_ACCEPTANCE.md) remains about the released baseline.
+Status updated 22 November 2026: the user confirmed v0.15.0 baseline testing complete and approved appearance PR #32. This checklist now targets v0.16.0; item-by-item clean-machine/DPI results are not recorded here. Leave unchecked items unverified and record device-specific evidence when testing the new release. For new checks use `--data .local-data/appearance.sqlite3`. [Next steps · 22 November 2026](NEXT_STEPS.md).
 
 Checks: `tests/test_appearance.py`, `soskuska/check_appearance.py`, live stream preservation in `check_tutor.py`, four-language controls and frozen Windows startup in all 12 language/mode combinations. Routine GUI checks run inside the [container](CONTAINER_TESTS.md). No new application dependency is required.

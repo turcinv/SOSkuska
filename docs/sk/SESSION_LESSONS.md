@@ -39,3 +39,7 @@ Konverzácia môže striedať češtinu, slovenčinu, angličtinu a ruštinu; od
 Koreňový `AGENTS.md` slúži ako stručný rozcestník. Pred úpravou oblasti načítaj požadované súbory `@docs/agents/...`; ostatné pravidlá načítaj podľa potreby. Ide o výslovné pokyny na čítanie súborov, nie prísľub automatického vloženia. Oficiálny [návod Codex k AGENTS.md](https://developers.openai.com/codex/guides/agents-md) opisuje hierarchické načítanie pokynov; projekt preto výslovne požaduje otvorenie odkazovaných súborov.
 
 Trvalé pravidlá patria do príslušného súboru pokynov, nové datované overenie sem a história vydaní do changelogu. Zmeny správania premietni do pravidiel a všetkých jazykov používateľskej dokumentácie.
+
+## Ďalšie kroky · 22. novembra 2026
+
+Stav 22. novembra 2026: používateľ potvrdil dokončenie testovania v0.15.0 a schválil PR #32. Tento zoznam teraz cieli na v0.16.0; jednotlivé výsledky čistého počítača/DPI tu nie sú zaznamenané. Nezaškrtnuté body zostávajú neoverené; pri testovaní nového vydania doplň dôkazy pre konkrétne zariadenie. [Ďalšie kroky · 22. novembra 2026](NEXT_STEPS.md).

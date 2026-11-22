@@ -63,4 +63,4 @@ The fifth CI job builds the Windows x64 portable ZIP on Windows, extracts that e
 
 When publishing a Windows release, align labels via PR first, then obtain the checked portable ZIP/checksum/report from the main CI run for the exact merged tag target. Verify the run head SHA and ZIP checksum before uploading assets. Do not reuse a PR synthetic-merge artifact or earlier-version binary. Wait for the Windows build/acceptance job; publishing sources alone is insufficient when promising a portable download.
 
-Appearance work is gated: continue stable v0.15.0 acceptance separately, use isolated feature data, resolve baseline bugs via separate PRs, and wait for user confirmation of completed baseline testing plus explicit merge approval. Passing CI does not remove this gate. See [Appearance](../APPEARANCE.md).
+Appearance gate satisfied on 22 November 2026: the user confirmed v0.15.0 testing complete and authorized merging PR #32. The feature is released in v0.16.0. Future feature/fix PRs still need their own review and explicit merge/release authorization; do not keep applying the completed v0.15.0 gate. See [Next steps](../NEXT_STEPS.md).

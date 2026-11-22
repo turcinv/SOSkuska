@@ -2,7 +2,7 @@
 
 [English](../WINDOWS_ACCEPTANCE.md) · [Čeština](../cs/WINDOWS_ACCEPTANCE.md) · [Slovenčina](../sk/WINDOWS_ACCEPTANCE.md) · [Русский](../ru/WINDOWS_ACCEPTANCE.md)
 
-**Ruční kontrola na čistém počítači: NEPROVEDENA.** Automatické CI protokoly jsou samostatný důkaz. Vyplň tento záznam na Windows x64 bez nainstalovaného Pythonu s přesným ověřeným artefaktem. Nepoužívej skutečná/soukromá studijní data.
+Stav 22. listopadu 2026: uživatel potvrdil dokončení testování v0.15.0 a schválil PR #32. Tento seznam nyní cílí na v0.16.0; jednotlivé výsledky čistého počítače/DPI zde nejsou zaznamenané. Nezaškrtnuté body zůstávají neověřené; při testování nového vydání doplň důkazy pro konkrétní zařízení.
 
 Zaznamenej edici/build Windows, architekturu CPU, rozlišení/měřítko, commit artefaktu, SHA-256, datum, testujícího a výsledky. Přilož snímky a postup reprodukce chyb. Každý bod označ PASS/FAIL s důkazem; nezaškrtnutý není ověřený.
 
