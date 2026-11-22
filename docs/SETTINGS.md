@@ -38,4 +38,4 @@ v0.17.0 adds focus-session crash recovery using schema **10**. Keep a backup bef
 
 ## Scheduled local backups
 
-This feature is implemented on the current branch and is not released yet. The published version remains v0.17.0; SQLite schema remains **10**. Manual backup/restore continues to work independently. [Scheduled local backups](SCHEDULED_BACKUPS.md).
+Scheduled local backups are available in **v0.18.0**. SQLite schema remains **10**. Manual backup/restore continues to work independently. [Scheduled local backups](SCHEDULED_BACKUPS.md).

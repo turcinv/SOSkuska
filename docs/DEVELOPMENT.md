@@ -219,7 +219,7 @@ python soskuska/check_practice_history.py
 
 ## Windows portable build and acceptance
 
-v0.15.0 adds an unsigned Windows x64 portable ZIP, built and checked by a fifth CI job. Bundled helper executables preserve isolated CSV/backup jobs; Python is not required on the target machine. Automated hosted Windows checks and the manual clean-machine checklist are separate; manual acceptance is not yet completed. Published version is v0.17.0, schema 10. [Windows portable build and acceptance](WINDOWS_PORTABLE.md) · [Checklist](WINDOWS_ACCEPTANCE.md).
+v0.15.0 adds an unsigned Windows x64 portable ZIP, built and checked by a fifth CI job. Bundled helper executables preserve isolated CSV/backup jobs; Python is not required on the target machine. Automated hosted Windows checks and the manual clean-machine checklist are separate; manual acceptance is not yet completed. Published version is v0.18.0, schema 10. [Windows portable build and acceptance](WINDOWS_PORTABLE.md) · [Checklist](WINDOWS_ACCEPTANCE.md).
 
 Current packaging work: 251 unit tests passed locally. The Linux container passed all 15 GUI scripts (250 unit tests at that source snapshot, two filesystem-specific skips). No native Mac GUI suite was run for this branch. Hosted Windows build evidence is recorded separately; manual acceptance remains NOT RUN.
 
@@ -237,4 +237,4 @@ v0.17.0 adds focus-session crash recovery using schema **10**. Keep a backup bef
 
 ## Scheduled local backups
 
-This feature is implemented on the current branch and is not released yet. The published version remains v0.17.0; SQLite schema remains **10**. Manual backup/restore continues to work independently. [Scheduled local backups](SCHEDULED_BACKUPS.md).
+Scheduled local backups are available in **v0.18.0**. SQLite schema remains **10**. Manual backup/restore continues to work independently. [Scheduled local backups](SCHEDULED_BACKUPS.md).

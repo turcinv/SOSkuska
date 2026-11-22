@@ -42,7 +42,7 @@ Record durable rules in the relevant topic file and new dated evidence here. Kee
 
 ## Next steps · 22 November 2026
 
-Status updated 22 November 2026: the user confirmed v0.15.0 baseline testing complete and approved appearance PR #32. This checklist now targets v0.17.0; item-by-item clean-machine/DPI results are not recorded here. Leave unchecked items unverified and record device-specific evidence when testing the new release. [Next steps · 22 November 2026](NEXT_STEPS.md).
+Status updated 22 November 2026: the user confirmed v0.15.0 baseline testing complete and approved appearance PR #32. This checklist now targets v0.18.0; item-by-item clean-machine/DPI results are not recorded here. Leave unchecked items unverified and record device-specific evidence when testing the new release. [Next steps · 22 November 2026](NEXT_STEPS.md).
 
 ## Focus recovery review · 22 November 2026
 
@@ -52,4 +52,4 @@ Independent Sol medium review resolved its findings. Local Linux/Docker verifica
 
 ## Scheduled backups review · 22 November 2026
 
-Keep a machine's backup consent/folder out of exported study data. Separate editable-plan identity from automatic success receipts so background completion cannot authorize stale controls or invalidate valid drafts. Treat another helper's lease as temporary busy. Keep runtime failures separate from form-load notices, and show blocked Close without navigating away or cancelling an import preview. Validate canonical paths and bounded UTF-8 receipts before snapshot publication; invalid sidecars must never prevent startup or enable automation. This feature is unreleased on feature/scheduled-backups; v0.17.0 remains the published version.
+Keep a machine's backup consent/folder out of exported study data. Separate editable-plan identity from automatic success receipts so background completion cannot authorize stale controls or invalidate valid drafts. Treat another helper's lease as temporary busy. Keep runtime failures separate from form-load notices, and show blocked Close without navigating away or cancelling an import preview. Validate canonical paths and bounded UTF-8 receipts before snapshot publication; invalid sidecars must never prevent startup or enable automation. PR #36 is merged; this feature is released in v0.18.0 with schema 10.

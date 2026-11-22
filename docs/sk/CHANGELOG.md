@@ -3,7 +3,7 @@
 [English](../../CHANGELOG.md) · [Čeština](../cs/CHANGELOG.md) · [Slovenčina](CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
 
-## Nevydané
+## 0.18.0 — 2026-11-22
 
 - Voliteľné denné miestne zálohy s priečinkom pre daný počítač, koordináciou okien a viditeľnými výsledkami/opakovaním.
 - Zachovanie súborov aj konceptov bez zmeny schémy; kontajnerové, procesné a Windows kontroly a návody v štyroch jazykoch.

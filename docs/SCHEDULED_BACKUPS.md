@@ -2,7 +2,7 @@
 
 [English](SCHEDULED_BACKUPS.md) · [Čeština](cs/SCHEDULED_BACKUPS.md) · [Slovenčina](sk/SCHEDULED_BACKUPS.md) · [Русский](ru/SCHEDULED_BACKUPS.md)
 
-This feature is implemented on the current branch and is not released yet. The published version remains v0.17.0; SQLite schema remains **10**. Manual backup/restore continues to work independently.
+Scheduled local backups are available in **v0.18.0**. SQLite schema remains **10**. Manual backup/restore continues to work independently.
 
 In Settings, scroll to **Daily local backups**. Choose an existing local folder, enable **Enable daily backups**, then select **Save backup schedule**. This has its own Save/Reload controls; saving the study/AI form does not save the backup schedule. Automation starts only after explicit opt-in. Disabling the saved schedule stops future automatic backups.
 

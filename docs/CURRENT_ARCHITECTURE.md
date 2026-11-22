@@ -2,7 +2,7 @@
 
 [English](CURRENT_ARCHITECTURE.md) · [Čeština](cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](sk/CURRENT_ARCHITECTURE.md) · [Русский](ru/CURRENT_ARCHITECTURE.md)
 
-**Published version: v0.17.0 · schema 10.** Practice history and container tests are implemented.
+**Published version: v0.18.0 · schema 10.** Practice history and container tests are implemented.
 
 v0.17.0 adds focus-session crash recovery using schema **10**. Keep a backup before opening existing data: migration is transactional, but v0.16.0 cannot open a schema-10 database. [Focus-session recovery](FOCUS_RECOVERY.md).
 
@@ -24,7 +24,7 @@ Python, CustomTkinter 5.2.2, Pillow and standard-library SQLite. One process own
 | `soskuska/study_statistics.py` / `statistics_page.py` | Consistent history aggregates and report UI |
 | `soskuska/ollama_client.py`, `tutor.py`, `tutor_page.py` | HTTP/HTTPS, bounded context/background jobs and local-history UI |
 | `soskuska/preferences.py` / `settings_page.py` | Pure preference validation and explicit-save UI |
-| `soskuska/automatic_backup.py` / `scheduled_backups.py` | Machine-local backup plan, daily receipt, exclusive helper and settings controls (unreleased) |
+| `soskuska/automatic_backup.py` / `scheduled_backups.py` | Machine-local backup plan, daily receipt, exclusive helper and settings controls (v0.18.0) |
 | `soskuska/scrolling.py` | Mouse wheel and Tk 9 trackpad compatibility |
 | `tests/` / `soskuska/check_*.py` | Unit tests, frozen migration fixtures and native GUI checks using temporary data |
 
@@ -283,7 +283,7 @@ Practice history now supports pages of 20 across all completed attempts, histori
 
 ## Windows portable build and acceptance
 
-v0.15.0 adds an unsigned Windows x64 portable ZIP, built and checked by a fifth CI job. Bundled helper executables preserve isolated CSV/backup jobs; Python is not required on the target machine. Automated hosted Windows checks and the manual clean-machine checklist are separate; manual acceptance is not yet completed. Published version is v0.17.0, schema 10. [Windows portable build and acceptance](WINDOWS_PORTABLE.md) · [Checklist](WINDOWS_ACCEPTANCE.md).
+v0.15.0 adds an unsigned Windows x64 portable ZIP, built and checked by a fifth CI job. Bundled helper executables preserve isolated CSV/backup jobs; Python is not required on the target machine. Automated hosted Windows checks and the manual clean-machine checklist are separate; manual acceptance is not yet completed. Published version is v0.18.0, schema 10. [Windows portable build and acceptance](WINDOWS_PORTABLE.md) · [Checklist](WINDOWS_ACCEPTANCE.md).
 
 ## Appearance settings
 
@@ -297,4 +297,4 @@ v0.17.0 adds focus-session crash recovery using schema **10**. Keep a backup bef
 
 ## Scheduled local backups
 
-This feature is implemented on the current branch and is not released yet. The published version remains v0.17.0; SQLite schema remains **10**. Manual backup/restore continues to work independently. [Scheduled local backups](SCHEDULED_BACKUPS.md).
+Scheduled local backups are available in **v0.18.0**. SQLite schema remains **10**. Manual backup/restore continues to work independently. [Scheduled local backups](SCHEDULED_BACKUPS.md).
