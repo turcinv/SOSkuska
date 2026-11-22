@@ -22,7 +22,7 @@ The SQLite snapshot contains all saved study data, preferences and local AI conv
 
 This is manual local backup, not synchronization, scheduled backup, encryption or complete crash/power-loss recovery. Keep copies somewhere safe; they contain private study data and saved AI connection preferences. Normal study stays offline and no cloud service is used.
 
-The current branch schema is 10; only schema 10 snapshots are supported by this first restore implementation. There is no downgrade or automatic migration during restore. Hard-linked active databases are rejected to keep locking reliable. Active database/companion paths, including case/Unicode aliases, cannot be used as backup outputs.
+The current schema is 10; only schema 10 snapshots are supported by this first restore implementation. There is no downgrade or automatic migration during restore. Hard-linked active databases are rejected to keep locking reliable. Active database/companion paths, including case/Unicode aliases, cannot be used as backup outputs.
 
 On macOS/Linux, atomic no-overwrite publication requires a filesystem supporting hard links (such as the usual local APFS/ext4 volumes); use a supported local folder if an external drive rejects publication. Windows uses its no-overwrite rename behavior. Database jobs run in helper processes, with a 60-second operation budget and a 90-second process safeguard. Avoid network paths and do not force-quit during a job. If a helper stops unexpectedly, reopen and inspect the database and safety copies instead of assuming the restore failed before commit.
 
@@ -32,4 +32,4 @@ AI Tutor now saves conversations locally, including the original server/model an
 
 ## Focus-session recovery
 
-This branch adds focus recovery to the published v0.16.0 baseline. It is unreleased and uses schema **10**. Keep a backup before opening existing data: migration is transactional, but v0.16.0 cannot open a schema-10 database. [Focus-session recovery](FOCUS_RECOVERY.md).
+v0.17.0 adds focus-session crash recovery using schema **10**. Keep a backup before opening existing data: migration is transactional, but v0.16.0 cannot open a schema-10 database. [Focus-session recovery](FOCUS_RECOVERY.md).

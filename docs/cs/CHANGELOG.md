@@ -3,7 +3,7 @@
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
 
-## Nevydané
+## 0.17.0 — 2026-11-22
 
 - Obnova soustředění po pádu: kontrolní body, pozastavená obnova/zahození, výhradní vlastnictví, opakování uložení a zálohy schématu 10.
 - Testy migrace a přerušení/obnovy; sladěné návody ve čtyřech jazycích.

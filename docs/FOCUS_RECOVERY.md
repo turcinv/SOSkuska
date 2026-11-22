@@ -2,7 +2,7 @@
 
 [English](FOCUS_RECOVERY.md) · [Čeština](cs/FOCUS_RECOVERY.md) · [Slovenčina](sk/FOCUS_RECOVERY.md) · [Русский](ru/FOCUS_RECOVERY.md)
 
-This branch adds focus recovery to the published v0.16.0 baseline. It is unreleased and uses schema **10**. Keep a backup before opening existing data: migration is transactional, but v0.16.0 cannot open a schema-10 database.
+v0.17.0 adds focus-session crash recovery using schema **10**. Keep a backup before opening existing data: migration is transactional, but v0.16.0 cannot open a schema-10 database.
 
 Start Studying creates a pending focus record before the timer starts. The app checkpoints whole elapsed seconds about every five seconds while running and immediately on Pause. It stores the original subject name, target and verified elapsed time. It does not store a monotonic clock value for reuse after restarting.
 

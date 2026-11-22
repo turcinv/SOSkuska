@@ -22,7 +22,7 @@ Snímek SQLite obsahuje všechna uložená studijní data, nastavení a místní
 
 Jde o ruční místní zálohy, ne synchronizaci, plánované zálohování, šifrování ani úplnou obnovu po pádu/výpadku proudu. Kopie obsahují soukromá studijní data a AI nastavení; ulož je bezpečně. Běžné studium zůstává offline bez cloudu.
 
-Schéma aktuální větve je 10; obnova přijímá pouze schéma 10, bez downgradu či automatické migrace. Aktivní databáze s pevnými odkazy se odmítají kvůli spolehlivému zamykání. Aktivní databázi ani její doprovodné soubory nelze použít jako cíl, včetně variant velikosti písmen a Unicode.
+Aktuální schéma je 10; obnova přijímá pouze schéma 10, bez downgradu či automatické migrace. Aktivní databáze s pevnými odkazy se odmítají kvůli spolehlivému zamykání. Aktivní databázi ani její doprovodné soubory nelze použít jako cíl, včetně variant velikosti písmen a Unicode.
 
 Na macOS/Linux vyžaduje atomické zveřejnění bez přepsání podporu pevných odkazů (například běžné místní APFS/ext4). Pokud externí disk zápis odmítne, použij podporovanou místní složku. Windows používá přejmenování bez přepsání. Úlohy běží v pomocných procesech: rozpočet operace 60 sekund, pojistka procesu 90 sekund. Vyhni se síťovým cestám a nevynucuj ukončení. Pokud pomocný proces nečekaně skončí, po spuštění zkontroluj data a bezpečnostní kopie; nelze předpokládat chybu před commitem.
 
@@ -32,4 +32,4 @@ AI Tutor nyní ukládá konverzace lokálně včetně původního serveru/modelu
 
 ## Obnova soustředění po pádu
 
-Tato větev přidává obnovu soustředění k vydané základní verzi v0.16.0. Funkce zatím není vydaná a používá schéma **10**. Před otevřením původních dat vytvoř zálohu: migrace je transakční, ale v0.16.0 databázi schématu 10 neotevře. [Obnova soustředění po pádu](FOCUS_RECOVERY.md).
+v0.17.0 přidává obnovu soustředění po pádu se schématem **10**. Před otevřením původních dat vytvoř zálohu: migrace je transakční, ale v0.16.0 databázi schématu 10 neotevře. [Obnova soustředění po pádu](FOCUS_RECOVERY.md).
