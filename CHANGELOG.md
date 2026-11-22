@@ -2,7 +2,7 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
-## Unreleased
+## 0.18.1 — 2026-11-22
 
 - Fix stale subject saves and question/topic delete confirmations; preserve same-subject question drafts and unavailable topic selections.
 - Reconcile daily-backup failures with another window’s successful receipt. Track and verify all four Astra findings in docs/REVIEW_FINDINGS.md; schema remains 10.

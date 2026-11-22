@@ -6,14 +6,14 @@ Záznam revize Astra 6.2 s nízkým úsilím pro v0.18.0, commit `252acc588700e4
 
 | ID | Priorita | Stav | Nález | Požadované chování |
 | --- | --- | --- | --- | --- |
-| A62-01 | P2 | Opraveno ve větvi | Starší formulář předmětu přepíše popis nebo termín změněný v jiném okně. | Porovnat původní obsah pod zápisovým zámkem a zachovat odmítnutý koncept. |
-| A62-02 | P2 | Opraveno ve větvi | Staré potvrzení smazání odstraní otázku změněnou v jiném okně; témata používají stejný postup. | Atomicky porovnat zobrazený obsah; změna vyžaduje nové potvrzení. |
-| A62-03 | P2 | Opraveno ve větvi | Návrat do banky otázek stejného předmětu ztratí rozepsanou otázku. | Zachovat editor, původní identitu a koncept při návratu ke stejnému předmětu. |
-| A62-04 | P3 | Opraveno ve větvi | Oznámení selhání zálohy zůstává po úspěchu dnešní zálohy v jiném okně. | Načíst novější potvrzení úspěchu a odstranit jen překonané oznámení chyby. |
+| A62-01 | P2 | Vydáno ve v0.18.1 | Starší formulář předmětu přepíše popis nebo termín změněný v jiném okně. | Porovnat původní obsah pod zápisovým zámkem a zachovat odmítnutý koncept. |
+| A62-02 | P2 | Vydáno ve v0.18.1 | Staré potvrzení smazání odstraní otázku změněnou v jiném okně; témata používají stejný postup. | Atomicky porovnat zobrazený obsah; změna vyžaduje nové potvrzení. |
+| A62-03 | P2 | Vydáno ve v0.18.1 | Návrat do banky otázek stejného předmětu ztratí rozepsanou otázku. | Zachovat editor, původní identitu a koncept při návratu ke stejnému předmětu. |
+| A62-04 | P3 | Vydáno ve v0.18.1 | Oznámení selhání zálohy zůstává po úspěchu dnešní zálohy v jiném okně. | Načíst novější potvrzení úspěchu a odstranit jen překonané oznámení chyby. |
 
 ## Řešení a ověření
 
-Všechny čtyři nálezy jsou opravené a ověřené ve větvi `fix/main-review-findings`; zůstávají nevydané do sloučení PR a schválení vydání. Záznam po vyřešení zachovej.
+Všechny čtyři nálezy byly opravené ve větvi `fix/main-review-findings`, sloučené přes [PR #38](https://github.com/turcinv/SOSkuska/pull/38) a vydané ve [v0.18.1](https://github.com/turcinv/SOSkuska/releases/tag/v0.18.1). Soubor zůstává záznamem řešení a ověření.
 
 Místní Docker/Xvfb: prošlo **306 testů** (dvě platformní přeskočení) a **18 GUI skriptů**. Nezávislá revize Sol se středním úsilím nenašla další blokující problémy. Ruční kontrola hardwaru zůstává samostatná.
 

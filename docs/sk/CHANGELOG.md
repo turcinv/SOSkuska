@@ -3,7 +3,7 @@
 [English](../../CHANGELOG.md) · [Čeština](../cs/CHANGELOG.md) · [Slovenčina](CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
 
-## Nevydané
+## 0.18.1 — 2026-11-22
 
 - Oprava zastaraného ukladania predmetov a potvrdení vymazania otázok/tém; zachovanie konceptov rovnakého predmetu a nedostupných tém.
 - Zohľadnenie úspešnej zálohy iného okna pri starom oznámení chyby. Štyri nálezy Astra sleduje REVIEW_FINDINGS.md; schéma zostáva 10.

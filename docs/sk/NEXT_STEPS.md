@@ -2,7 +2,7 @@
 
 [English](../NEXT_STEPS.md) · [Čeština](../cs/NEXT_STEPS.md) · [Slovenčina](../sk/NEXT_STEPS.md) · [Русский](../ru/NEXT_STEPS.md)
 
-Aktuálne vydanie: **v0.18.0**, schéma **10**, s uloženým Light/Dark/System. Používateľ 22. novembra potvrdil dokončenie testovania v0.15.0 a schválil zlúčenie vzhľadu; podmienka je splnená. Potvrdenie nenahrádza výsledky jednotlivých zariadení: podrobnosti čistého počítača, DPI a hardvéru neboli dodané. V dôkazoch projektu ich rozlišuj.
+Aktuálne vydanie: **v0.18.1**, schéma **10**, s uloženým Light/Dark/System. Používateľ 22. novembra potvrdil dokončenie testovania v0.15.0 a schválil zlúčenie vzhľadu; podmienka je splnená. Potvrdenie nenahrádza výsledky jednotlivých zariadení: podrobnosti čistého počítača, DPI a hardvéru neboli dodané. V dôkazoch projektu ich rozlišuj.
 
 1. **Overiť nové vydanie.** Použiť dočasné dáta alebo kópiu zálohy. Na Windows overiť živé Light/Dark, koncepty, štyri jazyky, kompaktné okno a mierku. System overiť skutočnou zmenou OS na Windows/macOS; Linux zámerne používa Light. Exportovať a otvoriť zálohu schémy 10. Zachovať originály schémy 9, pretože v0.16.0 migrované dáta neotvorí. Zaznamenať [kontrolu Windows](WINDOWS_ACCEPTANCE.md).
 2. **Otestovať reálny model Ollama.** Zapísať OS, hardvér, model/verziu, adresu servera a výsledky pripojenia, streamu, Stop, opätovného pripojenia a uloženého chatu. Študijné funkcie musia fungovať aj bez bežiaceho servera. CI s falošným serverom nedokladá kvalitu modelu ani výkon hardvéru. Reálna kontrola zatiaľ nie je zaznamenaná.
