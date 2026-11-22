@@ -12,7 +12,7 @@ The SQLite snapshot contains all saved study data, preferences and local AI conv
 
 1. Finish focus and finish/discard any practice test. Wait for or stop AI generation, then save needed drafts and resolve unsaved replies through Retry save reply or Discard unsaved.
 2. Close other SOSkúška windows using this database, older app versions and external SQLite tools. Current versions enforce shared/exclusive database leases; external tools and old versions do not participate in those leases.
-3. In Settings, choose **Choose backup…** and select a regular local standalone schema **9** SQLite file. WAL-mode working files, unrelated, corrupt, invalid, older and newer schemas are rejected. Use Create backup to export a WAL database first.
+3. In Settings, choose **Choose backup…** and select a regular local standalone schema **10** SQLite file. WAL-mode working files, unrelated, corrupt, invalid, older and newer schemas are rejected. Use Create backup to export a WAL database first.
 4. Validation checks integrity, expected structure, constraints, application value types/dates/timestamps, practice consistency and record references in a private copy. Inspect the displayed filename and counts. **Cancel** or navigation discards the selection without changing saved data. Changing the source file afterward does not change the validated selection.
 5. **Confirm restore and close** replaces all saved study data, preferences and conversations with the backup. Unsaved forms are lost. Guards are checked again; editing is blocked and periodic database callbacks are paused during restore.
 6. A safety copy of current committed data is created under `backups/` next to the active database before replacement. Its name is `SOSkuska-before-restore-<date>-<unique-id>.sqlite3`; the success message shows its exact path. Restore is one SQLite transaction, preserves ID sequences, checks final data against the validated copy, and rolls back on pre-commit failure. If safety-copy creation fails, data is not replaced.
@@ -22,10 +22,14 @@ The SQLite snapshot contains all saved study data, preferences and local AI conv
 
 This is manual local backup, not synchronization, scheduled backup, encryption or complete crash/power-loss recovery. Keep copies somewhere safe; they contain private study data and saved AI connection preferences. Normal study stays offline and no cloud service is used.
 
-The current schema is 9; only schema 9 snapshots are supported by this first restore implementation. There is no downgrade or automatic migration during restore. Hard-linked active databases are rejected to keep locking reliable. Active database/companion paths, including case/Unicode aliases, cannot be used as backup outputs.
+The current branch schema is 10; only schema 10 snapshots are supported by this first restore implementation. There is no downgrade or automatic migration during restore. Hard-linked active databases are rejected to keep locking reliable. Active database/companion paths, including case/Unicode aliases, cannot be used as backup outputs.
 
 On macOS/Linux, atomic no-overwrite publication requires a filesystem supporting hard links (such as the usual local APFS/ext4 volumes); use a supported local folder if an external drive rejects publication. Windows uses its no-overwrite rename behavior. Database jobs run in helper processes, with a 60-second operation budget and a 90-second process safeguard. Avoid network paths and do not force-quit during a job. If a helper stops unexpectedly, reopen and inspect the database and safety copies instead of assuming the restore failed before commit.
 
 ## Saved AI Tutor conversations
 
 AI Tutor now saves conversations locally, including the original server/model and reply status. Open saved history without networking, reconnect explicitly to continue, or delete a selected conversation after confirmation. Released in v0.12.0 with schema 7, which migrates existing study data transactionally. [Saved AI Tutor conversations](TUTOR_HISTORY.md).
+
+## Focus-session recovery
+
+This branch adds focus recovery to the published v0.16.0 baseline. It is unreleased and uses schema **10**. Keep a backup before opening existing data: migration is transactional, but v0.16.0 cannot open a schema-10 database. [Focus-session recovery](FOCUS_RECOVERY.md).

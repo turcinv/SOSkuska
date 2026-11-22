@@ -12,7 +12,7 @@ from preferences import DEFAULTS, preference_fields
 from database_lock import DatabaseLease
 from csv_import import ImportValidationError, validate_rows, signature
 
-SCHEMA_VERSION = 9
+SCHEMA_VERSION = 10
 
 
 def default_database(base):
@@ -41,7 +41,10 @@ def subject_fields(name, description="", exam_date=""):
     return name, key, description, exam_date or None
 
 
-class Store:
+from focus import FocusStoreMixin
+
+
+class Store(FocusStoreMixin):
     def __init__(self, path):
         path = Path(path).resolve()
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -209,6 +212,18 @@ class Store:
                 self.db.execute("ALTER TABLE preferences ADD COLUMN ui_language TEXT NOT NULL DEFAULT 'English' CHECK(ui_language IN ('English','Czech','Slovak','Russian'))")
             if version < 9:
                 self.db.execute("ALTER TABLE preferences ADD COLUMN appearance_mode TEXT NOT NULL DEFAULT 'Dark' CHECK(appearance_mode IN ('Light','Dark','System'))")
+            if version < 10:
+                self.db.execute("""CREATE TABLE focus_runs (
+                    id TEXT NOT NULL PRIMARY KEY CHECK(length(id)=32), singleton INTEGER NOT NULL DEFAULT 1 CHECK(singleton=1),
+                    subject_id INTEGER REFERENCES subjects(id) ON DELETE SET NULL, subject_name TEXT NOT NULL,
+                    target_seconds INTEGER NOT NULL CHECK(target_seconds BETWEEN 1 AND 10800),
+                    elapsed_seconds INTEGER NOT NULL CHECK(elapsed_seconds BETWEEN 0 AND target_seconds),
+                    status TEXT NOT NULL CHECK(status IN ('pending','completed','discarded')),
+                    revision INTEGER NOT NULL CHECK(revision>=0), started_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+                    completed_at TEXT, session_id INTEGER UNIQUE REFERENCES sessions(id),
+                    CHECK((status='pending' AND completed_at IS NULL) OR (status!='pending' AND completed_at IS NOT NULL)),
+                    CHECK((status='completed' AND ((elapsed_seconds=0 AND session_id IS NULL) OR (elapsed_seconds>0 AND session_id IS NOT NULL))) OR (status!='completed' AND session_id IS NULL)))""")
+                self.db.execute("CREATE UNIQUE INDEX focus_pending ON focus_runs(singleton) WHERE status='pending'")
             self.db.execute(f"PRAGMA user_version = {SCHEMA_VERSION}")
 
     def tutor_conversations(self, offset=0):
@@ -810,7 +825,9 @@ class Store:
             parameters.append(deck_id)
         return [dict(row) for row in self.db.execute(query + " ORDER BY id DESC LIMIT ?", (*parameters, limit))]
 
-    def add_session(self, seconds, subject_id=None, subject_name=None):
+    def add_session(self, seconds, subject_id=None, subject_name=None, *, focus_run_id=None):
+        if focus_run_id is not None:
+            return self.finish_focus_checkpoint(focus_run_id,seconds)
         if not isinstance(seconds, int) or isinstance(seconds, bool) or seconds < 0:
             raise ValueError("Study time must be a non-negative whole number of seconds.")
         if seconds == 0:
@@ -889,6 +906,7 @@ class Store:
 
     def close(self):
         try:
-            self.db.close()
+            try:self.release_focus()
+            finally:self.db.close()
         finally:
             self.lease.close()

@@ -144,6 +144,22 @@ def main():
             assert len(store.questions(sid))==2 and len(store.flashcards(did))==1
         finally:store.close()
         results.append('Bundled backup, validation, restore and retained imported data')
+        store=Store(database)
+        try:
+            run=store.start_focus_checkpoint(sid,900)
+            store.checkpoint_focus(run['id'],37)
+        finally:store.close()
+        check_window(app,database,cwd,env)
+        store=Store(database)
+        try:
+            pending=store.pending_focus()
+            assert pending['elapsed_seconds']==37 and pending['revision']==1
+            assert store.seconds()==0  # Frozen startup/close never auto-resumes or credits downtime.
+            store.claim_focus_checkpoint(pending['id'],pending['revision'])
+            store.finish_focus_checkpoint(pending['id'],37)
+            assert store.seconds()==37 and store.pending_focus() is None
+        finally:store.close()
+        results.append('Frozen pending-focus startup/close preserves checkpoint without automatic claim, elapsed time or credit')
         for language in ('English','Czech','Slovak','Russian'):
             for appearance in ('Light','Dark','System'):
                 store=Store(database)

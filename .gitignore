@@ -19,3 +19,4 @@ sources/
 *.sqlite3.lock
 build/
 .venv-build/
+*.focus.lock

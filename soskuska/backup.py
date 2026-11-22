@@ -14,7 +14,7 @@ from database_lock import DatabaseLease
 from storage import SCHEMA_VERSION, Store
 from backup_validation import validate_records
 
-TABLES = ('tasks', 'subjects', 'sessions', 'topics', 'questions', 'practice_attempts',
+TABLES = ('tasks', 'subjects', 'sessions', 'focus_runs', 'topics', 'questions', 'practice_attempts',
           'practice_items', 'decks', 'flashcards', 'review_events', 'preferences', 'tutor_conversations', 'tutor_turns', 'sqlite_sequence')
 TIMEOUT = 60
 
@@ -33,7 +33,7 @@ def deadline():
 
 def protect_path(path, active):
     path, active = Path(path).resolve(), Path(active).resolve()
-    protected = [active] + [Path(str(active) + suffix) for suffix in ('-wal', '-shm', '-journal', '.lock')]
+    protected = [active] + [Path(str(active) + suffix) for suffix in ('-wal', '-shm', '-journal', '.lock', '.focus.lock')]
     for item in protected:
         if unicodedata.normalize('NFC',str(path)).casefold() == unicodedata.normalize('NFC',str(item)).casefold() or (path.exists() and item.exists() and os.path.samefile(path, item)):
             raise ValueError('Choose a separate backup file, not the active database or its companion files.')
@@ -151,6 +151,8 @@ def restore_backup(active, prepared):
                     raise ValueError('The current database structure changed. Restore was not applied.')
             if target.execute("SELECT 1 FROM practice_attempts WHERE status='in_progress'").fetchone():
                 raise ValueError('Finish or discard the current practice test before restoring.')
+            if target.execute("SELECT 1 FROM focus_runs WHERE status='pending'").fetchone():
+                raise ValueError('Recover and finish, or discard the saved focus session before restoring.')
             folder = active.parent / 'backups'
             folder.mkdir(exist_ok=True)
             safety = folder / ('SOSkuska-before-restore-' + datetime.now().strftime('%Y%m%d-%H%M%S-') + uuid.uuid4().hex + '.sqlite3')

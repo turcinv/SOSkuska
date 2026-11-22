@@ -43,3 +43,9 @@ Record durable rules in the relevant topic file and new dated evidence here. Kee
 ## Next steps · 22 November 2026
 
 Status updated 22 November 2026: the user confirmed v0.15.0 baseline testing complete and approved appearance PR #32. This checklist now targets v0.16.0; item-by-item clean-machine/DPI results are not recorded here. Leave unchecked items unverified and record device-specific evidence when testing the new release. [Next steps · 22 November 2026](NEXT_STEPS.md).
+
+## Focus recovery review · 22 November 2026
+
+Durable Start/Recover must install usable timer controls before fallible Dashboard reads. A failed read must invalidate cached recovery actions; confirmations belong to the currently visible warning and must cancel on navigation or recovery. Periodic save failures need a persistent visible action even while another page is open. Backup validation must accept the same name domain as the original CRUD API and require bounded integer revisions with overflow-safe advancement. Focus changes are unreleased on a feature branch; published v0.16.0 remains schema 9.
+
+Independent Sol medium review resolved its findings. Local Linux/Docker verification passed 279 unit tests (two platform skips) and all 17 GUI scripts, including forced GUI termination and fresh-process focus recovery. Native hardware/manual Windows acceptance remains separate; hosted PR checks must be read for their own result.

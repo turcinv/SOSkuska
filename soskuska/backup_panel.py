@@ -29,7 +29,7 @@ class BackupPanel(ctk.CTkFrame):
         self.closed = False
         self.grid_columnconfigure(0, weight=1)
         app.label(self, tr(self.app, 'Backup and restore'), 20, bold=True).grid(row=0, column=0, sticky='w', pady=(12, 8))
-        self.status = app.label(self, tr(self.app, 'Backups contain saved data and preferences, including saved AI conversations, not unsaved drafts. Restore replaces saved data and closes the app. Only schema 9 backups are supported.'), 12, 'secondary', wraplength=600)
+        self.status = app.label(self, tr(self.app, 'Backups contain saved data and preferences, including saved AI conversations, not unsaved drafts. Restore replaces saved data and closes the app. Only schema 10 backups are supported.'), 12, 'secondary', wraplength=600)
         self.status.grid(row=1, column=0, sticky='ew', pady=(0, 12))
         actions = app.frame(self)
         actions.grid(row=2, column=0, sticky='w')
@@ -60,6 +60,8 @@ class BackupPanel(ctk.CTkFrame):
     def guard_restore(self):
         if self.app.session_open:
             raise ValueError('Finish the current focus session before restoring.')
+        if self.app.store.pending_focus() is not None:
+            raise ValueError('Recover and finish, or discard the saved focus session before restoring.')
         if self.app.tutor_page.unsaved_reply:
             raise ValueError('Retry save reply or Discard unsaved in AI Tutor before restoring.')
         if self.app.tutor_page.task is not None:

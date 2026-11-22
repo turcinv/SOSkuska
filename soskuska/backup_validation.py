@@ -98,3 +98,17 @@ def validate_records(store, tables, check):
                 raise ValueError('Invalid conversation text.')
             if turn['status']=='pending' and (index!=len(turns)-1 or turn['answer']):
                 raise ValueError('Invalid unfinished conversation reply.')
+
+    import re
+    from focus import MAX_FOCUS_REVISION
+    for row in db.execute('SELECT * FROM focus_runs'):
+        check()
+        if not isinstance(row['id'],str) or not re.fullmatch('[0-9a-f]{32}',row['id']):
+            raise ValueError('Invalid saved focus identity or subject name.')
+        subject_fields(row['subject_name'])
+        if not 0<=row['revision']<=MAX_FOCUS_REVISION:
+            raise ValueError('Invalid saved focus name or revision.')
+        if row['status']=='completed' and row['elapsed_seconds']:
+            session=db.execute('SELECT * FROM sessions WHERE id=?',(row['session_id'],)).fetchone()
+            if session is None or session['seconds']!=row['elapsed_seconds'] or session['subject_name']!=row['subject_name'] or session['subject_id']!=row['subject_id']:
+                raise ValueError('Saved focus completion does not match study history.')

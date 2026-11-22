@@ -29,7 +29,7 @@ Denný zoznam úloh sa tiež ukladá. Review a subject označuješ ručne; Compl
 
 Na Macu je predvolený súbor `~/Library/Application Support/SOSkuska/dashboard.sqlite3`. Ak aplikácia nájde pôvodnú databázu v `ExamPrep/dashboard.sqlite3` a nová ešte neexistuje, pokračuje v pôvodnom súbore. Pôvodné záznamy zachová a doplní nové tabuľky/stĺpce pomocou migrácie. Starým reláciám nepriraďuje vymyslené predmety.
 
-Parameter `--data` umožňuje vlastnú cestu. Údaje sa automaticky nesynchronizujú, nezálohujú ani nešifrujú. Počas časovača sa čas priebežne neukladá: pri páde môže rozpracovaná relácia zmiznúť a po reštarte sa neobnoví. Relácia cez polnoc sa zatiaľ pripíše ku dňu dokončenia.
+Start Studying najprv vytvorí rozpracovaný záznam. Aplikácia ukladá celé uplynuté sekundy približne každých päť sekúnd a ihneď pri Pause. Zachová pôvodný názov predmetu, cieľ a overený čas; hodnotu monotónnych hodín medzi procesmi neprenáša. Po páde alebo vynútenom ukončení Dashboard ponúkne Recover paused, Discard checkpoint a Refresh (popisky sa prekladajú podľa jazyka rozhrania). Obnova začína pozastavená, zachová pôvodný cieľ aj po zmene Settings a nepočíta čas zatvorenia ako štúdium. Resume pokračuje; Finish uloží čas. Rozpracovaný čas nie je v Statistics. Zahodenie vyžaduje druhé potvrdenie a nepridáva históriu. Navigácia, Escape, Refresh a Recover potvrdenie rušia. Chyba čítania vypne zastarané akcie do úspešného Refresh. [Obnova sústredenia po páde](FOCUS_RECOVERY.md).
 
 AI Tutor otvára voliteľný chat s miestnou históriou cez Ollamu; spojenie začne až po Connect alebo Send.
 
@@ -87,15 +87,15 @@ Konverzácie sa ukladajú do miestnej databázy a záloh. Voľby spojenia možno
 
 ## Záloha a obnova
 
-Settings teraz ponúka ručnú miestnu zálohu a overenú obnovu s bezpečnostnou kópiou pred nahradením. Aktuálna schéma je 9. Obnova zatvorí aplikáciu; potom ju spusti znovu. Pozri [Záloha a obnova](BACKUP_RESTORE.md).
+Settings teraz ponúka ručnú miestnu zálohu a overenú obnovu s bezpečnostnou kópiou pred nahradením. Schéma aktuálnej vetvy je 10. Obnova zatvorí aplikáciu; potom ju spusti znovu. Pozri [Záloha a obnova](BACKUP_RESTORE.md).
 
 ## Import otázok z CSV
 
-Banka otázok teraz podporuje import UTF-8 CSV do existujúceho predmetu: šablóna s hlavičkou, stránkovaný náhľad, odmietnutie presných duplicít a jedno atomické uloženie. Maximum 2 MiB / 500 záznamov; zoznam ukazuje 50 otázok na stránku. Aktuálna schéma je 9. [Import otázok z CSV](QUESTION_CSV_IMPORT.md).
+Banka otázok teraz podporuje import UTF-8 CSV do existujúceho predmetu: šablóna s hlavičkou, stránkovaný náhľad, odmietnutie presných duplicít a jedno atomické uloženie. Maximum 2 MiB / 500 záznamov; zoznam ukazuje 50 otázok na stránku. Schéma aktuálnej vetvy je 10. [Import otázok z CSV](QUESTION_CSV_IMPORT.md).
 
 ## Import kartičiek z CSV
 
-Flashcards teraz podporuje import UTF-8 CSV do existujúceho balíčka: šablónu s hlavičkou, stránkovaný náhľad, odmietnutie presných duplicít a jedno atomické uloženie. Maximum 2 MiB / 500 záznamov. Nové kartičky sú ihneď splatné; pôvodné termíny a história hodnotení zostávajú zachované. Aktuálna schéma je 9. [Import kartičiek z CSV](FLASHCARD_CSV_IMPORT.md).
+Flashcards teraz podporuje import UTF-8 CSV do existujúceho balíčka: šablónu s hlavičkou, stránkovaný náhľad, odmietnutie presných duplicít a jedno atomické uloženie. Maximum 2 MiB / 500 záznamov. Nové kartičky sú ihneď splatné; pôvodné termíny a história hodnotení zostávajú zachované. Schéma aktuálnej vetvy je 10. [Import kartičiek z CSV](FLASHCARD_CSV_IMPORT.md).
 
 ## Uložené konverzácie AI Tutor
 
@@ -103,4 +103,4 @@ AI Tutor teraz ukladá konverzácie lokálne vrátane pôvodného servera/modelu
 
 ## Jazyk rozhrania
 
-Výber jazyka rozhrania je dostupný vo v0.13.0: angličtina, čeština, slovenčina a ruština. Ukladá sa osobitne od jazyka AI a použije sa po reštarte. Aktuálna schéma je 9. [Jazyk rozhrania](UI_LANGUAGES.md).
+Výber jazyka rozhrania je dostupný vo v0.13.0: angličtina, čeština, slovenčina a ruština. Ukladá sa osobitne od jazyka AI a použije sa po reštarte. Schéma aktuálnej vetvy je 10. [Jazyk rozhrania](UI_LANGUAGES.md).

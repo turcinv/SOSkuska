@@ -102,6 +102,7 @@ Backup/restore validation on this branch passed 244 unit tests and fifteen nativ
 | Check / tests | Main coverage |
 | --- | --- |
 | `check_dashboard.py`, `test_storage.py`, `test_subjects.py` | Empty database, real metrics, subject CRUD/Unicode/exam dates, session links/history, wide/compact columns, search, synthetic scrolling, timer retry, midnight checklist, concurrent migrations |
+| `check_focus_recovery.py`, `test_focus.py` | Process crash/reopen, paused recovery, exclusive ownership, bounded failures, atomic completion/discard and schema-9 migration |
 | `check_question_bank.py`, `test_questions.py` | Topic/question CRUD, combined filters, subject isolation, compact editor, retained history, schema 2 fixture migration |
 | `check_review_fixes.py` | Stale deletion warnings, real SQLite locks, failed reads/writes, daily header/retry, no duplicate sessions, nested editor/scrollbar gestures; native macOS Quit in a bounded child process |
 | `check_practice.py`, `test_practice.py` | Setup, answer save/retry, scoring, immutable snapshots, UTC deadlines, idempotent completion, fresh-process resume, no scroll/draft changes on another screen |
@@ -132,7 +133,7 @@ Read the first failing step in [Actions](https://github.com/turcinv/SOSkuska/act
 
 ## Data and further development
 
-If no fresh `SOSkuska` database exists but legacy `ExamPrep/dashboard.sqlite3` does, the app uses that file without copying, moving or overwriting it. Explicit `--data` wins. Schema 9 migration preserves prior records; older apps refuse newer schemas. [Settings](SETTINGS.md) explains revision conflicts and explicit preference application.
+If no fresh `SOSkuska` database exists but legacy `ExamPrep/dashboard.sqlite3` does, the app uses that file without copying, moving or overwriting it. Explicit `--data` wins. Schema 10 migration preserves prior records; older apps refuse newer schemas. [Settings](SETTINGS.md) explains revision conflicts and explicit preference application.
 
 `app.py` owns Dashboard/timer/navigation; `storage.py` owns SQL and migrations; `scrolling.py` owns scrolling compatibility. Other screens have their own modules. HTML under `soskuska-local/` is only a visual reference. See [planned architecture](PLANNED_ARCHITECTURE.md) for gradual restructuring, [Flashcards](FLASHCARDS.md), [Statistics](STATISTICS.md) and [AI Tutor](AI_TUTOR.md) for feature rules.
 
@@ -140,7 +141,7 @@ Keep environments, SQLite files, caches and local tool configuration out of Git.
 
 ## Backup and restore
 
-Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Current schema is 9. Restore closes the app; reopen it afterward. See [Backup and restore](BACKUP_RESTORE.md).
+Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Current branch schema is 10. Restore closes the app; reopen it afterward. See [Backup and restore](BACKUP_RESTORE.md).
 
 `tests/test_backup.py`, `tests/test_backup_review.py`, `soskuska/check_backup.py`.
 
@@ -154,7 +155,7 @@ Settings now includes manual local backup and validated restore, with a pre-rest
 
 ## Import questions from CSV
 
-Question bank now supports UTF-8 CSV import into an existing subject, with a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records; question lists show 50 per page. Current schema is 9. [Question CSV import](QUESTION_CSV_IMPORT.md).
+Question bank now supports UTF-8 CSV import into an existing subject, with a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records; question lists show 50 per page. Current branch schema is 10. [Question CSV import](QUESTION_CSV_IMPORT.md).
 
 `tests/test_csv_import.py`, `soskuska/check_csv_import.py`.
 
@@ -168,7 +169,7 @@ Question bank now supports UTF-8 CSV import into an existing subject, with a hea
 
 ## Import flashcards from CSV
 
-Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Current schema is 9. [Import flashcards from CSV](FLASHCARD_CSV_IMPORT.md).
+Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Current branch schema is 10. [Import flashcards from CSV](FLASHCARD_CSV_IMPORT.md).
 
 `tests/test_flashcard_csv_import.py`, `soskuska/check_flashcard_import.py`.
 
@@ -196,7 +197,7 @@ AI Tutor now saves conversations locally, including the original server/model an
 
 ## Interface language
 
-UI language selection is available in v0.13.0: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current schema is 9. [Interface language](UI_LANGUAGES.md).
+UI language selection is available in v0.13.0: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current branch schema is 10. [Interface language](UI_LANGUAGES.md).
 
 `tests/test_localization.py`, `soskuska/check_ui_languages.py`.
 
@@ -224,8 +225,12 @@ Current packaging work: 251 unit tests passed locally. The Linux container passe
 
 ## Appearance settings
 
-v0.16.0 adds saved Light/Dark/System choices, applied on Save without rebuilding screens or losing active work. System follows Windows/macOS and uses Light on Linux. Current schema is 9. The user confirmed baseline testing complete and approved merging appearance PR #32 on 22 November 2026. [Appearance settings](APPEARANCE.md).
+v0.16.0 adds saved Light/Dark/System choices, applied on Save without rebuilding screens or losing active work. System follows Windows/macOS and uses Light on Linux. Current branch schema is 10. The user confirmed baseline testing complete and approved merging appearance PR #32 on 22 November 2026. [Appearance settings](APPEARANCE.md).
 
 ```sh
 python soskuska/check_appearance.py
 ```
+
+## Focus-session recovery
+
+This branch adds focus recovery to the published v0.16.0 baseline. It is unreleased and uses schema **10**. Keep a backup before opening existing data: migration is transactional, but v0.16.0 cannot open a schema-10 database. [Focus-session recovery](FOCUS_RECOVERY.md).
