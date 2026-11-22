@@ -50,19 +50,19 @@ Long text editors contain their own scrolling, including at boundaries and over 
 
 On macOS, the default is `~/Library/Application Support/SOSkuska/dashboard.sqlite3`; Windows uses `%LOCALAPPDATA%\SOSkuska\dashboard.sqlite3`, Linux uses `$XDG_DATA_HOME/SOSkuska/dashboard.sqlite3` or `~/.local/share/SOSkuska/dashboard.sqlite3`. If no new database exists but legacy `ExamPrep/dashboard.sqlite3` does, the app continues using that file without moving it. Migration preserves records without assigning invented subjects to old sessions. `--data` selects another file.
 
-There is no automatic synchronization, encryption or backup. Focus time is not continuously persisted, so a crash may lose the active session. Sessions crossing midnight belong entirely to their save day. Installers remain future work. See [current architecture](CURRENT_ARCHITECTURE.md) for details.
+Start Studying creates a pending focus record before the timer starts. The app checkpoints whole elapsed seconds about every five seconds while running and immediately on Pause. It stores the original subject name, target and verified elapsed time. It does not store a monotonic clock value for reuse after restarting. After a crash or forced termination, Dashboard offers **Recover paused**, **Discard checkpoint** and **Refresh**. Recovery always starts paused, preserves the original target even if Settings changed, and never counts time while the app was closed. Resume continues the timer; Finish saves the recovered time. Pending time is excluded from Statistics until completion. Discard requires a second confirmation and adds no study history. Navigation, Escape, Refresh and Recover cancel a pending discard confirmation. A failed read disables stale actions until Refresh succeeds. [Focus-session recovery](FOCUS_RECOVERY.md).
 
 ## Backup and restore
 
-Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Current schema is 9. Restore closes the app; reopen it afterward. See [Backup and restore](BACKUP_RESTORE.md).
+Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Current branch schema is 10. Restore closes the app; reopen it afterward. See [Backup and restore](BACKUP_RESTORE.md).
 
 ## Import questions from CSV
 
-Question bank now supports UTF-8 CSV import into an existing subject, with a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records; question lists show 50 per page. Current schema is 9. [Question CSV import](QUESTION_CSV_IMPORT.md).
+Question bank now supports UTF-8 CSV import into an existing subject, with a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records; question lists show 50 per page. Current branch schema is 10. [Question CSV import](QUESTION_CSV_IMPORT.md).
 
 ## Import flashcards from CSV
 
-Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Current schema is 9. [Import flashcards from CSV](FLASHCARD_CSV_IMPORT.md).
+Flashcards now supports UTF-8 CSV import into an existing deck: a header-only template, paged preview, exact-duplicate rejection and one atomic save. Maximum 2 MiB / 500 records. New cards are due immediately; existing schedules and review history are preserved. Current branch schema is 10. [Import flashcards from CSV](FLASHCARD_CSV_IMPORT.md).
 
 ## Saved AI Tutor conversations
 
@@ -70,4 +70,4 @@ AI Tutor now saves conversations locally, including the original server/model an
 
 ## Interface language
 
-UI language selection is available in v0.13.0: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current schema is 9. [Interface language](UI_LANGUAGES.md).
+UI language selection is available in v0.13.0: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current branch schema is 10. [Interface language](UI_LANGUAGES.md).

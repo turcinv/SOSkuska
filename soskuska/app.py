@@ -73,6 +73,10 @@ class Dashboard(ctk.CTk):
         self.data_restoring = False
         self.running_since = None
         self.session_seconds = 0.0
+        self.focus_run_id = None
+        self.last_checkpoint = 0.0
+        self.recovery_record = None
+        self.pending_focus_discard = False
         self.session_open = False
         self.session_save_failed = False
         self.refresh_pending = False
@@ -120,6 +124,7 @@ class Dashboard(ctk.CTk):
             # The native application-menu Quit does not send WM_DELETE_WINDOW.
             self.createcommand("::tk::mac::Quit", self.close)
         self.refresh_data()
+        self.refresh_focus_recovery()
         self.after(100, self.reflow)
         self.after(250, self.tick)
 
@@ -184,6 +189,7 @@ class Dashboard(ctk.CTk):
         self.label(self.footer, tr(self, 'LOCAL WORKSPACE'), 11, "secondary").pack(anchor="w", pady=(0, 12))
         self.label(self.footer, tr(self, 'Local student'), bold=True).pack(anchor="w")
         self.label(self.footer, tr(self, 'Offline · Stored on this device'), 12, "secondary").pack(anchor="w", pady=(2, 18))
+        self.focus_alert = self.button(self.sidebar,tr(self,'Focus needs saving'),self.show_focus_retry,width=40)
         self.ai_status = self.label(self.footer, tr(self, '○  AI not connected'), 12, "secondary")
         self.ai_status.pack(anchor="w")
         self.label(self.footer, tr(self, 'Study workspace · {v0}',v0=f'v{APP_VERSION}'), 11, "secondary").pack(anchor="w", pady=(6, 0))
@@ -206,8 +212,22 @@ class Dashboard(ctk.CTk):
         self.label(head, tr(self, 'A little focus today goes a long way.'), 14, "secondary").grid(row=2, column=0, sticky="w")
         self.start_button = self.button(head, tr(self, 'Start Studying  →'), self.start_focus, primary=True, width=160)
         self.start_button.grid(row=1, column=1, rowspan=2, padx=(16, 0), sticky="e")
+        self.recovery_panel = self.frame(self.content, card=True)
+        self.recovery_panel.grid(row=1,column=0,sticky='ew',pady=(0,20))
+        self.recovery_panel.grid_columnconfigure(0,weight=1)
+        self.label(self.recovery_panel,tr(self,'Saved focus session'),18,bold=True).grid(row=0,column=0,sticky='w',padx=18,pady=(14,8))
+        self.recovery_status = self.label(self.recovery_panel,'',13,'secondary',wraplength=600)
+        self.recovery_status.grid(row=1,column=0,sticky='ew',padx=18,pady=(0,12))
+        recovery_actions=self.frame(self.recovery_panel)
+        recovery_actions.grid(row=2,column=0,sticky='w',padx=18,pady=(0,14))
+        self.recover_focus_button=self.button(recovery_actions,tr(self,'Recover paused'),self.recover_focus,primary=True,width=155)
+        self.recover_focus_button.pack(side='left',padx=(0,8))
+        self.discard_focus_button=self.button(recovery_actions,tr(self,'Discard checkpoint'),self.discard_focus,width=175)
+        self.discard_focus_button.pack(side='left',padx=(0,8))
+        self.button(recovery_actions,tr(self,'Refresh'),self.refresh_focus_recovery,width=110).pack(side='left')
+        self.recovery_panel.grid_remove()
         self.metrics = self.frame(self.content)
-        self.metrics.grid(row=1, column=0, sticky="ew", pady=(0, 24))
+        self.metrics.grid(row=2, column=0, sticky="ew", pady=(0, 24))
         self.metric_cards, self.metric_values = [], []
         for name, val in [("Total study time", "0h 00m"), ("Study sessions", "0"), ("Current streak", "0 days"), ("Subjects", "0")]:
             card = self.frame(self.metrics, card=True)
@@ -217,7 +237,7 @@ class Dashboard(ctk.CTk):
             self.metric_cards.append(card)
             self.metric_values.append(label)
         self.columns = self.frame(self.content)
-        self.columns.grid(row=2, column=0, sticky="ew")
+        self.columns.grid(row=3, column=0, sticky="ew")
         self.columns.grid_columnconfigure(0, weight=1)
         self.main = self.frame(self.columns)
         self.main.grid_columnconfigure(0, weight=1)
@@ -227,7 +247,7 @@ class Dashboard(ctk.CTk):
         self.build_subjects()
         self.build_rail()
         self.notice = self.label(self.content, tr(self, 'Your subjects and study time are stored on this device.'), 12, "secondary", wraplength=650)
-        self.notice.grid(row=3, column=0, sticky="w", pady=(22, 4))
+        self.notice.grid(row=4, column=0, sticky="w", pady=(22, 4))
 
     def build_focus(self):
         self.label(self.main, tr(self, "Today's focus"), 16, bold=True).grid(row=0, column=0, sticky="w", pady=(0, 12))
@@ -256,6 +276,10 @@ class Dashboard(ctk.CTk):
         self.pause_button = self.button(self.timer_frame, tr(self, 'Pause'), self.pause_focus, width=74)
         self.pause_button.grid(row=0, column=1, padx=(8, 8))
         self.button(self.timer_frame, tr(self, 'Finish'), self.finish_focus, width=70).grid(row=0, column=2)
+        self.focus_subject_label = self.label(self.timer_frame,'',12,'secondary',wraplength=500)
+        self.focus_subject_label.grid(row=1,column=0,columnspan=3,sticky='ew',pady=(6,0))
+        self.focus_retry_label = self.label(self.timer_frame,'',12,'hover',wraplength=500)
+        self.focus_retry_label.grid(row=2,column=0,columnspan=3,sticky='ew',pady=(6,0))
         self.timer_frame.grid_remove()
         self.label(self.main, tr(self, 'Choose a subject'), 16, bold=True).grid(row=2, column=0, sticky="w", pady=(22, 12))
         resume = self.frame(self.main, card=True)
@@ -350,6 +374,7 @@ class Dashboard(ctk.CTk):
             button.configure(text=icon if self.collapsed else f"{icon}   {tr(self,name)}", anchor="center" if self.collapsed else "w")
         self.settings_btn.configure(text="⚙" if self.collapsed else tr(self, '⚙   Settings'))
         self.footer.grid_remove() if self.collapsed else self.footer.grid()
+        self.focus_alert.configure(text='!' if self.collapsed else tr(self,'Focus needs saving'))
         self.reflow()
 
     def navigate(self, name):
@@ -361,6 +386,7 @@ class Dashboard(ctk.CTk):
         if name not in ("Dashboard", "My Subjects", "Practice Tests", "Flashcards", "Statistics", "AI Tutor", "Settings"):
             self.show_notice(tr(self, '{v0} will be available in a later version.', v0=name))
             return
+        self.cancel_focus_discard()
         self.subject_page.cancel_delete()
         self.settings_page.backups.cancel_pending()
         self.current_page = name
@@ -412,6 +438,7 @@ class Dashboard(ctk.CTk):
         if self.question_bank.importer.saving or self.flashcard_page.importer.saving:
             return
         self.flashcard_page.importer.cancel()
+        self.cancel_focus_discard()
         if self.store.subject(subject_id) is None:
             self.navigate("My Subjects")
             self.show_notice(tr(self, 'This subject no longer exists.'))
@@ -503,6 +530,9 @@ class Dashboard(ctk.CTk):
         return "break"
 
     def clear_search(self, _event=None):
+        if self.pending_focus_discard:
+            self.cancel_focus_discard()
+            return "break"
         if self.current_page in ("Practice Tests", "Flashcards", "Statistics", "AI Tutor", "Settings"):
             return
         if self.current_page == "Question Bank":
@@ -513,54 +543,149 @@ class Dashboard(ctk.CTk):
     def elapsed(self):
         return self.session_seconds + (time.monotonic() - self.running_since if self.running_since is not None else 0)
 
+    def focus_error(self,exc):
+        return tr(self,'Could not access saved focus. Retry the action or Refresh recovery.') if isinstance(exc,(sqlite3.Error,OSError)) else tr(self,str(exc))
+
     def start_focus(self, subject_id=None):
         if self.session_open:
             self.navigate("Dashboard")
             self.show_notice(tr(self, 'A focus session is already open. Use Pause, Resume or Finish.'))
             return
         subject_id = subject_id if subject_id is not None else self.selected_subject_id
-        subject = self.store.subject(subject_id) if subject_id is not None else None
-        if subject is None:
+        if subject_id is None:
             self.navigate("My Subjects")
             self.subject_page.show_form()
             self.show_notice(tr(self, 'Create a subject before starting your first focus session.'))
             return
-        self.selected_subject_id = subject["id"]
-        self.session_subject_id = subject["id"]
-        self.session_subject_name = subject["name"]
-        self.navigate("Dashboard")
-        self.focus_target = self.preferences["focus_minutes"] * 60
-        self.timer_label.configure(text=tr(self, '{v0:02d}:00 · Focus', v0=self.focus_target // 60))
-        self.session_open = True
-        self.running_since = time.monotonic()
-        self.pause_button.configure(text=tr(self, 'Pause'))
-        self.timer_frame.grid()
-        self.subject_picker.configure(state="disabled")
-        self.start_button.configure(state="disabled")
-        self.show_notice(tr(self, 'Focus session started · {v0}', v0=subject['name']))
+        try:
+            row=self.store.start_focus_checkpoint(subject_id,self.preferences['focus_minutes']*60)
+        except (sqlite3.Error,ValueError,OSError) as exc:
+            self.refresh_focus_recovery()
+            self.show_notice(self.focus_error(exc))
+            return
+        self.activate_focus(row,recovered=False)
+        if self.refresh_pending:return
+        self.show_notice(tr(self, 'Focus session started · {v0}',v0=row['subject_name']))
+
+    def activate_focus(self,row,*,recovered):
+        self.focus_run_id=row['id']
+        self.session_subject_id=row['subject_id'];self.session_subject_name=row['subject_name']
+        if row['subject_id'] is not None:self.selected_subject_id=row['subject_id']
+        self.focus_target=row['target_seconds'];self.session_seconds=float(row['elapsed_seconds'])
+        self.running_since=None if recovered else time.monotonic()
+        self.last_checkpoint=time.monotonic();self.session_open=True;self.session_save_failed=False
+        self.recovery_record=None;self.pending_focus_discard=False;self.recovery_panel.grid_remove()
+        self.focus_retry_label.configure(text='')
+        self.focus_alert.grid_remove()
+        self.focus_subject_label.configure(text=tr(self,'Focus subject: {v0}',v0=row['subject_name']))
+        remaining=max(0,self.focus_target-int(self.elapsed()))
+        self.timer_label.configure(text=tr(self,'{v0:02d}:{v1:02d} · {v2}',v0=remaining//60,v1=remaining%60,v2=tr(self,'Paused' if recovered else 'Focus')))
+        self.pause_button.configure(text=tr(self,'Resume' if recovered else 'Pause'),state='normal')
+        self.timer_frame.grid();self.start_button.configure(state='disabled');self.subject_picker.configure(state='disabled')
+        try:self.navigate('Dashboard')
+        except sqlite3.Error:self.defer_refresh()
+
+    def cancel_focus_discard(self):
+        self.pending_focus_discard=False
+        self.discard_focus_button.configure(text=tr(self,'Discard checkpoint'))
+        if self.recovery_record is not None:
+            row=self.recovery_record
+            self.recovery_status.configure(text=tr(self,'{v0} · saved {v1}s of {v2}s. Recover paused or discard. Time while closed is not counted; another window may still own this session.',v0=row['subject_name'],v1=row['elapsed_seconds'],v2=row['target_seconds']))
+
+    def refresh_focus_recovery(self):
+        if self.session_open:return
+        self.cancel_focus_discard()
+        self.recovery_record=None
+        self.recover_focus_button.configure(state='disabled')
+        self.discard_focus_button.configure(state='disabled')
+        self.start_button.configure(state='disabled')
+        try:row=self.store.pending_focus()
+        except sqlite3.Error:
+            self.recovery_status.configure(text=tr(self,'Could not read saved focus. Retry Refresh; no checkpoint was discarded.'))
+            self.recovery_panel.grid();return
+        self.recovery_record=row
+        if row is None:
+            self.recovery_panel.grid_remove();self.start_button.configure(state='normal');return
+        self.recover_focus_button.configure(state='normal')
+        self.discard_focus_button.configure(state='normal')
+        self.cancel_focus_discard()
+        self.recovery_panel.grid()
+
+    def recover_focus(self):
+        if self.session_open:return
+        self.cancel_focus_discard()
+        if self.recovery_record is None:self.refresh_focus_recovery();return
+        try:row=self.store.claim_focus_checkpoint(self.recovery_record['id'],self.recovery_record['revision'])
+        except (sqlite3.Error,ValueError,OSError) as exc:
+            self.recovery_status.configure(text=self.focus_error(exc));return
+        self.activate_focus(row,recovered=True)
+        if self.refresh_pending:return
+        self.show_notice(tr(self,'Focus recovered paused. Resume or Finish when ready; app downtime was not counted.'))
+
+    def discard_focus(self):
+        if self.session_open:return
+        if self.recovery_record is None:self.refresh_focus_recovery();return
+        if not self.pending_focus_discard:
+            self.pending_focus_discard=True
+            self.discard_focus_button.configure(text=tr(self,'Confirm discard'))
+            self.recovery_status.configure(text=tr(self,'Discard this saved focus checkpoint? Its uncompleted time will not enter Statistics. Click Confirm discard, or Refresh to cancel.'))
+            return
+        try:self.store.discard_focus_checkpoint(self.recovery_record['id'],self.recovery_record['revision'])
+        except (sqlite3.Error,ValueError,OSError) as exc:
+            self.pending_focus_discard=False;self.discard_focus_button.configure(text=tr(self,'Discard checkpoint'))
+            self.recovery_status.configure(text=self.focus_error(exc));return
+        self.recovery_record=None;self.refresh_focus_recovery()
+        self.show_notice(tr(self,'Focus checkpoint discarded. Completed study history is unchanged.'))
+
+    def show_focus_retry(self):
+        try:self.navigate('Dashboard')
+        except sqlite3.Error:self.defer_refresh()
+        self.show_notice(SAVE_RETRY_NOTICE)
+        self.timer_frame.update_idletasks()
+        self.scroll._parent_canvas.yview_moveto(0)
+
+    def focus_save_failure(self):
+        self.pause_button.configure(state='disabled')
+        self.focus_retry_label.configure(text=tr(self,SAVE_RETRY_NOTICE))
+        self.focus_alert.configure(text='!' if self.collapsed else tr(self,'Focus needs saving'))
+        self.focus_alert.grid(row=2,column=0,sticky='ew',padx=12,pady=(8,0))
+        self.show_notice(SAVE_RETRY_NOTICE)
+
+    def checkpoint_focus(self):
+        elapsed=min(int(self.elapsed()),self.focus_target)
+        try:self.store.checkpoint_focus(self.focus_run_id,elapsed)
+        except (sqlite3.Error,ValueError):
+            self.session_seconds=self.elapsed();self.running_since=None;self.session_save_failed=True
+            self.focus_save_failure()
+            return False
+        self.last_checkpoint=time.monotonic();return True
 
     def pause_focus(self):
         if self.running_since is not None:
-            self.session_seconds = self.elapsed()
-            self.running_since = None
-            self.pause_button.configure(text=tr(self, 'Resume'))
-        else:
-            self.running_since = time.monotonic()
-            self.pause_button.configure(text=tr(self, 'Pause'))
+            self.session_seconds=self.elapsed();self.running_since=None
+            self.pause_button.configure(text=tr(self,'Resume'))
+            self.checkpoint_focus()
+        elif self.session_save_failed:
+            self.show_notice(SAVE_RETRY_NOTICE)
+        elif self.session_open:
+            if int(self.session_seconds)>=self.focus_target:self.finish_focus();return
+            self.running_since=time.monotonic();self.last_checkpoint=time.monotonic()
+            self.pause_button.configure(text=tr(self,'Pause'))
 
     def finish_focus(self):
         if not self.session_open:
             return False
         elapsed = min(int(self.elapsed()), self.focus_target)
         try:
-            self.store.add_session(elapsed, self.session_subject_id, self.session_subject_name)
-        except sqlite3.Error:
+            result=self.store.add_session(elapsed, self.session_subject_id, self.session_subject_name,focus_run_id=self.focus_run_id)
+            elapsed=result["seconds"]
+        except (sqlite3.Error,ValueError):
             self.session_seconds = self.elapsed()
             self.running_since = None
-            self.pause_button.configure(text=tr(self, 'Resume'))
             self.session_save_failed = True
-            self.show_notice(SAVE_RETRY_NOTICE)
+            self.focus_save_failure()
             return False
+        self.focus_run_id = None
         self.running_since = None
         self.session_seconds = 0.0
         self.session_open = False
@@ -568,6 +693,8 @@ class Dashboard(ctk.CTk):
         self.session_subject_id = None
         self.session_subject_name = None
         self.timer_frame.grid_remove()
+        self.focus_alert.grid_remove()
+        self.focus_retry_label.configure(text="")
         self.start_button.configure(state="normal")
         if elapsed:
             try:
@@ -631,6 +758,8 @@ class Dashboard(ctk.CTk):
                 self.timer_label.configure(text=tr(self, '{v0:02d}:{v1:02d} · {v2}', v0=remaining // 60, v1=remaining % 60, v2=tr(self,'Paused' if self.running_since is None else 'Focus')))
                 if remaining == 0 and self.running_since is not None:
                     self.finish_focus()
+                elif self.running_since is not None and time.monotonic()-self.last_checkpoint>=5:
+                    self.checkpoint_focus()
             today = date.today()
             day_changed = today != self.active_day
             if day_changed or self.refresh_pending:
@@ -660,6 +789,7 @@ class Dashboard(ctk.CTk):
             return
         self.settings_page.backups.cancel_pending()
         if self.session_open and not self.finish_focus():
+            self.show_focus_retry()
             return
         if not self.tutor_page.prepare_close():
             self.navigate("AI Tutor")

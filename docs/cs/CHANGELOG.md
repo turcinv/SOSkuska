@@ -3,6 +3,11 @@
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
 
+## Nevydané
+
+- Obnova soustředění po pádu: kontrolní body, pozastavená obnova/zahození, výhradní vlastnictví, opakování uložení a zálohy schématu 10.
+- Testy migrace a přerušení/obnovy; sladěné návody ve čtyřech jazycích.
+
 ## 0.16.0 — 2026-11-22
 
 v0.16.0 přidává uložené Light/Dark/System, použité po Save bez obnovy obrazovek a ztráty aktivní práce. System sleduje Windows/macOS, na Linuxu používá Light. Aktuální schéma je 9. Uživatel 22. listopadu 2026 potvrdil dokončení testování základu a schválil sloučení PR #32. [Nastavení vzhledu](APPEARANCE.md).

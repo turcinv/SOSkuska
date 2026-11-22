@@ -4,7 +4,9 @@
 
 **Vydaná verzia: v0.16.0 · schéma 9.** História testov a testy v kontajneri sú implementované.
 
-Výber jazyka rozhrania je dostupný vo v0.13.0: angličtina, čeština, slovenčina a ruština. Ukladá sa osobitne od jazyka AI a použije sa po reštarte. Aktuálna schéma je 9.
+Táto vetva pridáva obnovu sústredenia k vydanej základnej verzii v0.16.0. Funkcia zatiaľ nie je vydaná a používa schému **10**. Pred otvorením pôvodných dát vytvor zálohu: migrácia je transakčná, ale v0.16.0 databázu schémy 10 neotvorí. [Obnova sústredenia po páde](FOCUS_RECOVERY.md).
+
+Výber jazyka rozhrania je dostupný vo v0.13.0: angličtina, čeština, slovenčina a ruština. Ukladá sa osobitne od jazyka AI a použije sa po reštarte. Schéma aktuálnej vetvy je 10.
 
 ## Technológie a súbory
 
@@ -55,7 +57,7 @@ Obrazovky volajú `Store` priamo. Samostatná servisná/doménová vrstva a spol
 
 ## Schéma a migrácie
 
-`PRAGMA user_version` teraz označuje verziu **9**. Otvorenie pôvodnej databázy verzie 0 vytvorí/rozpozná pôvodné tabuľky a v jednej transakcii doplní predmety a väzby. Databáza s novšou verziou sa odmietne otvoriť namiesto pokusu o downgrade. Cudzie kľúče sú zapnuté pre každé pripojenie.
+`PRAGMA user_version` teraz označuje verziu **10**. Otvorenie pôvodnej databázy verzie 0 vytvorí/rozpozná pôvodné tabuľky a v jednej transakcii doplní predmety a väzby. Databáza s novšou verziou sa odmietne otvoriť namiesto pokusu o downgrade. Cudzie kľúče sú zapnuté pre každé pripojenie.
 
 ```sql
 CREATE TABLE tasks (
@@ -115,7 +117,7 @@ Ak nová databáza nie je a existuje pôvodná `ExamPrep/dashboard.sqlite3`, pou
 
 Časovač vyžaduje existujúci predmet. Počas relácie drží jeho ID a kópiu názvu; premenovanie nemení históriu. Má nastaviteľný limit 1–180 minút (predvolene 15), meranie cez `time.monotonic()`, aktualizáciu cez `after(250, tick)`, pauzu a dokončenie. Mazanie aktívneho predmetu UI zablokuje do dokončenia relácie. Finish, dosiahnutie limitu a bežné zatvorenie ukladajú čas. Pri chybe zápisu sa relácia pozastaví a možno skúsiť Finish znovu; okno sa nezatvorí s neuloženou reláciou.
 
-Čas nie je priebežne ukladaný a po páde sa nemusí obnoviť. Relácia sa pripisuje ku dňu uloženia a nerozdeľuje sa cez polnoc. Zmena dňa za behu obnoví prehľad a dnešný zoznam úloh. Nový zoznam používa kľúče `review_subject` a `focus`; staré riadky zostávajú v databáze, ale nie sú mapované na nové úlohy.
+Start Studying najprv vytvorí rozpracovaný záznam. Aplikácia ukladá celé uplynuté sekundy približne každých päť sekúnd a ihneď pri Pause. Zachová pôvodný názov predmetu, cieľ a overený čas; hodnotu monotónnych hodín medzi procesmi neprenáša. Po páde alebo vynútenom ukončení Dashboard ponúkne Recover paused, Discard checkpoint a Refresh (popisky sa prekladajú podľa jazyka rozhrania). Obnova začína pozastavená, zachová pôvodný cieľ aj po zmene Settings a nepočíta čas zatvorenia ako štúdium. Resume pokračuje; Finish uloží čas. Rozpracovaný čas nie je v Statistics. Zahodenie vyžaduje druhé potvrdenie a nepridáva históriu. Navigácia, Escape, Refresh a Recover potvrdenie rušia. Chyba čítania vypne zastarané akcie do úspešného Refresh. [Obnova sústredenia po páde](FOCUS_RECOVERY.md).
 
 ## Skutočný Dashboard
 
@@ -244,7 +246,7 @@ StatisticsPage volá Store.statistics(); study_statistics.py číta sessions, do
 
 Discard test získa zápisový zámok a potom overí termín. Ak medzitým vypršal, pokus aj odpovede sa zachovajú ako dokončený výsledok namiesto zmazania; zlyhanie zápisu ponechá pôvodné údaje na opakovanie. Ak iná inštancia rozpracovaný test odstráni, Finish zastaví opakovanie a obnoví nastavenie. Chyby SQLite možno ďalej opakovať; po chybe načítania nastavenia použi Refresh subjects alebo návrat na obrazovku.
 
-Editor otázok ukladá kópiu pôvodného obsahu. Pri uložení ju porovná s aktuálnou otázkou pod zápisovým zámkom. Novší text, možnosti, správna odpoveď, náročnosť, téma ani vysvetlenie sa neprepíšu starým formulárom. Pri konflikte zostane rozpísaný obsah; pred opätovným otvorením Edit si ho skopíruj a zmeny spoj s aktuálnou verziou. Táto oprava nepridáva migráciu; aktuálna schéma je 9.
+Editor otázok ukladá kópiu pôvodného obsahu. Pri uložení ju porovná s aktuálnou otázkou pod zápisovým zámkom. Novší text, možnosti, správna odpoveď, náročnosť, téma ani vysvetlenie sa neprepíšu starým formulárom. Pri konflikte zostane rozpísaný obsah; pred opätovným otvorením Edit si ho skopíruj a zmeny spoj s aktuálnou verziou. Táto oprava nepridáva migráciu; schéma aktuálnej vetvy je 10.
 
 Formulár New deck obnoví ponuku predmetov pri návrate, cez Refresh aj pred uložením, bez straty názvu a popisu. Premenovaný predmet zostane vybraný podľa ID. Ak bol vybraný predmet zmazaný, Choose a subject vyžaduje výslovne zvoliť iný; formulár ho sám nenahradí iným existujúcim predmetom.
 
@@ -276,19 +278,19 @@ CREATE TABLE preferences (
 
 ## Záloha a obnova
 
-Settings teraz ponúka ručnú miestnu zálohu a overenú obnovu s bezpečnostnou kópiou pred nahradením. Aktuálna schéma je 9. Obnova zatvorí aplikáciu; potom ju spusti znovu. Pozri [Záloha a obnova](BACKUP_RESTORE.md).
+Settings teraz ponúka ručnú miestnu zálohu a overenú obnovu s bezpečnostnou kópiou pred nahradením. Schéma aktuálnej vetvy je 10. Obnova zatvorí aplikáciu; potom ju spusti znovu. Pozri [Záloha a obnova](BACKUP_RESTORE.md).
 
 backup.py a backup_validation.py overujú súkromné samostatné snímky a aplikačné hodnoty; riadky nahrádzajú v jednej transakcii bez prevzatia cudzieho DDL. database_lock.py drží zdieľané zámky Store a výhradný zámok obnovy (flock / Windows LockFileEx). backup_worker.py beží v oddelenom procese; backup_panel.py cez Tk číta dočasný výstupný súbor, takže nehrozí plná rúra ani finalizácia Tk z pracovného vlákna. Pri obnove sa Store zatvorí a periodické callbacky pozastavia. Bezpečnostná kópia vznikne pod zápisovým zámkom; pred commitom sa overia konečné riadky a ID sekvencie.
 
 ## Import otázok z CSV
 
-Banka otázok teraz podporuje import UTF-8 CSV do existujúceho predmetu: šablóna s hlavičkou, stránkovaný náhľad, odmietnutie presných duplicít a jedno atomické uloženie. Maximum 2 MiB / 500 záznamov; zoznam ukazuje 50 otázok na stránku. Aktuálna schéma je 9. [Import otázok z CSV](QUESTION_CSV_IMPORT.md).
+Banka otázok teraz podporuje import UTF-8 CSV do existujúceho predmetu: šablóna s hlavičkou, stránkovaný náhľad, odmietnutie presných duplicít a jedno atomické uloženie. Maximum 2 MiB / 500 záznamov; zoznam ukazuje 50 otázok na stránku. Schéma aktuálnej vetvy je 10. [Import otázok z CSV](QUESTION_CSV_IMPORT.md).
 
 csv_import.py overuje ohraničené normalizované záznamy; csv_import_worker.py izoluje parsovanie, kontrolu iba na čítanie, uloženie a šablónu s výstupom do súboru. Store.open_existing používa mode=ro/rw bez vytvárania či migrácie. Store.import_questions znovu overí dávku pod BEGIN IMMEDIATE a uloží témy/otázky jednou transakciou. Úspešná dávka sa zneplatní pred čítaním prehľadov; opakovaná obnova nič neimportuje. Stránkovanie filtruje celý zoznam a potom vykreslí 50 kariet.
 
 ## Import kartičiek z CSV
 
-Flashcards teraz podporuje import UTF-8 CSV do existujúceho balíčka: šablónu s hlavičkou, stránkovaný náhľad, odmietnutie presných duplicít a jedno atomické uloženie. Maximum 2 MiB / 500 záznamov. Nové kartičky sú ihneď splatné; pôvodné termíny a história hodnotení zostávajú zachované. Aktuálna schéma je 9. [Import kartičiek z CSV](FLASHCARD_CSV_IMPORT.md).
+Flashcards teraz podporuje import UTF-8 CSV do existujúceho balíčka: šablónu s hlavičkou, stránkovaný náhľad, odmietnutie presných duplicít a jedno atomické uloženie. Maximum 2 MiB / 500 záznamov. Nové kartičky sú ihneď splatné; pôvodné termíny a história hodnotení zostávajú zachované. Schéma aktuálnej vetvy je 10. [Import kartičiek z CSV](FLASHCARD_CSV_IMPORT.md).
 
 `flashcard_csv_import.py` validuje ohraničené záznamy front/back; `flashcard_csv_import_worker.py` izoluje čítanie, kontrolu iba na čítanie a uloženie. `CsvImportPanel` zdieľa životný cyklus a publikovanie šablón s importom otázok. `Store.import_flashcards` pod BEGIN IMMEDIATE znovu overí zobrazený názov balíčka a duplicity v celom balíčku a vloží všetky kartičky naraz s aktuálnym UTC termínom. Pôvodné termíny a hodnotenia nemení.
 
@@ -298,7 +300,7 @@ AI Tutor teraz ukladá konverzácie lokálne vrátane pôvodného servera/modelu
 
 ## Jazyk rozhrania
 
-Výber jazyka rozhrania je dostupný vo v0.13.0: angličtina, čeština, slovenčina a ruština. Ukladá sa osobitne od jazyka AI a použije sa po reštarte. Aktuálna schéma je 9. [Jazyk rozhrania](UI_LANGUAGES.md).
+Výber jazyka rozhrania je dostupný vo v0.13.0: angličtina, čeština, slovenčina a ruština. Ukladá sa osobitne od jazyka AI a použije sa po reštarte. Schéma aktuálnej vetvy je 10. [Jazyk rozhrania](UI_LANGUAGES.md).
 
 ## História testov
 
@@ -310,4 +312,10 @@ v0.15.0 pridáva nepodpísaný prenosný ZIP pre Windows x64, zostavený a overe
 
 ## Nastavenie vzhľadu
 
-v0.16.0 pridáva uložené Light/Dark/System, použité po Save bez obnovy obrazoviek a straty aktívnej práce. System sleduje Windows/macOS, na Linuxe používa Light. Aktuálna schéma je 9. Používateľ 22. novembra 2026 potvrdil dokončenie testovania základu a schválil zlúčenie PR #32. [Nastavenie vzhľadu](APPEARANCE.md).
+v0.16.0 pridáva uložené Light/Dark/System, použité po Save bez obnovy obrazoviek a straty aktívnej práce. System sleduje Windows/macOS, na Linuxe používa Light. Schéma aktuálnej vetvy je 10. Používateľ 22. novembra 2026 potvrdil dokončenie testovania základu a schválil zlúčenie PR #32. [Nastavenie vzhľadu](APPEARANCE.md).
+
+## Obnova sústredenia po páde
+
+Táto vetva pridáva obnovu sústredenia k vydanej základnej verzii v0.16.0. Funkcia zatiaľ nie je vydaná a používa schému **10**. Pred otvorením pôvodných dát vytvor zálohu: migrácia je transakčná, ale v0.16.0 databázu schémy 10 neotvorí. [Obnova sústredenia po páde](FOCUS_RECOVERY.md).
+
+`focus_runs`: `id`, `subject_id`, `subject_name`, `target_seconds`, `elapsed_seconds`, `status` (pending/completed/discarded), `revision`, `started_at`, `updated_at`, `completed_at`, `session_id`. Dokončenie vloží študijnú reláciu a označí kontrolný bod v jednej transakcii; opakovanie nevytvorí druhú reláciu. Nula sekúnd nepridá štatistiku. Čas patrí miestnemu dňu dokončenia, aj po obnove; cez polnoc sa nedelí. Premenovanie/vymazanie predmetu zachová pôvodný historický názov; vymazanie odstráni len živý odkaz.

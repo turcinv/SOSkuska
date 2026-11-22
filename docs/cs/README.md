@@ -107,15 +107,15 @@ Hlavní dokumentace je anglicky v kořeni repozitáře a v `docs/`. Česká verz
 
 ## Záloha a obnova
 
-Settings nyní nabízí ruční místní zálohu a ověřenou obnovu s bezpečnostní kopií před nahrazením. Aktuální schéma je 9. Obnova zavře aplikaci; potom ji spusť znovu. Viz [Záloha a obnova](BACKUP_RESTORE.md).
+Settings nyní nabízí ruční místní zálohu a ověřenou obnovu s bezpečnostní kopií před nahrazením. Schéma aktuální větve je 10. Obnova zavře aplikaci; potom ji spusť znovu. Viz [Záloha a obnova](BACKUP_RESTORE.md).
 
 ## Import otázek z CSV
 
-Banka otázek nyní podporuje import UTF-8 CSV do existujícího předmětu: šablona s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů; seznam ukazuje 50 otázek na stránku. Aktuální schéma je 9. [Import otázek z CSV](QUESTION_CSV_IMPORT.md).
+Banka otázek nyní podporuje import UTF-8 CSV do existujícího předmětu: šablona s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů; seznam ukazuje 50 otázek na stránku. Schéma aktuální větve je 10. [Import otázek z CSV](QUESTION_CSV_IMPORT.md).
 
 ## Import kartiček z CSV
 
-Flashcards nyní podporuje import UTF-8 CSV do existujícího balíčku: šablonu s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů. Nové kartičky jsou ihned splatné; původní termíny a historie hodnocení zůstávají zachované. Aktuální schéma je 9. [Import kartiček z CSV](FLASHCARD_CSV_IMPORT.md).
+Flashcards nyní podporuje import UTF-8 CSV do existujícího balíčku: šablonu s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů. Nové kartičky jsou ihned splatné; původní termíny a historie hodnocení zůstávají zachované. Schéma aktuální větve je 10. [Import kartiček z CSV](FLASHCARD_CSV_IMPORT.md).
 
 [Poznatky ze sezení a předání projektu](SESSION_LESSONS.md)
 
@@ -125,7 +125,7 @@ AI Tutor nyní ukládá konverzace lokálně včetně původního serveru/modelu
 
 ## Jazyk rozhraní
 
-Výběr jazyka rozhraní je dostupný ve v0.13.0: angličtina, čeština, slovenština a ruština. Ukládá se zvlášť od jazyka AI a použije se po restartu. Aktuální schéma je 9. [Jazyk rozhraní](UI_LANGUAGES.md).
+Výběr jazyka rozhraní je dostupný ve v0.13.0: angličtina, čeština, slovenština a ruština. Ukládá se zvlášť od jazyka AI a použije se po restartu. Schéma aktuální větve je 10. [Jazyk rozhraní](UI_LANGUAGES.md).
 
 ## Historie testů
 
@@ -137,8 +137,12 @@ v0.15.0 přidává nepodepsaný přenosný ZIP pro Windows x64, sestavený a ov�
 
 ## Nastavení vzhledu
 
-v0.16.0 přidává uložené Light/Dark/System, použité po Save bez obnovy obrazovek a ztráty aktivní práce. System sleduje Windows/macOS, na Linuxu používá Light. Aktuální schéma je 9. Uživatel 22. listopadu 2026 potvrdil dokončení testování základu a schválil sloučení PR #32. [Nastavení vzhledu](APPEARANCE.md).
+v0.16.0 přidává uložené Light/Dark/System, použité po Save bez obnovy obrazovek a ztráty aktivní práce. System sleduje Windows/macOS, na Linuxu používá Light. Schéma aktuální větve je 10. Uživatel 22. listopadu 2026 potvrdil dokončení testování základu a schválil sloučení PR #32. [Nastavení vzhledu](APPEARANCE.md).
 
 ## Další kroky · 22. listopadu 2026
 
 Stav 22. listopadu 2026: uživatel potvrdil dokončení testování v0.15.0 a schválil PR #32. Tento seznam nyní cílí na v0.16.0; jednotlivé výsledky čistého počítače/DPI zde nejsou zaznamenané. Nezaškrtnuté body zůstávají neověřené; při testování nového vydání doplň důkazy pro konkrétní zařízení. [Další kroky · 22. listopadu 2026](NEXT_STEPS.md).
+
+## Obnova soustředění po pádu
+
+Tato větev přidává obnovu soustředění k vydané základní verzi v0.16.0. Funkce zatím není vydaná a používá schéma **10**. Před otevřením původních dat vytvoř zálohu: migrace je transakční, ale v0.16.0 databázi schématu 10 neotevře. [Obnova soustředění po pádu](FOCUS_RECOVERY.md).

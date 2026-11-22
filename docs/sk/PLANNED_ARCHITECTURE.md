@@ -76,7 +76,7 @@ Presun robiť po malých funkčných krokoch. Do vytvorenia balíka zostáva pla
 
 Konkrétne schémy musia doplniť cudzie kľúče, pravidlá mazania, indexy a transakcie. Migrácie musia zachovať dnešné `tasks` a `sessions`; existujúci čas nesmie dostať vymyslený predmet. Lokálny profil nemá vyžadovať serverový účet.
 
-Časové okamihy ukladať s jasným časovým pásmom, ideálne UTC; denné súčty počítať v miestnom pásme. Navrhnúť rozdelenie relácie cez polnoc a obnovu po páde. Monotónny čas sa nedá preniesť medzi spusteniami procesu, preto nebude jediným uloženým údajom.
+Obnova sústredenia po páde je implementovaná v nevydanej vetve; pozri [Obnova sústredenia](FOCUS_RECOVERY.md). Rozdelenie cez polnoc zostáva návrhom. Všetok čas teraz patrí miestnemu dňu dokončenia.
 
 ## Funkčné celky
 
@@ -117,15 +117,15 @@ Konverzácie sa ukladajú do miestnej databázy a záloh. Voľby spojenia možno
 
 ## Záloha a obnova
 
-Settings teraz ponúka ručnú miestnu zálohu a overenú obnovu s bezpečnostnou kópiou pred nahradením. Aktuálna schéma je 9. Obnova zatvorí aplikáciu; potom ju spusti znovu. Pozri [Záloha a obnova](BACKUP_RESTORE.md).
+Settings teraz ponúka ručnú miestnu zálohu a overenú obnovu s bezpečnostnou kópiou pred nahradením. Schéma aktuálnej vetvy je 10. Obnova zatvorí aplikáciu; potom ju spusti znovu. Pozri [Záloha a obnova](BACKUP_RESTORE.md).
 
 ## Import otázok z CSV
 
-Banka otázok teraz podporuje import UTF-8 CSV do existujúceho predmetu: šablóna s hlavičkou, stránkovaný náhľad, odmietnutie presných duplicít a jedno atomické uloženie. Maximum 2 MiB / 500 záznamov; zoznam ukazuje 50 otázok na stránku. Aktuálna schéma je 9. [Import otázok z CSV](QUESTION_CSV_IMPORT.md).
+Banka otázok teraz podporuje import UTF-8 CSV do existujúceho predmetu: šablóna s hlavičkou, stránkovaný náhľad, odmietnutie presných duplicít a jedno atomické uloženie. Maximum 2 MiB / 500 záznamov; zoznam ukazuje 50 otázok na stránku. Schéma aktuálnej vetvy je 10. [Import otázok z CSV](QUESTION_CSV_IMPORT.md).
 
 ## Import kartičiek z CSV
 
-Flashcards teraz podporuje import UTF-8 CSV do existujúceho balíčka: šablónu s hlavičkou, stránkovaný náhľad, odmietnutie presných duplicít a jedno atomické uloženie. Maximum 2 MiB / 500 záznamov. Nové kartičky sú ihneď splatné; pôvodné termíny a história hodnotení zostávajú zachované. Aktuálna schéma je 9. [Import kartičiek z CSV](FLASHCARD_CSV_IMPORT.md).
+Flashcards teraz podporuje import UTF-8 CSV do existujúceho balíčka: šablónu s hlavičkou, stránkovaný náhľad, odmietnutie presných duplicít a jedno atomické uloženie. Maximum 2 MiB / 500 záznamov. Nové kartičky sú ihneď splatné; pôvodné termíny a história hodnotení zostávajú zachované. Schéma aktuálnej vetvy je 10. [Import kartičiek z CSV](FLASHCARD_CSV_IMPORT.md).
 
 ## Uložené konverzácie AI Tutor
 
@@ -133,7 +133,7 @@ AI Tutor teraz ukladá konverzácie lokálne vrátane pôvodného servera/modelu
 
 ## Jazyk rozhrania
 
-Výber jazyka rozhrania je dostupný vo v0.13.0: angličtina, čeština, slovenčina a ruština. Ukladá sa osobitne od jazyka AI a použije sa po reštarte. Aktuálna schéma je 9. [Jazyk rozhrania](UI_LANGUAGES.md).
+Výber jazyka rozhrania je dostupný vo v0.13.0: angličtina, čeština, slovenčina a ruština. Ukladá sa osobitne od jazyka AI a použije sa po reštarte. Schéma aktuálnej vetvy je 10. [Jazyk rozhrania](UI_LANGUAGES.md).
 
 ## História testov
 
@@ -145,8 +145,12 @@ v0.15.0 pridáva nepodpísaný prenosný ZIP pre Windows x64, zostavený a overe
 
 ## Nastavenie vzhľadu
 
-v0.16.0 pridáva uložené Light/Dark/System, použité po Save bez obnovy obrazoviek a straty aktívnej práce. System sleduje Windows/macOS, na Linuxe používa Light. Aktuálna schéma je 9. Používateľ 22. novembra 2026 potvrdil dokončenie testovania základu a schválil zlúčenie PR #32. [Nastavenie vzhľadu](APPEARANCE.md).
+v0.16.0 pridáva uložené Light/Dark/System, použité po Save bez obnovy obrazoviek a straty aktívnej práce. System sleduje Windows/macOS, na Linuxe používa Light. Schéma aktuálnej vetvy je 10. Používateľ 22. novembra 2026 potvrdil dokončenie testovania základu a schválil zlúčenie PR #32. [Nastavenie vzhľadu](APPEARANCE.md).
 
 ## Ďalšie kroky · 22. novembra 2026
 
 Stav 22. novembra 2026: používateľ potvrdil dokončenie testovania v0.15.0 a schválil PR #32. Tento zoznam teraz cieli na v0.16.0; jednotlivé výsledky čistého počítača/DPI tu nie sú zaznamenané. Nezaškrtnuté body zostávajú neoverené; pri testovaní nového vydania doplň dôkazy pre konkrétne zariadenie. [Ďalšie kroky · 22. novembra 2026](NEXT_STEPS.md).
+
+## Obnova sústredenia po páde
+
+Táto vetva pridáva obnovu sústredenia k vydanej základnej verzii v0.16.0. Funkcia zatiaľ nie je vydaná a používa schému **10**. Pred otvorením pôvodných dát vytvor zálohu: migrácia je transakčná, ale v0.16.0 databázu schémy 10 neotvorí. [Obnova sústredenia po páde](FOCUS_RECOVERY.md).
