@@ -83,7 +83,7 @@ Focus crash recovery is available in v0.17.0; see [Focus recovery](FOCUS_RECOVER
 - **AI Tutor:** bounded Ollama HTTP client, discovered models, streaming and cancellation exist. Keep default local connection, visible configurable URL and no automatic cloud fallback. Distinguish unavailable service, no models, loading/ready/generating/stopped, memory error and missing model; connection failure alone cannot prove Ollama is not installed.
 - **AI execution:** keep long operations off the Tk thread, results through queue/after, and no worker widget calls. Do not share SQLite connections without a design; short writes may stay on the main thread and future jobs should get their own connections.
 - **Text/languages:** start with plain text, code blocks and Unicode math; advanced HTML/LaTeX is optional future work. Separate UI from AI answer language. UI translations should support English/Czech/Slovak/Russian, long text and Cyrillic; AI already supports these plus Automatic and manual override.
-- **Statistics/settings/data:** basic reports and study/AI preferences exist. Future work includes richer charts (Matplotlib only if needed), data management, import validation and scheduled backups. Manual backup/restore is now implemented.  The current manual restore closes the connection and creates a safety copy.
+- **Statistics/settings/data:** basic reports and study/AI preferences exist. Future work includes richer charts (Matplotlib only if needed), data management and import validation. Opt-in daily local backups are implemented on this unreleased branch. Manual backup/restore is now implemented.  The current manual restore closes the connection and creates a safety copy.
 
 ## Stages and completion criteria
 
@@ -137,3 +137,7 @@ Status updated 22 November 2026: the user confirmed v0.15.0 baseline testing com
 ## Focus-session recovery
 
 v0.17.0 adds focus-session crash recovery using schema **10**. Keep a backup before opening existing data: migration is transactional, but v0.16.0 cannot open a schema-10 database. [Focus-session recovery](FOCUS_RECOVERY.md).
+
+## Scheduled local backups
+
+This feature is implemented on the current branch and is not released yet. The published version remains v0.17.0; SQLite schema remains **10**. Manual backup/restore continues to work independently. [Scheduled local backups](SCHEDULED_BACKUPS.md).

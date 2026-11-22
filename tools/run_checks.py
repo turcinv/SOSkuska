@@ -19,6 +19,7 @@ GUI_CHECKS = (
     'check_settings.py',
     'check_appearance.py',
     'check_backup.py',
+    'check_scheduled_backups.py',
     'check_csv_import.py',
     'check_flashcard_import.py',
     'check_tutor_history.py',

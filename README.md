@@ -122,3 +122,7 @@ Status updated 22 November 2026: the user confirmed v0.15.0 baseline testing com
 ## Focus-session recovery
 
 v0.17.0 adds focus-session crash recovery using schema **10**. Keep a backup before opening existing data: migration is transactional, but v0.16.0 cannot open a schema-10 database. [Focus-session recovery](docs/FOCUS_RECOVERY.md).
+
+## Scheduled local backups
+
+This feature is implemented on the current branch and is not released yet. The published version remains v0.17.0; SQLite schema remains **10**. Manual backup/restore continues to work independently. [Scheduled local backups](docs/SCHEDULED_BACKUPS.md).

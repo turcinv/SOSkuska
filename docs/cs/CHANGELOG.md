@@ -3,6 +3,11 @@
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
 
+## Nevydané
+
+- Volitelné denní místní zálohy se složkou pro daný počítač, koordinací oken a viditelnými výsledky/opakováním.
+- Zachování souborů i konceptů bez změny schématu; kontejnerové, procesní a Windows kontroly a návody ve čtyřech jazycích.
+
 ## 0.17.0 — 2026-11-22
 
 - Obnova soustředění po pádu: kontrolní body, pozastavená obnova/zahození, výhradní vlastnictví, opakování uložení a zálohy schématu 10.

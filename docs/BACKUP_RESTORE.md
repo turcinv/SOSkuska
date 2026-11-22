@@ -33,3 +33,7 @@ AI Tutor now saves conversations locally, including the original server/model an
 ## Focus-session recovery
 
 v0.17.0 adds focus-session crash recovery using schema **10**. Keep a backup before opening existing data: migration is transactional, but v0.16.0 cannot open a schema-10 database. [Focus-session recovery](FOCUS_RECOVERY.md).
+
+## Scheduled local backups
+
+This feature is implemented on the current branch and is not released yet. The published version remains v0.17.0; SQLite schema remains **10**. Manual backup/restore continues to work independently. [Scheduled local backups](SCHEDULED_BACKUPS.md).

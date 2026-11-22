@@ -160,7 +160,17 @@ def main():
             assert store.seconds()==37 and store.pending_focus() is None
         finally:store.close()
         results.append('Frozen pending-focus startup/close preserves checkpoint without automatic claim, elapsed time or credit')
+        from automatic_backup import load_config,save_config
+        automatic_folder=folder/'Автоматические zálohy';automatic_folder.mkdir()
+        save_config(database,True,str(automatic_folder),load_config(database)['token'])
+        result=job('backup','automatic',database)
+        assert result[0]=='done' and result[1]['state']=='created',result
+        assert Path(result[1]['path']).is_file()
+        assert job('backup','automatic',database)[1]['state']=='skipped'
+        save_config(database,False,str(automatic_folder),load_config(database)['token'])
+        results.append('Bundled daily-backup helper: explicit opt-in, Unicode folder, receipt and same-day skip')
         for language in ('English','Czech','Slovak','Russian'):
+
             for appearance in ('Light','Dark','System'):
                 store=Store(database)
                 try:

@@ -140,6 +140,7 @@ class SettingsUiTests(unittest.TestCase):
         language = Entry('Automatic')
 
         with (patch('settings_page.BackupPanel'),
+              patch('settings_page.ScheduledBackups'),
               patch.object(ctk.CTkFrame, '__init__', return_value=None),
               patch.object(SettingsPage, 'grid_columnconfigure'),
               patch.object(SettingsPage, 'bind'),

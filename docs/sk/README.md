@@ -143,3 +143,7 @@ Stav 22. novembra 2026: používateľ potvrdil dokončenie testovania v0.15.0 a 
 ## Obnova sústredenia po páde
 
 v0.17.0 pridáva obnovu sústredenia po páde so schémou **10**. Pred otvorením pôvodných dát vytvor zálohu: migrácia je transakčná, ale v0.16.0 databázu schémy 10 neotvorí. [Obnova sústredenia po páde](FOCUS_RECOVERY.md).
+
+## Plánované miestne zálohy
+
+Funkcia je implementovaná v aktuálnej vetve a zatiaľ nie je vydaná. Vydaná verzia zostáva v0.17.0; schéma SQLite zostáva **10**. Ručná záloha a obnova fungujú samostatne. [Plánované miestne zálohy](SCHEDULED_BACKUPS.md).
