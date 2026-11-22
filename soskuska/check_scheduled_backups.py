@@ -82,6 +82,13 @@ def run(path,folder,reopen=False):
         panel.next_check=0;poll_now();wait(second_done)
     def second_done():
         assert len(list(folder.glob('*.sqlite3')))==2
+        # A persisted receipt reconciles an older local failure without another job.
+        panel.complete('error',None)
+        assert panel.backup_failed and app.backup_notice.winfo_manager()=='grid'
+        with patch('scheduled_backups.subprocess.Popen') as worker:
+            panel.retry();poll_now();worker.assert_not_called()
+        assert not panel.backup_failed and not app.backup_notice.winfo_manager()
+        assert len(list(folder.glob('*.sqlite3')))==2
         assert panel.runtime.cget('text')=='Daily backup saved. Existing backup files were kept.'
         app.scroll._parent_canvas.yview_moveto(1);app.update_idletasks()
         assert app.scroll._parent_canvas.yview()[0]>0
@@ -104,6 +111,6 @@ def main():
         command=[sys.executable,'-X','faulthandler','-u',__file__,'--data',str(path),'--folder',str(folder)]
         subprocess.run(command,check=True,timeout=25)
         subprocess.run([*command,'--reopen'],check=True,timeout=25)
-    print('PASS: opt-in schedule, draft/failure/reload preservation, stale-window rejection, isolated backup worker, close banner, daily retry, compact scrolling and fresh-process policy/receipt',flush=True)
+    print('PASS: opt-in schedule, draft/failure/reload preservation, stale-window rejection, isolated backup worker, close banner, daily retry, cross-window success reconciliation, compact scrolling and fresh-process policy/receipt',flush=True)
 
 if __name__=='__main__':main()

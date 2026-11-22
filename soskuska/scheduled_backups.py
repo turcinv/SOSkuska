@@ -18,7 +18,7 @@ class ScheduledBackups(ctk.CTkFrame):
     def __init__(self,parent,app):
         super().__init__(parent,fg_color='transparent');self.app=app
         self.snapshot=None;self.baseline=None;self.busy=False;self.closed=False
-        self.process=None;self.output=None;self.next_check=0;self.pending_reload=False;self.waiting_elsewhere=False
+        self.process=None;self.output=None;self.next_check=0;self.pending_reload=False;self.waiting_elsewhere=False;self.backup_failed=False
         self.grid_columnconfigure(0,weight=1)
         app.label(self,tr(app,'Daily local backups'),20,bold=True).grid(row=0,column=0,sticky='w',pady=(12,8))
         self.info=app.label(self,tr(app,'Opt in to one backup per local day while the app is open. Only saved data is copied. Existing backups are never deleted. This folder setting stays on this machine.'),12,'secondary',wraplength=600)
@@ -90,9 +90,11 @@ class ScheduledBackups(ctk.CTkFrame):
             self.output=None
         self.save_button.configure(state='normal');self.retry_button.configure(state='normal')
         if state!='done':
+            self.backup_failed=True
             self.next_check=time.monotonic()+900;self.runtime_message('Daily backup failed. Check the folder and free space, then Retry backup.')
             self.app.backup_notice.configure(text=tr(self.app,'Daily backup failed. Open Settings to retry.'));self.app.backup_notice.grid(row=1,column=0,columnspan=2,sticky='ew',padx=12,pady=6)
             return
+        self.backup_failed=False
         self.next_check=time.monotonic()+60
         self.app.backup_notice.grid_remove()
         self.waiting_elsewhere=value['state']=='busy'
@@ -121,7 +123,11 @@ class ScheduledBackups(ctk.CTkFrame):
                 if due(saved,date.today()):self.launch()
                 else:
                     if saved['last_path']:self.last.configure(text=tr(self.app,'Last automatic backup: {v0}',v0=saved['last_path']))
-                    if self.waiting_elsewhere:
+                    if self.backup_failed and not saved['invalid'] and saved['last_day']==date.today().isoformat() and saved['last_path']:
+                        self.backup_failed=False;self.waiting_elsewhere=False
+                        self.app.backup_notice.grid_remove()
+                        self.runtime_message('Daily backup saved. Existing backup files were kept.')
+                    elif self.waiting_elsewhere:
                         self.waiting_elsewhere=False;self.runtime_message('No daily backup needed now; the schedule will be checked again.')
         except (OSError,ValueError,sqlite3.Error):
             self.next_check=time.monotonic()+900;self.runtime_message('Could not read backup settings. Your draft is kept; retry Reload.')

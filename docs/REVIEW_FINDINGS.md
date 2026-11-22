@@ -6,7 +6,20 @@ Recorded from the Astra 6.2 low-effort review of v0.18.0 at `252acc588700e46f0df
 
 | ID | Priority | Status | Finding | Required behavior |
 | --- | --- | --- | --- | --- |
-| A62-01 | P2 | Open | An older subject form silently overwrites another window’s description or exam-date changes. | Compare the original editable snapshot under the write lock; preserve the rejected draft. |
-| A62-02 | P2 | Open | A pending question-delete confirmation removes a question edited in another window. The topic path has the same confirmation pattern. | Recheck the displayed snapshot atomically before deleting; changed content requires a new confirmation. |
-| A62-03 | P2 | Open | Returning to the same subject’s question bank loses an unfinished question draft. | Preserve the active editor, original identity and draft when revisiting the same subject. |
-| A62-04 | P3 | Open | A backup failure banner remains after another window successfully creates today’s backup. | Reconcile a newer success receipt and clear only the superseded failure indicators. |
+| A62-01 | P2 | Fixed on branch | An older subject form silently overwrites another window’s description or exam-date changes. | Compare the original editable snapshot under the write lock; preserve the rejected draft. |
+| A62-02 | P2 | Fixed on branch | A pending question-delete confirmation removes a question edited in another window. The topic path has the same confirmation pattern. | Recheck the displayed snapshot atomically before deleting; changed content requires a new confirmation. |
+| A62-03 | P2 | Fixed on branch | Returning to the same subject’s question bank loses an unfinished question draft. | Preserve the active editor, original identity and draft when revisiting the same subject. |
+| A62-04 | P3 | Fixed on branch | A backup failure banner remains after another window successfully creates today’s backup. | Reconcile a newer success receipt and clear only the superseded failure indicators. |
+
+## Resolution and validation
+
+All four findings are fixed and verified on `fix/main-review-findings`; they remain unreleased until the PR is merged and a release is authorized. Keep this record after resolution.
+
+Local Docker/Xvfb: **306 unit tests** (two platform skips), **18 GUI scripts** passed. Independent Sol review at medium effort found no remaining blockers. Native hardware/manual acceptance remains separate.
+
+- A62-01: `test_subject_draft_does_not_overwrite_concurrent_description_or_exam`; `check_state_fixes.py`.
+- A62-02: `test_question_deletion_requires_reconfirmation_after_changed_answers`, `test_topic_rename_invalidates_delete_warning_without_removing_questions`, `test_disappearing_record_clears_old_confirmation_and_does_not_retry_delete`; `check_state_fixes.py`.
+- A62-03: `check_state_fixes.py` — new/edit drafts, initial read retry, topic rename/deletion/recreation, explicit cancel and subject switching.
+- A62-04: `test_real_external_worker_success_reconciles_failed_window`, `test_older_or_invalid_receipt_does_not_clear_unresolved_failure`; `check_scheduled_backups.py`.
+
+[Unit tests](../tests/test_review_findings.py) · [GUI state checks](../soskuska/check_state_fixes.py) · [Backup GUI checks](../soskuska/check_scheduled_backups.py).

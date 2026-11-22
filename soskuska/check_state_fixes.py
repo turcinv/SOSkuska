@@ -84,6 +84,92 @@ def run_check(path):
         finally:
             other.close()
 
+    def main_review_findings(other_sid):
+        sid=app.store.create_subject('Reviewed subject','Original description','2026-12-20')
+        other=Store(path)
+        try:
+            app.navigate('My Subjects');subjects=app.subject_page;subjects.show_form(sid)
+            subjects.name_entry.delete(0,'end');subjects.name_entry.insert(0,'My rename')
+            other.update_subject(sid,'Reviewed subject','New description','2026-12-21')
+            subjects.save_button.invoke()
+            assert subjects.editing_id==sid and subjects.form.winfo_manager()=='grid'
+            assert subjects.name_entry.get()=='My rename'
+            assert 'changed in another window' in subjects.form_error.cget('text')
+            assert other.subject(sid)['description']=='New description'
+            subjects.show_form(sid);subjects.name_entry.delete(0,'end');subjects.name_entry.insert(0,'Merged subject')
+            subjects.save_button.invoke();assert other.subject(sid)['name']=='Merged subject'
+            tid=app.store.create_topic(sid,'Original topic')
+            qid=app.store.create_question(sid,'Original prompt',['a','b','c','d'],0,topic_id=tid)
+            app.open_question_bank(sid);bank=app.question_bank;bank.show_question_form(qid)
+            bank.prompt_entry.delete('1.0','end');bank.prompt_entry.insert('1.0','Draft prompt')
+            bank.explanation_entry.insert('1.0','Keep explanation')
+            bank.correct.set('C');bank.difficulty.set('Hard')
+            bank.option_entries[0].delete(0,'end');bank.option_entries[0].insert(0,'Draft answer')
+            bank.query.set('Draft')
+            original_snapshot=dict(bank.question_snapshot)
+            app.navigate('Settings');app.open_question_bank(sid)
+            assert bank.editing_question_id==qid and bank.question_snapshot==original_snapshot
+            assert bank.prompt_entry.get('1.0','end-1c')=='Draft prompt'
+            assert bank.option_entries[0].get()=='Draft answer' and bank.correct.get()=='C' and bank.difficulty.get()=='Hard'
+            assert bank.explanation_entry.get('1.0','end-1c')=='Keep explanation' and bank.query.get()=='Draft'
+            with patch.object(app.store,'subject',side_effect=sqlite3.OperationalError('read')):
+                app.open_question_bank(sid)
+            assert bank.editing_question_id==qid and bank.prompt_entry.get('1.0','end-1c')=='Draft prompt'
+            assert 'draft is kept' in bank.status.cget('text')
+            app.open_question_bank(sid);assert bank.status.cget('text')==''
+            bank.save_question();assert app.store.question(qid)['prompt']=='Draft prompt'
+            # Draft topic choices retain their IDs across rename and cannot silently
+            # turn unassigned if that selected topic is removed elsewhere.
+            draft_topic=other.create_topic(sid,'Draft topic choice')
+            bank.show_question_form(qid);bank.question_topic.set('Topic: Draft topic choice')
+            other.update_topic(draft_topic,'Renamed draft topic')
+            app.navigate('Dashboard');app.open_question_bank(sid)
+            assert bank.question_topic.get()=='Topic: Renamed draft topic'
+            other.delete_topic(draft_topic)
+            app.navigate('Dashboard');app.open_question_bank(sid)
+            assert bank.question_topic.get()=='Unavailable topic: Renamed draft topic'
+            replacement=other.create_topic(sid,'Renamed draft topic')
+            app.open_question_bank(sid)
+            assert bank.form_topics['Topic: Renamed draft topic']==replacement
+            assert bank.form_topics[bank.question_topic.get()]==draft_topic
+            bank.save_question();assert bank.editing_question_id==qid
+            assert 'selected topic no longer exists' in bank.question_error.cget('text')
+            assert app.store.question(qid)['topic_id']==tid
+            bank.question_topic.set('No topic');bank.save_question()
+            assert app.store.question(qid)['topic_id'] is None
+            bank.show_question_form()
+            assert bank.unavailable_topic_id is None and not any(label.startswith('Unavailable topic: ') for label in bank.form_topics)
+            bank.prompt_entry.insert('1.0','Unsaved new question')
+            app.navigate('Dashboard');app.open_question_bank(sid)
+            assert bank.editing_question_id is None and bank.question_form.winfo_manager()=='grid'
+            assert bank.prompt_entry.get('1.0','end-1c')=='Unsaved new question'
+            bank.question_topic.set('Topic: Original topic')
+            app.open_question_bank(other_sid)
+            assert bank.question_topic.get()=='No topic' and bank.unavailable_topic_id is None
+            assert tid not in bank.form_topics.values()
+            app.open_question_bank(sid);bank.show_topic_form(tid)
+            bank.topic_entry.delete(0,'end');bank.topic_entry.insert(0,'Topic draft')
+            app.navigate('Dashboard');app.open_question_bank(sid)
+            assert bank.editing_topic_id==tid and bank.topic_entry.get()=='Topic draft'
+            bank.hide_topic_form();bank.ask_delete('question',qid)
+            other.update_question(qid,'Changed before deletion',['one','two','three','four'],1,topic_id=tid)
+            bank.confirm_delete()
+            assert app.store.question(qid) is not None and bank.pending_delete is not None
+            assert 'changed' in bank.status.cget('text') and 'Changed before deletion' in bank.delete_text.cget('text')
+            assert 'This record changed' in bank.delete_text.cget('text')
+            with patch.object(app.store,'question',side_effect=sqlite3.OperationalError('read')):
+                bank.confirm_delete()
+            assert bank.pending_delete is not None and other.question(qid) is not None
+            bank.confirm_delete();assert app.store.question(qid) is None
+            qid=app.store.create_question(sid,'Retained question',['a','b','c','d'],0,topic_id=tid)
+            bank.ask_delete('topic',tid);other.update_topic(tid,'Renamed topic')
+            bank.confirm_delete();assert app.store.topic(tid) is not None
+            assert 'Renamed topic' in bank.delete_text.cget('text')
+            bank.confirm_delete();assert app.store.topic(tid) is None and app.store.question(qid)['topic_id'] is None
+        finally:
+            other.close()
+            app.navigate('Dashboard');app.store.delete_subject(sid);app.refresh_data()
+
     def question_conflict(sid):
         qid = app.store.create_question(sid, "Original?", ["A", "B", "C", "D"], 0)
         app.open_question_bank(sid)
@@ -172,6 +258,7 @@ def run_check(path):
 
     def initial():
         sid = deck_draft()
+        main_review_findings(sid)
         question_conflict(sid)
         expired_discard(sid)
         missing_practice(sid)
@@ -208,4 +295,4 @@ if __name__ == "__main__":
     ctk.set_appearance_mode("dark")
     with tempfile.TemporaryDirectory() as folder:
         run_check(Path(folder) / "state.sqlite3")
-    print("PASS: subject refresh without draft loss, rename/delete identity, failed-read retry, stale question conflict/reload and expired-discard retained result, missing-attempt recovery and transient-write retry", flush=True)
+    print("PASS: reviewed subject conflicts, stale question/topic delete reconfirmation, same-subject editor drafts and read retry; subject refresh without draft loss, rename/delete identity, failed-read retry, stale question conflict/reload and expired-discard retained result, missing-attempt recovery and transient-write retry", flush=True)

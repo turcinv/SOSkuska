@@ -238,3 +238,7 @@ v0.17.0 adds focus-session crash recovery using schema **10**. Keep a backup bef
 ## Scheduled local backups
 
 Scheduled local backups are available in **v0.18.0**. SQLite schema remains **10**. Manual backup/restore continues to work independently. [Scheduled local backups](SCHEDULED_BACKUPS.md).
+
+## Main-branch review fixes
+
+Unreleased fixes on `fix/main-review-findings`, tracked in [Astra review findings](REVIEW_FINDINGS.md). Schema remains 10 and the published version remains v0.18.0. Subject edits compare their original content under the write lock; a conflict keeps your draft. Copy any changes you need before reopening Edit to load the latest version. Question/topic deletions recheck their displayed snapshot and require a refreshed confirmation after changes. Returning to the same subject preserves the active question/topic editor, filters and original editing identity, including read retries; a removed selected topic stays unavailable until you explicitly choose a replacement or No topic. Opening a different subject still resets the editor. A newer successful daily-backup receipt clears the old failure notice without another backup write.

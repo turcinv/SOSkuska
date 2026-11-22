@@ -440,7 +440,15 @@ class Dashboard(ctk.CTk):
             return
         self.flashcard_page.importer.cancel()
         self.cancel_focus_discard()
-        if self.store.subject(subject_id) is None:
+        try:
+            subject = self.store.subject(subject_id)
+        except sqlite3.Error:
+            if self.question_bank.subject_id != subject_id:
+                self.show_notice(tr(self, 'Could not refresh the question bank. Your draft is kept; reopen Questions to retry.'))
+                return
+            # Reopen the retained editor; load_subject owns the read retry notice.
+            subject = True
+        if subject is None:
             self.navigate("My Subjects")
             self.show_notice(tr(self, 'This subject no longer exists.'))
             return

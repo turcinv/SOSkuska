@@ -11,6 +11,7 @@ class SubjectPage(ctk.CTkFrame):
         super().__init__(parent, fg_color="transparent", corner_radius=0)
         self.app = app
         self.editing_id = None
+        self.editing_snapshot = None
         self.deleting_id = None
         self.deleting_state = None
         self.card_columns = 1
@@ -84,6 +85,7 @@ class SubjectPage(ctk.CTkFrame):
             self.status.configure(text=tr(self.app, 'This subject no longer exists.'))
             return
         self.editing_id = subject_id
+        self.editing_snapshot = dict(subject) if subject else None
         self.form_title.configure(text=tr(self.app, 'Edit subject') if subject else tr(self.app, 'New subject'))
         for entry, value in [(self.name_entry, subject["name"] if subject else ""),
                              (self.exam_entry, (subject["exam_date"] or "") if subject else "")]:
@@ -99,6 +101,7 @@ class SubjectPage(ctk.CTkFrame):
     def hide_form(self):
         self.form.grid_remove()
         self.editing_id = None
+        self.editing_snapshot = None
 
     def save_subject(self):
         fields = (self.name_entry.get(), self.description_entry.get("1.0", "end-1c"), self.exam_entry.get())
@@ -106,7 +109,7 @@ class SubjectPage(ctk.CTkFrame):
             if self.editing_id is None:
                 self.app.store.create_subject(*fields)
             else:
-                self.app.store.update_subject(self.editing_id, *fields)
+                self.app.store.update_subject(self.editing_id, *fields, expected_state=self.editing_snapshot)
         except ValueError as exc:
             self.form_error.configure(text=tr(self.app, str(exc)))
             return
