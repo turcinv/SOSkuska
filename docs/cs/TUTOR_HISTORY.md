@@ -24,4 +24,4 @@ Pád procesu/systému může ponechat uloženou pending otázku; části streamu
 
 Konverzace jsou prostý text ve vybrané databázi a patří do záloh. Nejsou šifrované ani synchronizované. Limit: 12 otázek na konverzaci, otázka 4 000 znaků, odpověď 16 000; kontext nejvýše šest dokončených dvojic / 24 000 znaků. Částečné či chybné odpovědi nejsou dokončeným kontextem. AI odpovědi nadále ověřuj.
 
-Obnova přijímá pouze samostatné zálohy schématu 8. Starší originál uchovej. Vlastní zálohu schématu 6 převedeš tak, že vytvoříš samostatnou kopii, otevřeš ji v nové aplikaci přes --data pro migraci při startu a vyexportuješ novou zálohu přes Create backup. Kvůli převodu nenahrazuj pracovní databázi. Migrace neobnoví chaty ze starých verzí bez ukládání.
+Obnova přijímá pouze samostatné zálohy schématu 9. Starší originál uchovej. Vlastní zálohu schématu 6 převedeš tak, že vytvoříš samostatnou kopii, otevřeš ji v nové aplikaci přes --data pro migraci při startu a vyexportuješ novou zálohu přes Create backup. Kvůli převodu nenahrazuj pracovní databázi. Migrace neobnoví chaty ze starých verzí bez ukládání.

@@ -18,7 +18,7 @@ Connecting to a different server resolves the model from the saved preference ag
 
 ## Backup and restore
 
-Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Current schema is 8. Restore closes the app; reopen it afterward. See [Backup and restore](BACKUP_RESTORE.md).
+Settings now includes manual local backup and validated restore, with a pre-restore safety copy. Current schema is 9. Restore closes the app; reopen it afterward. See [Backup and restore](BACKUP_RESTORE.md).
 
 ## Saved AI Tutor conversations
 
@@ -26,4 +26,8 @@ AI Tutor now saves conversations locally, including the original server/model an
 
 ## Interface language
 
-UI language selection is available in v0.13.0: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current schema is 8. [Interface language](UI_LANGUAGES.md).
+UI language selection is available in v0.13.0: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current schema is 9. [Interface language](UI_LANGUAGES.md).
+
+## Appearance settings
+
+Unreleased appearance settings add saved Light/Dark/System choices, applied on Save without rebuilding screens or losing active work. System follows Windows/macOS and uses Light on Linux. Branch schema is 9; published v0.15.0 stays on schema 8. Keep the feature PR unmerged until baseline testing is confirmed complete and the user approves merging. [Appearance settings](APPEARANCE.md).

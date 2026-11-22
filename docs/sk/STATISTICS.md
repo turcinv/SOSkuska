@@ -18,6 +18,6 @@ História zahŕňa aj záznamy nad limit posledných 20 hodnotení na obrazovke 
 
 ## Implementácia a obmedzenia
 
-`statistics_page.py` zobrazuje prehľad; `study_statistics.py` obsahuje dotazy a zostavenie reportu cez `Store.statistics()`. Štyri agregácie bežia v jednej čítacej transakcii. Aktuálna schéma je 8; štatistiky nepridávajú závislosti ani zápisy do údajov. Aktualizácia je ručná alebo pri návrate, bez časovača na pozadí. Pri chybe načítania zostane predchádzajúci prehľad a možno skúsiť Refresh; nemusí byť aktuálny.
+`statistics_page.py` zobrazuje prehľad; `study_statistics.py` obsahuje dotazy a zostavenie reportu cez `Store.statistics()`. Štyri agregácie bežia v jednej čítacej transakcii. Aktuálna schéma je 9; štatistiky nepridávajú závislosti ani zápisy do údajov. Aktualizácia je ručná alebo pri návrate, bez časovača na pozadí. Pri chybe načítania zostane predchádzajúci prehľad a možno skúsiť Refresh; nemusí byť aktuálny.
 
 Export, vlastný rozsah dátumov, filter predmetu a pokročilé grafy zatiaľ nie sú súčasťou funkcie. AI Tutor má voliteľný chat s miestnou históriou cez Ollamu.

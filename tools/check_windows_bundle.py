@@ -145,13 +145,14 @@ def main():
         finally:store.close()
         results.append('Bundled backup, validation, restore and retained imported data')
         for language in ('English','Czech','Slovak','Russian'):
-            store=Store(database)
-            try:
-                saved=store.preferences()
-                store.save_preferences(dict(DEFAULTS,ui_language=language),expected_revision=saved['revision'])
-            finally:store.close()
-            check_window(app,database,cwd,env)
-            results.append(language+' frozen startup and normal close with bundled catalogs/fonts')
+            for appearance in ('Light','Dark','System'):
+                store=Store(database)
+                try:
+                    saved=store.preferences()
+                    store.save_preferences(dict(DEFAULTS,ui_language=language,appearance_mode=appearance),expected_revision=saved['revision'])
+                finally:store.close()
+                check_window(app,database,cwd,env)
+                results.append(language+'/'+appearance+' frozen startup and normal close with bundled catalogs/theme')
     args.report.parent.mkdir(parents=True,exist_ok=True)
     args.report.write_text(json.dumps({'platform':sys.platform,'automated_checks':results,
         'manual_clean_machine_status':'NOT RUN: hosted automated checks do not establish manual acceptance'},indent=2)+'\n',encoding='utf-8')

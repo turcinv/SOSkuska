@@ -18,7 +18,7 @@ Při připojení k jinému serveru se model vybere znovu podle uložené prefere
 
 ## Záloha a obnova
 
-Settings nyní nabízí ruční místní zálohu a ověřenou obnovu s bezpečnostní kopií před nahrazením. Aktuální schéma je 8. Obnova zavře aplikaci; potom ji spusť znovu. Viz [Záloha a obnova](BACKUP_RESTORE.md).
+Settings nyní nabízí ruční místní zálohu a ověřenou obnovu s bezpečnostní kopií před nahrazením. Aktuální schéma je 9. Obnova zavře aplikaci; potom ji spusť znovu. Viz [Záloha a obnova](BACKUP_RESTORE.md).
 
 ## Uložené konverzace AI Tutor
 
@@ -26,4 +26,8 @@ AI Tutor nyní ukládá konverzace lokálně včetně původního serveru/modelu
 
 ## Jazyk rozhraní
 
-Výběr jazyka rozhraní je dostupný ve v0.13.0: angličtina, čeština, slovenština a ruština. Ukládá se zvlášť od jazyka AI a použije se po restartu. Aktuální schéma je 8. [Jazyk rozhraní](UI_LANGUAGES.md).
+Výběr jazyka rozhraní je dostupný ve v0.13.0: angličtina, čeština, slovenština a ruština. Ukládá se zvlášť od jazyka AI a použije se po restartu. Aktuální schéma je 9. [Jazyk rozhraní](UI_LANGUAGES.md).
+
+## Nastavení vzhledu
+
+Nevydané nastavení vzhledu přidává uložené Light/Dark/System, použité po Save bez obnovy obrazovek a ztráty aktivní práce. System sleduje Windows/macOS, na Linuxu používá Light. Větev má schéma 9; vydaná v0.15.0 zůstává na schématu 8. PR neslučovat do potvrzení dokončeného testování základu a schválení uživatelem. [Nastavení vzhledu](APPEARANCE.md).

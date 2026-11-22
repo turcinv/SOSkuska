@@ -62,7 +62,7 @@ If `.codegraph/` exists at the repository root, use `codegraph_explore` or `code
 
 - discard_practice obtains BEGIN IMMEDIATE before reading the clock. It returns True for deletion of an unfinished attempt, False when an expired attempt was completed and kept instead. Failed writes roll back. Never delete an expired attempt before the UI timer gets a turn.
 - MissingPracticeError is terminal. Clear the stale active/finishing state and show usable setup; do not retry missing attempts every tick. SQLite failures still retain completion retry. A setup read failure can be retried with Refresh subjects or navigation.
-- Question forms pass their original content snapshot as expected_state to update_question. Compare all editable content/identity under the write lock; updated_at has insufficient precision. Preserve drafts on conflict; require reloading current content before another save. These fixes introduced no schema change (5 in v0.6.2; current schema is 8).
+- Question forms pass their original content snapshot as expected_state to update_question. Compare all editable content/identity under the write lock; updated_at has insufficient precision. Preserve drafts on conflict; require reloading current content before another save. These fixes introduced no schema change (5 in v0.6.2; current schema is 9).
 - New-deck draft subject choices refresh in place on load, Refresh and Save. Keep selected subject by ID across rename. If it was deleted, require an explicit replacement; preserve title/description on every refresh/read failure.
 - Run check_state_fixes.py and the complete unit/native suite with temporary databases. CI includes this seventh native check. These fixes were released in v0.6.2.
 

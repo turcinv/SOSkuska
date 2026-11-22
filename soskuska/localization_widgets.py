@@ -2,6 +2,7 @@
 import tkinter
 import customtkinter as ctk
 from localization import tr, LANGUAGE_NAMES
+from theme import COLORS as C
 
 
 class LocalizedOptionMenu(ctk.CTkOptionMenu):
@@ -12,6 +13,10 @@ class LocalizedOptionMenu(ctk.CTkOptionMenu):
         self._mapping={}
         displayed=self.labels(values)
         self.display_variable.set(self.current_label())
+        for key, role in dict(fg_color='raised', button_color='border', button_hover_color='selected',
+            text_color='text', text_color_disabled='secondary', dropdown_fg_color='card',
+            dropdown_text_color='text', dropdown_hover_color='raised').items():
+            kwargs.setdefault(key, C[role])
         super().__init__(master,variable=self.display_variable,values=displayed,command=self.selected,**kwargs)
         self.canonical_trace=variable.trace_add('write',self.sync)
 

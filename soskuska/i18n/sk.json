@@ -631,5 +631,14 @@
   "Choose a valid history page.": "Vyberte platnú stránku histórie.",
   "Choose a subject from practice history.": "Vyberte predmet z histórie testov.",
   "Use valid history dates in YYYY-MM-DD format, or leave them empty.": "Zadajte platné dátumy histórie vo formáte YYYY-MM-DD alebo ich nechajte prázdne.",
-  "History start date must not be after the end date.": "Počiatočný dátum histórie nesmie byť po koncovom dátume."
+  "History start date must not be after the end date.": "Počiatočný dátum histórie nesmie byť po koncovom dátume.",
+  "Appearance (applies on Save)": "Vzhľad (použije sa po uložení)",
+  "Light": "Svetlý",
+  "Dark": "Tmavý",
+  "System": "Podľa systému",
+  "Choose Light, Dark or System appearance.": "Vyberte svetlý, tmavý alebo systémový vzhľad.",
+  "System uses OS detection; choose Light or Dark if your desktop is not detected.": "Systémový vzhľad používa detekciu OS; ak vašu plochu nerozpozná, vyberte svetlý alebo tmavý.",
+  "Settings saved. Appearance applied. Restart the app to apply an interface language change. Active focus duration is unchanged; Ollama connects only after Connect.": "Nastavenia uložené. Vzhľad použitý. Na zmenu jazyka rozhrania reštartujte aplikáciu. Dĺžka aktívneho sústredenia sa nemení; Ollama sa pripojí až po Connect.",
+  "Backups contain saved data and preferences, including saved AI conversations, not unsaved drafts. Restore replaces saved data and closes the app. Only schema 9 backups are supported.": "Zálohy obsahujú uložené údaje, nastavenia a AI konverzácie, nie rozpísané formuláre. Obnova nahradí údaje a zatvorí aplikáciu. Podporovaná je iba schéma 9.",
+  "System follows Windows/macOS appearance; on Linux it uses Light.": "Systémový vzhľad sleduje Windows/macOS; na Linuxe používa svetlý."
 }

@@ -16,6 +16,7 @@ GUI_CHECKS = (
     'check_state_fixes.py',
     'check_tutor.py',
     'check_settings.py',
+    'check_appearance.py',
     'check_backup.py',
     'check_csv_import.py',
     'check_flashcard_import.py',

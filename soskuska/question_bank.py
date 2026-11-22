@@ -1,4 +1,5 @@
 """Subject-scoped topics and multiple-choice authoring; no practice execution yet."""
+from theme import COLORS as C
 from localization_widgets import LocalizedOptionMenu
 from localization import tr
 import sqlite3
@@ -42,7 +43,7 @@ class QuestionBankPage(ctk.CTkFrame):
         self.topic_form.grid_columnconfigure(0, weight=1)
         self.topic_form_title = app.label(self.topic_form, tr(self.app, 'New topic'), 16, bold=True)
         self.topic_form_title.grid(row=0, column=0, sticky="w", padx=18, pady=(14, 8))
-        self.topic_entry = ctk.CTkEntry(self.topic_form, height=38, font=app.font(), placeholder_text=tr(self.app, 'Topic name (1–120 characters)'))
+        self.topic_entry = ctk.CTkEntry(self.topic_form, height=38, font=app.font(), placeholder_text=tr(self.app, 'Topic name (1–120 characters)'), placeholder_text_color=C["secondary"])
         self.topic_entry.grid(row=1, column=0, sticky="ew", padx=18)
         self.topic_error = app.label(self.topic_form, "", 12, "secondary", wraplength=600)
         self.topic_error.grid(row=2, column=0, sticky="ew", padx=18, pady=6)
@@ -64,7 +65,7 @@ class QuestionBankPage(ctk.CTkFrame):
         self.option_entries = []
         for i, letter in enumerate("ABCD"):
             app.label(self.question_form, tr(self.app, 'Answer {v0} (required, up to 500 characters)', v0=letter), 12, "secondary").grid(row=3+i*2, column=0, sticky="w", padx=18)
-            entry = ctk.CTkEntry(self.question_form, height=36, font=app.font())
+            entry = ctk.CTkEntry(self.question_form, height=36, font=app.font(), placeholder_text_color=C["secondary"])
             entry.grid(row=4+i*2, column=0, sticky="ew", padx=18, pady=(4, 10))
             self.option_entries.append(entry)
         selectors = app.frame(self.question_form)
@@ -103,7 +104,7 @@ class QuestionBankPage(ctk.CTkFrame):
         actions = app.frame(self.delete_panel)
         actions.grid(row=1, column=0, sticky="w", padx=18, pady=(0, 14))
         self.delete_button = app.button(actions, tr(self.app, 'Confirm deletion'), self.confirm_delete, width=150)
-        self.delete_button.configure(fg_color="#7F1D1D", hover_color="#991B1B")
+        self.delete_button.configure(fg_color=C["danger"], hover_color=C["danger_hover"], text_color=C["on_primary"])
         self.delete_button.pack(side="left", padx=(0, 8))
         app.button(actions, tr(self.app, 'Cancel'), self.cancel_delete, width=80).pack(side="left")
         self.delete_panel.grid_remove()
@@ -123,7 +124,7 @@ class QuestionBankPage(ctk.CTkFrame):
         self.delete_topic_button = app.button(topic_actions, tr(self.app, 'Delete selected topic'), self.delete_selected_topic, width=180)
         self.delete_topic_button.pack(side="left")
         self.query = ctk.StringVar()
-        self.search = ctk.CTkEntry(self, height=38, textvariable=self.query, font=app.font(), placeholder_text=tr(self.app, 'Search question text…'))
+        self.search = ctk.CTkEntry(self, height=38, textvariable=self.query, font=app.font(), placeholder_text=tr(self.app, 'Search question text…'), placeholder_text_color=C["secondary"])
         self.search.grid(row=10, column=0, sticky="ew", pady=(0, 12))
         self.status = app.label(self, "", 12, "secondary", wraplength=650)
         self.status.grid(row=11, column=0, sticky="ew", pady=(0, 12))
@@ -145,8 +146,8 @@ class QuestionBankPage(ctk.CTkFrame):
 
     def menu(self, parent, variable, values, command=None):
         return LocalizedOptionMenu(parent,owner=self.app, variable=variable, values=values, command=command,
-                                height=36, font=self.app.font(13), fg_color="#202633",
-                                button_color="#6D28D9", button_hover_color="#8B5CF6")
+                                height=36, font=self.app.font(13), fg_color=C["raised"],
+                                button_color=C["border"], button_hover_color=C["selected"])
 
     def load_subject(self, subject_id):
         if self.importer.saving:return

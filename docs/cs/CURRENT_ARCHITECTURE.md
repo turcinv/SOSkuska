@@ -4,7 +4,7 @@
 
 **Vydaná verze: v0.15.0 · schéma 8.** Historie testů a testy v kontejneru jsou implementované.
 
-Výběr jazyka rozhraní je dostupný ve v0.13.0: angličtina, čeština, slovenština a ruština. Ukládá se zvlášť od jazyka AI a použije se po restartu. Aktuální schéma je 8.
+Výběr jazyka rozhraní je dostupný ve v0.13.0: angličtina, čeština, slovenština a ruština. Ukládá se zvlášť od jazyka AI a použije se po restartu. Aktuální schéma je 9.
 
 ## Technologie a soubory
 
@@ -55,7 +55,7 @@ Obrazovky volají `Store` přímo. Samostatná servisní/doménová vrstva a sd�
 
 ## Schéma a migrace
 
-`PRAGMA user_version` nyní označuje verzi **7**. Otevření původní databáze verze 0 vytvoří/uzná původní tabulky a v jedné transakci doplní předměty a vazby. Databáze s novější verzí se odmítne otevřít místo pokusu o downgrade. Cizí klíče jsou zapnuté pro každé připojení.
+`PRAGMA user_version` nyní označuje verzi **9**. Otevření původní databáze verze 0 vytvoří/uzná původní tabulky a v jedné transakci doplní předměty a vazby. Databáze s novější verzí se odmítne otevřít místo pokusu o downgrade. Cizí klíče jsou zapnuté pro každé připojení.
 
 ```sql
 CREATE TABLE tasks (
@@ -244,7 +244,7 @@ StatisticsPage volá Store.statistics(); study_statistics.py čte sessions, doko
 
 Discard test získá zápisový zámek a potom ověří termín. Pokud mezitím vypršel, pokus i odpovědi se zachovají jako dokončený výsledek místo smazání; selhání zápisu ponechá původní data pro opakování. Pokud jiná instance rozpracovaný test odstraní, Finish zastaví opakování a obnoví nastavení. Chyby SQLite se dál dají opakovat; po chybě načtení nastavení použij Refresh subjects nebo návrat na obrazovku.
 
-Editor otázek ukládá kopii původního obsahu. Při uložení ji porovná s aktuální otázkou pod zápisovým zámkem. Novější text, možnosti, správná odpověď, obtížnost, téma nebo vysvětlení se nepřepíšou starým formulářem. Při konfliktu zůstane rozepsaný obsah; před opětovným otevřením Edit si jej zkopíruj a změny spoj s aktuální verzí. Tato oprava nepřidává migraci; aktuální schéma je 8.
+Editor otázek ukládá kopii původního obsahu. Při uložení ji porovná s aktuální otázkou pod zápisovým zámkem. Novější text, možnosti, správná odpověď, obtížnost, téma nebo vysvětlení se nepřepíšou starým formulářem. Při konfliktu zůstane rozepsaný obsah; před opětovným otevřením Edit si jej zkopíruj a změny spoj s aktuální verzí. Tato oprava nepřidává migraci; aktuální schéma je 9.
 
 Formulář New deck obnoví nabídku předmětů při návratu, přes Refresh i před uložením, bez ztráty názvu a popisu. Přejmenovaný předmět zůstane vybraný podle ID. Pokud byl vybraný předmět smazán, Choose a subject vyžaduje výslovně zvolit jiný; formulář jej sám nenahradí jiným existujícím předmětem.
 
@@ -266,30 +266,29 @@ Nastavení se ukládá transakčně ve schématu 6 s ochranou před přepsáním
 
 ```sql
 CREATE TABLE preferences (
-    id INTEGER PRIMARY KEY CHECK(id = 1),
-    focus_minutes INTEGER NOT NULL CHECK(focus_minutes BETWEEN 1 AND 180),
-    daily_goal_minutes INTEGER NOT NULL CHECK(daily_goal_minutes BETWEEN 1 AND 1440),
-    ollama_endpoint TEXT NOT NULL, ollama_model TEXT NOT NULL,
-    answer_language TEXT NOT NULL,
-    revision INTEGER NOT NULL DEFAULT 0 CHECK(revision >= 0)
-);
+                    id INTEGER PRIMARY KEY CHECK(id=1),
+                    focus_minutes INTEGER NOT NULL CHECK(focus_minutes BETWEEN 1 AND 180),
+                    daily_goal_minutes INTEGER NOT NULL CHECK(daily_goal_minutes BETWEEN 1 AND 1440),
+                    ollama_endpoint TEXT NOT NULL, ollama_model TEXT NOT NULL,
+                    answer_language TEXT NOT NULL,
+                    revision INTEGER NOT NULL DEFAULT 0 CHECK(revision>=0), ui_language TEXT NOT NULL DEFAULT 'English' CHECK(ui_language IN ('English','Czech','Slovak','Russian')), appearance_mode TEXT NOT NULL DEFAULT 'Dark' CHECK(appearance_mode IN ('Light','Dark','System')));
 ```
 
 ## Záloha a obnova
 
-Settings nyní nabízí ruční místní zálohu a ověřenou obnovu s bezpečnostní kopií před nahrazením. Aktuální schéma je 8. Obnova zavře aplikaci; potom ji spusť znovu. Viz [Záloha a obnova](BACKUP_RESTORE.md).
+Settings nyní nabízí ruční místní zálohu a ověřenou obnovu s bezpečnostní kopií před nahrazením. Aktuální schéma je 9. Obnova zavře aplikaci; potom ji spusť znovu. Viz [Záloha a obnova](BACKUP_RESTORE.md).
 
 backup.py a backup_validation.py ověřují soukromé samostatné snímky a aplikační hodnoty; řádky nahrazují v jedné transakci bez převzetí cizího DDL. database_lock.py drží sdílené zámky Store a výhradní zámek obnovy (flock / Windows LockFileEx). backup_worker.py běží v odděleném procesu; backup_panel.py přes Tk čte dočasný výstupní soubor, takže nehrozí plná roura ani finalizace Tk z pracovního vlákna. Při obnově se Store zavře a periodické callbacky pozastaví. Bezpečnostní kopie vznikne pod zápisovým zámkem; před commitem se ověří konečné řádky a ID sekvence.
 
 ## Import otázek z CSV
 
-Banka otázek nyní podporuje import UTF-8 CSV do existujícího předmětu: šablona s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů; seznam ukazuje 50 otázek na stránku. Aktuální schéma je 8. [Import otázek z CSV](QUESTION_CSV_IMPORT.md).
+Banka otázek nyní podporuje import UTF-8 CSV do existujícího předmětu: šablona s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů; seznam ukazuje 50 otázek na stránku. Aktuální schéma je 9. [Import otázek z CSV](QUESTION_CSV_IMPORT.md).
 
 csv_import.py ověřuje omezené normalizované záznamy; csv_import_worker.py izoluje parsování, kontrolu pouze pro čtení, uložení a šablonu s výstupem do souboru. Store.open_existing používá mode=ro/rw bez vytváření či migrace. Store.import_questions znovu ověří dávku pod BEGIN IMMEDIATE a uloží témata/otázky jednou transakcí. Úspěšná dávka se zneplatní před čtením přehledů; opakovaná obnova nic neimportuje. Stránkování filtruje celý seznam a pak vykreslí 50 karet.
 
 ## Import kartiček z CSV
 
-Flashcards nyní podporuje import UTF-8 CSV do existujícího balíčku: šablonu s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů. Nové kartičky jsou ihned splatné; původní termíny a historie hodnocení zůstávají zachované. Aktuální schéma je 8. [Import kartiček z CSV](FLASHCARD_CSV_IMPORT.md).
+Flashcards nyní podporuje import UTF-8 CSV do existujícího balíčku: šablonu s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů. Nové kartičky jsou ihned splatné; původní termíny a historie hodnocení zůstávají zachované. Aktuální schéma je 9. [Import kartiček z CSV](FLASHCARD_CSV_IMPORT.md).
 
 `flashcard_csv_import.py` validuje omezené záznamy front/back; `flashcard_csv_import_worker.py` izoluje čtení, kontrolu pouze pro čtení a uložení. `CsvImportPanel` sdílí životní cyklus a publikaci šablon s importem otázek. `Store.import_flashcards` pod BEGIN IMMEDIATE znovu ověří zobrazený název balíčku a duplicity v celém balíčku a vloží všechny kartičky jednou s aktuálním UTC termínem. Původní termíny a hodnocení nemění.
 
@@ -299,7 +298,7 @@ AI Tutor nyní ukládá konverzace lokálně včetně původního serveru/modelu
 
 ## Jazyk rozhraní
 
-Výběr jazyka rozhraní je dostupný ve v0.13.0: angličtina, čeština, slovenština a ruština. Ukládá se zvlášť od jazyka AI a použije se po restartu. Aktuální schéma je 8. [Jazyk rozhraní](UI_LANGUAGES.md).
+Výběr jazyka rozhraní je dostupný ve v0.13.0: angličtina, čeština, slovenština a ruština. Ukládá se zvlášť od jazyka AI a použije se po restartu. Aktuální schéma je 9. [Jazyk rozhraní](UI_LANGUAGES.md).
 
 ## Historie testů
 
@@ -308,3 +307,7 @@ Historie testů nyní nabízí všechny dokončené pokusy po 20 na stránku, fi
 ## Přenosná verze Windows a přejímka
 
 v0.15.0 přidává nepodepsaný přenosný ZIP pro Windows x64, sestavený a ověřený pátou úlohou CI. Přibalený pomocný program zachová oddělené CSV/zálohovací procesy; cílový počítač nepotřebuje Python. Automatické hostované kontroly a ruční seznam pro čistý počítač jsou oddělené; ruční přejímka zatím není dokončená. Vydaná verze je v0.15.0, schéma 8. [Přenosná verze Windows a přejímka](WINDOWS_PORTABLE.md) · [Kontrolní seznam](WINDOWS_ACCEPTANCE.md).
+
+## Nastavení vzhledu
+
+Nevydané nastavení vzhledu přidává uložené Light/Dark/System, použité po Save bez obnovy obrazovek a ztráty aktivní práce. System sleduje Windows/macOS, na Linuxu používá Light. Větev má schéma 9; vydaná v0.15.0 zůstává na schématu 8. PR neslučovat do potvrzení dokončeného testování základu a schválení uživatelem. [Nastavení vzhledu](APPEARANCE.md).

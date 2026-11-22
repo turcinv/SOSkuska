@@ -631,5 +631,14 @@
   "Choose a valid history page.": "Выберите допустимую страницу истории.",
   "Choose a subject from practice history.": "Выберите предмет из истории тестов.",
   "Use valid history dates in YYYY-MM-DD format, or leave them empty.": "Введите допустимые даты истории в формате YYYY-MM-DD или оставьте их пустыми.",
-  "History start date must not be after the end date.": "Начальная дата истории не должна быть позже конечной."
+  "History start date must not be after the end date.": "Начальная дата истории не должна быть позже конечной.",
+  "Appearance (applies on Save)": "Оформление (применяется после сохранения)",
+  "Light": "Светлое",
+  "Dark": "Тёмное",
+  "System": "Системное",
+  "Choose Light, Dark or System appearance.": "Выберите светлое, тёмное или системное оформление.",
+  "System uses OS detection; choose Light or Dark if your desktop is not detected.": "Системное оформление использует определение ОС; если среда не распознана, выберите светлое или тёмное.",
+  "Settings saved. Appearance applied. Restart the app to apply an interface language change. Active focus duration is unchanged; Ollama connects only after Connect.": "Настройки сохранены. Оформление применено. Перезапустите приложение для смены языка интерфейса. Длительность текущего занятия не меняется; Ollama подключается только после Connect.",
+  "Backups contain saved data and preferences, including saved AI conversations, not unsaved drafts. Restore replaces saved data and closes the app. Only schema 9 backups are supported.": "Копии содержат сохранённые данные, настройки и беседы AI, но не черновики. Восстановление заменяет данные и закрывает приложение. Поддерживается только схема 9.",
+  "System follows Windows/macOS appearance; on Linux it uses Light.": "Системное оформление следует Windows/macOS; в Linux используется светлое."
 }

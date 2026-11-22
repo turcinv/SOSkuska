@@ -1,4 +1,5 @@
 """Subject management screen; widget work stays on Tk's main thread."""
+from theme import COLORS as C
 from localization import tr
 import sqlite3
 
@@ -28,13 +29,13 @@ class SubjectPage(ctk.CTkFrame):
         self.form_title = app.label(self.form, tr(self.app, 'New subject'), 18, bold=True)
         self.form_title.grid(row=0, column=0, sticky="w", padx=18, pady=(16, 12))
         app.label(self.form, tr(self.app, 'Subject name (required, up to 120 characters)'), 12, "secondary").grid(row=1, column=0, sticky="w", padx=18)
-        self.name_entry = ctk.CTkEntry(self.form, height=38, font=app.font(), placeholder_text=tr(self.app, 'e.g. Mathematics'))
+        self.name_entry = ctk.CTkEntry(self.form, height=38, font=app.font(), placeholder_text=tr(self.app, 'e.g. Mathematics'), placeholder_text_color=C["secondary"])
         self.name_entry.grid(row=2, column=0, sticky="ew", padx=18, pady=(4, 12))
         app.label(self.form, tr(self.app, 'Description (optional)'), 12, "secondary").grid(row=3, column=0, sticky="w", padx=18)
         self.description_entry = ctk.CTkTextbox(self.form, height=65, font=app.font(), wrap="word")
         self.description_entry.grid(row=4, column=0, sticky="ew", padx=18, pady=(4, 12))
         app.label(self.form, tr(self.app, 'Exam date (optional, YYYY-MM-DD)'), 12, "secondary").grid(row=5, column=0, sticky="w", padx=18)
-        self.exam_entry = ctk.CTkEntry(self.form, height=38, font=app.font(), placeholder_text=tr(self.app, 'YYYY-MM-DD'))
+        self.exam_entry = ctk.CTkEntry(self.form, height=38, font=app.font(), placeholder_text=tr(self.app, 'YYYY-MM-DD'), placeholder_text_color=C["secondary"])
         self.exam_entry.grid(row=6, column=0, sticky="ew", padx=18, pady=(4, 12))
         self.form_error = app.label(self.form, "", 12, "secondary", wraplength=600)
         self.form_error.grid(row=7, column=0, sticky="ew", padx=18)
@@ -53,13 +54,13 @@ class SubjectPage(ctk.CTkFrame):
         actions = app.frame(self.delete_panel)
         actions.grid(row=1, column=0, sticky="w", padx=18, pady=(0, 14))
         self.delete_button = app.button(actions, tr(self.app, 'Delete subject'), self.confirm_delete, width=130)
-        self.delete_button.configure(fg_color="#7F1D1D", hover_color="#991B1B")
+        self.delete_button.configure(fg_color=C["danger"], hover_color=C["danger_hover"], text_color=C["on_primary"])
         self.delete_button.pack(side="left", padx=(0, 8))
         app.button(actions, tr(self.app, 'Cancel'), self.cancel_delete, width=85).pack(side="left")
         self.delete_panel.grid_remove()
 
         self.query = ctk.StringVar()
-        self.search = ctk.CTkEntry(self, height=38, textvariable=self.query, font=app.font(), placeholder_text=tr(self.app, 'Search subjects…'))
+        self.search = ctk.CTkEntry(self, height=38, textvariable=self.query, font=app.font(), placeholder_text=tr(self.app, 'Search subjects…'), placeholder_text_color=C["secondary"])
         self.search.grid(row=3, column=0, sticky="ew", pady=(0, 16))
         self.query.trace_add("write", lambda *_: self.render())
         self.status = app.label(self, "", 12, "secondary", wraplength=650)
