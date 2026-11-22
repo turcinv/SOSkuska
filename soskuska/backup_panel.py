@@ -58,6 +58,8 @@ class BackupPanel(ctk.CTkFrame):
         self.confirmation.grid_remove()
 
     def guard_restore(self):
+        if self.app.settings_page.schedule.busy:
+            raise ValueError('Creating the daily backup. Wait before closing.')
         if self.app.session_open:
             raise ValueError('Finish the current focus session before restoring.')
         if self.app.store.pending_focus() is not None:

@@ -9,13 +9,16 @@ from backup import PreparedBackup, create_backup, restore_backup
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('kind', choices=['backup','validate','restore'])
+    parser.add_argument('kind', choices=['backup','validate','restore','automatic'])
     parser.add_argument('active', type=Path)
-    parser.add_argument('selected', type=Path)
+    parser.add_argument('selected', type=Path,nargs='?')
     parser.add_argument('--staging', type=Path)
     args = parser.parse_args(argv)
     try:
-        if args.kind == 'backup':
+        if args.kind == 'automatic':
+            from automatic_backup import perform_backup
+            result=perform_backup(args.active)
+        elif args.kind == 'backup':
             result = str(create_backup(args.active,args.selected))
         elif args.kind == 'validate':
             prepared = PreparedBackup(args.selected,args.active)

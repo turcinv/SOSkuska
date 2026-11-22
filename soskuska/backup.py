@@ -33,7 +33,7 @@ def deadline():
 
 def protect_path(path, active):
     path, active = Path(path).resolve(), Path(active).resolve()
-    protected = [active] + [Path(str(active) + suffix) for suffix in ('-wal', '-shm', '-journal', '.lock', '.focus.lock')]
+    protected = [active] + [Path(str(active) + suffix) for suffix in ('-wal', '-shm', '-journal', '.lock', '.focus.lock', '.backup-plan.json', '.backup-plan.lock')]
     for item in protected:
         if unicodedata.normalize('NFC',str(path)).casefold() == unicodedata.normalize('NFC',str(item)).casefold() or (path.exists() and item.exists() and os.path.samefile(path, item)):
             raise ValueError('Choose a separate backup file, not the active database or its companion files.')

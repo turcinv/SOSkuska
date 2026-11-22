@@ -2,6 +2,11 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
+## Unreleased
+
+- Opt-in daily local backups with machine-specific folder settings, exclusive multi-window coordination and visible save/retry results.
+- Preserve existing files and drafts; no schema change. Add container GUI, worker and frozen Windows helper checks, with guides in four languages.
+
 ## 0.17.0 — 2026-11-22
 
 - Focus-session crash recovery: durable checkpoints, explicit paused recovery/discard, exclusive ownership, save retry and schema-10 backup support.

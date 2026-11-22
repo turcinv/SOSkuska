@@ -20,3 +20,6 @@ sources/
 build/
 .venv-build/
 *.focus.lock
+
+*.backup-plan.json
+*.backup-plan.lock

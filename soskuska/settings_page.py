@@ -8,6 +8,7 @@ import customtkinter as ctk
 from preferences import preference_fields, UI_LANGUAGES, APPEARANCE_MODES
 from tutor import LANGUAGES
 from backup_panel import BackupPanel
+from scheduled_backups import ScheduledBackups
 
 
 class SettingsPage(ctk.CTkFrame):
@@ -56,7 +57,9 @@ class SettingsPage(ctk.CTkFrame):
         self.copy_button = app.button(actions, tr(self.app, 'Use Tutor choices'), self.copy_tutor, width=155)
         self.copy_button.pack(side='left')
         self.backups = BackupPanel(self, app)
-        self.backups.grid(row=19, column=0, sticky='ew', pady=(20, 0))
+        self.backups.grid(row=20, column=0, sticky='ew', pady=(20, 0))
+        self.schedule=ScheduledBackups(self,app)
+        self.schedule.grid(row=19,column=0,sticky='ew',pady=(20,0))
         self.baseline = self.values()  # Even a failed first read must preserve later edits.
         self.bind('<Configure>', lambda event: [label.configure(wraplength=max(250,event.width-12)) for label in (self.status,info)], add='+')
 
@@ -71,6 +74,7 @@ class SettingsPage(ctk.CTkFrame):
         self.reload_button.configure(text=tr(self.app, 'Reload'))
 
     def load(self, force=False):
+        self.schedule.load()
         self.cancel_reload()
         if not force and self.dirty():
             self.status.configure(text=tr(self.app, 'Your settings draft is kept. Save it or Reload to use the saved preferences.'))

@@ -319,3 +319,7 @@ v0.16.0 přidává uložené Light/Dark/System, použité po Save bez obnovy obr
 v0.17.0 přidává obnovu soustředění po pádu se schématem **10**. Před otevřením původních dat vytvoř zálohu: migrace je transakční, ale v0.16.0 databázi schématu 10 neotevře. [Obnova soustředění po pádu](FOCUS_RECOVERY.md).
 
 `focus_runs`: `id`, `subject_id`, `subject_name`, `target_seconds`, `elapsed_seconds`, `status` (pending/completed/discarded), `revision`, `started_at`, `updated_at`, `completed_at`, `session_id`. Dokončení vloží studijní relaci a označí kontrolní bod v jedné transakci; opakování nevytvoří druhou relaci. Nula sekund nepřidá statistiku. Čas patří místnímu dni dokončení, i po obnově; přes půlnoc se nedělí. Přejmenování/smazání předmětu zachová původní historický název; smazání odstraní jen živý odkaz.
+
+## Plánované místní zálohy
+
+Funkce je implementovaná v aktuální větvi a zatím není vydaná. Vydaná verze zůstává v0.17.0; schéma SQLite zůstává **10**. Ruční záloha a obnova fungují samostatně. [Plánované místní zálohy](SCHEDULED_BACKUPS.md).

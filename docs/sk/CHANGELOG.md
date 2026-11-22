@@ -3,6 +3,11 @@
 [English](../../CHANGELOG.md) · [Čeština](../cs/CHANGELOG.md) · [Slovenčina](CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
 
+## Nevydané
+
+- Voliteľné denné miestne zálohy s priečinkom pre daný počítač, koordináciou okien a viditeľnými výsledkami/opakovaním.
+- Zachovanie súborov aj konceptov bez zmeny schémy; kontajnerové, procesné a Windows kontroly a návody v štyroch jazykoch.
+
 ## 0.17.0 — 2026-11-22
 
 - Obnova sústredenia po páde: kontrolné body, pozastavená obnova/zahodenie, výhradné vlastníctvo, opakovanie uloženia a zálohy schémy 10.

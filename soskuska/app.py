@@ -94,6 +94,7 @@ class Dashboard(ctk.CTk):
         self.grid_columnconfigure(1, weight=1)
         self.build_sidebar()
         self.build_content()
+        self.backup_notice=self.label(self,'',12,'hover',wraplength=900)
         self.subject_page = SubjectPage(self.scroll, self)
         self.subject_page.grid(row=0, column=0, sticky="ew", padx=28, pady=28)
         self.subject_page.grid_remove()
@@ -781,6 +782,10 @@ class Dashboard(ctk.CTk):
             self.after(250, self.tick)
 
     def close(self):
+        if self.settings_page.schedule.busy:
+            self.backup_notice.configure(text=tr(self,'Daily backup is running. Please wait before closing.'))
+            self.backup_notice.grid(row=1,column=0,columnspan=2,sticky='ew',padx=12,pady=6)
+            return
         if self.question_bank.importer.saving or self.flashcard_page.importer.saving:
             (self.flashcard_page.importer if self.flashcard_page.importer.saving else self.question_bank.importer).status.configure(text=tr(self, 'Wait for the CSV import to finish before closing.'))
             return

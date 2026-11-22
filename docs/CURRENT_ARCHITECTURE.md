@@ -24,6 +24,7 @@ Python, CustomTkinter 5.2.2, Pillow and standard-library SQLite. One process own
 | `soskuska/study_statistics.py` / `statistics_page.py` | Consistent history aggregates and report UI |
 | `soskuska/ollama_client.py`, `tutor.py`, `tutor_page.py` | HTTP/HTTPS, bounded context/background jobs and local-history UI |
 | `soskuska/preferences.py` / `settings_page.py` | Pure preference validation and explicit-save UI |
+| `soskuska/automatic_backup.py` / `scheduled_backups.py` | Machine-local backup plan, daily receipt, exclusive helper and settings controls (unreleased) |
 | `soskuska/scrolling.py` | Mouse wheel and Tk 9 trackpad compatibility |
 | `tests/` / `soskuska/check_*.py` | Unit tests, frozen migration fixtures and native GUI checks using temporary data |
 
@@ -42,6 +43,10 @@ flowchart LR
     User --> Settings[SettingsPage]
     Settings --> Preferences[preferences.py]
     Settings --> Store
+    Settings --> Schedule[scheduled_backups.py / Tk polling]
+    Schedule --> BackupWorker[backup_worker.py automatic / isolated process]
+    BackupWorker --> Plan[local JSON plan and receipt]
+    BackupWorker --> DB
     User --> Tutor[TutorPage]
     Tutor --> Jobs[tutor.py / background task]
     Jobs --> Ollama[ollama_client.py / HTTP]
@@ -289,3 +294,7 @@ v0.16.0 adds saved Light/Dark/System choices, applied on Save without rebuilding
 v0.17.0 adds focus-session crash recovery using schema **10**. Keep a backup before opening existing data: migration is transactional, but v0.16.0 cannot open a schema-10 database. [Focus-session recovery](FOCUS_RECOVERY.md).
 
 `focus_runs` stores a 32-character run ID, original subject snapshot, target/elapsed seconds, pending/completed/discarded status, revision, UTC start/update/completion timestamps and an optional unique `sessions` link. A partial unique index permits one pending run. Zero-second completion has no session link. Completion and its history insert commit together. Subject deletion clears the live reference but retains the snapshot. Schema-9 migration/rollback uses a frozen fixture.
+
+## Scheduled local backups
+
+This feature is implemented on the current branch and is not released yet. The published version remains v0.17.0; SQLite schema remains **10**. Manual backup/restore continues to work independently. [Scheduled local backups](SCHEDULED_BACKUPS.md).
