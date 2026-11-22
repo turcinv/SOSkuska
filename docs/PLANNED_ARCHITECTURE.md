@@ -4,7 +4,7 @@
 
 **Future design, not a description of everything implemented today.** Proposed files/tables exist only where confirmed by [current architecture](CURRENT_ARCHITECTURE.md). A roadmap does not authorize implementing every feature at once.
 
-Published baseline is v0.18.0, with interface languages, saved AI conversations and schema 10. The history guide below describes the implemented behavior. Settings Save does not start networking.
+Published baseline is v0.18.1, with interface languages, saved AI conversations and schema 10. The history guide below describes the implemented behavior. Settings Save does not start networking.
 
 ## Direction
 
@@ -124,7 +124,7 @@ Practice history now supports pages of 20 across all completed attempts, histori
 
 ## Windows portable build and acceptance
 
-v0.15.0 adds an unsigned Windows x64 portable ZIP, built and checked by a fifth CI job. Bundled helper executables preserve isolated CSV/backup jobs; Python is not required on the target machine. Automated hosted Windows checks and the manual clean-machine checklist are separate; manual acceptance is not yet completed. Published version is v0.18.0, schema 10. [Windows portable build and acceptance](WINDOWS_PORTABLE.md) · [Checklist](WINDOWS_ACCEPTANCE.md).
+v0.15.0 adds an unsigned Windows x64 portable ZIP, built and checked by a fifth CI job. Bundled helper executables preserve isolated CSV/backup jobs; Python is not required on the target machine. Automated hosted Windows checks and the manual clean-machine checklist are separate; manual acceptance is not yet completed. Published version is v0.18.1, schema 10. [Windows portable build and acceptance](WINDOWS_PORTABLE.md) · [Checklist](WINDOWS_ACCEPTANCE.md).
 
 ## Appearance settings
 
@@ -132,7 +132,7 @@ v0.16.0 adds saved Light/Dark/System choices, applied on Save without rebuilding
 
 ## Next steps · 22 November 2026
 
-Status updated 22 November 2026: the user confirmed v0.15.0 baseline testing complete and approved appearance PR #32. This checklist now targets v0.18.0; item-by-item clean-machine/DPI results are not recorded here. Leave unchecked items unverified and record device-specific evidence when testing the new release. [Next steps · 22 November 2026](NEXT_STEPS.md).
+Status updated 22 November 2026: the user confirmed v0.15.0 baseline testing complete and approved appearance PR #32. This checklist now targets v0.18.1; item-by-item clean-machine/DPI results are not recorded here. Leave unchecked items unverified and record device-specific evidence when testing the new release. [Next steps · 22 November 2026](NEXT_STEPS.md).
 
 ## Focus-session recovery
 

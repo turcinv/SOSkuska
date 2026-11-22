@@ -303,7 +303,7 @@ python soskuska/check_practice_history.py
 
 ## Přenosná verze Windows a přejímka
 
-v0.15.0 přidává nepodepsaný přenosný ZIP pro Windows x64, sestavený a ověřený pátou úlohou CI. Přibalený pomocný program zachová oddělené CSV/zálohovací procesy; cílový počítač nepotřebuje Python. Automatické hostované kontroly a ruční seznam pro čistý počítač jsou oddělené; ruční přejímka zatím není dokončená. Vydaná verze je v0.18.0, schéma 10. [Přenosná verze Windows a přejímka](WINDOWS_PORTABLE.md) · [Kontrolní seznam](WINDOWS_ACCEPTANCE.md).
+v0.15.0 přidává nepodepsaný přenosný ZIP pro Windows x64, sestavený a ověřený pátou úlohou CI. Přibalený pomocný program zachová oddělené CSV/zálohovací procesy; cílový počítač nepotřebuje Python. Automatické hostované kontroly a ruční seznam pro čistý počítač jsou oddělené; ruční přejímka zatím není dokončená. Vydaná verze je v0.18.1, schéma 10. [Přenosná verze Windows a přejímka](WINDOWS_PORTABLE.md) · [Kontrolní seznam](WINDOWS_ACCEPTANCE.md).
 
 Aktuální práce na balení: lokálně prošlo 251 jednotkových testů. Linuxový kontejner dokončil všech 15 GUI skriptů (250 jednotkových testů v daném snímku, dvě přeskočené kontroly specifické pro souborový systém). Pro tuto větev se nativní GUI na Macu nespouštělo. Hostované Windows a ruční přejímka jsou oddělené; ruční přejímka NEPROVEDENA.
 
@@ -325,4 +325,4 @@ Plánované místní zálohy jsou dostupné ve **v0.18.0**. Schéma SQLite zůst
 
 ## Opravy po revizi hlavní větve
 
-Nevydané opravy ve větvi `fix/main-review-findings` sleduje [záznam revize Astra](REVIEW_FINDINGS.md). Schéma zůstává 10 a vydaná verze v0.18.0. Úpravy předmětu porovnají původní obsah pod zápisovým zámkem; konflikt zachová koncept. Před opětovným otevřením úprav pro načtení nejnovější verze si potřebné změny zkopíruj. Smazání otázky/tématu porovná zobrazený obsah a po změně vyžaduje nové potvrzení. Návrat ke stejnému předmětu zachová editor otázky/tématu, filtry i původní identitu, také při opakování čtení; smazané vybrané téma zůstane nedostupné, dokud výslovně nevybereš jiné téma nebo možnost Bez tématu. Jiný předmět editor stále resetuje. Novější potvrzení úspěšné denní zálohy odstraní staré oznámení chyby bez dalšího zápisu zálohy.
+Opravy vydané ve v0.18.1 přes PR #38 sleduje [záznam revize Astra](REVIEW_FINDINGS.md). Schéma zůstává 10 a vydaná verze je v0.18.1. Úpravy předmětu porovnají původní obsah pod zápisovým zámkem; konflikt zachová koncept. Před opětovným otevřením úprav pro načtení nejnovější verze si potřebné změny zkopíruj. Smazání otázky/tématu porovná zobrazený obsah a po změně vyžaduje nové potvrzení. Návrat ke stejnému předmětu zachová editor otázky/tématu, filtry i původní identitu, také při opakování čtení; smazané vybrané téma zůstane nedostupné, dokud výslovně nevybereš jiné téma nebo možnost Bez tématu. Jiný předmět editor stále resetuje. Novější potvrzení úspěšné denní zálohy odstraní staré oznámení chyby bez dalšího zápisu zálohy.
