@@ -2,7 +2,7 @@
 
 [English](../SCHEDULED_BACKUPS.md) · [Čeština](../cs/SCHEDULED_BACKUPS.md) · [Slovenčina](SCHEDULED_BACKUPS.md) · [Русский](../ru/SCHEDULED_BACKUPS.md)
 
-Funkcia je implementovaná v aktuálnej vetve a zatiaľ nie je vydaná. Vydaná verzia zostáva v0.17.0; schéma SQLite zostáva **10**. Ručná záloha a obnova fungujú samostatne.
+Plánované miestne zálohy sú dostupné vo **v0.18.0**. Schéma SQLite zostáva **10**. Ručná záloha a obnova fungujú samostatne.
 
 V Settings prejdi na Daily local backups. Vyber existujúci miestny priečinok, zapni Enable daily backups a klikni na Save backup schedule (popisky sa prekladajú podľa jazyka rozhrania). Plán má vlastné uloženie a načítanie; uloženie študijného/AI formulára plán neukladá. Automatika začne až po výslovnom zapnutí a uložení. Vypnutie uloženého plánu zastaví ďalšie automatické zálohy.
 

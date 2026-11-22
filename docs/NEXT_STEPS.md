@@ -2,7 +2,7 @@
 
 [English](NEXT_STEPS.md) · [Čeština](cs/NEXT_STEPS.md) · [Slovenčina](sk/NEXT_STEPS.md) · [Русский](ru/NEXT_STEPS.md)
 
-Current release: **v0.17.0**, schema **10**, with saved Light/Dark/System appearance. The user confirmed v0.15.0 testing complete and approved the appearance merge on 22 November; that merge gate is satisfied. This confirmation is not a completed per-device checklist: detailed clean-machine, DPI and hardware results were not supplied. Keep that distinction in the semester evidence.
+Current release: **v0.18.0**, schema **10**, with saved Light/Dark/System appearance. The user confirmed v0.15.0 testing complete and approved the appearance merge on 22 November; that merge gate is satisfied. This confirmation is not a completed per-device checklist: detailed clean-machine, DPI and hardware results were not supplied. Keep that distinction in the semester evidence.
 
 1. **Check the new release.** Use disposable data or a backup copy. On Windows, check live Light/Dark switching, draft retention, all four languages, compact layout and display scaling. Verify System follows an actual OS appearance change on Windows/macOS; Linux deliberately resolves System to Light. Export/reopen a schema-10 backup. Retain original schema-9 backups because v0.16.0 cannot reopen migrated data. Record results in [Windows acceptance](WINDOWS_ACCEPTANCE.md).
 2. **Test a real Ollama model.** Record OS, hardware, model/version, server URL and outcome for connect, streaming, Stop, reconnect and saved chat. Confirm offline study still works when the server is stopped. Fake-server CI establishes protocol behavior, not model quality or real hardware performance. No real-model check is recorded yet.
@@ -11,4 +11,4 @@ Current release: **v0.17.0**, schema **10**, with saved Light/Dark/System appear
 
 Baseline bugs should get separate fix PRs; use patch releases when appropriate. New features use separate branches, container GUI tests and independent Sol review at medium effort. Continue English-primary documentation with Czech/Slovak/Russian versions. Merge and release only with user approval. No additional standing baseline-test gate is inferred for future work.
 
-5. **Scheduled local backups** — This feature is implemented on the current branch and is not released yet. The published version remains v0.17.0; SQLite schema remains **10**. Manual backup/restore continues to work independently. [Scheduled local backups](SCHEDULED_BACKUPS.md).
+5. **Scheduled local backups** — Scheduled local backups are available in **v0.18.0**. SQLite schema remains **10**. Manual backup/restore continues to work independently. [Scheduled local backups](SCHEDULED_BACKUPS.md).

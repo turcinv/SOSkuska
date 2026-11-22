@@ -303,7 +303,7 @@ python soskuska/check_practice_history.py
 
 ## Přenosná verze Windows a přejímka
 
-v0.15.0 přidává nepodepsaný přenosný ZIP pro Windows x64, sestavený a ověřený pátou úlohou CI. Přibalený pomocný program zachová oddělené CSV/zálohovací procesy; cílový počítač nepotřebuje Python. Automatické hostované kontroly a ruční seznam pro čistý počítač jsou oddělené; ruční přejímka zatím není dokončená. Vydaná verze je v0.17.0, schéma 10. [Přenosná verze Windows a přejímka](WINDOWS_PORTABLE.md) · [Kontrolní seznam](WINDOWS_ACCEPTANCE.md).
+v0.15.0 přidává nepodepsaný přenosný ZIP pro Windows x64, sestavený a ověřený pátou úlohou CI. Přibalený pomocný program zachová oddělené CSV/zálohovací procesy; cílový počítač nepotřebuje Python. Automatické hostované kontroly a ruční seznam pro čistý počítač jsou oddělené; ruční přejímka zatím není dokončená. Vydaná verze je v0.18.0, schéma 10. [Přenosná verze Windows a přejímka](WINDOWS_PORTABLE.md) · [Kontrolní seznam](WINDOWS_ACCEPTANCE.md).
 
 Aktuální práce na balení: lokálně prošlo 251 jednotkových testů. Linuxový kontejner dokončil všech 15 GUI skriptů (250 jednotkových testů v daném snímku, dvě přeskočené kontroly specifické pro souborový systém). Pro tuto větev se nativní GUI na Macu nespouštělo. Hostované Windows a ruční přejímka jsou oddělené; ruční přejímka NEPROVEDENA.
 
@@ -321,4 +321,4 @@ v0.17.0 přidává obnovu soustředění po pádu se schématem **10**. Před ot
 
 ## Plánované místní zálohy
 
-Funkce je implementovaná v aktuální větvi a zatím není vydaná. Vydaná verze zůstává v0.17.0; schéma SQLite zůstává **10**. Ruční záloha a obnova fungují samostatně. [Plánované místní zálohy](SCHEDULED_BACKUPS.md).
+Plánované místní zálohy jsou dostupné ve **v0.18.0**. Schéma SQLite zůstává **10**. Ruční záloha a obnova fungují samostatně. [Plánované místní zálohy](SCHEDULED_BACKUPS.md).
