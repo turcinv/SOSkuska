@@ -2,7 +2,7 @@
 
 [English](../FOCUS_RECOVERY.md) · [Čeština](FOCUS_RECOVERY.md) · [Slovenčina](../sk/FOCUS_RECOVERY.md) · [Русский](../ru/FOCUS_RECOVERY.md)
 
-Tato větev přidává obnovu soustředění k vydané základní verzi v0.16.0. Funkce zatím není vydaná a používá schéma **10**. Před otevřením původních dat vytvoř zálohu: migrace je transakční, ale v0.16.0 databázi schématu 10 neotevře.
+v0.17.0 přidává obnovu soustředění po pádu se schématem **10**. Před otevřením původních dat vytvoř zálohu: migrace je transakční, ale v0.16.0 databázi schématu 10 neotevře.
 
 Start Studying nejprve vytvoří rozpracovaný záznam. Aplikace ukládá celé uplynulé sekundy přibližně každých pět sekund a ihned při Pause. Zachová původní název předmětu, cíl a ověřený čas; hodnotu monotónních hodin mezi procesy nepřenáší.
 

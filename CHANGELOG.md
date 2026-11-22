@@ -2,7 +2,7 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
-## Unreleased
+## 0.17.0 — 2026-11-22
 
 - Focus-session crash recovery: durable checkpoints, explicit paused recovery/discard, exclusive ownership, save retry and schema-10 backup support.
 - Migration and crash/reopen regression checks; aligned English/Czech/Slovak/Russian guides.
