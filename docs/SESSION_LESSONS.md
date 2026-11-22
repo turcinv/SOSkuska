@@ -39,3 +39,7 @@ Conversation may switch between Czech, Slovak, English and Russian. Reply in the
 Use the short root `AGENTS.md` as a routing index. Read the required `@docs/agents/...` topic files before editing the corresponding area; avoid loading unrelated safeguards. These are explicit file-reading references, not a promise of automatic transclusion. The official [Codex AGENTS.md guide](https://developers.openai.com/codex/guides/agents-md) documents hierarchical instruction discovery; this repository therefore explicitly tells the agent to open its referenced files.
 
 Record durable rules in the relevant topic file and new dated evidence here. Keep detailed release history in the changelog. When behavior changes, update the applicable safeguard and all language versions of user documentation.
+
+## Next steps · 22 November 2026
+
+Status updated 22 November 2026: the user confirmed v0.15.0 baseline testing complete and approved appearance PR #32. This checklist now targets v0.16.0; item-by-item clean-machine/DPI results are not recorded here. Leave unchecked items unverified and record device-specific evidence when testing the new release. [Next steps · 22 November 2026](NEXT_STEPS.md).

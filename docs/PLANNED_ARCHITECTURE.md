@@ -4,7 +4,7 @@
 
 **Future design, not a description of everything implemented today.** Proposed files/tables exist only where confirmed by [current architecture](CURRENT_ARCHITECTURE.md). A roadmap does not authorize implementing every feature at once.
 
-Published baseline is v0.15.0, with interface languages, saved AI conversations and schema 8. The history guide below describes the implemented behavior. Settings Save does not start networking.
+Published baseline is v0.16.0, with interface languages, saved AI conversations and schema 9. The history guide below describes the implemented behavior. Settings Save does not start networking.
 
 ## Direction
 
@@ -124,8 +124,12 @@ Practice history now supports pages of 20 across all completed attempts, histori
 
 ## Windows portable build and acceptance
 
-v0.15.0 adds an unsigned Windows x64 portable ZIP, built and checked by a fifth CI job. Bundled helper executables preserve isolated CSV/backup jobs; Python is not required on the target machine. Automated hosted Windows checks and the manual clean-machine checklist are separate; manual acceptance is not yet completed. Published version is v0.15.0, schema 8. [Windows portable build and acceptance](WINDOWS_PORTABLE.md) · [Checklist](WINDOWS_ACCEPTANCE.md).
+v0.15.0 adds an unsigned Windows x64 portable ZIP, built and checked by a fifth CI job. Bundled helper executables preserve isolated CSV/backup jobs; Python is not required on the target machine. Automated hosted Windows checks and the manual clean-machine checklist are separate; manual acceptance is not yet completed. Published version is v0.16.0, schema 9. [Windows portable build and acceptance](WINDOWS_PORTABLE.md) · [Checklist](WINDOWS_ACCEPTANCE.md).
 
 ## Appearance settings
 
-Unreleased appearance settings add saved Light/Dark/System choices, applied on Save without rebuilding screens or losing active work. System follows Windows/macOS and uses Light on Linux. Branch schema is 9; published v0.15.0 stays on schema 8. Keep the feature PR unmerged until baseline testing is confirmed complete and the user approves merging. [Appearance settings](APPEARANCE.md).
+v0.16.0 adds saved Light/Dark/System choices, applied on Save without rebuilding screens or losing active work. System follows Windows/macOS and uses Light on Linux. Current schema is 9. The user confirmed baseline testing complete and approved merging appearance PR #32 on 22 November 2026. [Appearance settings](APPEARANCE.md).
+
+## Next steps · 22 November 2026
+
+Status updated 22 November 2026: the user confirmed v0.15.0 baseline testing complete and approved appearance PR #32. This checklist now targets v0.16.0; item-by-item clean-machine/DPI results are not recorded here. Leave unchecked items unverified and record device-specific evidence when testing the new release. [Next steps · 22 November 2026](NEXT_STEPS.md).

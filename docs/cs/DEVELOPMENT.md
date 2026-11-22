@@ -303,13 +303,13 @@ python soskuska/check_practice_history.py
 
 ## Přenosná verze Windows a přejímka
 
-v0.15.0 přidává nepodepsaný přenosný ZIP pro Windows x64, sestavený a ověřený pátou úlohou CI. Přibalený pomocný program zachová oddělené CSV/zálohovací procesy; cílový počítač nepotřebuje Python. Automatické hostované kontroly a ruční seznam pro čistý počítač jsou oddělené; ruční přejímka zatím není dokončená. Vydaná verze je v0.15.0, schéma 8. [Přenosná verze Windows a přejímka](WINDOWS_PORTABLE.md) · [Kontrolní seznam](WINDOWS_ACCEPTANCE.md).
+v0.15.0 přidává nepodepsaný přenosný ZIP pro Windows x64, sestavený a ověřený pátou úlohou CI. Přibalený pomocný program zachová oddělené CSV/zálohovací procesy; cílový počítač nepotřebuje Python. Automatické hostované kontroly a ruční seznam pro čistý počítač jsou oddělené; ruční přejímka zatím není dokončená. Vydaná verze je v0.16.0, schéma 9. [Přenosná verze Windows a přejímka](WINDOWS_PORTABLE.md) · [Kontrolní seznam](WINDOWS_ACCEPTANCE.md).
 
 Aktuální práce na balení: lokálně prošlo 251 jednotkových testů. Linuxový kontejner dokončil všech 15 GUI skriptů (250 jednotkových testů v daném snímku, dvě přeskočené kontroly specifické pro souborový systém). Pro tuto větev se nativní GUI na Macu nespouštělo. Hostované Windows a ruční přejímka jsou oddělené; ruční přejímka NEPROVEDENA.
 
 ## Nastavení vzhledu
 
-Nevydané nastavení vzhledu přidává uložené Light/Dark/System, použité po Save bez obnovy obrazovek a ztráty aktivní práce. System sleduje Windows/macOS, na Linuxu používá Light. Větev má schéma 9; vydaná v0.15.0 zůstává na schématu 8. PR neslučovat do potvrzení dokončeného testování základu a schválení uživatelem. [Nastavení vzhledu](APPEARANCE.md).
+v0.16.0 přidává uložené Light/Dark/System, použité po Save bez obnovy obrazovek a ztráty aktivní práce. System sleduje Windows/macOS, na Linuxu používá Light. Aktuální schéma je 9. Uživatel 22. listopadu 2026 potvrdil dokončení testování základu a schválil sloučení PR #32. [Nastavení vzhledu](APPEARANCE.md).
 
 ```sh
 python soskuska/check_appearance.py

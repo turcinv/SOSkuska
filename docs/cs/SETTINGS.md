@@ -30,4 +30,4 @@ Výběr jazyka rozhraní je dostupný ve v0.13.0: angličtina, čeština, sloven
 
 ## Nastavení vzhledu
 
-Nevydané nastavení vzhledu přidává uložené Light/Dark/System, použité po Save bez obnovy obrazovek a ztráty aktivní práce. System sleduje Windows/macOS, na Linuxu používá Light. Větev má schéma 9; vydaná v0.15.0 zůstává na schématu 8. PR neslučovat do potvrzení dokončeného testování základu a schválení uživatelem. [Nastavení vzhledu](APPEARANCE.md).
+v0.16.0 přidává uložené Light/Dark/System, použité po Save bez obnovy obrazovek a ztráty aktivní práce. System sleduje Windows/macOS, na Linuxu používá Light. Aktuální schéma je 9. Uživatel 22. listopadu 2026 potvrdil dokončení testování základu a schválil sloučení PR #32. [Nastavení vzhledu](APPEARANCE.md).

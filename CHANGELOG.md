@@ -2,9 +2,9 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
-## Unreleased
+## 0.16.0 — 2026-11-22
 
-Unreleased appearance settings add saved Light/Dark/System choices, applied on Save without rebuilding screens or losing active work. System follows Windows/macOS and uses Light on Linux. Branch schema is 9; published v0.15.0 stays on schema 8. Keep the feature PR unmerged until baseline testing is confirmed complete and the user approves merging. [Appearance settings](docs/APPEARANCE.md).
+v0.16.0 adds saved Light/Dark/System choices, applied on Save without rebuilding screens or losing active work. System follows Windows/macOS and uses Light on Linux. Current schema is 9. The user confirmed baseline testing complete and approved merging appearance PR #32 on 22 November 2026. [Appearance settings](docs/APPEARANCE.md).
 
 ## 0.15.0 — 2026-11-21
 

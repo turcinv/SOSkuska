@@ -303,13 +303,13 @@ python soskuska/check_practice_history.py
 
 ## Prenosná verzia Windows a preberacia kontrola
 
-v0.15.0 pridáva nepodpísaný prenosný ZIP pre Windows x64, zostavený a overený piatou úlohou CI. Pribalený pomocný program zachová oddelené CSV/zálohovacie procesy; cieľový počítač nepotrebuje Python. Automatické hostované kontroly a ručný zoznam pre čistý počítač sú oddelené; ručná preberacia kontrola zatiaľ nie je dokončená. Vydaná verzia je v0.15.0, schéma 8. [Prenosná verzia Windows a preberacia kontrola](WINDOWS_PORTABLE.md) · [Kontrolný zoznam](WINDOWS_ACCEPTANCE.md).
+v0.15.0 pridáva nepodpísaný prenosný ZIP pre Windows x64, zostavený a overený piatou úlohou CI. Pribalený pomocný program zachová oddelené CSV/zálohovacie procesy; cieľový počítač nepotrebuje Python. Automatické hostované kontroly a ručný zoznam pre čistý počítač sú oddelené; ručná preberacia kontrola zatiaľ nie je dokončená. Vydaná verzia je v0.16.0, schéma 9. [Prenosná verzia Windows a preberacia kontrola](WINDOWS_PORTABLE.md) · [Kontrolný zoznam](WINDOWS_ACCEPTANCE.md).
 
 Aktuálna práca na balení: lokálne prešlo 251 jednotkových testov. Linuxový kontajner dokončil všetkých 15 GUI skriptov (250 jednotkových testov v danej snímke, dve preskočené kontroly špecifické pre súborový systém). Pre túto vetvu sa natívne GUI na Macu nespúšťalo. Hostované Windows a ručná kontrola sú oddelené; ručná kontrola NEVYKONANÁ.
 
 ## Nastavenie vzhľadu
 
-Nevydané nastavenie vzhľadu pridáva uložené Light/Dark/System, použité po Save bez obnovy obrazoviek a straty aktívnej práce. System sleduje Windows/macOS, na Linuxe používa Light. Vetva má schému 9; vydaná v0.15.0 zostáva na schéme 8. PR nezlučovať do potvrdenia dokončeného testovania základu a schválenia používateľom. [Nastavenie vzhľadu](APPEARANCE.md).
+v0.16.0 pridáva uložené Light/Dark/System, použité po Save bez obnovy obrazoviek a straty aktívnej práce. System sleduje Windows/macOS, na Linuxe používa Light. Aktuálna schéma je 9. Používateľ 22. novembra 2026 potvrdil dokončenie testovania základu a schválil zlúčenie PR #32. [Nastavenie vzhľadu](APPEARANCE.md).
 
 ```sh
 python soskuska/check_appearance.py
