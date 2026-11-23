@@ -2,6 +2,8 @@
 
 [English](WINDOWS_ACCEPTANCE.md) · [Čeština](cs/WINDOWS_ACCEPTANCE.md) · [Slovenčina](sk/WINDOWS_ACCEPTANCE.md) · [Русский](ru/WINDOWS_ACCEPTANCE.md)
 
+Use [Acceptance steps before v1.0.0](V1_RELEASE_PLAN.md) for the test order, isolated launch command, results template and release gate.
+
 Status updated 22 November 2026: the user confirmed v0.15.0 baseline testing complete and approved appearance PR #32. This checklist now targets v0.18.1; item-by-item clean-machine/DPI results are not recorded here. Leave unchecked items unverified and record device-specific evidence when testing the new release.
 
 Record: Windows edition/build, CPU architecture, display resolution/scaling, artifact commit, SHA-256, date, tester and outcomes. Attach screenshots and reproduction details for failures. Mark each row PASS/FAIL and note the evidence; unchecked rows are not verified.

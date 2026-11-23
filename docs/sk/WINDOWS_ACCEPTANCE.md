@@ -2,6 +2,8 @@
 
 [English](../WINDOWS_ACCEPTANCE.md) · [Čeština](../cs/WINDOWS_ACCEPTANCE.md) · [Slovenčina](../sk/WINDOWS_ACCEPTANCE.md) · [Русский](../ru/WINDOWS_ACCEPTANCE.md)
 
+Pozri [Akceptačné kroky pred v1.0.0](V1_RELEASE_PLAN.md): poradie kontrol, spustenie s oddelenými dátami, šablóna výsledkov a podmienky vydania.
+
 Stav 22. novembra 2026: používateľ potvrdil dokončenie testovania v0.15.0 a schválil PR #32. Tento zoznam teraz cieli na v0.18.1; jednotlivé výsledky čistého počítača/DPI tu nie sú zaznamenané. Nezaškrtnuté body zostávajú neoverené; pri testovaní nového vydania doplň dôkazy pre konkrétne zariadenie.
 
 Zaznamenaj edíciu/build Windows, architektúru CPU, rozlíšenie/mierku, commit artefaktu, SHA-256, dátum, testujúceho a výsledky. Prilož snímky a postup reprodukcie chýb. Každý bod označ PASS/FAIL s dôkazom; nezaškrtnutý nie je overený.
