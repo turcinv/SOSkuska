@@ -53,7 +53,7 @@ flowchart LR
     Clock[time.monotonic] --> Dashboard
 ```
 
-Obrazovky volajú `Store` priamo. Samostatná servisná/doménová vrstva a spoločný modul motívu zostávajú plánované. `SubjectPage` využíva existujúce pomocné metódy aplikácie pre štýl.
+Obrazovky volajú `Store` priamo; rozdelenie na servisné/doménové vrstvy zostáva návrhom. Spoločné farby už obsahuje `theme.py`. Tk vlastní widgety a krátke databázové operácie. Sieťové vlákna vracajú výsledky cez front bez prístupu k Tk/SQLite. Pomocné CSV/zálohovacie procesy majú vlastné pripojenia SQLite; hlavné vlákno kontroluje ich súborový výstup.
 
 ## Schéma a migrácie
 
