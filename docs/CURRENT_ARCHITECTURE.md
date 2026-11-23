@@ -59,7 +59,7 @@ flowchart LR
     Focus --> DB
 ```
 
-Screens call Store directly; separate service/domain layers and a shared theme module remain proposals. SubjectPage uses the app's existing styling helpers. Workers never call Tk or SQLite; queue events are handled on the main thread.
+Screens call Store directly; the layered service/domain split remains proposed. Shared colours already live in `theme.py`. Tk owns widgets and short database operations. Network workers return queued results without touching Tk or SQLite. CSV/backup helpers run in isolated processes with their own SQLite connections; the main thread polls their file-backed results.
 
 ## Schema and migrations
 
