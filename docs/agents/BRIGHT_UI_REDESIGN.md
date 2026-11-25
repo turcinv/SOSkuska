@@ -62,7 +62,7 @@ Practice redesign merged through [PR #46](https://github.com/turcinv/SOSkuska/pu
 
 ### Step 4 handoff · 25 November 2026
 
-Flashcard review is implemented on `feature/bright-ui-flashcards`; see [captures, validation and next-session scope](design/bright-ui-step4/README.md). Prompt/answer reading surfaces, guarded Reveal/rating footer, responsive rating grid, deck actions and empty states are aligned. Failed-write feedback stays by the footer; a committed rating with failed next-card read disables old ratings and retries reads only. Scheduling, schema 10, immutable history and CSV/editor paths remain. Published labels stay v0.20.0; this step is unreleased until its PR is authorized for merge. Continue with the **Subjects and Question Bank portion of Step 5 only** after this step is merged and requested.
+Flashcard review merged through [PR #48](https://github.com/turcinv/SOSkuska/pull/48), commit `0b370d0`, and ships in v0.21.0; see [captures, validation and next-session scope](design/bright-ui-step4/README.md). Prompt/answer reading surfaces, guarded Reveal/rating footer, responsive rating grid, deck actions and empty states are aligned. Failed-write feedback stays by the footer; a committed rating with failed next-card read disables old ratings and retries reads only. Scheduling, schema 10, immutable history and CSV/editor paths remain. Release labels align to v0.21.0/schema 10. All five feature PR CI jobs passed. Continue with the **Subjects and Question Bank portion of Step 5 only** after this step is merged and requested.
 
 ## Step 5 — Consistency pass
 
