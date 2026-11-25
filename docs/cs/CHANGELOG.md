@@ -2,7 +2,7 @@
 
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
-## Nevydáno — nastavení a společné datové panely
+## 0.24.0 — 2026-11-25
 
 - Nastavení seskupuje studijní předvolby a rozhraní vedle sebe v širokém okně a pod sebou v kompaktním; AI má vlastní kartu přes celou šířku. Zpráva pro Uložit/Načíst se zobrazuje u ovládání i v záhlaví. Změna velikosti zachová stejné prvky, koncepty a uložené snímky; ukládání zůstává výslovné a aktivní časovače zachovají původní délku.
 - Plán denních záloh, ruční záloha/obnova a oba importy CSV používají společný vzhled karet, odsazení a zalomené zprávy. Skupiny akcí mají tři sloupce v širokém rozložení, jinak dva. Varování obnovy je nad tlačítkem nevratného potvrzení a Zrušit. Pole náhledu/chyb CSV mají viditelné okraje a vlastní posouvání. Pravidla náhledu, zrušení, atomického zápisu, oddělených procesů, zavření po obnově a bezpečnostní kopie se nemění.

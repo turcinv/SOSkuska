@@ -2,7 +2,7 @@
 
 [English](CURRENT_ARCHITECTURE.md) · [Čeština](cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](sk/CURRENT_ARCHITECTURE.md) · [Русский](ru/CURRENT_ARCHITECTURE.md)
 
-## Unreleased — Settings and shared data panels
+## v0.24.0 — Settings and shared data panels
 
 Settings groups Study and Interface preferences side by side in wide windows and stacked in compact ones; AI preferences have a separate full-width card. Save/Reload feedback appears beside the controls as well as in the header. Resizing preserves the same fields, drafts and saved snapshots; saving remains explicit and active timers retain their original duration. Daily backup schedules, manual backup/restore and both CSV importers now use the shared card style, consistent insets and wrapped messages. Action groups use three columns in wide layouts or two in compact ones. Restore warnings appear above the destructive confirmation and Cancel controls. CSV preview/error fields have visible borders and keep their own scrolling. Preview, cancellation, atomic writes, isolated workers, restore closure and safety-copy rules are unchanged.
 
@@ -12,13 +12,13 @@ Statistics groups the period selector and Refresh in a header, with three summar
 
 ## v0.22.0 — Subjects and Question Bank design
 
-Subjects and Question Bank now group titles, counts and actions in page headers and put labelled search/filter controls on shared surfaces. Subject actions use two rows; cards use two columns from 950 logical page pixels and one below. Resizing rearranges existing cards without querying the database. Question answer fields use two columns from 850 logical panel pixels and stack below; correct-answer previews are visually grouped in the authoring list only. Pagination remains 50 questions per page. Drafts, original edit snapshots, filters, topic identities, stale-state guards and CSV previews keep their existing behavior. Published version remains v0.23.0, schema 10.
+Subjects and Question Bank now group titles, counts and actions in page headers and put labelled search/filter controls on shared surfaces. Subject actions use two rows; cards use two columns from 950 logical page pixels and one below. Resizing rearranges existing cards without querying the database. Question answer fields use two columns from 850 logical panel pixels and stack below; correct-answer previews are visually grouped in the authoring list only. Pagination remains 50 questions per page. Drafts, original edit snapshots, filters, topic identities, stale-state guards and CSV previews keep their existing behavior. Published version remains v0.24.0, schema 10.
 
 ## v0.21.0 — Flashcard review redesign
 
-Flashcard review now separates the prompt and revealed answer into reading surfaces. Reveal is the primary action until the answer appears; Again / Hard / Good / Easy then replace it in the same footer, in four columns on wide screens or two on compact screens. Long text wraps and scrolls to the rating controls. Deck actions and empty states use the shared layout. A failed rating write keeps the revealed answer for retry. If the rating was saved but loading the next card fails, the old ratings are disabled and Refresh card only reloads the next card; the saved rating is not repeated. Scheduling, history, editor drafts and CSV preview behavior are preserved. Published version remains v0.23.0, schema 10.
+Flashcard review now separates the prompt and revealed answer into reading surfaces. Reveal is the primary action until the answer appears; Again / Hard / Good / Easy then replace it in the same footer, in four columns on wide screens or two on compact screens. Long text wraps and scrolls to the rating controls. Deck actions and empty states use the shared layout. A failed rating write keeps the revealed answer for retry. If the rating was saved but loading the next card fails, the old ratings are disabled and Refresh card only reloads the next card; the saved rating is not repeated. Scheduling, history, editor drafts and CSV preview behavior are preserved. Published version remains v0.24.0, schema 10.
 
-**Published version: v0.23.0 · schema 10.** Practice history and container tests are implemented.
+**Published version: v0.24.0 · schema 10.** Practice history and container tests are implemented.
 
 v0.17.0 adds focus-session crash recovery using schema **10**. Keep a backup before opening existing data: migration is transactional, but v0.16.0 cannot open a schema-10 database. [Focus-session recovery](FOCUS_RECOVERY.md).
 
@@ -317,7 +317,7 @@ Scheduled local backups are available in **v0.18.0**. SQLite schema remains **10
 
 ## Main-branch review fixes
 
-Fixes released in v0.18.1 through PR #38, tracked in [Astra review findings](REVIEW_FINDINGS.md). Schema remains 10 and the published version is v0.23.0. Subject edits compare their original content under the write lock; a conflict keeps your draft. Copy any changes you need before reopening Edit to load the latest version. Question/topic deletions recheck their displayed snapshot and require a refreshed confirmation after changes. Returning to the same subject preserves the active question/topic editor, filters and original editing identity, including read retries; a removed selected topic stays unavailable until you explicitly choose a replacement or No topic. Opening a different subject still resets the editor. A newer successful daily-backup receipt clears the old failure notice without another backup write.
+Fixes released in v0.18.1 through PR #38, tracked in [Astra review findings](REVIEW_FINDINGS.md). Schema remains 10 and the published version is v0.24.0. Subject edits compare their original content under the write lock; a conflict keeps your draft. Copy any changes you need before reopening Edit to load the latest version. Question/topic deletions recheck their displayed snapshot and require a refreshed confirmation after changes. Returning to the same subject preserves the active question/topic editor, filters and original editing identity, including read retries; a removed selected topic stays unavailable until you explicitly choose a replacement or No topic. Opening a different subject still resets the editor. A newer successful daily-backup receipt clears the old failure notice without another backup write.
 
 ## v0.20.0 — Practice redesign Step 3
 

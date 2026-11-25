@@ -2,7 +2,7 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
-## Unreleased — Settings and shared data panels
+## 0.24.0 — 2026-11-25
 
 - Settings groups Study and Interface preferences side by side in wide windows and stacked in compact ones; AI preferences have a separate full-width card. Save/Reload feedback appears beside the controls as well as in the header. Resizing preserves the same fields, drafts and saved snapshots; saving remains explicit and active timers retain their original duration.
 - Daily backup schedules, manual backup/restore and both CSV importers now use the shared card style, consistent insets and wrapped messages. Action groups use three columns in wide layouts or two in compact ones. Restore warnings appear above the destructive confirmation and Cancel controls. CSV preview/error fields have visible borders and keep their own scrolling. Preview, cancellation, atomic writes, isolated workers, restore closure and safety-copy rules are unchanged.

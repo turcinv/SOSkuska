@@ -2,7 +2,7 @@
 
 [English](BACKUP_RESTORE.md) · [Čeština](cs/BACKUP_RESTORE.md) · [Slovenčina](sk/BACKUP_RESTORE.md) · [Русский](ru/BACKUP_RESTORE.md)
 
-## Unreleased — Settings and shared data panels
+## v0.24.0 — Settings and shared data panels
 
 Daily backup schedules, manual backup/restore and both CSV importers now use the shared card style, consistent insets and wrapped messages. Action groups use three columns in wide layouts or two in compact ones. Restore warnings appear above the destructive confirmation and Cancel controls. CSV preview/error fields have visible borders and keep their own scrolling. Preview, cancellation, atomic writes, isolated workers, restore closure and safety-copy rules are unchanged.
 

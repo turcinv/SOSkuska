@@ -2,7 +2,7 @@
 
 [English](../CURRENT_ARCHITECTURE.md) · [Čeština](../cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](CURRENT_ARCHITECTURE.md) · [Русский](../ru/CURRENT_ARCHITECTURE.md)
 
-## Nevydané — nastavenia a spoločné dátové panely
+## v0.24.0 — nastavenia a spoločné dátové panely
 
 Nastavenia zoskupujú študijné predvoľby a rozhranie vedľa seba v širokom okne a pod sebou v kompaktnom; AI má vlastnú kartu cez celú šírku. Správa pre Uložiť/Načítať sa zobrazuje pri ovládaní aj v záhlaví. Zmena veľkosti zachová rovnaké prvky, koncepty a uložené snímky; ukladanie zostáva výslovné a aktívne časovače zachovajú pôvodnú dĺžku. Plán denných záloh, ručná záloha/obnova a oba importy CSV používajú spoločný vzhľad kariet, odsadenie a zalomené správy. Skupiny akcií majú tri stĺpce v širokom rozložení, inak dva. Varovanie obnovy je nad tlačidlom nevratného potvrdenia a Zrušiť. Polia náhľadu/chýb CSV majú viditeľné okraje a vlastné posúvanie. Pravidlá náhľadu, zrušenia, atomického zápisu, oddelených procesov, zatvorenia po obnove a bezpečnostnej kópie sa nemenia.
 
@@ -12,13 +12,13 @@ Nastavenia zoskupujú študijné predvoľby a rozhranie vedľa seba v širokom o
 
 ## v0.22.0 — vzhľad predmetov a banky otázok
 
-Predmety a banka otázok teraz zoskupujú názvy, počty a akcie v záhlaví a označené hľadanie a filtre na spoločných plochách. Akcie predmetu majú dva riadky; kartičky majú dva stĺpce od 950 logických pixelov stránky, inak jeden. Zmena veľkosti preskladá existujúce kartičky bez dotazu do databázy. Polia odpovedí majú dva stĺpce od 850 logických pixelov panela, inak sú pod sebou; náhľad správnej odpovede je zvýraznený iba v zozname na úpravy. Stránkovanie zostáva po 50 otázkach. Koncepty, pôvodné snímky úprav, filtre, identita tém, kontroly zastaraného stavu a náhľad CSV zachovávajú doterajšie správanie. Vydaná verzia zostáva v0.23.0, schéma 10.
+Predmety a banka otázok teraz zoskupujú názvy, počty a akcie v záhlaví a označené hľadanie a filtre na spoločných plochách. Akcie predmetu majú dva riadky; kartičky majú dva stĺpce od 950 logických pixelov stránky, inak jeden. Zmena veľkosti preskladá existujúce kartičky bez dotazu do databázy. Polia odpovedí majú dva stĺpce od 850 logických pixelov panela, inak sú pod sebou; náhľad správnej odpovede je zvýraznený iba v zozname na úpravy. Stránkovanie zostáva po 50 otázkach. Koncepty, pôvodné snímky úprav, filtre, identita tém, kontroly zastaraného stavu a náhľad CSV zachovávajú doterajšie správanie. Vydaná verzia zostáva v0.24.0, schéma 10.
 
 ## v0.21.0 — nový vzhľad opakovania kartičiek
 
-Opakovanie kartičiek teraz oddeľuje otázku a odhalenú odpoveď do čítacích plôch. Hlavnou akciou je odhalenie odpovede; potom ju na rovnakom mieste nahradí hodnotenie Again / Hard / Good / Easy, v štyroch stĺpcoch v širokom okne alebo v dvoch v kompaktnom. Dlhý text sa zalamuje a k hodnoteniu sa dá posunúť stránka. Akcie balíčka a prázdne stavy používajú spoločné rozloženie. Zlyhanie zápisu zachová odhalenú odpoveď na opakovanie. Keď sa hodnotenie uloží, ale načítanie ďalšej kartičky zlyhá, staré hodnotenia sa vypnú a Obnoviť kartičku iba znova načíta ďalšiu kartičku; uložené hodnotenie sa neopakuje. Plánovanie, história, rozpísané úpravy a náhľad CSV zostávajú zachované. Vydaná verzia zostáva v0.23.0, schéma 10.
+Opakovanie kartičiek teraz oddeľuje otázku a odhalenú odpoveď do čítacích plôch. Hlavnou akciou je odhalenie odpovede; potom ju na rovnakom mieste nahradí hodnotenie Again / Hard / Good / Easy, v štyroch stĺpcoch v širokom okne alebo v dvoch v kompaktnom. Dlhý text sa zalamuje a k hodnoteniu sa dá posunúť stránka. Akcie balíčka a prázdne stavy používajú spoločné rozloženie. Zlyhanie zápisu zachová odhalenú odpoveď na opakovanie. Keď sa hodnotenie uloží, ale načítanie ďalšej kartičky zlyhá, staré hodnotenia sa vypnú a Obnoviť kartičku iba znova načíta ďalšiu kartičku; uložené hodnotenie sa neopakuje. Plánovanie, história, rozpísané úpravy a náhľad CSV zostávajú zachované. Vydaná verzia zostáva v0.24.0, schéma 10.
 
-**Vydaná verzia: v0.23.0 · schéma 10.** História testov a testy v kontajneri sú implementované.
+**Vydaná verzia: v0.24.0 · schéma 10.** História testov a testy v kontajneri sú implementované.
 
 v0.17.0 pridáva obnovu sústredenia po páde so schémou **10**. Pred otvorením pôvodných dát vytvor zálohu: migrácia je transakčná, ale v0.16.0 databázu schémy 10 neotvorí. [Obnova sústredenia po páde](FOCUS_RECOVERY.md).
 
@@ -324,7 +324,7 @@ História testov teraz ponúka všetky dokončené pokusy po 20 na stránku, fil
 
 ## Prenosná verzia Windows a preberacia kontrola
 
-v0.15.0 pridáva nepodpísaný prenosný ZIP pre Windows x64, zostavený a overený piatou úlohou CI. Pribalený pomocný program zachová oddelené CSV/zálohovacie procesy; cieľový počítač nepotrebuje Python. Automatické hostované kontroly a ručný zoznam pre čistý počítač sú oddelené; ručná preberacia kontrola zatiaľ nie je dokončená. Vydaná verzia je v0.23.0, schéma 10. [Prenosná verzia Windows a preberacia kontrola](WINDOWS_PORTABLE.md) · [Kontrolný zoznam](WINDOWS_ACCEPTANCE.md).
+v0.15.0 pridáva nepodpísaný prenosný ZIP pre Windows x64, zostavený a overený piatou úlohou CI. Pribalený pomocný program zachová oddelené CSV/zálohovacie procesy; cieľový počítač nepotrebuje Python. Automatické hostované kontroly a ručný zoznam pre čistý počítač sú oddelené; ručná preberacia kontrola zatiaľ nie je dokončená. Vydaná verzia je v0.24.0, schéma 10. [Prenosná verzia Windows a preberacia kontrola](WINDOWS_PORTABLE.md) · [Kontrolný zoznam](WINDOWS_ACCEPTANCE.md).
 
 ## Nastavenie vzhľadu
 
@@ -342,7 +342,7 @@ Plánované miestne zálohy sú dostupné vo **v0.18.0**. Schéma SQLite zostáv
 
 ## Opravy po revízii hlavnej vetvy
 
-Opravy vydané vo v0.18.1 cez PR #38 sleduje [záznam revízie Astra](REVIEW_FINDINGS.md). Schéma zostáva 10 a vydaná verzia je v0.23.0. Úpravy predmetu porovnajú pôvodný obsah pod zápisovým zámkom; konflikt zachová koncept. Pred opätovným otvorením úprav na načítanie najnovšej verzie si potrebné zmeny skopíruj. Vymazanie otázky/témy porovná zobrazený obsah a po zmene vyžaduje nové potvrdenie. Návrat k rovnakému predmetu zachová editor otázky/témy, filtre aj pôvodnú identitu, tiež pri opakovaní čítania; vymazaná vybraná téma zostane nedostupná, kým výslovne nevyberieš inú tému alebo možnosť Bez témy. Iný predmet editor stále resetuje. Novšie potvrdenie úspešnej dennej zálohy odstráni staré oznámenie chyby bez ďalšieho zápisu zálohy.
+Opravy vydané vo v0.18.1 cez PR #38 sleduje [záznam revízie Astra](REVIEW_FINDINGS.md). Schéma zostáva 10 a vydaná verzia je v0.24.0. Úpravy predmetu porovnajú pôvodný obsah pod zápisovým zámkom; konflikt zachová koncept. Pred opätovným otvorením úprav na načítanie najnovšej verzie si potrebné zmeny skopíruj. Vymazanie otázky/témy porovná zobrazený obsah a po zmene vyžaduje nové potvrdenie. Návrat k rovnakému predmetu zachová editor otázky/témy, filtre aj pôvodnú identitu, tiež pri opakovaní čítania; vymazaná vybraná téma zostane nedostupná, kým výslovne nevyberieš inú tému alebo možnosť Bez témy. Iný predmet editor stále resetuje. Novšie potvrdenie úspešnej dennej zálohy odstráni staré oznámenie chyby bez ďalšieho zápisu zálohy.
 
 ## v0.20.0 — redizajn testov, krok 3
 

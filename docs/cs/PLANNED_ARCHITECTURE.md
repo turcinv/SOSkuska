@@ -4,7 +4,7 @@
 
 **Budoucí návrh, nikoli dnešní implementace.** Zde uvedené moduly a tabulky zatím neexistují, pokud je nepotvrzuje [současná architektura](CURRENT_ARCHITECTURE.md). Tento plán sám neznamená zahájení implementace všech funkcí.
 
-Vydaná základní verze je v0.23.0 s jazyky rozhraní, uloženými konverzacemi AI a schématem 10. Průvodci níže popisují implementované funkce. Uložení nastavení nespouští síťové připojení.
+Vydaná základní verze je v0.24.0 s jazyky rozhraní, uloženými konverzacemi AI a schématem 10. Průvodci níže popisují implementované funkce. Uložení nastavení nespouští síťové připojení.
 
 Nastavení se ukládá do stejné databáze jako studijní data. [Settings](SETTINGS.md). Nastavení se ukládá transakčně ve schématu 6 s ochranou před přepsáním změn jiného okna. Migrace z verze 5 zachová všechny předchozí tabulky i data; starší aplikace novější schéma odmítne otevřít.
 ## Směr

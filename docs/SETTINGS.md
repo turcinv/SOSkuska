@@ -2,7 +2,7 @@
 
 [English](SETTINGS.md) · [Čeština](cs/SETTINGS.md) · [Slovenčina](sk/SETTINGS.md) · [Русский](ru/SETTINGS.md)
 
-## Unreleased — Settings and shared data panels
+## v0.24.0 — Settings and shared data panels
 
 Settings groups Study and Interface preferences side by side in wide windows and stacked in compact ones; AI preferences have a separate full-width card. Save/Reload feedback appears beside the controls as well as in the header. Resizing preserves the same fields, drafts and saved snapshots; saving remains explicit and active timers retain their original duration.
 
