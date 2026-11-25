@@ -2,6 +2,8 @@
 
 [English](../APPEARANCE.md) · [Čeština](../cs/APPEARANCE.md) · [Slovenčina](../sk/APPEARANCE.md) · [Русский](../ru/APPEARANCE.md)
 
+**Zatiaľ nevydané — redizajn, krok 1:** spoločný vzhľad používa modré akcie/výber, mätový priebeh, teplé svetlé pozadie v Light a párové tmavé plochy. Vedľajšie tlačidlá majú samostatné pozadie pri prejdení kurzorom; lišty Statistics používajú rovnaké pozadie ako Dashboard. Rozloženie, uložený/predvolený režim, navigácia, dáta aj správanie nastavení zostávajú rovnaké. [Interné snímky, skice a odovzdanie](../agents/design/bright-ui-step1/README.md).
+
 Nastavenie vzhľadu vyšlo vo **v0.16.0** po potvrdení testovania základu v0.15.0 a schválení zlúčenia PR #32 používateľom 22. novembra 2026. Ďalšie zmeny vyžadujú vlastnú revíziu a schválenie zlúčenia/vydania.
 
 Otvor **Settings → Appearance (applies on Save)** a vyber Light, Dark alebo System. Uložením sa vzhľad hneď použije a zapamätá pre túto databázu. Samotný výber je koncept; navigácia ho zachová, Reload potvrdzuje jeho nahradenie. Chybný alebo zastaraný zápis zachová súčasný vzhľad aj koncept. Pôvodné databázy začínajú tmavým vzhľadom. Uloženie celého formulára naďalej rešpektuje validáciu a ochrany zmien AI.

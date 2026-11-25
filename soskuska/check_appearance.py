@@ -50,6 +50,8 @@ def run(path, reopen=False, screenshots=None):
                 raise AssertionError('No visible background found')
             def visit(parent):
                 for widget in parent.winfo_children():
+                    if widget.winfo_ismapped() and isinstance(widget,ctk.CTkProgressBar):
+                        assert contrast(color(widget.cget('progress_color'),widget),background(widget))>=3.0
                     if widget.winfo_ismapped() and isinstance(widget,(ctk.CTkLabel,ctk.CTkButton,ctk.CTkCheckBox,ctk.CTkEntry,ctk.CTkOptionMenu,ctk.CTkRadioButton)):
                         own=not isinstance(widget,(ctk.CTkCheckBox,ctk.CTkRadioButton))
                         text=widget.cget('text_color')

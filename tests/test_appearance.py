@@ -111,6 +111,24 @@ class AppearanceTests(unittest.TestCase):
             for background in ('primary','primary_hover'):
                 self.assertGreaterEqual(contrast(COLORS['disabled_on_primary'][mode],COLORS[background][mode]),4.5)
 
+    def test_selected_navigation_and_button_hover_states_remain_readable(self):
+        # Covers actual shared helper roles rather than pinning particular hex values.
+        pairs = [('hover', 'selected'), ('text', 'raised'),
+                 ('text', 'secondary_hover'), ('secondary', 'raised'),
+                 ('on_primary', 'primary_hover'), ('on_primary', 'danger_hover')]
+        for mode in (0, 1):
+            for foreground, background in pairs:
+                with self.subTest(mode=mode, foreground=foreground, background=background):
+                    self.assertGreaterEqual(contrast(COLORS[foreground][mode], COLORS[background][mode]), 4.5)
+
+    def test_progress_and_dark_control_outlines_remain_distinguishable(self):
+        for mode in (0, 1):
+            self.assertGreaterEqual(contrast(COLORS['accent'][mode], COLORS['raised'][mode]), 3.0)
+        # Disabled selector chevrons share the border fill; unchecked boxes use
+        # that same border on cards. Both need to stay identifiable in Dark mode.
+        for foreground, background in [('secondary', 'border'), ('border', 'card')]:
+            self.assertGreaterEqual(contrast(COLORS[foreground][1], COLORS[background][1]), 3.0)
+
 
 class SystemFallbackTests(unittest.TestCase):
     def test_unsupported_system_mode_never_enables_ctk_os_command_polling(self):

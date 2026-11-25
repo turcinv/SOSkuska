@@ -24,6 +24,10 @@ Suggested first prompt for the next session:
 2. Update paired theme colors and reuse the existing `font`, `label`, `frame` and `button` helpers for the few shared visual roles the new layouts need. Check primary and secondary buttons, selected items, placeholders, warnings and disabled states. Leave layout changes for later steps.
 3. Run `tests/test_appearance.py` and `soskuska/check_appearance.py` through the appropriate test environment. Confirm that applying Light, Dark and System through the existing Save flow keeps active widgets and drafts intact. End the session once the palette and shared styles pass the focused checks.
 
+### Step 1 handoff · 25 November 2026
+
+Theme foundation implemented on `feature/bright-ui-theme`, pending PR merge. See [captures, sketches, reproduction commands and validation](design/bright-ui-step1/README.md). Shared palette and secondary hover role are applied; Statistics progress tracks reuse the shared surface. Light/Dark captures use the same disposable fixture. Local validation: 308 unit tests (two platform skips), 18 GUI scripts and 12 focused appearance tests passed; independent Sol medium re-review found no blockers. Published version remains v0.18.1, schema 10. Native platform/scaling checks are not claimed. Continue with **Step 2**, not the whole plan; repeat acceptance after layout work before v1.0.0.
+
 ## Step 2 — Dashboard and sidebar
 
 **Files:** `soskuska/app.py`, `soskuska/check_dashboard.py`, and the localization catalogs if labels change.
