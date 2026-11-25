@@ -2,7 +2,7 @@
 
 [English](../QUESTION_CSV_IMPORT.md) · [Čeština](../cs/QUESTION_CSV_IMPORT.md) · [Slovenčina](QUESTION_CSV_IMPORT.md) · [Русский](../ru/QUESTION_CSV_IMPORT.md)
 
-Nevydaný redizajn úprav združuje filtre a hľadanie do jednej plochy a ponecháva Import CSV v záhlaví banky. Vstup do importu, oddelenie náhľadu od konceptov a pravidlá ukladania a opakovania nižšie sa nemenia.
+Redizajn úprav vo v0.22.0 združuje filtre a hľadanie do jednej plochy a ponecháva Import CSV v záhlaví banky. Vstup do importu, oddelenie náhľadu od konceptov a pravidlá ukladania a opakovania nižšie sa nemenia.
 
 Otvor **My Subjects → Questions → Import CSV** pri existujúcom predmete. Súbor pridá otázky iba doňho; nevytvára predmet ani neupravuje existujúce otázky. Kartičky táto prvá verzia neimportuje.
 

@@ -1,6 +1,6 @@
 # Bright UI Step 5 authoring evidence and handoff
 
-Internal implementation record, **25 November 2026**, branch `feature/bright-ui-subjects-questions`. Implements the **Subjects and Question Bank portion of [Step 5](../../BRIGHT_UI_REDESIGN.md)** only. Published version remains **v0.21.0 / schema 10**; this work is unreleased pending its PR and merge authorization.
+Internal implementation record, **25 November 2026**, branch `feature/bright-ui-subjects-questions`. Implements the **Subjects and Question Bank portion of [Step 5](../../BRIGHT_UI_REDESIGN.md)** only. Merged through [PR #50](https://github.com/turcinv/SOSkuska/pull/50), commit `1bf6763`, and released in **v0.22.0 / schema 10**. Captures retain their implementation-time version labels.
 
 ## Implemented
 
@@ -29,7 +29,7 @@ Use the [Step 1 Docker capture command](../bright-ui-step1/README.md#reproduce-c
 ## Validation and continuation
 
 - Focused `check_question_bank.py` passed: CRUD, validation, filters, compact editor scrolling, subject isolation, deletion and reopening.
-- Full Docker/Xvfb suite: **308 unit tests**, **two platform skips**, **all 19 GUI scripts passed**. The original combined language script exceeded its 60-second budget on hosted CI. Authoring probes now run in `check_authoring_layout.py`, with every assertion retained and the same 60-second per-script bound. Hosted CI is recorded separately on the PR. Four-language authoring checks at 100/150% startup scaling passed: long names/topic/prompt/answer, viewport bounds, real compact/wide resizing with an open subject draft and SQL reads forbidden, stable card widgets and edit snapshots, answer-grid reflow, retained question draft after navigation, failed-write retention and save-footer access.
+- Full Docker/Xvfb suite: **308 unit tests**, **two platform skips**, **all 19 GUI scripts passed**. The original combined language script exceeded its 60-second budget on hosted CI. Authoring probes now run in `check_authoring_layout.py`, with every assertion retained and the same 60-second per-script bound. All five feature CI jobs passed in run `45593933822`; release assets are built separately from the final main/tag commit. Four-language authoring checks at 100/150% startup scaling passed: long names/topic/prompt/answer, viewport bounds, real compact/wide resizing with an open subject draft and SQL reads forbidden, stable card widgets and edit snapshots, answer-grid reflow, retained question draft after navigation, failed-write retention and save-footer access.
 - All **28 captures** visually inspected. Syntax, changed Markdown/artifact links, catalog parity and diff checks are checked before commit.
 - Independent Sol medium review found no code blocker. Its outdated-breakpoint finding was addressed in all four architecture guides and the Dashboard layout check; final follow-up covers the added probes and capture helper.
 

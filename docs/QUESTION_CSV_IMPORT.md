@@ -2,7 +2,7 @@
 
 [English](QUESTION_CSV_IMPORT.md) · [Čeština](cs/QUESTION_CSV_IMPORT.md) · [Slovenčina](sk/QUESTION_CSV_IMPORT.md) · [Русский](ru/QUESTION_CSV_IMPORT.md)
 
-The unreleased authoring redesign groups filters and search in one card and keeps Import CSV in the bank header. Import entry points, preview/draft separation and save/retry rules below are unchanged.
+The v0.22.0 authoring redesign groups filters and search in one card and keeps Import CSV in the bank header. Import entry points, preview/draft separation and save/retry rules below are unchanged.
 
 Open **My Subjects → Questions → Import CSV** in an existing subject. The file adds questions to that subject only; it never creates a subject or edits existing questions. Flashcard CSV import is available separately in Flashcards.
 
