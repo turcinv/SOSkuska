@@ -27,13 +27,14 @@ def main():
     parser.add_argument('--dashboard-only', action='store_true')
     parser.add_argument('--practice-views', action='store_true', help='Capture running/setup/confirmation/result/history only')
     parser.add_argument('--flashcard-views', action='store_true', help='Capture deck/review/empty/history views only')
+    parser.add_argument('--authoring-views', action='store_true', help='Capture Subjects and Question Bank only')
     parser.add_argument('--timed-practice', action='store_true', help='Use a frozen five-minute fixture instead of untimed')
     parser.add_argument('--empty', action='store_true', help='Empty Dashboard; requires --dashboard-only')
     args = parser.parse_args()
     if args.empty and not args.dashboard_only:
         parser.error('--empty requires --dashboard-only')
-    if sum((args.practice_views, args.dashboard_only, args.flashcard_views)) > 1:
-        parser.error('Choose only one of --practice-views, --dashboard-only and --flashcard-views')
+    if sum((args.practice_views, args.dashboard_only, args.flashcard_views, args.authoring_views)) > 1:
+        parser.error('Choose only one of --practice-views, --dashboard-only, --flashcard-views and --authoring-views')
     dimensions = (1440, 900) if args.size == 'wide' else (1024, 700)
     args.output.mkdir(parents=True, exist_ok=True)
     # Xvfb captures must never open a native macOS/Windows application window.
@@ -64,6 +65,8 @@ def main():
             store.save_preferences(dict(DEFAULTS, appearance_mode=args.mode, ui_language=args.language), expected_revision=0)
             if not args.empty:
                 sid = store.create_subject('Computer Science', 'Disposable design fixture', '2026-12-15')
+                if args.authoring_views:
+                    store.create_subject('Mathematics', 'Second disposable subject for the responsive grid')
                 topic = store.create_topic(sid, 'Data structures')
                 store.create_question(sid, 'Which structure follows first in, first out?',
                                       ['Queue', 'Stack', 'Binary tree', 'Hash table'], 0, 'Easy', topic)
@@ -101,6 +104,10 @@ def main():
             image.save(args.output / (name + '.png'))
 
         def dashboard():
+            if args.authoring_views:
+                app.navigate('My Subjects')
+                app.after(400, guard(subjects))
+                return
             if args.flashcard_views:
                 app.navigate('Flashcards')
                 app.flashcard_page.show_decks()
@@ -152,6 +159,44 @@ def main():
 
         def practice_history_ready():
             capture('practice-history')
+            app.close()
+
+        def subjects():
+            capture('subjects')
+            app.subject_page.show_form(sid)
+            app.after(400, guard(subject_editor))
+
+        def subject_editor():
+            capture('subject-editor')
+            app.subject_page.hide_form()
+            app.open_question_bank(sid)
+            app.after(400, guard(question_bank))
+
+        def question_bank():
+            capture('question-bank')
+            app.question_bank.show_question_form(app.store.questions(sid)[0]['id'])
+            app.after(400, guard(question_editor))
+
+        def question_editor():
+            capture('question-editor')
+            app.scroll._parent_canvas.yview_moveto(0.45)
+            app.after(400, guard(question_footer))
+
+        def question_footer():
+            capture('question-editor-footer')
+            app.question_bank.hide_question_form()
+            app.question_bank.show_topic_form(topic)
+            app.after(400, guard(topic_editor))
+
+        def topic_editor():
+            capture('topic-editor')
+            app.question_bank.hide_topic_form()
+            app.question_bank.query.set('no matching fixture')
+            app.scroll.scroll_to_top()
+            app.after(400, guard(question_empty))
+
+        def question_empty():
+            capture('question-empty')
             app.close()
 
         def decks():
@@ -216,7 +261,8 @@ def main():
         'platform': platform.platform(), 'python': platform.python_version(),
         'customtkinter': ctk.__version__, 'content': 'Disposable fixture only; no user data',
         'scope': 'Linux Xvfb capture; not native Windows/macOS acceptance',
-        'screens': (['decks', 'deck', 'flashcard', 'flashcard-revealed', 'flashcard-complete', 'deck-no-due', 'flashcard-history']
+        'screens': (['subjects', 'subject-editor', 'question-bank', 'question-editor', 'question-editor-footer', 'topic-editor', 'question-empty']
+                    if args.authoring_views else ['decks', 'deck', 'flashcard', 'flashcard-revealed', 'flashcard-complete', 'deck-no-due', 'flashcard-history']
                     if args.flashcard_views else ['practice', 'practice-setup', 'practice-confirm', 'practice-result', 'practice-history']
                     if args.practice_views else ['dashboard'] if args.dashboard_only
                     else ['dashboard', 'practice', 'flashcard', 'flashcard-revealed']),

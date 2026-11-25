@@ -108,7 +108,7 @@ def check_subject_search():
 
 def check_wide_subject_layout():
     page = app.subject_page
-    assert page.winfo_width() >= 850
+    assert app.scroll.logical_pixels(page.winfo_width()) >= 950
     assert page.card_columns == 2
     positions = [(int(card.grid_info()["row"]), int(card.grid_info()["column"]))
                  for card in page.cards.winfo_children()]
@@ -119,7 +119,7 @@ def check_wide_subject_layout():
 
 def check_compact_subject_layout():
     page = app.subject_page
-    assert page.winfo_width() < 850
+    assert app.scroll.logical_pixels(page.winfo_width()) < 950
     assert page.card_columns == 1
     assert [int(card.grid_info()["column"]) for card in page.cards.winfo_children()] == [0, 0, 0, 0]
     app.navigate("Dashboard")

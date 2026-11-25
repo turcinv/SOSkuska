@@ -8,7 +8,7 @@ Read the plan from the documentation PR or from `main` once merged. Start implem
 
 Suggested first prompt for the next session:
 
-> Read `docs/agents/BRIGHT_UI_REDESIGN.md` and the repository guidance. Inspect the implementation handoffs and branch first. After Step 4 is merged, implement the Subjects and Question Bank portion of Step 5 only with disposable data and focused checks.
+> Read `docs/agents/BRIGHT_UI_REDESIGN.md` and the repository guidance. Inspect the implementation handoffs and branch first. After the Step 5 authoring portion is merged, implement the Statistics and AI Tutor portion of Step 5 only with disposable data and focused checks.
 
 ## Design direction
 
@@ -67,6 +67,10 @@ Flashcard review merged through [PR #48](https://github.com/turcinv/SOSkuska/pul
 ## Step 5 — Consistency pass
 
 Split this into as many sessions as needed. In one session, align **Subjects and Question Bank**. In another, align **Statistics and AI Tutor**, then handle **Settings and shared backup/import panels** in a separate session if needed. Apply the shared style to typography, spacing, forms, statuses and empty states. Keep editors and in-progress operations intact. Run the existing GUI check for each touched screen, including its import, draft or streaming checks where relevant. Update English, Czech, Slovak and Russian catalogs together if text changes, and keep affected user guides aligned if screen navigation or documented behavior changes.
+
+### Step 5 authoring handoff · 25 November 2026
+
+Subjects and Question Bank are implemented on `feature/bright-ui-subjects-questions`; see [captures, validation and continuation scope](design/bright-ui-step5-authoring/README.md). Header/search/filter cards, two-row subject actions, responsive answer fields, readable authoring previews and empty states use shared styles. Resizing repositions existing subject cards without SQL reads; logical-unit wrapping and breakpoints preserve compact/scaled layouts. Existing editor widgets, snapshots, filters, topic identity, pagination and import paths remain. This portion is unreleased; labels remain v0.21.0/schema 10. Continue only when requested with the **Statistics and AI Tutor portion of Step 5**, leaving Settings/data panels for another session.
 
 ## Step 6 — Regression checks and teacher demo
 

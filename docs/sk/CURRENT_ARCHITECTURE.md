@@ -2,6 +2,10 @@
 
 [English](../CURRENT_ARCHITECTURE.md) · [Čeština](../cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](CURRENT_ARCHITECTURE.md) · [Русский](../ru/CURRENT_ARCHITECTURE.md)
 
+## Nevydané — vzhľad predmetov a banky otázok
+
+Predmety a banka otázok teraz zoskupujú názvy, počty a akcie v záhlaví a označené hľadanie a filtre na spoločných plochách. Akcie predmetu majú dva riadky; kartičky majú dva stĺpce od 950 logických pixelov stránky, inak jeden. Zmena veľkosti preskladá existujúce kartičky bez dotazu do databázy. Polia odpovedí majú dva stĺpce od 850 logických pixelov panela, inak sú pod sebou; náhľad správnej odpovede je zvýraznený iba v zozname na úpravy. Stránkovanie zostáva po 50 otázkach. Koncepty, pôvodné snímky úprav, filtre, identita tém, kontroly zastaraného stavu a náhľad CSV zachovávajú doterajšie správanie. Vydaná verzia zostáva v0.21.0, schéma 10.
+
 ## v0.21.0 — nový vzhľad opakovania kartičiek
 
 Opakovanie kartičiek teraz oddeľuje otázku a odhalenú odpoveď do čítacích plôch. Hlavnou akciou je odhalenie odpovede; potom ju na rovnakom mieste nahradí hodnotenie Again / Hard / Good / Easy, v štyroch stĺpcoch v širokom okne alebo v dvoch v kompaktnom. Dlhý text sa zalamuje a k hodnoteniu sa dá posunúť stránka. Akcie balíčka a prázdne stavy používajú spoločné rozloženie. Zlyhanie zápisu zachová odhalenú odpoveď na opakovanie. Keď sa hodnotenie uloží, ale načítanie ďalšej kartičky zlyhá, staré hodnotenia sa vypnú a Obnoviť kartičku iba znova načíta ďalšiu kartičku; uložené hodnotenie sa neopakuje. Plánovanie, história, rozpísané úpravy a náhľad CSV zostávajú zachované. Vydaná verzia zostáva v0.21.0, schéma 10.
@@ -131,7 +135,7 @@ Karty ukazujú počet relácií a uložený čas predmetu, nie vymyslený pokrok
 
 ## Rozloženie a ovládanie
 
-1440 × 900 / 1024 × 700. **v0.19.0, redizajn, krok 2:** Today’s Study združuje výber predmetu, Start Studying, časovač/obnovu/opakovanie zápisu, denný pokrok a zoznam úloh. Nasledujú predmety a označené hľadanie; súhrn metrík je pod stĺpcami. Hranica viditeľnej plochy je 1100 logických CTk pixelov bez posuvníka: skúšky/posledné sedenia sú vedľa v širokom režime a pod obsahom v kompaktnom; Dashboard má dva/jeden stĺpec predmetov. Sidebar zostáva 230 logických pixelov, zbalený 72. My Subjects naďalej používa vlastnú hranicu 850 pixelov. Dlhé názvy sa zalamujú; prázdny priestor ponúka vytvorenie prvého predmetu. Medze sa overujú pri počiatočnej mierke 100/150 % vo všetkých štyroch jazykoch; natívne/živé DPI kontroly sú oddelené.
+1440 × 900 / 1024 × 700. **v0.19.0, redizajn, krok 2:** Today’s Study združuje výber predmetu, Start Studying, časovač/obnovu/opakovanie zápisu, denný pokrok a zoznam úloh. Nasledujú predmety a označené hľadanie; súhrn metrík je pod stĺpcami. Hranica viditeľnej plochy je 1100 logických CTk pixelov bez posuvníka: skúšky/posledné sedenia sú vedľa v širokom režime a pod obsahom v kompaktnom; Dashboard má dva/jeden stĺpec predmetov. Sidebar zostáva 230 logických pixelov, zbalený 72. My Subjects teraz používa vlastnú hranicu 950 logických pixelov stránky. Dlhé názvy sa zalamujú; prázdny priestor ponúka vytvorenie prvého predmetu. Medze sa overujú pri počiatočnej mierke 100/150 % vo všetkých štyroch jazykoch; natívne/živé DPI kontroly sú oddelené.
 
 Obrazovky majú nezávislé vyhľadávanie cez `casefold()`. Ctrl+K / Cmd+K zameria hľadanie aktívnej obrazovky; Escape vymaže dotaz. Formuláre pre nový/upravený predmet aj potvrdenie vymazania sú inline. Podpora `TouchpadScroll`, kolieska a staršieho Linux/X11 zostáva v adaptéri využívajúcom súkromné členy CustomTkinteru; pri aktualizácii ho znovu overiť.
 

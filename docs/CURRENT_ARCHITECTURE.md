@@ -2,6 +2,10 @@
 
 [English](CURRENT_ARCHITECTURE.md) · [Čeština](cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](sk/CURRENT_ARCHITECTURE.md) · [Русский](ru/CURRENT_ARCHITECTURE.md)
 
+## Unreleased — Subjects and Question Bank design
+
+Subjects and Question Bank now group titles, counts and actions in page headers and put labelled search/filter controls on shared surfaces. Subject actions use two rows; cards use two columns from 950 logical page pixels and one below. Resizing rearranges existing cards without querying the database. Question answer fields use two columns from 850 logical panel pixels and stack below; correct-answer previews are visually grouped in the authoring list only. Pagination remains 50 questions per page. Drafts, original edit snapshots, filters, topic identities, stale-state guards and CSV previews keep their existing behavior. Published version remains v0.21.0, schema 10.
+
 ## v0.21.0 — Flashcard review redesign
 
 Flashcard review now separates the prompt and revealed answer into reading surfaces. Reveal is the primary action until the answer appears; Again / Hard / Good / Easy then replace it in the same footer, in four columns on wide screens or two on compact screens. Long text wraps and scrolls to the rating controls. Deck actions and empty states use the shared layout. A failed rating write keeps the revealed answer for retry. If the rating was saved but loading the next card fails, the old ratings are disabled and Refresh card only reloads the next card; the saved rating is not repeated. Scheduling, history, editor drafts and CSV preview behavior are preserved. Published version remains v0.21.0, schema 10.
@@ -141,7 +145,7 @@ Dashboard metrics use actual total time, saved sessions, subject count and study
 
 ## Layout and scrolling
 
-Target: 1440 × 900; minimum: 1024 × 700. **v0.19.0 redesign Step 2:** Today’s Study groups subject selection, Start Studying, timer/recovery/retry controls, daily progress and checklist. Subjects and labelled search follow it; lifetime metrics are a compact summary below the columns. The visible viewport breakpoint is 1100 logical CTk pixels, excluding the scrollbar: exams/recent sessions sit alongside in wide mode and stack below in compact mode; Dashboard subjects use two/one columns respectively. Sidebar remains 230 logical pixels, collapsed 72. My Subjects still uses its separate 850-pixel breakpoint. Long names wrap; new workspaces offer Create your first subject. Bounds are checked at 100/150% startup scaling in all four languages; native/live-DPI acceptance remains separate.
+Target: 1440 × 900; minimum: 1024 × 700. **v0.19.0 redesign Step 2:** Today’s Study groups subject selection, Start Studying, timer/recovery/retry controls, daily progress and checklist. Subjects and labelled search follow it; lifetime metrics are a compact summary below the columns. The visible viewport breakpoint is 1100 logical CTk pixels, excluding the scrollbar: exams/recent sessions sit alongside in wide mode and stack below in compact mode; Dashboard subjects use two/one columns respectively. Sidebar remains 230 logical pixels, collapsed 72. My Subjects now uses a separate 950-logical-pixel page breakpoint. Long names wrap; new workspaces offer Create your first subject. Bounds are checked at 100/150% startup scaling in all four languages; native/live-DPI acceptance remains separate.
 
 Search is independent per screen and uses casefold. Ctrl+K / Cmd+K focuses active search; Escape clears it. Screens without search must leave hidden drafts alone. Forms and deletion confirmations are inline. Navigation cancels pending subject deletion; name/content counts are compared under the write lock before deletion, requiring a refreshed warning if changed.
 

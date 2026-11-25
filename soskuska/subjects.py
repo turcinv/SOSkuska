@@ -15,14 +15,16 @@ class SubjectPage(ctk.CTkFrame):
         self.deleting_id = None
         self.deleting_state = None
         self.card_columns = 1
+        self.subject_cards = []
         self.grid_columnconfigure(0, weight=1)
-        header = app.frame(self)
+        header = app.frame(self, card=True)
         header.grid(row=0, column=0, sticky="ew", pady=(0, 20))
         header.grid_columnconfigure(0, weight=1)
-        app.label(header, tr(self.app, 'My Subjects'), 28, bold=True).grid(row=0, column=0, sticky="w")
-        app.label(header, tr(self.app, 'Your subjects, exam dates and focused study time.'), 14, "secondary").grid(row=1, column=0, sticky="w", pady=(4, 0))
+        app.label(header, tr(self.app, 'My Subjects'), 28, bold=True).grid(row=0, column=0, sticky="ew", padx=18, pady=(16,0))
+        app.label(header, tr(self.app, 'Your subjects, exam dates and focused study time.'), 14, "secondary", wraplength=500, justify="left").grid(row=1, column=0, sticky="ew", padx=18, pady=(4, 12))
         self.add_button = app.button(header, tr(self.app, '+ New subject'), self.show_form, primary=True, width=140)
-        self.add_button.grid(row=0, column=1, rowspan=2, padx=(16, 0))
+        self.add_button.grid(row=2, column=0, sticky="w", padx=18, pady=(0,16))
+        self.wrap_labels(header)
 
         self.form = app.frame(self, card=True)
         self.form.grid(row=1, column=0, sticky="ew", pady=(0, 20))
@@ -33,7 +35,7 @@ class SubjectPage(ctk.CTkFrame):
         self.name_entry = ctk.CTkEntry(self.form, height=38, font=app.font(), placeholder_text=tr(self.app, 'e.g. Mathematics'), placeholder_text_color=C["secondary"])
         self.name_entry.grid(row=2, column=0, sticky="ew", padx=18, pady=(4, 12))
         app.label(self.form, tr(self.app, 'Description (optional)'), 12, "secondary").grid(row=3, column=0, sticky="w", padx=18)
-        self.description_entry = ctk.CTkTextbox(self.form, height=65, font=app.font(), wrap="word")
+        self.description_entry = ctk.CTkTextbox(self.form, height=65, font=app.font(), wrap="word", border_width=1, border_color=C["border"])
         self.description_entry.grid(row=4, column=0, sticky="ew", padx=18, pady=(4, 12))
         app.label(self.form, tr(self.app, 'Exam date (optional, YYYY-MM-DD)'), 12, "secondary").grid(row=5, column=0, sticky="w", padx=18)
         self.exam_entry = ctk.CTkEntry(self.form, height=38, font=app.font(), placeholder_text=tr(self.app, 'YYYY-MM-DD'), placeholder_text_color=C["secondary"])
@@ -45,6 +47,7 @@ class SubjectPage(ctk.CTkFrame):
         self.save_button = app.button(actions, tr(self.app, 'Save subject'), self.save_subject, primary=True, width=130)
         self.save_button.pack(side="left", padx=(0, 8))
         app.button(actions, tr(self.app, 'Cancel'), self.hide_form, width=85).pack(side="left")
+        self.wrap_labels(self.form)
         self.form.grid_remove()
 
         self.delete_panel = app.frame(self, card=True)
@@ -58,11 +61,16 @@ class SubjectPage(ctk.CTkFrame):
         self.delete_button.configure(fg_color=C["danger"], hover_color=C["danger_hover"], text_color=C["on_primary"])
         self.delete_button.pack(side="left", padx=(0, 8))
         app.button(actions, tr(self.app, 'Cancel'), self.cancel_delete, width=85).pack(side="left")
+        self.wrap_labels(self.delete_panel)
         self.delete_panel.grid_remove()
 
         self.query = ctk.StringVar()
-        self.search = ctk.CTkEntry(self, height=38, textvariable=self.query, font=app.font(), placeholder_text=tr(self.app, 'Search subjects…'), placeholder_text_color=C["secondary"])
-        self.search.grid(row=3, column=0, sticky="ew", pady=(0, 16))
+        search_panel = app.frame(self, card=True)
+        search_panel.grid(row=3, column=0, sticky="ew", pady=(0,16))
+        search_panel.grid_columnconfigure(0, weight=1)
+        app.label(search_panel, tr(app, "Search subjects…"), 12, "secondary").grid(row=0,column=0,sticky="w",padx=18,pady=(12,4))
+        self.search = ctk.CTkEntry(search_panel, height=38, textvariable=self.query, font=app.font(), placeholder_text=tr(self.app, 'Search subjects…'), placeholder_text_color=C["secondary"])
+        self.search.grid(row=1, column=0, sticky="ew", padx=18, pady=(0,16))
         self.query.trace_add("write", lambda *_: self.render())
         self.status = app.label(self, "", 12, "secondary", wraplength=650)
         self.status.grid(row=4, column=0, sticky="ew", pady=(0, 12))
@@ -71,12 +79,31 @@ class SubjectPage(ctk.CTkFrame):
         self.bind("<Configure>", self._resize)
         self.render()
 
+    def wrap_labels(self, parent):
+        labels = [w for w in parent.winfo_children() if isinstance(w, ctk.CTkLabel)]
+        for label in labels:
+            label.configure(justify="left", wraplength=500)
+        def resize(event):
+            width = max(200, self.app.scroll.logical_pixels(event.width) - 36)
+            for label in labels:
+                label.configure(wraplength=width)
+        parent.bind("<Configure>", resize, add="+")
+
     def _resize(self, event):
-        # CTkFrame.bind forwards Configure events from its internal canvas.
-        columns = 2 if event.width >= 850 else 1
+        # Geometry only: resizing must not query SQLite or recreate editing state.
+        columns = 2 if self.app.scroll.logical_pixels(event.width) >= 950 else 1
         if columns != self.card_columns:
             self.card_columns = columns
-            self.render()
+            self.layout_cards()
+
+    def layout_cards(self):
+        for col in range(2):
+            self.cards.grid_columnconfigure(col, weight=1 if col < self.card_columns else 0,
+                uniform="subject" if col < self.card_columns else "")
+        for i, card in enumerate(self.subject_cards):
+            card.grid(row=i // self.card_columns, column=i % self.card_columns, sticky="nsew",
+                padx=(0,8) if self.card_columns == 2 and i % 2 == 0 else (8,0) if self.card_columns == 2 else 0,
+                pady=(0,16))
 
     def show_form(self, subject_id=None):
         self.cancel_delete()
@@ -164,6 +191,7 @@ class SubjectPage(ctk.CTkFrame):
     def render(self):
         for child in self.cards.winfo_children():
             child.destroy()
+        self.subject_cards = []
         subjects = self.app.store.subjects()
         query = self.query.get().strip().casefold()
         visible = [s for s in subjects if query in s["name"].casefold()]
@@ -171,27 +199,29 @@ class SubjectPage(ctk.CTkFrame):
             self.cards.grid_columnconfigure(col, weight=1 if col < self.card_columns else 0, uniform="subject" if col < self.card_columns else "")
         if not visible:
             message = "No matching subjects. Try another name." if subjects else "No subjects yet. Create your first subject to start studying."
-            self.app.label(self.cards, tr(self.app,message), 14, "secondary", wraplength=600).grid(row=0, column=0, columnspan=2, sticky="w", pady=20)
+            empty = self.app.frame(self.cards, card=True)
+            empty.grid(row=0,column=0,columnspan=2,sticky="ew")
+            empty.grid_columnconfigure(0,weight=1)
+            self.app.label(empty,tr(self.app,message),14,"secondary").grid(row=0,column=0,sticky="ew",padx=18,pady=20)
+            self.wrap_labels(empty)
             return
         for i, subject in enumerate(visible):
             card = self.app.frame(self.cards, card=True)
-            card.grid(row=i // self.card_columns, column=i % self.card_columns, sticky="nsew", padx=(0, 8) if self.card_columns == 2 and i % 2 == 0 else (8, 0) if self.card_columns == 2 else 0, pady=(0, 16))
+            self.subject_cards.append(card)
             card.grid_columnconfigure(0, weight=1)
             title = self.app.label(card, subject["name"], 17, bold=True, wraplength=300)
             title.grid(row=0, column=0, sticky="ew", padx=18, pady=(16, 6))
             description = self.app.label(card, subject["description"] or tr(self.app,"No description yet."), 13, "secondary", wraplength=300)
             description.grid(row=1, column=0, sticky="ew", padx=18, pady=(0, 10))
-            def resize_labels(event, title=title, description=description):
-                title.configure(wraplength=max(200, event.width - 36))
-                description.configure(wraplength=max(200, event.width - 36))
-            card.bind("<Configure>", resize_labels, add="+")
             exam = tr(self.app,'Exam: {v0}',v0=subject['exam_date']) if subject['exam_date'] else tr(self.app,'No exam date set')
             self.app.label(card, exam, 12, "secondary").grid(row=2, column=0, sticky="w", padx=18)
             self.app.label(card, tr(self.app, '{v0} topics · {v1} questions · {v2} min studied', v0=subject['topic_count'], v1=subject['question_count'], v2=subject['study_seconds'] // 60), 12, "secondary").grid(row=3, column=0, sticky="w", padx=18, pady=(4, 12))
             actions = self.app.frame(card)
             actions.grid(row=4, column=0, sticky="w", padx=18, pady=(0, 16))
-            for text, callback in [("Questions", lambda sid=subject["id"]: self.app.open_question_bank(sid)),
+            for index, (text, callback) in enumerate([("Questions", lambda sid=subject["id"]: self.app.open_question_bank(sid)),
                                    ("Study", lambda sid=subject["id"]: self.app.start_focus(sid)),
                                    ("Edit", lambda sid=subject["id"]: self.show_form(sid)),
-                                   ("Delete", lambda sid=subject["id"]: self.ask_delete(sid))]:
-                self.app.button(actions, tr(self.app,text), callback, width=78, primary=text == "Study").pack(side="left", padx=(0, 6))
+                                   ("Delete", lambda sid=subject["id"]: self.ask_delete(sid))]):
+                self.app.button(actions, tr(self.app,text), callback, width=100, primary=text == "Questions").grid(row=index//2,column=index%2,sticky="ew",padx=(0,8),pady=(0,8))
+            self.wrap_labels(card)
+        self.layout_cards()

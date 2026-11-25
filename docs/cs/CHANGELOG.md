@@ -2,6 +2,10 @@
 
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
+## Nevydáno — vzhled předmětů a banky otázek
+
+- Předměty a banka otázek nyní seskupují názvy, počty a akce v záhlaví a označené hledání a filtry na společných plochách. Akce předmětu mají dva řádky; kartičky mají dva sloupce od 950 logických pixelů stránky, jinak jeden. Změna velikosti přeskládá existující kartičky bez dotazu na databázi. Pole odpovědí mají dva sloupce od 850 logických pixelů panelu, jinak jsou pod sebou; náhled správné odpovědi je zvýrazněný pouze v seznamu pro úpravy. Stránkování zůstává po 50 otázkách. Koncepty, původní snímky úprav, filtry, identita témat, kontroly zastaralého stavu a náhled CSV zachovávají dosavadní chování. Vydaná verze zůstává v0.21.0, schéma 10.
+
 ## 0.21.0 — 2026-11-25
 
 - Nové čtecí plochy otázky a odpovědi, společné místo pro odhalení a hodnocení, akce balíčku a prázdné stavy. Chyby zápisu jsou u ovládání; chyba načtení další kartičky neopakuje uložené hodnocení. Zachováno plánování, historie a import; ověřeny čtyři jazyky při počátečním měřítku 100/150 %.
