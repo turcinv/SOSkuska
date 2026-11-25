@@ -3,7 +3,7 @@
 [English](../../CHANGELOG.md) · [Čeština](../cs/CHANGELOG.md) · [Slovenčina](CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
 
-## Nevydané
+## 0.20.0 — 2026-11-25
 
 - Redizajn nastavení testu, záhlavia, uložených odpovedí, navigácie, výsledkov a histórie. Zachované skóre/termíny/snímky, ochrana skrytých udalostí a overenie chýb zápisu/dlhého obsahu v štyroch jazykoch pri počiatočnej mierke 100/150 %.
 

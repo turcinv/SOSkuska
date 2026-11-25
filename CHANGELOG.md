@@ -2,7 +2,7 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
-## Unreleased
+## 0.20.0 — 2026-11-25
 
 - Redesign Practice setup, running header, saved-answer rows, navigation, results and history. Preserve scoring/deadlines/snapshots, reject hidden answer events and verify rollback/long content in four languages at 100/150% startup scaling.
 

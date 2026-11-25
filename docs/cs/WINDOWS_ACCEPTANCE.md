@@ -2,7 +2,7 @@
 
 [English](../WINDOWS_ACCEPTANCE.md) · [Čeština](../cs/WINDOWS_ACCEPTANCE.md) · [Slovenčina](../sk/WINDOWS_ACCEPTANCE.md) · [Русский](../ru/WINDOWS_ACCEPTANCE.md)
 
-Stav 22. listopadu 2026: uživatel potvrdil dokončení testování v0.15.0 a schválil PR #32. Tento seznam nyní cílí na v0.19.0; jednotlivé výsledky čistého počítače/DPI zde nejsou zaznamenané. Nezaškrtnuté body zůstávají neověřené; při testování nového vydání doplň důkazy pro konkrétní zařízení.
+Stav 22. listopadu 2026: uživatel potvrdil dokončení testování v0.15.0 a schválil PR #32. Tento seznam nyní cílí na v0.20.0; jednotlivé výsledky čistého počítače/DPI zde nejsou zaznamenané. Nezaškrtnuté body zůstávají neověřené; při testování nového vydání doplň důkazy pro konkrétní zařízení.
 
 Zaznamenej edici/build Windows, architekturu CPU, rozlišení/měřítko, commit artefaktu, SHA-256, datum, testujícího a výsledky. Přilož snímky a postup reprodukce chyb. Každý bod označ PASS/FAIL s důkazem; nezaškrtnutý není ověřený.
 

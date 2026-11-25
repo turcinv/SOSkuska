@@ -50,7 +50,7 @@ Dashboard/sidebar merged through [PR #44](https://github.com/turcinv/SOSkuska/pu
 
 ### Step 3 handoff · 25 November 2026
 
-Practice redesign implemented on `feature/bright-ui-practice`, pending PR merge. See [captures, reproduction, review and validation](design/bright-ui-step3/README.md). Progress/timer header, saved-choice row selection, common footer, grouped setup and result/history hierarchy are in place. Hidden row/label/radio events cannot save answers; failed writes restore the last saved choice and styling. Local validation: 308 unit tests (two platform skips), all 18 GUI scripts and 28 focused practice/history unit tests passed; Sol medium re-review found no blockers. All four languages at 100/150% startup scaling cover long content, rollback, hidden events, footer access and results. Published labels stay v0.19.0/schema 10. After merge, continue with **Step 4 only** when requested.
+Practice redesign merged through [PR #46](https://github.com/turcinv/SOSkuska/pull/46), commit `a5bc578`, and released in v0.20.0. See [captures, reproduction, review and validation](design/bright-ui-step3/README.md). Progress/timer header, saved-choice row selection, common footer, grouped setup and result/history hierarchy are in place. Hidden row/label/radio events cannot save answers; failed writes restore the last saved choice and styling. Local validation: 308 unit tests (two platform skips), all 18 GUI scripts and 28 focused practice/history unit tests passed; Sol medium re-review found no blockers. All four languages at 100/150% startup scaling cover long content, rollback, hidden events, footer access and results. Release labels align to v0.20.0/schema 10. Continue with **Step 4 only** when requested.
 
 ## Step 4 — Flashcard review
 

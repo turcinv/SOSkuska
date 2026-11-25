@@ -2,7 +2,7 @@
 
 [English](CURRENT_ARCHITECTURE.md) · [Čeština](cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](sk/CURRENT_ARCHITECTURE.md) · [Русский](ru/CURRENT_ARCHITECTURE.md)
 
-**Published version: v0.19.0 · schema 10.** Practice history and container tests are implemented.
+**Published version: v0.20.0 · schema 10.** Practice history and container tests are implemented.
 
 v0.17.0 adds focus-session crash recovery using schema **10**. Keep a backup before opening existing data: migration is transactional, but v0.16.0 cannot open a schema-10 database. [Focus-session recovery](FOCUS_RECOVERY.md).
 
@@ -301,8 +301,8 @@ Scheduled local backups are available in **v0.18.0**. SQLite schema remains **10
 
 ## Main-branch review fixes
 
-Fixes released in v0.18.1 through PR #38, tracked in [Astra review findings](REVIEW_FINDINGS.md). Schema remains 10 and the published version is v0.19.0. Subject edits compare their original content under the write lock; a conflict keeps your draft. Copy any changes you need before reopening Edit to load the latest version. Question/topic deletions recheck their displayed snapshot and require a refreshed confirmation after changes. Returning to the same subject preserves the active question/topic editor, filters and original editing identity, including read retries; a removed selected topic stays unavailable until you explicitly choose a replacement or No topic. Opening a different subject still resets the editor. A newer successful daily-backup receipt clears the old failure notice without another backup write.
+Fixes released in v0.18.1 through PR #38, tracked in [Astra review findings](REVIEW_FINDINGS.md). Schema remains 10 and the published version is v0.20.0. Subject edits compare their original content under the write lock; a conflict keeps your draft. Copy any changes you need before reopening Edit to load the latest version. Question/topic deletions recheck their displayed snapshot and require a refreshed confirmation after changes. Returning to the same subject preserves the active question/topic editor, filters and original editing identity, including read retries; a removed selected topic stays unavailable until you explicitly choose a replacement or No topic. Opening a different subject still resets the editor. A newer successful daily-backup receipt clears the old failure notice without another backup write.
 
-## Unreleased — Practice redesign Step 3
+## v0.20.0 — Practice redesign Step 3
 
 Running tests now group progress/timing in a header and show a bar of saved answers. Full-width A–D rows highlight the saved choice, not correctness; background/text clicks save through the existing answer path. Previous/Next/Clear and Finish share a footer. Setup selectors share a card, and results/history use matching surfaces. Failed saves restore selection/style; hidden setup or off-page answer callbacks do not write. Long content wraps and scrolls at compact size. Scoring, deadlines, confirmations, resume, filters and retained snapshots remain unchanged; current schema is 10.
