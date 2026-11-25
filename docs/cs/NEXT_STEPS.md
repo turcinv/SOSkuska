@@ -1,14 +1,12 @@
-# Další kroky · 22. listopadu 2026
+# Další kroky · 25. listopadu 2026
 
-[English](../NEXT_STEPS.md) · [Čeština](../cs/NEXT_STEPS.md) · [Slovenčina](../sk/NEXT_STEPS.md) · [Русский](../ru/NEXT_STEPS.md)
+[English](../NEXT_STEPS.md) · [Čeština](NEXT_STEPS.md) · [Slovenčina](../sk/NEXT_STEPS.md) · [Русский](../ru/NEXT_STEPS.md)
 
-Aktuální vydání: **v0.18.1**, schéma **10**, s uloženým Light/Dark/System. Uživatel 22. listopadu potvrdil dokončení testování v0.15.0 a schválil sloučení vzhledu; podmínka je splněná. Potvrzení nenahrazuje výsledky pro jednotlivá zařízení: podrobnosti čistého počítače, DPI a hardwaru nebyly dodané. V důkazech projektu je rozlišuj.
+Aktuální vydání: **v0.19.0**, schéma **10**. Kroky designu 1–2 jsou implementované přes PR #43 a #44: společný vzhled a Dashboard/sidebar. Čtyři dřívější nálezy Astra zůstávají vyřešené. Toto vydání nepotvrzuje přejímku v1.0.0.
 
-1. **Ověřit nové vydání.** Použít dočasná data nebo kopii zálohy. Na Windows ověřit živé Light/Dark, koncepty, čtyři jazyky, kompaktní okno a měřítko. System ověřit skutečnou změnou OS na Windows/macOS; Linux záměrně používá Light. Exportovat a otevřít zálohu schématu 10. Zachovat originály schématu 9, protože v0.16.0 migrovaná data neotevře. Zaznamenat [přejímku Windows](WINDOWS_ACCEPTANCE.md).
-2. **Otestovat reálný model Ollama.** Zapsat OS, hardware, model/verzi, adresu serveru a výsledky připojení, streamu, Stop, opětovného připojení a uloženého chatu. Studijní funkce musí fungovat i bez běžícího serveru. CI s falešným serverem nedokládá kvalitu modelu ani výkon hardwaru. Reálná kontrola zatím není zaznamenaná.
-3. **Souběžně připravit semestrální odevzdání.** Popis implementace, diagramy architektury, snímky, důkazy testů, omezení a scénář ukázky. Rozlišit vydané chování, potvrzení uživatele, automatizaci a neověřené ruční body. Před odevzdáním vycházet ze skutečných pokynů zadání; tento seznam nedokládá jejich splnění.
-4. **Obnova soustředění po pádu** — v0.17.0 přidává obnovu soustředění po pádu se schématem **10**. Před otevřením původních dat vytvoř zálohu: migrace je transakční, ale v0.16.0 databázi schématu 10 neotevře. [Obnova soustředění po pádu](FOCUS_RECOVERY.md).
+1. **Další implementace: krok 3, Practice Tests.** Použít [plán designu](../agents/BRIGHT_UI_REDESIGN.md) a [předání kroku 2](../agents/design/bright-ui-step2/README.md). Nová větev, zachovat odpovědi/termíny/historii, příslušné kontroly v kontejneru a nezávislá revize Sol na medium. Nedělat všechny zbývající kroky najednou. Nová práce, sloučení i vydání potřebují vlastní schválení.
+2. **Po redesignu zopakovat skutečnou přejímku.** Použít aktuální [Windows balíček](WINDOWS_PORTABLE.md) a [ruční seznam](WINDOWS_ACCEPTANCE.md), dočasná data a zapsat OS/build, hardware, rozlišení/měřítko, verzi/součet a výsledky. Kontroly počátečního měřítka 100/150 % v kontejneru nejsou nativní Windows ani změna DPI za běhu. Omezení živého škálování CTk zůstává v předání.
+3. **Ověřit skutečný model Ollama.** Zapsat verze modelu/serveru, hardware, adresu bez přihlašovacích údajů, datum a výsledky Connect/stream/Stop/opětovného připojení/uloženého chatu. Se zastaveným serverem ověřit offline studium. Falešný server CI neprokazuje kvalitu ani výkon skutečného modelu.
+4. **Samostatně dokončit práci a prezentaci.** Osobní údaje, předmět, jazyk a termín ponechat jako zástupná pole do dodání. Doplnit skutečné snímky, zdroje a výsledky; aktualizovat generovaná pole a prohlédnout konečné stránkování. Řídit se zadáním; úspěch testů aplikace neurčuje termín ani splnění odevzdání.
 
-Chyby základu patří do samostatných opravných PR, případně opravného vydání. Funkce mají vlastní větev, kontejnerové GUI kontroly a nezávislou revizi Sol se středním úsilím. Zachovat čtyři jazyky dokumentace. Sloučení a vydání jen se souhlasem uživatele. Pro budoucí práci se automaticky nezavádí další trvalá podmínka testování základu.
-
-5. **Plánované místní zálohy** — Plánované místní zálohy jsou dostupné ve **v0.18.0**. Schéma SQLite zůstává **10**. Ruční záloha a obnova fungují samostatně. [Plánované místní zálohy](SCHEDULED_BACKUPS.md).
+Před v1.0.0 dokončit přejímku, opravit nálezy přes revidované PR, zopakovat kontroly a vydat jen se souhlasem uživatele. Tato aktualizace neoznačuje ruční položky jako úspěšné. Historické potvrzení v0.15.0 neověřuje redesign.

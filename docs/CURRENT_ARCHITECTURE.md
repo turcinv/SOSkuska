@@ -2,7 +2,7 @@
 
 [English](CURRENT_ARCHITECTURE.md) · [Čeština](cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](sk/CURRENT_ARCHITECTURE.md) · [Русский](ru/CURRENT_ARCHITECTURE.md)
 
-**Published version: v0.18.1 · schema 10.** Practice history and container tests are implemented.
+**Published version: v0.19.0 · schema 10.** Practice history and container tests are implemented.
 
 v0.17.0 adds focus-session crash recovery using schema **10**. Keep a backup before opening existing data: migration is transactional, but v0.16.0 cannot open a schema-10 database. [Focus-session recovery](FOCUS_RECOVERY.md).
 
@@ -137,7 +137,7 @@ Dashboard metrics use actual total time, saved sessions, subject count and study
 
 ## Layout and scrolling
 
-Target: 1440 × 900; minimum: 1024 × 700. **Unreleased redesign Step 2:** Today’s Study groups subject selection, Start Studying, timer/recovery/retry controls, daily progress and checklist. Subjects and labelled search follow it; lifetime metrics are a compact summary below the columns. The visible viewport breakpoint is 1100 logical CTk pixels, excluding the scrollbar: exams/recent sessions sit alongside in wide mode and stack below in compact mode; Dashboard subjects use two/one columns respectively. Sidebar remains 230 logical pixels, collapsed 72. My Subjects still uses its separate 850-pixel breakpoint. Long names wrap; new workspaces offer Create your first subject. Bounds are checked at 100/150% startup scaling in all four languages; native/live-DPI acceptance remains separate.
+Target: 1440 × 900; minimum: 1024 × 700. **v0.19.0 redesign Step 2:** Today’s Study groups subject selection, Start Studying, timer/recovery/retry controls, daily progress and checklist. Subjects and labelled search follow it; lifetime metrics are a compact summary below the columns. The visible viewport breakpoint is 1100 logical CTk pixels, excluding the scrollbar: exams/recent sessions sit alongside in wide mode and stack below in compact mode; Dashboard subjects use two/one columns respectively. Sidebar remains 230 logical pixels, collapsed 72. My Subjects still uses its separate 850-pixel breakpoint. Long names wrap; new workspaces offer Create your first subject. Bounds are checked at 100/150% startup scaling in all four languages; native/live-DPI acceptance remains separate.
 
 Search is independent per screen and uses casefold. Ctrl+K / Cmd+K focuses active search; Escape clears it. Screens without search must leave hidden drafts alone. Forms and deletion confirmations are inline. Navigation cancels pending subject deletion; name/content counts are compared under the write lock before deletion, requiring a refreshed warning if changed.
 
@@ -301,4 +301,4 @@ Scheduled local backups are available in **v0.18.0**. SQLite schema remains **10
 
 ## Main-branch review fixes
 
-Fixes released in v0.18.1 through PR #38, tracked in [Astra review findings](REVIEW_FINDINGS.md). Schema remains 10 and the published version is v0.18.1. Subject edits compare their original content under the write lock; a conflict keeps your draft. Copy any changes you need before reopening Edit to load the latest version. Question/topic deletions recheck their displayed snapshot and require a refreshed confirmation after changes. Returning to the same subject preserves the active question/topic editor, filters and original editing identity, including read retries; a removed selected topic stays unavailable until you explicitly choose a replacement or No topic. Opening a different subject still resets the editor. A newer successful daily-backup receipt clears the old failure notice without another backup write.
+Fixes released in v0.18.1 through PR #38, tracked in [Astra review findings](REVIEW_FINDINGS.md). Schema remains 10 and the published version is v0.19.0. Subject edits compare their original content under the write lock; a conflict keeps your draft. Copy any changes you need before reopening Edit to load the latest version. Question/topic deletions recheck their displayed snapshot and require a refreshed confirmation after changes. Returning to the same subject preserves the active question/topic editor, filters and original editing identity, including read retries; a removed selected topic stays unavailable until you explicitly choose a replacement or No topic. Opening a different subject still resets the editor. A newer successful daily-backup receipt clears the old failure notice without another backup write.

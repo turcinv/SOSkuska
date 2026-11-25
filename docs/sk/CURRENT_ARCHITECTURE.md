@@ -2,7 +2,7 @@
 
 [English](../CURRENT_ARCHITECTURE.md) · [Čeština](../cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](CURRENT_ARCHITECTURE.md) · [Русский](../ru/CURRENT_ARCHITECTURE.md)
 
-**Vydaná verzia: v0.18.1 · schéma 10.** História testov a testy v kontajneri sú implementované.
+**Vydaná verzia: v0.19.0 · schéma 10.** História testov a testy v kontajneri sú implementované.
 
 v0.17.0 pridáva obnovu sústredenia po páde so schémou **10**. Pred otvorením pôvodných dát vytvor zálohu: migrácia je transakčná, ale v0.16.0 databázu schémy 10 neotvorí. [Obnova sústredenia po páde](FOCUS_RECOVERY.md).
 
@@ -127,7 +127,7 @@ Karty ukazujú počet relácií a uložený čas predmetu, nie vymyslený pokrok
 
 ## Rozloženie a ovládanie
 
-1440 × 900 / 1024 × 700. **Zatiaľ nevydaný redizajn, krok 2:** Today’s Study združuje výber predmetu, Start Studying, časovač/obnovu/opakovanie zápisu, denný pokrok a zoznam úloh. Nasledujú predmety a označené hľadanie; súhrn metrík je pod stĺpcami. Hranica viditeľnej plochy je 1100 logických CTk pixelov bez posuvníka: skúšky/posledné sedenia sú vedľa v širokom režime a pod obsahom v kompaktnom; Dashboard má dva/jeden stĺpec predmetov. Sidebar zostáva 230 logických pixelov, zbalený 72. My Subjects naďalej používa vlastnú hranicu 850 pixelov. Dlhé názvy sa zalamujú; prázdny priestor ponúka vytvorenie prvého predmetu. Medze sa overujú pri počiatočnej mierke 100/150 % vo všetkých štyroch jazykoch; natívne/živé DPI kontroly sú oddelené.
+1440 × 900 / 1024 × 700. **v0.19.0, redizajn, krok 2:** Today’s Study združuje výber predmetu, Start Studying, časovač/obnovu/opakovanie zápisu, denný pokrok a zoznam úloh. Nasledujú predmety a označené hľadanie; súhrn metrík je pod stĺpcami. Hranica viditeľnej plochy je 1100 logických CTk pixelov bez posuvníka: skúšky/posledné sedenia sú vedľa v širokom režime a pod obsahom v kompaktnom; Dashboard má dva/jeden stĺpec predmetov. Sidebar zostáva 230 logických pixelov, zbalený 72. My Subjects naďalej používa vlastnú hranicu 850 pixelov. Dlhé názvy sa zalamujú; prázdny priestor ponúka vytvorenie prvého predmetu. Medze sa overujú pri počiatočnej mierke 100/150 % vo všetkých štyroch jazykoch; natívne/živé DPI kontroly sú oddelené.
 
 Obrazovky majú nezávislé vyhľadávanie cez `casefold()`. Ctrl+K / Cmd+K zameria hľadanie aktívnej obrazovky; Escape vymaže dotaz. Formuláre pre nový/upravený predmet aj potvrdenie vymazania sú inline. Podpora `TouchpadScroll`, kolieska a staršieho Linux/X11 zostáva v adaptéri využívajúcom súkromné členy CustomTkinteru; pri aktualizácii ho znovu overiť.
 
@@ -308,7 +308,7 @@ História testov teraz ponúka všetky dokončené pokusy po 20 na stránku, fil
 
 ## Prenosná verzia Windows a preberacia kontrola
 
-v0.15.0 pridáva nepodpísaný prenosný ZIP pre Windows x64, zostavený a overený piatou úlohou CI. Pribalený pomocný program zachová oddelené CSV/zálohovacie procesy; cieľový počítač nepotrebuje Python. Automatické hostované kontroly a ručný zoznam pre čistý počítač sú oddelené; ručná preberacia kontrola zatiaľ nie je dokončená. Vydaná verzia je v0.18.1, schéma 10. [Prenosná verzia Windows a preberacia kontrola](WINDOWS_PORTABLE.md) · [Kontrolný zoznam](WINDOWS_ACCEPTANCE.md).
+v0.15.0 pridáva nepodpísaný prenosný ZIP pre Windows x64, zostavený a overený piatou úlohou CI. Pribalený pomocný program zachová oddelené CSV/zálohovacie procesy; cieľový počítač nepotrebuje Python. Automatické hostované kontroly a ručný zoznam pre čistý počítač sú oddelené; ručná preberacia kontrola zatiaľ nie je dokončená. Vydaná verzia je v0.19.0, schéma 10. [Prenosná verzia Windows a preberacia kontrola](WINDOWS_PORTABLE.md) · [Kontrolný zoznam](WINDOWS_ACCEPTANCE.md).
 
 ## Nastavenie vzhľadu
 
@@ -326,4 +326,4 @@ Plánované miestne zálohy sú dostupné vo **v0.18.0**. Schéma SQLite zostáv
 
 ## Opravy po revízii hlavnej vetvy
 
-Opravy vydané vo v0.18.1 cez PR #38 sleduje [záznam revízie Astra](REVIEW_FINDINGS.md). Schéma zostáva 10 a vydaná verzia je v0.18.1. Úpravy predmetu porovnajú pôvodný obsah pod zápisovým zámkom; konflikt zachová koncept. Pred opätovným otvorením úprav na načítanie najnovšej verzie si potrebné zmeny skopíruj. Vymazanie otázky/témy porovná zobrazený obsah a po zmene vyžaduje nové potvrdenie. Návrat k rovnakému predmetu zachová editor otázky/témy, filtre aj pôvodnú identitu, tiež pri opakovaní čítania; vymazaná vybraná téma zostane nedostupná, kým výslovne nevyberieš inú tému alebo možnosť Bez témy. Iný predmet editor stále resetuje. Novšie potvrdenie úspešnej dennej zálohy odstráni staré oznámenie chyby bez ďalšieho zápisu zálohy.
+Opravy vydané vo v0.18.1 cez PR #38 sleduje [záznam revízie Astra](REVIEW_FINDINGS.md). Schéma zostáva 10 a vydaná verzia je v0.19.0. Úpravy predmetu porovnajú pôvodný obsah pod zápisovým zámkom; konflikt zachová koncept. Pred opätovným otvorením úprav na načítanie najnovšej verzie si potrebné zmeny skopíruj. Vymazanie otázky/témy porovná zobrazený obsah a po zmene vyžaduje nové potvrdenie. Návrat k rovnakému predmetu zachová editor otázky/témy, filtre aj pôvodnú identitu, tiež pri opakovaní čítania; vymazaná vybraná téma zostane nedostupná, kým výslovne nevyberieš inú tému alebo možnosť Bez témy. Iný predmet editor stále resetuje. Novšie potvrdenie úspešnej dennej zálohy odstráni staré oznámenie chyby bez ďalšieho zápisu zálohy.
