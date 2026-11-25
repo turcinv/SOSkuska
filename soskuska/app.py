@@ -151,7 +151,7 @@ class Dashboard(ctk.CTk):
         return ctk.CTkButton(parent, text=text, command=command, height=38,
                              corner_radius=8, font=self.font(14, primary),
                              fg_color=C["primary"] if primary else C["raised"],
-                             hover_color=C["primary_hover"] if primary else C["border"],
+                             hover_color=C["primary_hover"] if primary else C["secondary_hover"],
                              text_color=C["on_primary"] if primary else C["text"],
                              text_color_disabled=C["disabled_on_primary"] if primary else C["secondary"], border_width=0 if primary else 1,
                              border_color=C["border"], **kwargs)

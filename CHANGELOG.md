@@ -2,6 +2,10 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
+## Unreleased
+
+- Shared blue/mint theme foundation with paired Light/Dark surfaces, distinct secondary hover and consistent progress tracks. Preserve existing layouts, defaults and schema 10; retain disposable before/after captures and future layout sketches.
+
 ## 0.18.1 — 2026-11-22
 
 - Fix stale subject saves and question/topic delete confirmations; preserve same-subject question drafts and unavailable topic selections.

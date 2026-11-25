@@ -2,6 +2,8 @@
 
 [English](APPEARANCE.md) · [Čeština](cs/APPEARANCE.md) · [Slovenčina](sk/APPEARANCE.md) · [Русский](ru/APPEARANCE.md)
 
+**Unreleased — redesign Step 1:** the shared theme now uses blue actions/selection, mint progress, a warm off-white Light workspace and paired Dark surfaces. Secondary buttons have a separate hover surface; Statistics progress tracks match Dashboard. Layouts, saved mode/default, navigation, data and settings behaviour are unchanged. [Internal captures, sketches and handoff](agents/design/bright-ui-step1/README.md).
+
 Appearance settings were released in **v0.16.0** after the user confirmed v0.15.0 baseline testing complete and approved merging PR #32 on 22 November 2026. Future changes still require their own review and merge/release authorization.
 
 Open **Settings → Appearance (applies on Save)** and choose Light, Dark or System. Save settings to apply the choice immediately and remember it for this database. Merely selecting a mode is a draft; navigation keeps that draft, while Reload confirms replacing it. Failed or stale saves keep the current appearance and draft. Existing databases default to Dark. Saving the whole Settings form retains its existing validation and AI-change guards.

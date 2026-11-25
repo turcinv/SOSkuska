@@ -3,6 +3,10 @@
 [English](../../CHANGELOG.md) · [Čeština](../cs/CHANGELOG.md) · [Slovenčina](CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
 
+## Nevydané
+
+- Spoločný modrý/mätový vzhľad s párovými Light/Dark plochami, samostatným prejdením vedľajších tlačidiel a jednotným pozadím priebehu. Rozloženie, predvolené hodnoty a schéma 10 zostávajú; uložené dočasné snímky pred/po a skice budúceho rozloženia.
+
 ## 0.18.1 — 2026-11-22
 
 - Oprava zastaraného ukladania predmetov a potvrdení vymazania otázok/tém; zachovanie konceptov rovnakého predmetu a nedostupných tém.
