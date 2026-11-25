@@ -45,3 +45,7 @@ SubjectPage passes its original editable subject snapshot to update_subject; com
 ## Practice UI review safeguards
 
 Show saved answer selection independently of correctness and restore both radio value and row style after a failed write. Guard every answer callback with the active Practice page and gridded run panel; a hidden but still-enabled radio must not mutate the attempt. Count committed answers in progress. CTkFrame.bind delivers canvas Configure events, so widget-local width handlers must accept them and convert native widths to logical CTk units. Audit checked/hover indicators against selected surfaces. GUI checks exercise row canvas/text events, off-page events with run still gridded, rollback, navigation/resume and long-text footer reachability at startup scaling in four languages.
+
+### Flashcard review footer and refresh
+
+Keep reveal/rating controls in the same footer; order is Again, Hard, Good, Easy. Hidden ratings remain disabled until Reveal. Treat `review_refresh_pending` as UI-only committed-write state: invalidate the old card and disable its ratings before reading the next card, then clear the flag only after that read succeeds. A failed write retains the revealed card for retry. Surface errors beside the footer as well as the page status; localize referenced action names. Test the next-card read separately from precommit Store validation.

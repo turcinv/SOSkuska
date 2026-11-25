@@ -2,6 +2,10 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
+## Unreleased — Flashcard review redesign
+
+- Redesign Flashcard prompt/answer surfaces, Reveal/rating footer, deck actions and empty states. Keep failed-write retry beside the controls and prevent a saved rating from being repeated after a next-card read failure. Preserve scheduling/history/imports; verify four languages at 100/150% startup scaling.
+
 ## 0.20.0 — 2026-11-25
 
 - Redesign Practice setup, running header, saved-answer rows, navigation, results and history. Preserve scoring/deadlines/snapshots, reject hidden answer events and verify rollback/long content in four languages at 100/150% startup scaling.

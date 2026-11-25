@@ -18,7 +18,14 @@ def safe(method):
         try:
             return method(self, *args, **kwargs)
         except (ValueError, sqlite3.Error) as exc:
-            self.status.configure(text=tr(self.app,tr(self.app, str(exc)) if isinstance(exc, ValueError) else tr(self.app, 'Could not access flashcard data. Please retry.')))
+            message = tr(self.app,str(exc)) if isinstance(exc,ValueError) else tr(self.app,'Could not access flashcard data. Please retry.')
+            if self.review_refresh_pending:
+                message += ' ' + tr(self.app,'Review saved. Refresh card to continue; do not rate it again.')
+            self.status.configure(text=message)
+            notice = getattr(self,'review_notice',None)
+            if self.view == 'review' and notice is not None and notice.winfo_exists():
+                notice.configure(text=message)
+                notice.grid()
     return call
 
 
@@ -36,6 +43,7 @@ class FlashcardPage(ctk.CTkFrame):
         self.queue = []
         self.current_card = None
         self.revealed = False
+        self.review_refresh_pending = False
         self.rated = {rating: 0 for rating in RATINGS}
         self.review_deck_name = ""
         self.query = ctk.StringVar()
@@ -66,15 +74,16 @@ class FlashcardPage(ctk.CTkFrame):
         self.view = view
         self.pending_delete = None
         if view != "review":
+            self.review_refresh_pending = False
             self.current_card = None
             self.revealed = False
         if self.app.current_page == "Flashcards":
             self.app.scroll.scroll_to_top()
 
     def label(self, parent, text, row, size=14, bold=False):
-        label = self.app.label(parent, text, size, bold=bold, wraplength=600)
+        label = self.app.label(parent, text, size, bold=bold, wraplength=600, justify='left')
         label.grid(row=row, column=0, sticky="ew", padx=18, pady=(12, 10))
-        parent.bind("<Configure>", lambda event, label=label: label.configure(wraplength=max(250, event.width-36)), add="+")
+        parent.bind("<Configure>", lambda event, label=label: label.configure(wraplength=max(200, self.app.scroll.logical_pixels(event.width)-36)), add="+")
         return label
 
     @staticmethod
@@ -118,7 +127,10 @@ class FlashcardPage(ctk.CTkFrame):
         self.new_deck_button = self.app.button(self.body, tr(self.app, '+ New deck'), self.deck_form, primary=True, width=140)
         self.new_deck_button.grid(row=0, column=0, sticky="w", pady=(0, 16))
         if not decks:
-            self.app.label(self.body, tr(self.app, 'No decks yet. Create a subject in My Subjects, then add your first deck.'), 14, "secondary", wraplength=650).grid(row=1, column=0, sticky="ew")
+            empty = self.app.frame(self.body, card=True)
+            empty.grid(row=1,column=0,sticky='ew')
+            empty.grid_columnconfigure(0,weight=1)
+            self.label(empty,tr(self.app,'No decks yet. Create a subject in My Subjects, then add your first deck.'),0)
         for row, deck in enumerate(decks, 1):
             card = self.app.frame(self.body, card=True)
             card.grid(row=row, column=0, sticky="ew", pady=(0, 14))
@@ -166,25 +178,33 @@ class FlashcardPage(ctk.CTkFrame):
             self.label(head, deck["description"], 2)
         actions = self.app.frame(self.body)
         actions.grid(row=1, column=0, sticky="w", pady=(0, 16))
-        self.new_card_button = self.app.button(actions, tr(self.app, '+ New card'), self.card_form, primary=True, width=125)
-        self.new_card_button.pack(side="left", padx=(0, 8))
-        self.study_button = self.app.button(actions, tr(self.app, 'Study due ({v0})', v0=len(due)), lambda: self.start_review(deck_id), width=155)
-        self.study_button.pack(side="left", padx=(0, 8))
+        self.new_card_button = self.app.button(actions, tr(self.app, '+ New card'), self.card_form,
+                                                primary=not due, width=125)
+        self.new_card_button.grid(row=0, column=0, padx=(0, 8), pady=(0, 8), sticky="w")
+        self.study_button = self.app.button(actions, tr(self.app, 'Study due ({v0})', v0=len(due)),
+            lambda: self.start_review(deck_id), primary=bool(due), width=155)
+        self.study_button.grid(row=0, column=1, padx=(0, 8), pady=(0, 8), sticky="w")
         self.study_button.configure(state="normal" if due else "disabled")
-        self.app.button(actions, tr(self.app, 'Edit deck'), lambda: self.deck_form(deck_id), width=100).pack(side="left", padx=(0, 8))
-        self.app.button(actions, tr(self.app, 'Delete deck'), lambda: self.ask_delete("deck", deck_id), width=115).pack(side="left")
         self.csv_button = self.app.button(actions, tr(self.app, 'Import CSV'), self.importer.open, width=110)
-        self.csv_button.pack(side="left", padx=(8,0))
+        self.csv_button.grid(row=0, column=2, pady=(0, 8), sticky="w")
+        self.app.button(actions, tr(self.app, 'Edit deck'), lambda: self.deck_form(deck_id), width=100).grid(
+            row=1, column=0, padx=(0, 8), sticky="w")
+        self.app.button(actions, tr(self.app, 'Delete deck'), lambda: self.ask_delete("deck", deck_id), width=115).grid(
+            row=1, column=1, sticky="w")
         search = self.app.frame(self.body)
         search.grid(row=2, column=0, sticky="ew", pady=(0, 14))
         search.grid_columnconfigure(0, weight=1)
         self.search = ctk.CTkEntry(search, height=38, placeholder_text=tr(self.app, 'Search front or back…'), font=self.app.font(), placeholder_text_color=C["secondary"])
-        self.search.grid(row=0, column=0, sticky="ew", padx=(0, 8))
+        self.app.label(search, tr(self.app, 'Search front or back…'), 11, 'secondary').grid(row=0, column=0, sticky='w', pady=(0,4))
+        self.search.grid(row=1, column=0, sticky="ew", padx=(0, 8))
         self.search.insert(0, search_draft)
-        self.app.button(search, tr(self.app, 'Search'), self.search_cards, width=90).grid(row=0, column=1)
+        self.app.button(search, tr(self.app, 'Search'), self.search_cards, width=90).grid(row=1, column=1)
         self.app.label(self.body, tr(self.app, '{v0} matching cards · showing up to 100. Narrow the search for more.', v0=len(cards)), 13, "secondary", wraplength=650).grid(row=3, column=0, sticky="ew", pady=(0, 12))
         if not cards:
-            self.app.label(self.body, tr(self.app, 'No matching cards. Add a card or change the search.'), 14, "secondary").grid(row=4, column=0, sticky="w")
+            empty = self.app.frame(self.body, card=True)
+            empty.grid(row=4,column=0,sticky='ew')
+            empty.grid_columnconfigure(0,weight=1)
+            self.label(empty,tr(self.app,'No matching cards. Add a card or change the search.'),0)
         for row, item in enumerate(cards[:100], 4):
             card = self.app.frame(self.body, card=True)
             card.grid(row=row, column=0, sticky="ew", pady=(0, 14))
@@ -370,43 +390,88 @@ class FlashcardPage(ctk.CTkFrame):
                 break
             self.queue.pop(0)
         self.clear("review")
+        self.review_refresh_pending = False
         self.current_card = card
         self.revealed = False
-        self.app.label(self.body, self.review_deck_name, 22, bold=True, wraplength=650).grid(row=0, column=0, sticky="ew", pady=(0, 14))
+        header = self.app.frame(self.body, card=True)
+        header.grid(row=0, column=0, sticky="ew", pady=(0, 16))
+        header.grid_columnconfigure(0, weight=1)
+        self.label(header, self.review_deck_name, 0, 22, True)
         if card is None:
             done = sum(self.rated.values())
-            self.app.label(self.body, tr(self.app, 'No more due cards in this batch. {v0} reviews saved.', v0=done), 18, wraplength=650).grid(row=1, column=0, sticky="ew", pady=(0, 12))
-            self.app.label(self.body, " · ".join(f"{tr(self.app,key)}: {value}" for key, value in self.rated.items()), 13, "secondary", wraplength=650).grid(row=2, column=0, sticky="ew", pady=(0, 16))
-            self.app.button(self.body, tr(self.app, 'Back to deck'), lambda: self.show_deck(self.deck_id), width=150).grid(row=3, column=0, sticky="w")
+            self.label(header, tr(self.app, 'No more due cards in this batch. {v0} reviews saved.', v0=done), 1, 18)
+            self.label(header, " · ".join(f"{tr(self.app,key)}: {value}" for key, value in self.rated.items()), 2, 13)
+            self.app.button(header, tr(self.app, 'Back to deck'), lambda: self.show_deck(self.deck_id), primary=True, width=150).grid(
+                row=3, column=0, sticky="w", padx=18, pady=(0,16))
             return
-        self.app.label(self.body, tr(self.app, '{v0} cards left · {v1} reviews saved this batch', v0=len(self.queue), v1=sum(self.rated.values())), 13, "secondary", wraplength=650).grid(row=1, column=0, sticky="ew", pady=(0, 16))
+        self.label(header, tr(self.app, '{v0} cards left · {v1} reviews saved this batch',
+                             v0=len(self.queue), v1=sum(self.rated.values())), 1, 13)
         panel = self.app.frame(self.body, card=True)
-        panel.grid(row=2, column=0, sticky="ew", pady=(0, 16))
+        panel.grid(row=1, column=0, sticky="ew", pady=(0,16))
         panel.grid_columnconfigure(0, weight=1)
-        self.label(panel, card["front"], 0, 21, True)
-        self.answer = self.label(panel, "", 1, 17)
-        self.answer.grid_remove()
-        self.reveal_button = self.app.button(self.body, tr(self.app, 'Reveal answer'), self.reveal, primary=True, width=165)
-        self.reveal_button.grid(row=3, column=0, sticky="w", pady=(0, 16))
-        actions = self.app.frame(self.body)
-        actions.grid(row=4, column=0, sticky="w", pady=(0, 16))
+        self.app.label(panel, tr(self.app, 'Prompt'), 12, 'secondary').grid(
+            row=0, column=0, sticky='w', padx=18, pady=(16,0))
+        self.front_label = self.label(panel, card["front"], 1, 22, True)
+        self.front_label.grid(pady=(8,22))
+        self.answer_panel = self.app.frame(panel, card=True)
+        self.answer_panel.configure(fg_color=C['raised'], border_width=0)
+        self.answer_panel.grid(row=2,column=0,sticky='ew',padx=18,pady=(0,18))
+        self.answer_panel.grid_columnconfigure(0,weight=1)
+        self.app.label(self.answer_panel,tr(self.app,'Answer'),12,'secondary').grid(
+            row=0,column=0,sticky='w',padx=18,pady=(12,0))
+        self.answer = self.label(self.answer_panel, "", 1, 17)
+        self.answer_panel.grid_remove()
+        self.review_footer = self.app.frame(self.body)
+        self.review_footer.grid(row=2,column=0,sticky='ew',pady=(0,16))
+        self.review_footer.grid_columnconfigure(0,weight=1)
+        self.reveal_button = self.app.button(self.review_footer, tr(self.app, 'Reveal answer'),
+                                              self.reveal, primary=True, width=165)
+        self.reveal_button.grid(row=0,column=0,sticky='w')
+        self.rating_actions = self.app.frame(self.review_footer)
+        self.rating_actions.grid(row=0,column=0,sticky='ew')
+        self.app.label(self.rating_actions,tr(self.app,'Rate your recall'),13,'secondary').grid(
+            row=0,column=0,columnspan=4,sticky='w',pady=(0,8))
         self.rating_buttons = {}
         for rating in RATINGS:
             _due, _interval, label = next_review(card["interval_days"], rating, utc_now())
-            button = self.app.button(actions, tr(self.app, '{v0} · {v1}', v0=tr(self.app,rating), v1=duration_text(self.app,label)), lambda r=rating, cid=card["id"], rev=card["revision"]: self.rate(r, cid, rev), width=138)
-            button.pack(side="left", padx=(0, 6))
+            button = self.app.button(self.rating_actions, tr(self.app, '{v0} · {v1}',
+                v0=tr(self.app,rating), v1=duration_text(self.app,label)),
+                lambda r=rating, cid=card["id"], rev=card["revision"]: self.rate(r, cid, rev), width=138)
             button.configure(state="disabled")
             self.rating_buttons[rating] = button
-        self.app.button(self.body, tr(self.app, 'Refresh card'), self.show_review, width=140).grid(row=5, column=0, sticky="w")
+        self.rating_actions.bind('<Configure>', self.layout_ratings, add='+')
+        self.layout_ratings()
+        self.rating_actions.grid_remove()
+        self.review_notice = self.app.label(self.review_footer,'',12,'hover',wraplength=650,justify='left')
+        self.review_notice.grid(row=1,column=0,sticky='ew',pady=(8,0))
+        self.review_notice.grid_remove()
+        self.review_footer.bind('<Configure>',lambda event:self.review_notice.configure(
+            wraplength=max(200,self.app.scroll.logical_pixels(event.width))),add='+')
+        self.app.button(self.body, tr(self.app, 'Refresh card'), self.show_review, width=140).grid(
+            row=3,column=0,sticky='w')
         self.status.configure(text=tr(self.app, 'Ratings are self-assessments, not test scores. Unrated cards remain due after closing.'))
+
+    def layout_ratings(self, event=None):
+        width = (self.app.scroll.logical_pixels(event.width) if event is not None
+                 else self.app.scroll.viewport_width() - 56)
+        columns = 4 if width >= 850 else 2
+        for index in range(4):
+            self.rating_actions.grid_columnconfigure(index,weight=1 if index < columns else 0,
+                                                      uniform='rating' if index < columns else '')
+        for index, rating in enumerate(RATINGS):
+            self.rating_buttons[rating].grid(row=1+index//columns,column=index%columns,sticky='ew',
+                padx=(0 if index%columns == 0 else 4, 0 if index%columns == columns-1 else 4),
+                pady=(0,8))
 
     def reveal(self):
         if self.app.current_page != "Flashcards" or self.view != "review" or self.current_card is None:
             return
         self.revealed = True
         self.answer.configure(text=self.current_card["back"])
-        self.answer.grid()
+        self.answer_panel.grid()
         self.reveal_button.configure(state="disabled")
+        self.reveal_button.grid_remove()
+        self.rating_actions.grid()
         for button in self.rating_buttons.values():
             button.configure(state="normal")
 
@@ -426,6 +491,9 @@ class FlashcardPage(ctk.CTkFrame):
         self.rated[rating] += 1
         self.current_card = None
         self.revealed = False
+        self.review_refresh_pending = True
+        for button in self.rating_buttons.values():
+            button.configure(state='disabled')
         self.show_review()
 
     @safe

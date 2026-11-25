@@ -131,6 +131,81 @@ def practice_layout(app, scale):
     app.store.delete_subject(sid); app.refresh_data(); app.navigate('Dashboard')
 
 
+def flashcard_layout(app, scale):
+    """Long-content reveal/rating, retry and compact actions in all languages."""
+    sid = app.store.create_subject('Карточки — проверка')
+    did = app.store.create_deck(sid, 'Длинная колода — ' + 'тема ' * 15)
+    front = ('Длинный вопрос для проверки чтения и переноса. ' * 45)[:1900].strip()
+    back = ('Подробный ответ с объяснением и несколькими строками. ' * 70)[:3700].strip()
+    cid = app.store.create_flashcard(did,front,back)
+    app.store.create_flashcard(did,'Second prompt','Second answer')
+    app.navigate('Flashcards');page=app.flashcard_page;page.open_deck(did);app.update_idletasks()
+    canvas=app.scroll._parent_canvas
+    for button in (page.new_card_button,page.study_button,page.csv_button):
+        assert button.winfo_rootx()+button.winfo_width() <= canvas.winfo_rootx()+canvas.winfo_width()
+    page.start_review(did);app.update_idletasks()
+    assert page.current_card['id']==cid and not page.revealed
+    assert page.answer.cget('text')=='' and page.answer_panel.winfo_manager()==''
+    assert page.rating_actions.winfo_manager()==''
+    assert all(b.cget('state')=='disabled' for b in page.rating_buttons.values())
+    assert page.front_label.cget('text')==front and page.front_label.cget('justify')=='left'
+    assert page.front_label.cget('wraplength') <= page.front_label.master.winfo_width()/scale-30
+    before=len(app.store.flashcard_history())
+    page.rate('Good',cid,page.current_card['revision'])
+    assert len(app.store.flashcard_history())==before
+    def footer_bounds(buttons):
+        app.update_idletasks();canvas.yview_moveto(1);app.update_idletasks()
+        for button in buttons:
+            assert button.winfo_ismapped()
+            assert button.winfo_rootx()>=canvas.winfo_rootx()
+            assert button.winfo_rootx()+button.winfo_width()<=canvas.winfo_rootx()+canvas.winfo_width()
+            assert button.winfo_rooty()>=canvas.winfo_rooty()
+            assert button.winfo_rooty()+button.winfo_height()<=canvas.winfo_rooty()+canvas.winfo_height()
+    footer_bounds([page.reveal_button])
+    page.reveal_button.invoke();app.update_idletasks()
+    assert page.revealed and page.answer.cget('text')==back
+    assert page.answer_panel.winfo_ismapped() and not page.reveal_button.winfo_ismapped()
+    assert page.answer.cget('justify')=='left'
+    assert page.answer.cget('wraplength') <= page.answer.master.winfo_width()/scale-30
+    assert list(page.rating_buttons)==['Again','Hard','Good','Easy']
+    assert [int(b.grid_info()['row']) for b in page.rating_buttons.values()]==[1,1,2,2]
+    footer_bounds(page.rating_buttons.values())
+    with patch.object(app.store,'rate_flashcard',side_effect=sqlite3.OperationalError('full')):
+        page.rating_buttons['Good'].invoke()
+    assert page.revealed and page.current_card['id']==cid and page.answer.cget('text')==back
+    assert page.review_notice.cget('text') and page.review_notice.winfo_manager()=='grid'
+    assert len(app.store.flashcard_history())==before
+    app.navigate('Dashboard');page.rating_buttons['Good'].invoke()
+    assert len(app.store.flashcard_history())==before
+    app.navigate('Flashcards');app.update_idletasks()
+    assert not page.revealed and page.answer_panel.winfo_manager()==''
+    page.reveal_button.invoke();app.update_idletasks()
+    stale=dict(page.current_card)
+    # The rating commits even if loading the next card fails; only Refresh may retry the read.
+    read_card = app.store.flashcard
+    def fail_next_read(card_id):
+        if card_id != cid:
+            raise sqlite3.OperationalError('read')
+        return read_card(card_id)
+    with patch.object(app.store,'flashcard',side_effect=fail_next_read):
+        page.rating_buttons['Good'].invoke()
+    assert len(app.store.flashcard_history())==before+1
+    assert page.current_card is None and page.review_refresh_pending
+    assert all(b.cget('state')=='disabled' for b in page.rating_buttons.values())
+    assert app.translator.text('Review saved. Refresh card to continue; do not rate it again.') in page.review_notice.cget('text')
+    footer_bounds([page.review_notice])
+    page.rate('Good',stale['id'],stale['revision'])
+    assert len(app.store.flashcard_history())==before+1
+    page.show_review();assert not page.review_refresh_pending and not page.revealed
+    page.reveal_button.invoke();page.rating_buttons['Good'].invoke()
+    assert page.current_card is None
+    page.show_deck(did);assert page.study_button.cget('state')=='disabled'
+    page.show_history();app.update_idletasks()
+    assert any(isinstance(w,ctk.CTkLabel) and w.cget('text')==back for w in widgets(page.body))
+    app.store.delete_deck(did);app.store.delete_subject(sid)
+    page.show_decks();app.navigate('Dashboard')
+
+
 def check(path,language,reopen=False,scale=1.0):
     next_language=list(LANGUAGE_CODES)[(list(LANGUAGE_CODES).index(language)+1)%4]
     if not reopen:
@@ -158,6 +233,7 @@ def check(path,language,reopen=False,scale=1.0):
                 tr=app.translator.text
                 dashboard_layout(app, scale)
                 practice_layout(app, scale)
+                flashcard_layout(app, scale)
                 assert tr('Dashboard') in app.nav_buttons[0].cget('text')
                 assert tr('Settings') in app.settings_btn.cget('text')
                 sid=app.store.subjects()[0]['id'];deck=app.store.decks()[0]['id'];qid=app.store.questions(sid)[0]['id']
@@ -256,4 +332,4 @@ if __name__=='__main__':
                     subprocess.run([sys.executable,'-X','faulthandler','-u',str(Path(__file__).resolve()),'--language',language,'--data',str(path),*flags],check=True,timeout=25)
                 scaled=Path(folder)/(language+'-150.db')
                 subprocess.run([sys.executable,'-X','faulthandler','-u',str(Path(__file__).resolve()),'--language',language,'--data',str(scaled),'--scale','1.5'],check=True,timeout=25)
-        print('PASS: four translated interfaces, compact Dashboard at 100/150 percent including recovery/retry/long selected names, Practice selection/rollback/hidden events/long text/results/footer at both scales, canonical dropdowns, unchanged user content, independent answer language, draft retention, compact scrolling, trace cleanup and fresh-process language application',flush=True)
+        print('PASS: four translated interfaces, compact Dashboard at 100/150 percent including recovery/retry/long selected names, Practice selection/rollback/hidden events/long text/results/footer at both scales, Flashcard reveal/rating/long text/postcommit retry at both scales, canonical dropdowns, unchanged user content, independent answer language, draft retention, compact scrolling, trace cleanup and fresh-process language application',flush=True)

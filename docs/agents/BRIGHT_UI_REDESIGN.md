@@ -8,7 +8,7 @@ Read the plan from the documentation PR or from `main` once merged. Start implem
 
 Suggested first prompt for the next session:
 
-> Read `docs/agents/BRIGHT_UI_REDESIGN.md` and the repository guidance. Inspect the implementation handoffs and branch first. After Step 2 is merged, implement Step 3 only with disposable data and focused checks.
+> Read `docs/agents/BRIGHT_UI_REDESIGN.md` and the repository guidance. Inspect the implementation handoffs and branch first. After Step 4 is merged, implement the Subjects and Question Bank portion of Step 5 only with disposable data and focused checks.
 
 ## Design direction
 
@@ -59,6 +59,10 @@ Practice redesign merged through [PR #46](https://github.com/turcinv/SOSkuska/pu
 1. Give prompt and revealed answer a spacious reading surface. Make Reveal the primary action before the answer appears, then show the existing rating choices in a consistent order and location. Keep long content scrollable and the rating actions reachable.
 2. Align deck and card lists, editing controls, and empty states with the shared styles. Preserve the reveal-before-rating rule, review history and import preview state.
 3. Run `check_flashcards.py` and `check_flashcard_import.py`. Verify reveal and rating, a deck with no due cards, and long text at compact size. If time is short, proceed to Step 6 for the teacher demo and schedule Step 5 later.
+
+### Step 4 handoff · 25 November 2026
+
+Flashcard review is implemented on `feature/bright-ui-flashcards`; see [captures, validation and next-session scope](design/bright-ui-step4/README.md). Prompt/answer reading surfaces, guarded Reveal/rating footer, responsive rating grid, deck actions and empty states are aligned. Failed-write feedback stays by the footer; a committed rating with failed next-card read disables old ratings and retries reads only. Scheduling, schema 10, immutable history and CSV/editor paths remain. Published labels stay v0.20.0; this step is unreleased until its PR is authorized for merge. Continue with the **Subjects and Question Bank portion of Step 5 only** after this step is merged and requested.
 
 ## Step 5 — Consistency pass
 
