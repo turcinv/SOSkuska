@@ -2,9 +2,9 @@
 
 [English](../WINDOWS_PORTABLE.md) · [Čeština](../cs/WINDOWS_PORTABLE.md) · [Slovenčina](../sk/WINDOWS_PORTABLE.md) · [Русский](../ru/WINDOWS_PORTABLE.md)
 
-v0.20.0 включает **неподписанный переносимый ZIP для Windows x64**, а не установщик. Пользователю не нужны Python или права администратора.
+v0.21.0 включает **неподписанный переносимый ZIP для Windows x64**, а не установщик. Пользователю не нужны Python или права администратора.
 
-1. Скачай `SOSkuska-windows-x64.zip` и файл `.sha256` из [v0.20.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.20.0). Частный репозиторий требует входа на GitHub и доступа. Выбирай именованный Windows ZIP, а не архив исходников GitHub.
+1. Скачай `SOSkuska-windows-x64.zip` и файл `.sha256` из [v0.21.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.21.0). Частный репозиторий требует входа на GitHub и доступа. Выбирай именованный Windows ZIP, а не архив исходников GitHub.
 2. Полностью распакуй ZIP в папку с правом записи. Сохрани всю папку `SOSkuska`, включая `_internal` и `SOSkuska-worker.exe`.
 3. Открой `SOSkuska.exe`. Не запускай его внутри ZIP, не переноси только EXE и не запускай помощник напрямую. Данные остаются отдельно в `%LOCALAPPDATA%\SOSkuska\dashboard.sqlite3`; прежний резервный путь ExamPrep также действует.
 4. Неподписанный файл могут блокировать защита Windows или правила организации. Проверь источник/коммит и SHA-256; не отключай защиту. При запрете политикой обратись к администратору.

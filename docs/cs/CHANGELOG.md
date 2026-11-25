@@ -2,7 +2,7 @@
 
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
-## Nevydáno — nový vzhled opakování kartiček
+## 0.21.0 — 2026-11-25
 
 - Nové čtecí plochy otázky a odpovědi, společné místo pro odhalení a hodnocení, akce balíčku a prázdné stavy. Chyby zápisu jsou u ovládání; chyba načtení další kartičky neopakuje uložené hodnocení. Zachováno plánování, historie a import; ověřeny čtyři jazyky při počátečním měřítku 100/150 %.
 

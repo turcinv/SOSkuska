@@ -1,6 +1,6 @@
 # Bright UI Step 4 evidence and handoff
 
-Internal implementation record, **25 November 2026**, branch `feature/bright-ui-flashcards`. Implements [Step 4](../../BRIGHT_UI_REDESIGN.md) only. Published labels remain **v0.20.0 / schema 10**; this feature is unreleased pending its PR merge authorization.
+Internal implementation record, **25 November 2026**, branch `feature/bright-ui-flashcards`. Implements [Step 4](../../BRIGHT_UI_REDESIGN.md) only. Merged through [PR #48](https://github.com/turcinv/SOSkuska/pull/48), commit `0b370d0`, and released in **v0.21.0 / schema 10**. The captures retain the implementation-time v0.20.0 footer.
 
 ## Implemented
 
@@ -30,6 +30,6 @@ Use the [Step 1 Docker capture command](../bright-ui-step1/README.md#reproduce-c
 - Flashcard checks preserve CRUD, reveal-before-rating, stale revisions, retry, scheduling, retained history, deletion and fresh-process reopening. CSV checks cover preview/draft retention, atomic retry, duplicates, pagination and reopening.
 - Four-language checks at 100/150% startup scaling cover 1,900-character prompts, 3,700-character answers, deck-action and footer bounds, hidden ratings, failed-write retry, off-page guards, next-card read failure after commit without duplicate ratings, refresh and a completed batch. Actual wide captures assert four rating columns; compact captures assert two.
 - Independent Sol medium review: left alignment, scaled grid padding and local retry feedback addressed. Final review found no application/capture blockers; localized retry button names corrected. The reviewed missing Slovak architecture section and capture README are included in the final documentation.
-- All **21 captures** visually inspected. Syntax, changed Markdown/artifact references, catalog parity and `git diff --check` checked before commit. Hosted CI is reported separately on the PR.
+- All **21 captures** visually inspected. Syntax, changed Markdown/artifact references, catalog parity and `git diff --check` checked before commit. All five feature PR CI jobs passed in run `45588520179`; release artifacts are built separately from the final main commit.
 
 These are Linux/Xvfb checks, not native Windows/macOS hardware acceptance. Startup scaling does not establish live monitor-scaling support; the existing CTk limitation is unchanged. Continue only when requested with the **Subjects and Question Bank portion of Step 5**; Statistics/Tutor and Settings/data panels are separate later sessions.
