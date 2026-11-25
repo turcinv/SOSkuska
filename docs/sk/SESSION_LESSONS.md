@@ -51,3 +51,7 @@ Dashboard, krok 2, združuje študijné akcie, pod nimi predmety/hľadanie, komp
 ## Revízia redizajnu testov · 25. novembra 2026
 
 CTkFrame.bind odovzdáva Configure na canvas: lokálnu zmenu veľkosti neodmietať porovnaním event.widget s obalom. Pred zalamovaním previesť pixely na logické jednotky. Výber odpovede kresliť z uloženého snímku, po chybe obnoviť; riadok/text/radio chrániť aktuálnou stránkou aj viditeľnosťou testu. Kontrast radia overiť oproti vybranému pozadiu. Testovať skutočné kresliace/textové ciele udalostí, nielen priame volania. Priebeh počíta uložené odpovede, nie správnosť.
+
+## 2026-11-25 · Flashcard retry
+
+Rozlišuj chybu zápisu hodnotenia od chyby následného čítania. Pri chybe zápisu zachovaj odhalenú odpoveď; po úspešnom zápise vypni staré hodnotenia a opakuj iba čítanie ďalšej kartičky. Správu o opakovaní zobraz pri hodnotení dlhej odpovede a použi preložené názvy akcií.

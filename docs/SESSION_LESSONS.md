@@ -65,3 +65,7 @@ Dashboard Step 2 groups study actions and keeps subjects/search below them, with
 ## Practice redesign review · 25 November 2026
 
 CTkFrame.bind forwards Configure to its canvas: widget-local resize callbacks must not reject those events by comparing event.widget with the wrapper. Apply logical-unit conversion before CTk wrap lengths. Render running answer highlights from committed snapshots, restore them after write failure, and guard row/label/radio events with both current page and run visibility; checked radio contrast must be audited against the selected surface. Verify native drawing/text event targets in tests, not only direct callbacks. Progress counts saved answers, never correctness.
+
+## 2026-11-25 · Flashcard retry
+
+Keep rating-write failure separate from postcommit read failure. Preserve revealed content for a failed write; after a successful write, disable old rating controls and retry only the next-card read. Put retry feedback beside long-answer rating controls and use localized action names.

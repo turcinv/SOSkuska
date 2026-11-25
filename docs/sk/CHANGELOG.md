@@ -2,6 +2,10 @@
 
 [English](../../CHANGELOG.md) · [Čeština](../cs/CHANGELOG.md) · [Slovenčina](CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
+## Nevydané — nový vzhľad opakovania kartičiek
+
+- Nové čítacie plochy otázky a odpovede, spoločné miesto pre odhalenie a hodnotenie, akcie balíčka a prázdne stavy. Chyby zápisu sú pri ovládaní; chyba načítania ďalšej kartičky neopakuje uložené hodnotenie. Zachované plánovanie, história a import; overené štyri jazyky pri počiatočnej mierke 100/150 %.
+
 
 ## 0.20.0 — 2026-11-25
 

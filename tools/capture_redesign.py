@@ -26,13 +26,14 @@ def main():
     parser.add_argument('--size', choices=('wide', 'compact'), default='wide')
     parser.add_argument('--dashboard-only', action='store_true')
     parser.add_argument('--practice-views', action='store_true', help='Capture running/setup/confirmation/result/history only')
+    parser.add_argument('--flashcard-views', action='store_true', help='Capture deck/review/empty/history views only')
     parser.add_argument('--timed-practice', action='store_true', help='Use a frozen five-minute fixture instead of untimed')
     parser.add_argument('--empty', action='store_true', help='Empty Dashboard; requires --dashboard-only')
     args = parser.parse_args()
     if args.empty and not args.dashboard_only:
         parser.error('--empty requires --dashboard-only')
-    if args.practice_views and args.dashboard_only:
-        parser.error('--practice-views and --dashboard-only are mutually exclusive')
+    if sum((args.practice_views, args.dashboard_only, args.flashcard_views)) > 1:
+        parser.error('Choose only one of --practice-views, --dashboard-only and --flashcard-views')
     dimensions = (1440, 900) if args.size == 'wide' else (1024, 700)
     args.output.mkdir(parents=True, exist_ok=True)
     # Xvfb captures must never open a native macOS/Windows application window.
@@ -100,6 +101,11 @@ def main():
             image.save(args.output / (name + '.png'))
 
         def dashboard():
+            if args.flashcard_views:
+                app.navigate('Flashcards')
+                app.flashcard_page.show_decks()
+                app.after(400, guard(decks))
+                return
             if not args.practice_views:
                 capture('dashboard')
             if args.dashboard_only:
@@ -148,6 +154,16 @@ def main():
             capture('practice-history')
             app.close()
 
+        def decks():
+            capture('decks')
+            app.flashcard_page.show_deck(deck)
+            app.after(400, guard(deck_view))
+
+        def deck_view():
+            capture('deck')
+            app.flashcard_page.start_review(deck)
+            app.after(400, guard(flashcard))
+
         def flashcard():
             assert not app.flashcard_page.revealed
             capture('flashcard')
@@ -157,6 +173,33 @@ def main():
         def revealed():
             assert app.flashcard_page.revealed
             capture('flashcard-revealed')
+            if args.flashcard_views:
+                page = app.flashcard_page
+                assert [button.grid_info()['column'] for button in page.rating_buttons.values()] == ([0, 1, 2, 3] if args.size == 'wide' else [0, 1, 0, 1])
+                page.rating_buttons['Good'].invoke()
+                page.reveal_button.invoke()
+                page.rating_buttons['Good'].invoke()
+                assert page.current_card is None
+                app.after(400, guard(flashcard_complete))
+            else:
+                app.close()
+
+        def flashcard_complete():
+            capture('flashcard-complete')
+            app.flashcard_page.show_deck(deck)
+            app.after(400, guard(deck_no_due))
+
+        def deck_no_due():
+            capture('deck-no-due')
+            app.flashcard_page.show_history()
+            app.after(400, guard(flashcard_history))
+
+        def flashcard_history():
+            app.scroll._parent_canvas.yview_moveto(0)
+            app.after(300, guard(flashcard_history_ready))
+
+        def flashcard_history_ready():
+            capture('flashcard-history')
             app.close()
 
         app.report_callback_exception = lambda kind, value, tb: (errors.append(repr(value)), app.destroy())
@@ -173,7 +216,8 @@ def main():
         'platform': platform.platform(), 'python': platform.python_version(),
         'customtkinter': ctk.__version__, 'content': 'Disposable fixture only; no user data',
         'scope': 'Linux Xvfb capture; not native Windows/macOS acceptance',
-        'screens': (['practice', 'practice-setup', 'practice-confirm', 'practice-result', 'practice-history']
+        'screens': (['decks', 'deck', 'flashcard', 'flashcard-revealed', 'flashcard-complete', 'deck-no-due', 'flashcard-history']
+                    if args.flashcard_views else ['practice', 'practice-setup', 'practice-confirm', 'practice-result', 'practice-history']
                     if args.practice_views else ['dashboard'] if args.dashboard_only
                     else ['dashboard', 'practice', 'flashcard', 'flashcard-revealed']),
         'timed_practice': args.timed_practice,

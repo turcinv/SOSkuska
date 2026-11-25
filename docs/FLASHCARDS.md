@@ -2,6 +2,10 @@
 
 [English](FLASHCARDS.md) · [Čeština](cs/FLASHCARDS.md) · [Slovenčina](sk/FLASHCARDS.md) · [Русский](ru/FLASHCARDS.md)
 
+## Unreleased — Flashcard review redesign
+
+Flashcard review now separates the prompt and revealed answer into reading surfaces. Reveal is the primary action until the answer appears; Again / Hard / Good / Easy then replace it in the same footer, in four columns on wide screens or two on compact screens. Long text wraps and scrolls to the rating controls. Deck actions and empty states use the shared layout. A failed rating write keeps the revealed answer for retry. If the rating was saved but loading the next card fails, the old ratings are disabled and Refresh card only reloads the next card; the saved rating is not repeated. Scheduling, history, editor drafts and CSV preview behavior are preserved. Published version remains v0.20.0, schema 10.
+
 Open **Flashcards** in the sidebar. New deck creates a deck for an existing subject; deck names are globally unique. A deck's subject cannot later change, but its name and description can. Open deck lets you add/edit cards. Front: 1–2,000 characters; back: 1–4,000. Search checks both sides. Lists show up to 100 matches; narrow your search for others.
 
 **Study due** opens at most 100 currently due cards, oldest first. Reveal answer shows the back and enables Again / Hard / Good / Easy. Ratings are your own assessment of recall, not measured accuracy or mastery. Each rating saves a history snapshot and next due date together. Unrated cards stay due; after restart, start another batch. Refresh reloads counts and due status; lists do not rebuild in the background.

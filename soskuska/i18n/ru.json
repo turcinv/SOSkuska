@@ -702,5 +702,7 @@
   "Choose a subject and start a focused session.": "Выберите предмет и начните занятие.",
   "Create your first subject": "Создайте первый предмет",
   "Lifetime summary": "Общая статистика",
-  "Today's Study": "Учёба сегодня"
+  "Today's Study": "Учёба сегодня",
+  "Rate your recall": "Оцените, насколько хорошо вспомнили",
+  "Review saved. Refresh card to continue; do not rate it again.": "Оценка сохранена. Для продолжения нажмите «Обновить карточку»; не оценивайте её повторно."
 }

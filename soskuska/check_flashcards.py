@@ -75,6 +75,7 @@ def run_check(path, reopen=False):
         page.study_button.invoke()
         assert page.current_card["id"] == app.store.due_flashcards(did)[0]["id"]
         assert not page.revealed
+        assert page.answer_panel.winfo_manager()=='' and page.rating_actions.winfo_manager()==''
         assert all(b.cget("state") == "disabled" for b in page.rating_buttons.values())
         page.rate("Good", cid, page.current_card["revision"])
         assert app.store.flashcard_history() == []
@@ -108,6 +109,7 @@ def run_check(path, reopen=False):
         with patch.object(app.store, "rate_flashcard", side_effect=sqlite3.OperationalError("disk full")):
             page.rating_buttons["Good"].invoke()
         assert page.revealed and page.current_card["id"] == first["id"]
+        assert page.review_notice.cget('text') and page.review_notice.winfo_manager()=='grid'
         assert app.store.flashcard_history() == []
         page.rating_buttons["Good"].invoke()
         assert len(app.store.flashcard_history()) == 1
