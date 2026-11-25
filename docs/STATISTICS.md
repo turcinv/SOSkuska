@@ -2,7 +2,7 @@
 
 [English](STATISTICS.md) · [Čeština](cs/STATISTICS.md) · [Slovenčina](sk/STATISTICS.md) · [Русский](ru/STATISTICS.md)
 
-## Unreleased — Statistics and AI Tutor design
+## v0.23.0 — Statistics and AI Tutor design
 
 Statistics groups the period selector and Refresh in a header, with three summary cards side by side on wide screens or stacked in compact windows. Subject and daily activity remain below, with readable wrapped labels. Resizing preserves the existing report and does not query the database; failed Refresh keeps the prior snapshot. Definitions, weighted accuracy and self-rating counts are unchanged.
 

@@ -1,6 +1,6 @@
 # Bright UI Step 5 Statistics/Tutor evidence and handoff
 
-Internal implementation record, **25 November 2026**, branch `feature/bright-ui-statistics-tutor`. Implements the **Statistics and AI Tutor portion of [Step 5](../../BRIGHT_UI_REDESIGN.md)** only. Published labels remain **v0.22.0 / schema 10**. This work is unreleased until its PR is authorized for merge.
+Internal implementation record, **25 November 2026**, branch `feature/bright-ui-statistics-tutor`. Implements the **Statistics and AI Tutor portion of [Step 5](../../BRIGHT_UI_REDESIGN.md)** only. Merged through [PR #52](https://github.com/turcinv/SOSkuska/pull/52), commit `532d13a`, and released in **v0.23.0 / schema 10**. Captures retain implementation-time version labels.
 
 ## Implemented
 
@@ -29,7 +29,7 @@ Use the [Step 1 Docker capture command](../bright-ui-step1/README.md#reproduce-c
 
 ## Validation and review
 
-- Full Linux Docker/Xvfb suite and hosted CI are reported on the PR. Existing Statistics/Tutor/history checks cover empty data, all periods, weighted retained history, read retry, explicit connection, real loopback streaming/Stop, UTF-8, navigation, write failures, offline history, interruption, close/restart and persisted ownership.
+- Full Linux Docker/Xvfb suite passed: **308 unit tests**, **two platform skips**, **all 20 GUI scripts**. All five feature CI jobs passed in run `45633577816`; release assets are built separately from the final main/tag commit. Existing Statistics/Tutor/history checks cover empty data, all periods, weighted retained history, read retry, explicit connection, real loopback streaming/Stop, UTF-8, navigation, write failures, offline history, interruption, close/restart and persisted ownership.
 - New `check_report_layout.py` is a separate bounded script in the shared runner, for **20 GUI scripts** total. It tests four languages at 100/150% startup scaling, empty/populated Statistics, report identity across failed reads, geometry without SQL, exact Czech compact/wide resize, long labels, localized model instruction at the wide threshold, offline history, existing transcript/prompt widgets during busy resizing, hidden stream consumption/scroll isolation, Stop and visible discard warning.
 - The simulated busy queue is UI/state coverage; existing loopback tests establish the network event path. No model downloads or cloud calls. Each script retains its 60-second bound; new child probes retain bounded execution.
 - Independent Sol medium review addressed clipped Russian model instructions and distant recovery warnings. Additional resize investigation identified the shared-width rounding safeguard; the resulting four-language probes pass.

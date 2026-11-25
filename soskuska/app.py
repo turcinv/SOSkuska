@@ -35,7 +35,7 @@ from preferences import AI_KEYS
 from startup_errors import report_startup_error
 from appearance import apply_appearance
 
-APP_VERSION = '0.22.0'
+APP_VERSION = '0.23.0'
 
 from theme import COLORS as C
 

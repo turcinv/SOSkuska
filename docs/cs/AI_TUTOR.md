@@ -2,7 +2,7 @@
 
 [English](../AI_TUTOR.md) · [Čeština](AI_TUTOR.md) · [Slovenčina](../sk/AI_TUTOR.md) · [Русский](../ru/AI_TUTOR.md)
 
-## Nevydáno — vzhled statistik a AI Tutora
+## v0.23.0 — vzhled statistik a AI Tutora
 
 AI Tutor odděluje ovládání serveru/modelu/jazyka a uložené historie do karet, vedle sebe v širokém okně a pod sebou v kompaktním. Výběr modelu má celý řádek. Vlastník konverzace, přepis, otázka a Odeslat/Zastavit sdílejí ohraničenou plochu pro čtení a psaní. Zpráva o obnově se opakuje u tlačítek opakování, zahození a přerušení, aby bylo potvrzení čitelné po posunu stránky. Navigace a změna velikosti zachovají koncepty, prvky, výběr historie a běžící úlohy. Připojení je výslovné; otevření historie zůstává offline.
 
