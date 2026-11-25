@@ -69,3 +69,7 @@ CTkFrame.bind forwards Configure to its canvas: widget-local resize callbacks mu
 ## 2026-11-25 · Flashcard retry
 
 Keep rating-write failure separate from postcommit read failure. Preserve revealed content for a failed write; after a successful write, disable old rating controls and retry only the next-card read. Put retry feedback beside long-answer rating controls and use localized action names.
+
+## 2026-11-25 · Responsive reports and Tutor
+
+Use a stable shared-container width to wrap labels inside equal-width columns. Deriving wrap length from each rounded card width can cause a one-pixel geometry loop during resize. Reflow only when the column mode changes, and keep recovery warnings beside their confirmation controls.

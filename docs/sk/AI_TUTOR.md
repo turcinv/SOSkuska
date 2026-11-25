@@ -2,6 +2,10 @@
 
 [English](../AI_TUTOR.md) · [Čeština](../cs/AI_TUTOR.md) · [Slovenčina](AI_TUTOR.md) · [Русский](../ru/AI_TUTOR.md)
 
+## Nevydané — vzhľad štatistík a AI Tutora
+
+AI Tutor oddeľuje ovládanie servera/modelu/jazyka a uloženej histórie do kariet, vedľa seba v širokom okne a pod sebou v kompaktnom. Výber modelu má celý riadok. Vlastník konverzácie, prepis, otázka a Odoslať/Zastaviť zdieľajú ohraničenú plochu na čítanie a písanie. Správa o obnove sa opakuje pri tlačidlách opakovania, zahodenia a prerušenia, aby bolo potvrdenie čitateľné po posune stránky. Navigácia a zmena veľkosti zachovajú koncepty, prvky, výber histórie a bežiace úlohy. Pripojenie je výslovné; otvorenie histórie zostáva offline.
+
 V AI Tutor pripoj vlastný server Ollama cez Connect / refresh, vyber model a jazyk odpovede a zadaj otázku. Odpoveď prichádza priebežne; Stop ju zastaví. Ostatné obrazovky zostávajú použiteľné počas generovania aj bez Ollamy. Chat sa ukladá do miestnej databázy a možno ho otvoriť po reštarte; pozri sprievodcu históriou.
 
 ## Prvé použitie

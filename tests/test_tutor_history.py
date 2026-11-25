@@ -177,7 +177,7 @@ class HistoryUiTests(unittest.TestCase):
         page.history_offset=0;page.history_has_next=True
         page.history_rows={'1 · First':{'id':1,'revision':1}};page.pending_delete=None
         page.history_choice=Mock();page.history_choice.get.return_value='1 · First'
-        page.history_menu=Mock();page.delete_button=Mock();page.status=Mock();page.controls=Mock()
+        page.history_menu=Mock();page.delete_button=Mock();page.status=Mock();page.feedback=Mock();page.controls=Mock()
         return page
 
     def test_failed_next_page_read_keeps_displayed_offset_and_rows(self):

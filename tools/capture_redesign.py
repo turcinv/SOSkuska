@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import platform
+import sqlite3
 import sys
 import tempfile
 from unittest.mock import patch
@@ -28,13 +29,14 @@ def main():
     parser.add_argument('--practice-views', action='store_true', help='Capture running/setup/confirmation/result/history only')
     parser.add_argument('--flashcard-views', action='store_true', help='Capture deck/review/empty/history views only')
     parser.add_argument('--authoring-views', action='store_true', help='Capture Subjects and Question Bank only')
+    parser.add_argument('--report-views', action='store_true', help='Capture Statistics and offline Tutor views only')
     parser.add_argument('--timed-practice', action='store_true', help='Use a frozen five-minute fixture instead of untimed')
     parser.add_argument('--empty', action='store_true', help='Empty Dashboard; requires --dashboard-only')
     args = parser.parse_args()
     if args.empty and not args.dashboard_only:
         parser.error('--empty requires --dashboard-only')
-    if sum((args.practice_views, args.dashboard_only, args.flashcard_views, args.authoring_views)) > 1:
-        parser.error('Choose only one of --practice-views, --dashboard-only, --flashcard-views and --authoring-views')
+    if sum((args.practice_views, args.dashboard_only, args.flashcard_views, args.authoring_views, args.report_views)) > 1:
+        parser.error('Choose only one of --practice-views, --dashboard-only, --flashcard-views, --authoring-views and --report-views')
     dimensions = (1440, 900) if args.size == 'wide' else (1024, 700)
     args.output.mkdir(parents=True, exist_ok=True)
     # Xvfb captures must never open a native macOS/Windows application window.
@@ -78,6 +80,13 @@ def main():
                 store.add_session(1500, sid, 'Computer Science')
                 attempt = store.start_practice(sid, 2, minutes=5 if args.timed_practice else None)
                 store.save_practice_answer(attempt, 0, 1)
+                if args.report_views:
+                    store.complete_practice(attempt)
+                    saved=store.begin_tutor_turn(None,'http://127.0.0.1:11434','study-model:latest',
+                        'How do queues and stacks differ?','English')
+                    store.finish_tutor_turn(saved['id'],saved['turn_id'],
+                        'A queue removes the oldest item first (FIFO). A stack removes the newest item first (LIFO).\n\nUse a queue for work handled in arrival order, and a stack for undo history. This is a disposable captured reply, not a live model response.',
+                        'completed',expected_revision=saved['revision'])
         ctk.set_default_color_theme('dark-blue')
         ctk.set_widget_scaling(1)
         ctk.set_window_scaling(1)
@@ -104,6 +113,10 @@ def main():
             image.save(args.output / (name + '.png'))
 
         def dashboard():
+            if args.report_views:
+                app.navigate("Statistics")
+                app.after(400,guard(statistics))
+                return
             if args.authoring_views:
                 app.navigate('My Subjects')
                 app.after(400, guard(subjects))
@@ -159,6 +172,40 @@ def main():
 
         def practice_history_ready():
             capture('practice-history')
+            app.close()
+
+        def statistics():
+            capture('statistics')
+            app.scroll._parent_canvas.yview_moveto(1)
+            app.after(400,guard(statistics_daily))
+
+        def statistics_daily():
+            capture('statistics-daily')
+            with patch.object(app.store,'statistics',side_effect=sqlite3.OperationalError('locked')):
+                app.statistics_page.load()
+            app.scroll.scroll_to_top()
+            app.after(400,guard(statistics_retry))
+
+        def statistics_retry():
+            capture('statistics-retry')
+            app.navigate('AI Tutor')
+            app.after(400,guard(tutor))
+
+        def tutor():
+            assert app.tutor_page.task is None and app.tutor_page.connected_endpoint is None
+            capture('tutor')
+            app.tutor_page.open_button.invoke()
+            app.tutor_page.prompt.insert('1.0','Give me a short example to check my understanding.')
+            app.scroll._parent_canvas.yview_moveto(.35)
+            app.after(400,guard(tutor_conversation))
+
+        def tutor_conversation():
+            capture('tutor-conversation')
+            app.scroll._parent_canvas.yview_moveto(1)
+            app.after(400,guard(tutor_footer))
+
+        def tutor_footer():
+            capture('tutor-footer')
             app.close()
 
         def subjects():
@@ -261,7 +308,8 @@ def main():
         'platform': platform.platform(), 'python': platform.python_version(),
         'customtkinter': ctk.__version__, 'content': 'Disposable fixture only; no user data',
         'scope': 'Linux Xvfb capture; not native Windows/macOS acceptance',
-        'screens': (['subjects', 'subject-editor', 'question-bank', 'question-editor', 'question-editor-footer', 'topic-editor', 'question-empty']
+        'screens': (['statistics', 'statistics-daily', 'statistics-retry', 'tutor', 'tutor-conversation', 'tutor-footer']
+                    if args.report_views else ['subjects', 'subject-editor', 'question-bank', 'question-editor', 'question-editor-footer', 'topic-editor', 'question-empty']
                     if args.authoring_views else ['decks', 'deck', 'flashcard', 'flashcard-revealed', 'flashcard-complete', 'deck-no-due', 'flashcard-history']
                     if args.flashcard_views else ['practice', 'practice-setup', 'practice-confirm', 'practice-result', 'practice-history']
                     if args.practice_views else ['dashboard'] if args.dashboard_only

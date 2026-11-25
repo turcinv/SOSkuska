@@ -2,6 +2,10 @@
 
 [English](../CURRENT_ARCHITECTURE.md) · [Čeština](../cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](CURRENT_ARCHITECTURE.md) · [Русский](../ru/CURRENT_ARCHITECTURE.md)
 
+## Nevydané — vzhľad štatistík a AI Tutora
+
+Štatistiky zoskupujú výber obdobia a Obnoviť do záhlavia. Tri súhrnné karty sú vedľa seba v širokom okne, inak pod sebou. Aktivita predmetov a dní zostáva nižšie s čitateľne zalomenými popismi. Zmena veľkosti zachová existujúci prehľad bez dotazu do databázy; chyba obnovenia ponechá predchádzajúcu snímku. Definície, vážená úspešnosť a počty vlastných hodnotení sa nemenia. AI Tutor oddeľuje ovládanie servera/modelu/jazyka a uloženej histórie do kariet, vedľa seba v širokom okne a pod sebou v kompaktnom. Výber modelu má celý riadok. Vlastník konverzácie, prepis, otázka a Odoslať/Zastaviť zdieľajú ohraničenú plochu na čítanie a písanie. Správa o obnove sa opakuje pri tlačidlách opakovania, zahodenia a prerušenia, aby bolo potvrdenie čitateľné po posune stránky. Navigácia a zmena veľkosti zachovajú koncepty, prvky, výber histórie a bežiace úlohy. Pripojenie je výslovné; otvorenie histórie zostáva offline.
+
 ## v0.22.0 — vzhľad predmetov a banky otázok
 
 Predmety a banka otázok teraz zoskupujú názvy, počty a akcie v záhlaví a označené hľadanie a filtre na spoločných plochách. Akcie predmetu majú dva riadky; kartičky majú dva stĺpce od 950 logických pixelov stránky, inak jeden. Zmena veľkosti preskladá existujúce kartičky bez dotazu do databázy. Polia odpovedí majú dva stĺpce od 850 logických pixelov panela, inak sú pod sebou; náhľad správnej odpovede je zvýraznený iba v zozname na úpravy. Stránkovanie zostáva po 50 otázkach. Koncepty, pôvodné snímky úprav, filtre, identita tém, kontroly zastaraného stavu a náhľad CSV zachovávajú doterajšie správanie. Vydaná verzia zostáva v0.22.0, schéma 10.

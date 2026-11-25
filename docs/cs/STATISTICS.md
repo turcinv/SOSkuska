@@ -2,6 +2,10 @@
 
 [English](../STATISTICS.md) · [Čeština](STATISTICS.md) · [Slovenčina](../sk/STATISTICS.md) · [Русский](../ru/STATISTICS.md)
 
+## Nevydáno — vzhled statistik a AI Tutora
+
+Statistiky seskupují výběr období a Obnovit do záhlaví. Tři souhrnné karty jsou vedle sebe v širokém okně, jinak pod sebou. Aktivita předmětů a dnů zůstává níže s čitelně zalomenými popisky. Změna velikosti zachová existující přehled bez dotazu na databázi; chyba obnovení ponechá předchozí snímek. Definice, vážená úspěšnost a počty vlastních hodnocení se nemění.
+
 V nabídce **Statistics** zvol Last 7 days, Last 30 days nebo All time. Přehled ukazuje uložený čas a sezení, otázkami váženou úspěšnost dokončených testů, počty vlastních hodnocení kartiček, čas podle předmětu a denní aktivitu. Refresh nebo návrat na obrazovku načte nový snímek. Nejde o měření zvládnutí učiva.
 
 ## Význam čísel

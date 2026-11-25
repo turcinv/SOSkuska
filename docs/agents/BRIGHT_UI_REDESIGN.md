@@ -8,7 +8,7 @@ Read the plan from the documentation PR or from `main` once merged. Start implem
 
 Suggested first prompt for the next session:
 
-> Read `docs/agents/BRIGHT_UI_REDESIGN.md` and the repository guidance. Inspect the implementation handoffs and branch first. After the Step 5 authoring portion is merged, implement the Statistics and AI Tutor portion of Step 5 only with disposable data and focused checks.
+> Read `docs/agents/BRIGHT_UI_REDESIGN.md` and the repository guidance. Inspect the implementation handoffs and branch first. After the Step 5 Statistics/Tutor portion is merged, implement Settings and shared backup/import panels only with disposable data and focused checks.
 
 ## Design direction
 
@@ -71,6 +71,10 @@ Split this into as many sessions as needed. In one session, align **Subjects and
 ### Step 5 authoring handoff · 25 November 2026
 
 Subjects and Question Bank merged through [PR #50](https://github.com/turcinv/SOSkuska/pull/50), commit `1bf6763`, and ship in v0.22.0; see [captures, validation and continuation scope](design/bright-ui-step5-authoring/README.md). Header/search/filter cards, two-row subject actions, responsive answer fields, readable authoring previews and empty states use shared styles. Resizing repositions existing subject cards without SQL reads; logical-unit wrapping and breakpoints preserve compact/scaled layouts. Existing editor widgets, snapshots, filters, topic identity, pagination and import paths remain. Release labels align to v0.22.0/schema 10. All five feature CI jobs passed; the bounded suite includes 19 GUI scripts. Continue only when requested with the **Statistics and AI Tutor portion of Step 5**, leaving Settings/data panels for another session.
+
+### Step 5 Statistics/Tutor handoff · 25 November 2026
+
+Implemented on `feature/bright-ui-statistics-tutor`; see [captures, validation and continuation](design/bright-ui-step5-reports/README.md). Statistics groups period controls and responsive summary cards; Tutor groups connection/history and conversation/composer surfaces, with full-width model selection and recovery feedback beside its controls. Stable parent widths avoid uniform-column rounding loops. Existing calculations, snapshots, drafts, context ownership, streaming, Stop and persistence behavior remain. New four-language 100/150% startup layout/state probes run as a separate bounded GUI script. This portion is unreleased; labels remain v0.22.0/schema 10. Next only when requested after merge: **Settings and shared backup/import panels**, then Step 6 acceptance/demo.
 
 ## Step 6 — Regression checks and teacher demo
 

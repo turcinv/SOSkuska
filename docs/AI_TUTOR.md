@@ -2,6 +2,10 @@
 
 [English](AI_TUTOR.md) · [Čeština](cs/AI_TUTOR.md) · [Slovenčina](sk/AI_TUTOR.md) · [Русский](ru/AI_TUTOR.md)
 
+## Unreleased — Statistics and AI Tutor design
+
+AI Tutor groups server/model/language controls and saved-history controls into separate cards, side by side on wide screens and stacked in compact windows. The model selector has a full-width row. Conversation ownership, transcript, prompt and Send/Stop controls share a bordered reading/editing surface. Recovery feedback is repeated beside the retry/discard/interruption controls so confirmations remain readable after scrolling. Navigation and resizing keep drafts, widgets, history selection and active jobs. Connection remains explicit; opening history stays offline.
+
 Connect your Ollama server through **Connect / refresh**, choose a model and answer language, type a question and select **Send**. Replies arrive progressively; **Stop** cancels generation. Other screens remain usable during generation and without Ollama. Chat is saved in the local database and can be reopened after restart; see the saved-history guide.
 
 ## First use

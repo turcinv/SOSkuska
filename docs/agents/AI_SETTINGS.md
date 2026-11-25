@@ -46,3 +46,7 @@ English instructions for development agents, referenced by [AGENTS.md](../../AGE
 ## Appearance safeguards (v0.16.0)
 
 Schema 9 adds appearance_mode Light/Dark/System with Dark default. Keep migration/revisions atomic; preserve language/history. Save applies to existing paired-color widgets through appearance.apply_appearance, never by screen reconstruction or I/O. Theme changes must not reset drafts, focus/practice, or an active Tutor request. Linux System deliberately resolves to Light: pinned darkdetect otherwise starts gsettings synchronously at CTk's 30ms polling cadence. Windows/macOS System uses native detection; use only public CTk APIs. Caption/checkmark/disabled-on-primary/placeholder colors have distinct roles; audit contrast on real widget backgrounds. Maintain all four catalogs/guides, frozen startup checks and schema-8 migration fixture. The baseline-testing gate was satisfied by the user on 22 November 2026 and PR #32 merged; retain normal per-PR merge/release authorization for future work.
+
+## Tutor feedback placement
+
+Tutor `set_status` updates both the header and the feedback beside recovery controls. Keep copy-before-discard and other-window interruption warnings visible near their confirmation buttons after scrolling. The model selector needs a full-width row for localized instructions; preserve its canonical value and explicit connection semantics. Geometry changes only reposition existing setup/recovery widgets.
