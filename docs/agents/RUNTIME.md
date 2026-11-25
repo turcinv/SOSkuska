@@ -78,3 +78,7 @@ Schema 10 adds focus_runs. Preserve the exclusive persistent `.focus.lock`, five
 ## Dashboard responsive geometry
 
 The scrolling adapter converts actual canvas/event widths into CTk logical units, excluding the scrollbar. Use that conversion for breakpoints and label wrapping; never feed native event widths directly into scaled wraplength. Reflow on viewport width changes as well as root resize and preserve hidden panels/drafts. Compact bounds checks must measure against the actual viewport with recovery/retry visible and long selected names. Simulate startup DPI in fresh processes with scaling set before widget creation; CTk 5.2.2 scaling callbacks can re-grid hidden widgets if invoked on a live app. Native/live-monitor DPI remains separate acceptance evidence.
+
+## Equal-column wrapping
+
+Derive label wrap lengths in uniform responsive columns from their shared container width, with gutter/inset/rounding allowance, not each child card's rounded width. The Czech Statistics resize probe exposed alternating one-pixel allocations that rewrapped indefinitely. Only re-grid on column-mode changes and avoid configuring unchanged wrap lengths. Keep these callbacks local to destroyed-with-report containers; resizing must not reread data or replace live editors/jobs.

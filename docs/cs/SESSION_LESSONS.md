@@ -55,3 +55,7 @@ CTkFrame.bind předává Configure na canvas: lokální změnu velikosti neodmí
 ## 2026-11-25 · Flashcard retry
 
 Odlišuj chybu zápisu hodnocení od chyby následného čtení. Při chybě zápisu zachovej odhalenou odpověď; po úspěšném zápisu vypni stará hodnocení a opakuj pouze čtení další kartičky. Zprávu o opakování zobraz u hodnocení dlouhé odpovědi a použij přeložené názvy akcí.
+
+## 2026-11-25 · Responzivní přehledy a Tutor
+
+Popisky ve stejně širokých sloupcích zalamuj podle stabilní šířky společného kontejneru. Šířka jednotlivých zaokrouhlených karet může při změně velikosti způsobit smyčku o jeden pixel. Rozložení měň jen při přepnutí počtu sloupců a varování zobraz u potvrzovacích tlačítek.

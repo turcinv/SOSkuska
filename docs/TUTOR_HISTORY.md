@@ -2,6 +2,10 @@
 
 [English](TUTOR_HISTORY.md) · [Čeština](cs/TUTOR_HISTORY.md) · [Slovenčina](sk/TUTOR_HISTORY.md) · [Русский](ru/TUTOR_HISTORY.md)
 
+## Unreleased — Statistics and AI Tutor design
+
+AI Tutor groups server/model/language controls and saved-history controls into separate cards, side by side on wide screens and stacked in compact windows. The model selector has a full-width row. Conversation ownership, transcript, prompt and Send/Stop controls share a bordered reading/editing surface. Recovery feedback is repeated beside the retry/discard/interruption controls so confirmations remain readable after scrolling. Navigation and resizing keep drafts, widgets, history selection and active jobs. Connection remains explicit; opening history stays offline.
+
 AI Tutor now saves conversations locally, including the original server/model and reply status. Open saved history without networking, reconnect explicitly to continue, or delete a selected conversation after confirmation. Released in v0.12.0 with schema 7, which migrates existing study data transactionally.
 
 ## Use saved history

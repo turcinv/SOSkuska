@@ -25,6 +25,7 @@ GUI_CHECKS = (
     'check_tutor_history.py',
     'check_ui_languages.py',
     'check_authoring_layout.py',
+    'check_report_layout.py',
 )
 
 

@@ -44,6 +44,7 @@ class SettingsUiTests(unittest.TestCase):
         page.connected_endpoint = endpoint
         page.language = Mock()
         page.status = Mock()
+        page.feedback = Mock()
         page.clear_button = Mock()
         page.models = []
         page.turns = []
