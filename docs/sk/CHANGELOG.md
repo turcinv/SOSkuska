@@ -2,7 +2,7 @@
 
 [English](../../CHANGELOG.md) · [Čeština](../cs/CHANGELOG.md) · [Slovenčina](CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
-## Nevydané — vzhľad štatistík a AI Tutora
+## 0.23.0 — 2026-11-25
 
 - Štatistiky zoskupujú výber obdobia a Obnoviť do záhlavia. Tri súhrnné karty sú vedľa seba v širokom okne, inak pod sebou. Aktivita predmetov a dní zostáva nižšie s čitateľne zalomenými popismi. Zmena veľkosti zachová existujúci prehľad bez dotazu do databázy; chyba obnovenia ponechá predchádzajúcu snímku. Definície, vážená úspešnosť a počty vlastných hodnotení sa nemenia.
 - AI Tutor oddeľuje ovládanie servera/modelu/jazyka a uloženej histórie do kariet, vedľa seba v širokom okne a pod sebou v kompaktnom. Výber modelu má celý riadok. Vlastník konverzácie, prepis, otázka a Odoslať/Zastaviť zdieľajú ohraničenú plochu na čítanie a písanie. Správa o obnove sa opakuje pri tlačidlách opakovania, zahodenia a prerušenia, aby bolo potvrdenie čitateľné po posune stránky. Navigácia a zmena veľkosti zachovajú koncepty, prvky, výber histórie a bežiace úlohy. Pripojenie je výslovné; otvorenie histórie zostáva offline.

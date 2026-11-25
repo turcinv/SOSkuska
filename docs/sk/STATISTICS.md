@@ -2,7 +2,7 @@
 
 [English](../STATISTICS.md) · [Čeština](../cs/STATISTICS.md) · [Slovenčina](STATISTICS.md) · [Русский](../ru/STATISTICS.md)
 
-## Nevydané — vzhľad štatistík a AI Tutora
+## v0.23.0 — vzhľad štatistík a AI Tutora
 
 Štatistiky zoskupujú výber obdobia a Obnoviť do záhlavia. Tri súhrnné karty sú vedľa seba v širokom okne, inak pod sebou. Aktivita predmetov a dní zostáva nižšie s čitateľne zalomenými popismi. Zmena veľkosti zachová existujúci prehľad bez dotazu do databázy; chyba obnovenia ponechá predchádzajúcu snímku. Definície, vážená úspešnosť a počty vlastných hodnotení sa nemenia.
 
