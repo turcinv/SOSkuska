@@ -5,6 +5,7 @@
 
 ## Nevydané
 
+- Redizajn Dashboardu, krok 2: spoločné študijné ovládanie, akcia pre prvý predmet, predmety/hľadanie nižšie, kompaktný súhrn, responzívny bočný obsah a výber sidebaru. Logické rozmery plochy/názvov; obnova/opakovanie zápisu v štyroch jazykoch pri počiatočnej mierke 100/150 %.
 - Spoločný modrý/mätový vzhľad s párovými Light/Dark plochami, samostatným prejdením vedľajších tlačidiel a jednotným pozadím priebehu. Rozloženie, predvolené hodnoty a schéma 10 zostávajú; uložené dočasné snímky pred/po a skice budúceho rozloženia.
 
 ## 0.18.1 — 2026-11-22

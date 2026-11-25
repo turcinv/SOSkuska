@@ -1,6 +1,6 @@
 # SOSkúška bright UI redesign plan
 
-This is an internal implementation plan for the native Python/CustomTkinter app. The goal is to make the redesign visible in a semester presentation and help students identify their next action with less searching. The existing Light theme already uses white cards and purple accents. The main visual change is a new dashboard layout, followed by clearer Practice Test and Flashcard review screens.
+This is an internal implementation plan for the native Python/CustomTkinter app. The goal is to make the redesign visible in a semester presentation and help students identify their next action with less searching. The original Light theme used white cards and purple accents; Step 1 replaces the shared palette. The main visual change is a new dashboard layout, followed by clearer Practice Test and Flashcard review screens.
 
 ## Session handoff
 
@@ -8,7 +8,7 @@ Read the plan from the documentation PR or from `main` once merged. Start implem
 
 Suggested first prompt for the next session:
 
-> Read `docs/agents/BRIGHT_UI_REDESIGN.md` and the repository guidance. Implement Step 1 only. Use disposable data, run its focused checks, and report what is ready for Step 2.
+> Read `docs/agents/BRIGHT_UI_REDESIGN.md` and the repository guidance. Inspect the implementation handoffs and branch first. After Step 2 is merged, implement Step 3 only with disposable data and focused checks.
 
 ## Design direction
 
@@ -26,7 +26,7 @@ Suggested first prompt for the next session:
 
 ### Step 1 handoff · 25 November 2026
 
-Theme foundation implemented on `feature/bright-ui-theme`, pending PR merge. See [captures, sketches, reproduction commands and validation](design/bright-ui-step1/README.md). Shared palette and secondary hover role are applied; Statistics progress tracks reuse the shared surface. Light/Dark captures use the same disposable fixture. Local validation: 308 unit tests (two platform skips), 18 GUI scripts and 12 focused appearance tests passed; independent Sol medium re-review found no blockers. Published version remains v0.18.1, schema 10. Native platform/scaling checks are not claimed. Continue with **Step 2**, not the whole plan; repeat acceptance after layout work before v1.0.0.
+Theme foundation merged through [PR #43](https://github.com/turcinv/SOSkuska/pull/43), commit `60a8082`. See [captures, sketches, reproduction commands and validation](design/bright-ui-step1/README.md). Shared palette and secondary hover role are applied; Statistics progress tracks reuse the shared surface. Light/Dark captures use the same disposable fixture. Local validation: 308 unit tests (two platform skips), 18 GUI scripts and 12 focused appearance tests passed; independent Sol medium re-review found no blockers. Published version remains v0.18.1, schema 10. Native platform/scaling checks are not claimed. Continue with **Step 2**, not the whole plan; repeat acceptance after layout work before v1.0.0.
 
 ## Step 2 — Dashboard and sidebar
 
@@ -35,6 +35,10 @@ Theme foundation implemented on `feature/bright-ui-theme`, pending PR merge. See
 1. Replace the greeting-led layout with a **Today's Study** panel that groups the subject picker, Start Studying action, timer controls, and daily-goal progress. Keep recovery and save-retry actions visible when needed. Keep the checklist accessible in the same section.
 2. Put **My Subjects** and its search directly below Today's Study. Place upcoming exams and recent sessions beside the main column at the wide size and stack them below it at the minimum size. Move lifetime metrics into a compact summary. Give the sidebar a clear selected state and preserve collapse and navigation behavior.
 3. Run `check_dashboard.py` and `check_focus_recovery.py`. Verify empty and populated dashboards, long subject names, sidebar collapse, recovery and the start/pause/resume/finish flow at 1440 × 900 and 1024 × 700. Check that a new user can find the first action if the database has no subjects. End after the dashboard is ready to show by itself.
+
+### Step 2 handoff · 25 November 2026
+
+Dashboard/sidebar implemented on `feature/bright-ui-dashboard`, pending PR merge. See [screenshots, validation, reproduction and next-session scope](design/bright-ui-step2/README.md). The study panel, subject/search ordering, compact summary and sidebar selection are in place. Width/wrapping now use logical viewport dimensions; four-language checks cover 100/150% startup scaling, long selected names and recovery/retry controls. Local full suite: 308 unit tests (two platform skips), all 18 GUI scripts passed. Sol medium re-review found no remaining blockers. Published labels stay v0.18.1/schema 10; native hardware/live-DPI claims are excluded. After merge, continue with **Step 3 only**.
 
 ## Step 3 — Practice Tests
 

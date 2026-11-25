@@ -22,7 +22,55 @@ def widgets(root):
         yield from widgets(child)
 
 
-def check(path,language,reopen=False):
+def dashboard_layout(app, scale):
+    """Measure startup DPI in fresh processes, not live CTk scaling changes."""
+    def visible(widget):
+        app.update_idletasks()
+        canvas = app.scroll._parent_canvas
+        assert widget.winfo_ismapped()
+        left, top = widget.winfo_rootx(), widget.winfo_rooty()
+        right, bottom = left + widget.winfo_width(), top + widget.winfo_height()
+        assert canvas.winfo_rootx() <= left and right <= canvas.winfo_rootx() + canvas.winfo_width(), (app.translator.language, widget, left, right, canvas.winfo_width())
+        assert canvas.winfo_rooty() <= top and bottom <= canvas.winfo_rooty() + canvas.winfo_height(), (app.translator.language, widget, top, bottom, canvas.winfo_height())
+
+    def settle():
+        ready = ctk.BooleanVar(master=app, value=False)
+        app.after(200, lambda: ready.set(True))
+        app.wait_variable(ready)
+        app.reflow(); app.update_idletasks()
+
+    long_name = ('Длинный предмет ' + 'математика ' * 9).strip()
+    sid = app.store.create_subject(long_name)
+    app.refresh_data(); app.select_subject(long_name); app.refresh_data(); settle()
+    assert app.layout_mode == 'compact'
+    assert app.subject_selection.get() == long_name and app.selected_subject_id == sid
+    app.scroll._parent_canvas.yview_moveto(0)
+    for widget in (app.start_button, app.subject_picker, app.search, app.manage_subjects_button):
+        visible(widget)
+    card = next(card for name, card in app.subject_cards if name == long_name)
+    title = next(w for w in card.winfo_children() if isinstance(w,ctk.CTkLabel) and w.cget('text') == long_name)
+    assert title.cget('wraplength') <= card.winfo_width() / scale - 30
+    assert title.winfo_height() > 28 * scale
+    assert any(isinstance(w,ctk.CTkLabel) and w.cget('text')==app.translator.text("Today's Study") for w in widgets(app.study_panel))
+    app.store.start_focus_checkpoint(sid, 900)
+    app.store.release_focus(); app.refresh_focus_recovery(); settle()
+    app.scroll._parent_canvas.yview_moveto(0)
+    for widget in app.recover_focus_button.master.winfo_children():
+        if isinstance(widget,ctk.CTkButton): visible(widget)
+    visible(app.recovery_status)
+    app.discard_focus(); app.update_idletasks(); visible(app.discard_focus_button)
+    app.cancel_focus_discard(); app.recover_focus()
+    assert app.session_open and app.running_since is None
+    with patch.object(app.store,'add_session',side_effect=sqlite3.OperationalError('full')):
+        assert not app.finish_focus()
+    app.show_focus_retry(); app.update_idletasks()
+    visible(app.finish_button); visible(app.focus_retry_label)
+    assert app.focus_retry_label.cget('text')
+    assert app.finish_focus()
+    app.store.delete_subject(sid); app.refresh_data()
+
+
+def check(path,language,reopen=False,scale=1.0):
     next_language=list(LANGUAGE_CODES)[(list(LANGUAGE_CODES).index(language)+1)%4]
     if not reopen:
         store=Store(path)
@@ -36,6 +84,7 @@ def check(path,language,reopen=False):
         finally:store.close()
     errors=[]
     with patch('socket.create_connection',side_effect=AssertionError('Unexpected network')):
+        ctk.set_widget_scaling(scale); ctk.set_window_scaling(scale)
         app=Dashboard(path)
         def run():
             try:
@@ -46,6 +95,7 @@ def check(path,language,reopen=False):
                     app.navigate('Settings');assert app.settings_page.ui_language.get()==next_language
                     app.close();return
                 tr=app.translator.text
+                dashboard_layout(app, scale)
                 assert tr('Dashboard') in app.nav_buttons[0].cget('text')
                 assert tr('Settings') in app.settings_btn.cget('text')
                 sid=app.store.subjects()[0]['id'];deck=app.store.decks()[0]['id'];qid=app.store.questions(sid)[0]['id']
@@ -133,13 +183,15 @@ def check(path,language,reopen=False):
 
 
 if __name__=='__main__':
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--language');parser.add_argument('--data',type=Path);parser.add_argument('--reopen',action='store_true');args=parser.parse_args()
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--language');parser.add_argument('--data',type=Path);parser.add_argument('--reopen',action='store_true');parser.add_argument('--scale',type=float,choices=(1.0,1.5),default=1.0);args=parser.parse_args()
     ctk.set_appearance_mode('dark')
-    if args.language:check(args.data,args.language,args.reopen)
+    if args.language:check(args.data,args.language,args.reopen,args.scale)
     else:
         with tempfile.TemporaryDirectory() as folder:
             for language in LANGUAGE_CODES:
                 path=Path(folder)/(language+'.db')
                 for flags in ([],['--reopen']):
                     subprocess.run([sys.executable,'-X','faulthandler','-u',str(Path(__file__).resolve()),'--language',language,'--data',str(path),*flags],check=True,timeout=25)
-        print('PASS: four translated interfaces, canonical dropdowns, unchanged user content, independent answer language, draft retention, compact scrolling, trace cleanup and fresh-process language application',flush=True)
+                scaled=Path(folder)/(language+'-150.db')
+                subprocess.run([sys.executable,'-X','faulthandler','-u',str(Path(__file__).resolve()),'--language',language,'--data',str(scaled),'--scale','1.5'],check=True,timeout=25)
+        print('PASS: four translated interfaces, compact Dashboard at 100/150 percent including recovery/retry/long selected names, canonical dropdowns, unchanged user content, independent answer language, draft retention, compact scrolling, trace cleanup and fresh-process language application',flush=True)

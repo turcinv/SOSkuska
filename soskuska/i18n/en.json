@@ -698,5 +698,9 @@
   "Could not refresh the question bank. Your draft is kept; reopen Questions to retry.": "Could not refresh the question bank. Your draft is kept; reopen Questions to retry.",
   "Delete question “{v0}” permanently? This cannot be undone.": "Delete question “{v0}” permanently? This cannot be undone.",
   "The selected topic no longer exists. Choose another topic or No topic before saving.": "The selected topic no longer exists. Choose another topic or No topic before saving.",
-  "Unavailable topic: {v0}": "Unavailable topic: {v0}"
+  "Unavailable topic: {v0}": "Unavailable topic: {v0}",
+  "Choose a subject and start a focused session.": "Choose a subject and start a focused session.",
+  "Create your first subject": "Create your first subject",
+  "Lifetime summary": "Lifetime summary",
+  "Today's Study": "Today's Study"
 }

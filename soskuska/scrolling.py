@@ -31,6 +31,20 @@ class DashboardScrollFrame(ctk.CTkScrollableFrame):
             root.bind("<Button-4>", self._legacy_wheel, add="+")
             root.bind("<Button-5>", self._legacy_wheel, add="+")
 
+    def viewport_width(self):
+        """Visible width in CTk logical units, excluding the scrollbar.
+
+        CTk 5.2.2 reports native pixel geometry but scales widget dimensions.
+        Keep the scaling conversion beside its private canvas in this adapter.
+        """
+        return self.logical_pixels(self._parent_canvas.winfo_width())
+
+    def logical_pixels(self, pixels):
+        return self._reverse_widget_scaling(pixels)
+
+    def is_viewport(self, widget):
+        return widget is self._parent_canvas
+
     def scroll_to_top(self):
         self._parent_canvas.yview_moveto(0)
 

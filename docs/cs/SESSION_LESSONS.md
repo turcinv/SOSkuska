@@ -43,3 +43,7 @@ Trvalá pravidla patří do příslušného souboru pokynů, nové datované ov�
 ## Další kroky · 22. listopadu 2026
 
 Stav 22. listopadu 2026: uživatel potvrdil dokončení testování v0.15.0 a schválil PR #32. Tento seznam nyní cílí na v0.18.1; jednotlivé výsledky čistého počítače/DPI zde nejsou zaznamenané. Nezaškrtnuté body zůstávají neověřené; při testování nového vydání doplň důkazy pro konkrétní zařízení. [Další kroky · 22. listopadu 2026](NEXT_STEPS.md).
+
+## Revize Dashboardu · 25. listopadu 2026
+
+Dashboard, krok 2, sdružuje studijní akce, pod nimi předměty/hledání, kompaktní souhrn a výběr sidebaru. Rozměry plochy a zalamování převádět z nativních pixelů na logické CTk jednotky uvnitř adaptéru posouvání; meze ověřovat proti skutečné ploše. Simulované DPI nastavit před konstrukcí widgetů v nových procesech: živá změna CTk 5.2.2 může znovu zobrazit skryté stránky. Revize bez blokujících nálezů; 308 unit testů (dva přeskočené), všech 18 GUI skriptů v kontejneru včetně čtyř jazyků a obnovy/opakování při počátečním měřítku 100/150 %. Nativní/živé DPI ověření je oddělené.

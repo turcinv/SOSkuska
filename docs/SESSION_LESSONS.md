@@ -57,3 +57,7 @@ Keep a machine's backup consent/folder out of exported study data. Separate edit
 ## Astra main review fixes · 22 November 2026
 
 The Astra 6.2 low-effort review of main/v0.18.0 identified three P2 issues and one P3 issue. Track them with stable IDs A62-01 through A62-04 in [Review findings](REVIEW_FINDINGS.md), initially committed Open before implementation. Keep the tracker after resolution as evidence; mark fixes verified on their branch separately from merge/release status. Compare editable source snapshots atomically, keep changed-delete warnings beside Confirm, preserve same-subject editor identities and unavailable topic IDs, and reconcile background backup success across windows without another write.
+
+## Dashboard redesign review · 25 November 2026
+
+Dashboard Step 2 groups study actions and keeps subjects/search below them, with a compact metrics summary and explicit sidebar selection. Viewport dimensions and title wrap lengths must be converted from native pixels to CTk logical units inside the scrolling adapter. Bounds checks must use the real viewport. Set simulated DPI before constructing widgets in fresh processes: live CTk 5.2.2 scaling can re-grid hidden pages. Re-review found no blockers; 308 unit tests (two skips) and all 18 container GUI scripts passed, including four-language 100/150% startup recovery/retry checks. Native platform/live-DPI acceptance is separate.

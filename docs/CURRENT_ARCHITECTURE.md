@@ -137,7 +137,7 @@ Dashboard metrics use actual total time, saved sessions, subject count and study
 
 ## Layout and scrolling
 
-Target window: 1440 × 900; minimum: 1024 × 700. Sidebar is 230 px, collapsed 72 px. With less than 1100 px remaining, Dashboard metrics become 2 × 2 and its right panel moves below the main content. My Subjects uses two columns above its 850 px breakpoint and one below; long names wrap.
+Target: 1440 × 900; minimum: 1024 × 700. **Unreleased redesign Step 2:** Today’s Study groups subject selection, Start Studying, timer/recovery/retry controls, daily progress and checklist. Subjects and labelled search follow it; lifetime metrics are a compact summary below the columns. The visible viewport breakpoint is 1100 logical CTk pixels, excluding the scrollbar: exams/recent sessions sit alongside in wide mode and stack below in compact mode; Dashboard subjects use two/one columns respectively. Sidebar remains 230 logical pixels, collapsed 72. My Subjects still uses its separate 850-pixel breakpoint. Long names wrap; new workspaces offer Create your first subject. Bounds are checked at 100/150% startup scaling in all four languages; native/live-DPI acceptance remains separate.
 
 Search is independent per screen and uses casefold. Ctrl+K / Cmd+K focuses active search; Escape clears it. Screens without search must leave hidden drafts alone. Forms and deletion confirmations are inline. Navigation cancels pending subject deletion; name/content counts are compared under the write lock before deletion, requiring a refreshed warning if changed.
 
