@@ -12,6 +12,7 @@ from unittest.mock import patch
 import customtkinter as ctk
 from app import Dashboard
 from storage import Store
+from theme import COLORS as C
 
 
 def run_check(path, resume=False):
@@ -63,11 +64,15 @@ def run_check(path, resume=False):
         aid = page.active_id
         correct = page.items[0]["correct_option"]
         page.radios[correct].invoke()
+        assert page.answer_rows[correct].cget('fg_color') == C['selected']
+        assert page.answer_progress.get() == 0.5
         page.next_button.invoke()
         assert app.store.practice_attempt(aid)["current_index"] == 1
         with patch.object(app.store, "save_practice_answer", side_effect=sqlite3.OperationalError("disk full")):
             page.radios[3].invoke()
         assert page.choice.get() == -1
+        assert all(row.cget('fg_color') == C['card'] for row in page.answer_rows)
+        assert page.answer_progress.get() == 0.5
         assert app.store.practice_items(aid)[1]["selected_option"] is None
         app.navigate("Dashboard")
         app.navigate("Practice Tests")
@@ -165,6 +170,8 @@ def run_check(path, resume=False):
         assert page.active_id is not None
         assert page.choice.get() == page.items[0]["correct_option"]
         assert page.attempt["current_index"] == 0
+        assert page.answer_rows[page.choice.get()].cget('fg_color') == C['selected']
+        assert page.answer_progress.get() > 0
         page.finish_button.invoke()
         page.confirm_button.invoke()
         assert app.store.active_practice() is None

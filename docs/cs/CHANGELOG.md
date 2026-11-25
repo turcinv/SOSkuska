@@ -3,6 +3,10 @@
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
 
+## Nevydané
+
+- Redesign nastavení testu, záhlaví, uložených odpovědí, navigace, výsledků a historie. Zachované skóre/termíny/snímky, ochrana skrytých událostí a ověření chyb zápisu/dlouhého obsahu ve čtyřech jazycích při počátečním měřítku 100/150 %.
+
 ## 0.19.0 — 2026-11-25
 
 - Redesign Dashboardu, krok 2: společné studijní ovládání, akce pro první předmět, předměty/hledání níže, kompaktní souhrn, responzivní boční obsah a výběr sidebaru. Logické rozměry plochy/názvů; obnova/opakování zápisu ve čtyřech jazycích při počátečním měřítku 100/150 %.

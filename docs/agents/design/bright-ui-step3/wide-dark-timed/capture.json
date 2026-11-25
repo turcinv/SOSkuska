@@ -1,0 +1,23 @@
+{
+  "fixture_date": "2026-11-25T12:00:00+00:00",
+  "mode": "Dark",
+  "size": [
+    1440,
+    900
+  ],
+  "language": "English",
+  "empty": false,
+  "platform": "Linux-7.0.14-linuxkit-aarch64-with-glibc2.36",
+  "python": "3.12.16",
+  "customtkinter": "5.2.2",
+  "content": "Disposable fixture only; no user data",
+  "scope": "Linux Xvfb capture; not native Windows/macOS acceptance",
+  "screens": [
+    "practice",
+    "practice-setup",
+    "practice-confirm",
+    "practice-result",
+    "practice-history"
+  ],
+  "timed_practice": true
+}

@@ -5,6 +5,7 @@ import subprocess
 import sys
 import tempfile
 import traceback
+import tkinter
 from pathlib import Path
 from unittest.mock import patch
 
@@ -12,6 +13,7 @@ import customtkinter as ctk
 from app import Dashboard
 from storage import Store
 from preferences import DEFAULTS
+from theme import COLORS as C
 from localization import Translator, LANGUAGE_CODES
 from localization_widgets import LocalizedOptionMenu
 
@@ -70,6 +72,65 @@ def dashboard_layout(app, scale):
     app.store.delete_subject(sid); app.refresh_data()
 
 
+def practice_layout(app, scale):
+    """Long-content running/setup/result/history in each language/startup DPI."""
+    sid = app.store.create_subject(('Практика ' + 'предмет ' * 12).strip())
+    prompt = ('Длинный вопрос для проверки переноса и прокрутки. ' * 18).strip()
+    answers = [(letter + ' ' + 'Подробный вариант ответа. ' * 15).strip() for letter in 'ABCD']
+    explanation = 'SNAPSHOT_EXPLANATION_ONLY_AFTER_FINISH'
+    app.store.create_question(sid, prompt, answers, 2, explanation=explanation)
+    aid = app.store.start_practice(sid, 1, minutes=5)
+    app.navigate('Practice Tests'); page = app.practice_page
+    app.update_idletasks()
+    assert page.run.winfo_ismapped() and not page.results.winfo_ismapped()
+    assert page.prompt.cget('wraplength') <= page.prompt.master.winfo_width() / scale - 30
+    assert page.prompt.winfo_height() > 60 * scale
+    assert page.answer_progress.get() == 0
+    assert all(row.cget('fg_color') == C['card'] for row in page.answer_rows)
+    assert not any(isinstance(w,ctk.CTkLabel) and explanation in w.cget('text') for w in widgets(page.run))
+    for row, label in zip(page.answer_rows,page.answer_labels):
+        assert label.cget('wraplength') <= row.winfo_width() / scale - 100
+    def click_row(index):
+        row = page.answer_rows[index]
+        children = (row.nametowidget(name) for name in row.tk.call('winfo','children',str(row)))
+        canvas = next(w for w in children if isinstance(w,tkinter.Canvas))
+        canvas.event_generate('<Button-1>', x=4, y=4)
+        app.update_idletasks()
+    def selected(index):
+        assert page.choice.get() == index
+        assert app.store.practice_items(aid)[0]['selected_option'] == (None if index == -1 else index)
+        assert [row.cget('fg_color') == C['selected'] for row in page.answer_rows] == [i == index for i in range(4)]
+        assert page.answer_progress.get() == (0 if index == -1 else 1)
+    click_row(1); selected(1)  # Highlight the choice, not the correct answer (C).
+    text = next(w for w in page.answer_labels[3].winfo_children() if isinstance(w,tkinter.Label))
+    text.event_generate('<Button-1>'); app.update_idletasks(); selected(3)
+    with patch.object(app.store,'save_practice_answer',side_effect=sqlite3.OperationalError('full')):
+        click_row(0)
+    selected(3)
+    page.clear_button.invoke(); selected(-1)
+    page.show_config(); click_row(0); page.radios[2].invoke(); selected(-1)
+    page.resume()  # Keep the run gridded to isolate the off-page guard too.
+    app.navigate('Dashboard'); text.event_generate('<Button-1>'); page.radios[2].invoke(); selected(-1)
+    app.navigate('Practice Tests'); app.update_idletasks(); selected(-1)
+    click_row(1); selected(1)
+    app.scroll._parent_canvas.yview_moveto(1); app.update_idletasks()
+    canvas=app.scroll._parent_canvas
+    for button in (page.previous_button,page.next_button,page.clear_button,page.finish_button):
+        assert button.winfo_ismapped()
+        assert button.winfo_rootx() >= canvas.winfo_rootx()
+        assert button.winfo_rootx()+button.winfo_width() <= canvas.winfo_rootx()+canvas.winfo_width()
+        assert button.winfo_rooty()+button.winfo_height() <= canvas.winfo_rooty()+canvas.winfo_height()
+    page.finish_button.invoke(); page.confirm_button.invoke(); app.update_idletasks()
+    assert page.results.winfo_ismapped() and app.store.practice_attempt(aid)['status']=='completed'
+    assert any(isinstance(w,ctk.CTkLabel) and explanation in w.cget('text') for w in widgets(page.results))
+    for label in (w for w in widgets(page.results) if isinstance(w,ctk.CTkLabel)):
+        if label.cget('wraplength'):
+            assert label.cget('wraplength') <= label.master.winfo_width()/scale - 30
+    page.show_config(); app.update_idletasks()
+    assert page.start_button.winfo_rootx()+page.start_button.winfo_width() <= canvas.winfo_rootx()+canvas.winfo_width()
+    app.store.delete_subject(sid); app.refresh_data(); app.navigate('Dashboard')
+
+
 def check(path,language,reopen=False,scale=1.0):
     next_language=list(LANGUAGE_CODES)[(list(LANGUAGE_CODES).index(language)+1)%4]
     if not reopen:
@@ -96,6 +157,7 @@ def check(path,language,reopen=False,scale=1.0):
                     app.close();return
                 tr=app.translator.text
                 dashboard_layout(app, scale)
+                practice_layout(app, scale)
                 assert tr('Dashboard') in app.nav_buttons[0].cget('text')
                 assert tr('Settings') in app.settings_btn.cget('text')
                 sid=app.store.subjects()[0]['id'];deck=app.store.decks()[0]['id'];qid=app.store.questions(sid)[0]['id']
@@ -194,4 +256,4 @@ if __name__=='__main__':
                     subprocess.run([sys.executable,'-X','faulthandler','-u',str(Path(__file__).resolve()),'--language',language,'--data',str(path),*flags],check=True,timeout=25)
                 scaled=Path(folder)/(language+'-150.db')
                 subprocess.run([sys.executable,'-X','faulthandler','-u',str(Path(__file__).resolve()),'--language',language,'--data',str(scaled),'--scale','1.5'],check=True,timeout=25)
-        print('PASS: four translated interfaces, compact Dashboard at 100/150 percent including recovery/retry/long selected names, canonical dropdowns, unchanged user content, independent answer language, draft retention, compact scrolling, trace cleanup and fresh-process language application',flush=True)
+        print('PASS: four translated interfaces, compact Dashboard at 100/150 percent including recovery/retry/long selected names, Practice selection/rollback/hidden events/long text/results/footer at both scales, canonical dropdowns, unchanged user content, independent answer language, draft retention, compact scrolling, trace cleanup and fresh-process language application',flush=True)

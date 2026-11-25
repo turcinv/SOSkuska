@@ -327,3 +327,7 @@ Plánované miestne zálohy sú dostupné vo **v0.18.0**. Schéma SQLite zostáv
 ## Opravy po revízii hlavnej vetvy
 
 Opravy vydané vo v0.18.1 cez PR #38 sleduje [záznam revízie Astra](REVIEW_FINDINGS.md). Schéma zostáva 10 a vydaná verzia je v0.19.0. Úpravy predmetu porovnajú pôvodný obsah pod zápisovým zámkom; konflikt zachová koncept. Pred opätovným otvorením úprav na načítanie najnovšej verzie si potrebné zmeny skopíruj. Vymazanie otázky/témy porovná zobrazený obsah a po zmene vyžaduje nové potvrdenie. Návrat k rovnakému predmetu zachová editor otázky/témy, filtre aj pôvodnú identitu, tiež pri opakovaní čítania; vymazaná vybraná téma zostane nedostupná, kým výslovne nevyberieš inú tému alebo možnosť Bez témy. Iný predmet editor stále resetuje. Novšie potvrdenie úspešnej dennej zálohy odstráni staré oznámenie chyby bez ďalšieho zápisu zálohy.
+
+## Zatiaľ nevydané — redizajn testov, krok 3
+
+Bežiaci test združuje priebeh/čas v záhlaví a ukazuje počet uložených odpovedí lištou. Riadky A–D cez celú šírku zvýraznia uložený výber, nie správnosť; kliknutie na pozadie/text používa pôvodné ukladanie. Previous/Next/Clear a Finish zdieľajú pätu. Nastavenia sú v spoločnej karte, výsledky/história majú zjednotené plochy. Chyba zápisu vráti výber/vzhľad; skryté odpovede pri nastaveniach či inej stránke nezapisujú. Dlhý obsah sa zalamuje a posúva. Skóre, termíny, potvrdenia, pokračovanie, filtre a snímky zostávajú; aktuálna schéma je 10.
