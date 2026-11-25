@@ -2,7 +2,7 @@
 
 [English](PRACTICE_HISTORY.md) · [Čeština](cs/PRACTICE_HISTORY.md) · [Slovenčina](sk/PRACTICE_HISTORY.md) · [Русский](ru/PRACTICE_HISTORY.md)
 
-**Unreleased — Practice redesign Step 3:** Running tests now group progress/timing in a header and show a bar of saved answers. Full-width A–D rows highlight the saved choice, not correctness; background/text clicks save through the existing answer path. Previous/Next/Clear and Finish share a footer. Setup selectors share a card, and results/history use matching surfaces. Failed saves restore selection/style; hidden setup or off-page answer callbacks do not write. Long content wraps and scrolls at compact size. Scoring, deadlines, confirmations, resume, filters and retained snapshots remain unchanged; current schema is 10.
+**v0.20.0 — Practice redesign Step 3:** Running tests now group progress/timing in a header and show a bar of saved answers. Full-width A–D rows highlight the saved choice, not correctness; background/text clicks save through the existing answer path. Previous/Next/Clear and Finish share a footer. Setup selectors share a card, and results/history use matching surfaces. Failed saves restore selection/style; hidden setup or off-page answer callbacks do not write. Long content wraps and scrolls at compact size. Scoring, deadlines, confirmations, resume, filters and retained snapshots remain unchanged; current schema is 10.
 
 Open **Practice Tests → Completed tests**. History now shows all retained completed attempts in pages of 20, newest completion first, with attempt ID as the tie-breaker. Use Previous / Next to browse, and View result to reopen the saved score, selected/correct answers and explanations. Returning to setup/history keeps the page and filters.
 
