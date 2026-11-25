@@ -2,7 +2,7 @@
 
 [English](../SETTINGS.md) · [Čeština](SETTINGS.md) · [Slovenčina](../sk/SETTINGS.md) · [Русский](../ru/SETTINGS.md)
 
-## Nevydáno — nastavení a společné datové panely
+## v0.24.0 — nastavení a společné datové panely
 
 Nastavení seskupuje studijní předvolby a rozhraní vedle sebe v širokém okně a pod sebou v kompaktním; AI má vlastní kartu přes celou šířku. Zpráva pro Uložit/Načíst se zobrazuje u ovládání i v záhlaví. Změna velikosti zachová stejné prvky, koncepty a uložené snímky; ukládání zůstává výslovné a aktivní časovače zachovají původní délku.
 

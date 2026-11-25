@@ -2,9 +2,9 @@
 
 [English](NEXT_STEPS.md) · [Čeština](cs/NEXT_STEPS.md) · [Slovenčina](sk/NEXT_STEPS.md) · [Русский](ru/NEXT_STEPS.md)
 
-Current release: **v0.23.0**, schema **10**. Bright UI Steps 1–4 and the Subjects/Question Bank and Statistics/AI Tutor portions of Step 5 are implemented through PRs #43, #44, #46, #48, #50 and #52.
+Current release: **v0.24.0**, schema **10**. Bright UI implementation Steps 1–5 are complete through PRs #43, #44, #46, #48, #50, #52 and #54. Step 6 acceptance and demo preparation remain.
 
-1. **Next: Step 5, Settings and shared backup/import panels only.** Follow the [design plan](agents/BRIGHT_UI_REDESIGN.md) and [Statistics/Tutor handoff](agents/design/bright-ui-step5-reports/README.md), on a separate branch with independent Sol medium review and container checks. Preserve preferences drafts, explicit Save/Reload, active timers, worker processes, import previews and atomic backup/restore behavior. Then move to Step 6 regression checks and teacher demo.
+1. **Next: Step 6, regression checks and teacher demo.** Follow the [design plan](agents/BRIGHT_UI_REDESIGN.md) and [Settings/data handoff](agents/design/bright-ui-step5-settings/README.md). Use disposable data to verify the complete study flow, Light/Dark/System, four languages and compact/wide layouts; refresh the final screenshot/demo evidence. Make any fixes through a separate reviewed branch/PR. Do not infer manual hardware acceptance from automated checks.
 2. **Complete release acceptance after the redesign.** Use the [Windows checklist](WINDOWS_ACCEPTANCE.md) with disposable data and recorded OS/build, hardware, scaling, version/hash and outcomes. Startup scaling checks are not native/live-DPI acceptance. Test a real Ollama model separately, recording server/model versions, hardware, streaming/Stop/reconnect/history and offline study.
 3. **Finish the semester report and presentation separately.** Keep identity/course/language/deadline placeholders until supplied; add real screenshots, references and evaluation evidence. Follow the course instructions, refresh document fields and inspect final pagination.
 

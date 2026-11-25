@@ -1,6 +1,6 @@
 # Bright UI Step 5 Settings/data evidence and handoff
 
-Internal implementation record, **25 November 2026**, branch `feature/bright-ui-settings-data`. Implements the **Settings and shared backup/import portion of [Step 5](../../BRIGHT_UI_REDESIGN.md)** only. Published labels remain **v0.23.0 / schema 10**; this portion is unreleased pending its PR and merge authorization.
+Internal implementation record, **25 November 2026**, branch `feature/bright-ui-settings-data`. Implements the **Settings and shared backup/import portion of [Step 5](../../BRIGHT_UI_REDESIGN.md)** only. Merged through [PR #54](https://github.com/turcinv/SOSkuska/pull/54), commit `c6d094a`, and released in **v0.24.0 / schema 10**. Captures retain implementation-time labels.
 
 ## Implemented
 
@@ -30,7 +30,7 @@ Use the [Step 1 Docker capture command](../bright-ui-step1/README.md#reproduce-c
 
 ## Validation and review
 
-- macOS headless unit suite: **308 passed**. Full Docker/Xvfb and hosted CI results are recorded on the PR; they must be inspected separately.
+- macOS headless unit suite: **308 passed**. Full Docker/Xvfb suite passed 308 unit tests (two platform skips) and all 21 GUI scripts. All five feature CI jobs passed in run `45691418974`; release assets are built separately from the final main/tag commit.
 - Existing Settings, appearance, backup/restore, schedule and both CSV checks exercise persistence, stale conflicts, retained drafts, active timer safety, no auto-connection, worker errors/retry, atomic import, postcommit refresh, restore guards/safety copy/closure, pagination and fresh-process reopening.
 - New `check_data_layout.py` is the **21st bounded GUI script** in the shared runner. Four languages at 100/150% startup scaling passed real compact/wide resizing without preference reads, stable field/snapshot identities, active timer target, failed Save and Reload confirmation feedback beside controls, retained schedule draft, actual validated backup/cancel and visible warning/actions, and both worker-read CSV previews with stable preview identity and question editor/deck search drafts.
 - Preview waits handle already-finished jobs and are bounded. The previous test wait race was fixed in the probe; it did not require changing production worker code. Each script retains its 60-second limit.
