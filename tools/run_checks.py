@@ -24,6 +24,7 @@ GUI_CHECKS = (
     'check_flashcard_import.py',
     'check_tutor_history.py',
     'check_ui_languages.py',
+    'check_authoring_layout.py',
 )
 
 
