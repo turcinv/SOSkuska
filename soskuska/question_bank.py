@@ -1,4 +1,4 @@
-"""Subject-scoped topics and multiple-choice authoring; no practice execution yet."""
+"""Subject-scoped topics and multiple-choice authoring."""
 from theme import COLORS as C
 from localization_widgets import LocalizedOptionMenu
 from localization import tr
@@ -26,12 +26,15 @@ class QuestionBankPage(ctk.CTkFrame):
         self.grid_columnconfigure(0, weight=1)
 
         app.button(self, tr(self.app, '← My Subjects'), lambda: app.navigate("My Subjects"), width=140).grid(row=0, column=0, sticky="w", pady=(0, 16))
-        self.heading = app.label(self, tr(self.app, 'Question bank'), 26, bold=True, wraplength=650)
-        self.heading.grid(row=1, column=0, sticky="ew")
-        self.count_label = app.label(self, "", 13, "secondary")
-        self.count_label.grid(row=2, column=0, sticky="w", pady=(4, 16))
-        actions = app.frame(self)
-        actions.grid(row=3, column=0, sticky="w", pady=(0, 16))
+        header = app.frame(self, card=True)
+        header.grid(row=1,column=0,rowspan=3,sticky="ew",pady=(0,16))
+        header.grid_columnconfigure(0,weight=1)
+        self.heading = app.label(header, tr(self.app, 'Question bank'), 26, bold=True, wraplength=650)
+        self.heading.grid(row=0, column=0, sticky="ew",padx=18,pady=(16,4))
+        self.count_label = app.label(header, "", 13, "secondary")
+        self.count_label.grid(row=1,column=0,sticky="ew",padx=18,pady=(0,12))
+        actions = app.frame(header)
+        actions.grid(row=2,column=0,sticky="w",padx=18,pady=(0,16))
         self.add_question_button = app.button(actions, tr(self.app, '+ New question'), self.show_question_form, primary=True, width=150)
         self.add_question_button.pack(side="left", padx=(0, 8))
         self.add_topic_button = app.button(actions, tr(self.app, '+ New topic'), self.show_topic_form, width=125)
@@ -61,13 +64,20 @@ class QuestionBankPage(ctk.CTkFrame):
         self.question_form_title = app.label(self.question_form, tr(self.app, 'New question'), 18, bold=True)
         self.question_form_title.grid(row=0, column=0, sticky="w", padx=18, pady=(16, 10))
         app.label(self.question_form, tr(self.app, 'Question (required, up to 2,000 characters)'), 12, "secondary").grid(row=1, column=0, sticky="w", padx=18)
-        self.prompt_entry = ctk.CTkTextbox(self.question_form, height=70, font=app.font(), wrap="word")
+        self.prompt_entry = ctk.CTkTextbox(self.question_form, height=70, font=app.font(), wrap="word", border_width=1, border_color=C["border"])
         self.prompt_entry.grid(row=2, column=0, sticky="ew", padx=18, pady=(4, 12))
+        self.answer_fields = []
         self.option_entries = []
+        self.answers_panel = app.frame(self.question_form)
+        self.answers_panel.grid(row=3,column=0,rowspan=8,sticky="ew",padx=18,pady=(0,12))
         for i, letter in enumerate("ABCD"):
-            app.label(self.question_form, tr(self.app, 'Answer {v0} (required, up to 500 characters)', v0=letter), 12, "secondary").grid(row=3+i*2, column=0, sticky="w", padx=18)
-            entry = ctk.CTkEntry(self.question_form, height=36, font=app.font(), placeholder_text_color=C["secondary"])
-            entry.grid(row=4+i*2, column=0, sticky="ew", padx=18, pady=(4, 10))
+            field = app.frame(self.answers_panel)
+            field.grid_columnconfigure(0,weight=1)
+            self.answer_fields.append(field)
+            app.label(field,tr(self.app,'Answer {v0} (required, up to 500 characters)',v0=letter),12,"secondary",wraplength=300,justify="left").grid(row=0,column=0,sticky="ew",pady=(0,4))
+            entry = ctk.CTkEntry(field, height=38, font=app.font(), placeholder_text_color=C["secondary"])
+            entry.grid(row=1,column=0,sticky="ew")
+            self.wrap_labels(field)
             self.option_entries.append(entry)
         selectors = app.frame(self.question_form)
         selectors.grid(row=11, column=0, sticky="ew", padx=18, pady=(2, 12))
@@ -86,7 +96,7 @@ class QuestionBankPage(ctk.CTkFrame):
             if col == 2:
                 self.question_topic_menu = menu
         app.label(self.question_form, tr(self.app, 'Explanation (optional, up to 2,000 characters)'), 12, "secondary").grid(row=12, column=0, sticky="w", padx=18)
-        self.explanation_entry = ctk.CTkTextbox(self.question_form, height=65, font=app.font(), wrap="word")
+        self.explanation_entry = ctk.CTkTextbox(self.question_form, height=65, font=app.font(), wrap="word", border_width=1, border_color=C["border"])
         self.explanation_entry.grid(row=13, column=0, sticky="ew", padx=18, pady=(4, 8))
         self.question_error = app.label(self.question_form, "", 12, "secondary", wraplength=600)
         self.question_error.grid(row=14, column=0, sticky="ew", padx=18)
@@ -110,44 +120,67 @@ class QuestionBankPage(ctk.CTkFrame):
         app.button(actions, tr(self.app, 'Cancel'), self.cancel_delete, width=80).pack(side="left")
         self.delete_panel.grid_remove()
 
-        filters = app.frame(self)
+        filters = app.frame(self, card=True)
         filters.grid(row=8, column=0, sticky="ew", pady=(0, 12))
         filters.grid_columnconfigure((0, 1), weight=1, uniform="filter")
         self.topic_filter = ctk.StringVar(value="All topics")
         self.difficulty_filter = ctk.StringVar(value="All difficulties")
         self.topic_filter_menu = self.menu(filters, self.topic_filter, list(self.filter_topics), self.filter_changed)
-        self.topic_filter_menu.grid(row=0, column=0, sticky="ew", padx=(0, 8))
-        self.menu(filters, self.difficulty_filter, ["All difficulties", *DIFFICULTIES], self.filter_changed).grid(row=0, column=1, sticky="ew")
-        topic_actions = app.frame(self)
-        topic_actions.grid(row=9, column=0, sticky="w", pady=(0, 12))
+        app.label(filters,tr(app,"Topic"),12,"secondary").grid(row=0,column=0,sticky="w",padx=18,pady=(12,4))
+        app.label(filters,tr(app,"Difficulty"),12,"secondary").grid(row=0,column=1,sticky="w",padx=18,pady=(12,4))
+        self.topic_filter_menu.grid(row=1,column=0,sticky="ew",padx=(18,8))
+        self.menu(filters, self.difficulty_filter, ["All difficulties", *DIFFICULTIES], self.filter_changed).grid(row=1,column=1,sticky="ew",padx=(0,18))
+        topic_actions = app.frame(filters)
+        topic_actions.grid(row=2,column=0,columnspan=2,sticky="w",padx=18,pady=(12,12))
         self.edit_topic_button = app.button(topic_actions, tr(self.app, 'Rename selected topic'), self.edit_selected_topic, width=180)
         self.edit_topic_button.pack(side="left", padx=(0, 8))
         self.delete_topic_button = app.button(topic_actions, tr(self.app, 'Delete selected topic'), self.delete_selected_topic, width=180)
         self.delete_topic_button.pack(side="left")
         self.query = ctk.StringVar()
-        self.search = ctk.CTkEntry(self, height=38, textvariable=self.query, font=app.font(), placeholder_text=tr(self.app, 'Search question text…'), placeholder_text_color=C["secondary"])
-        self.search.grid(row=10, column=0, sticky="ew", pady=(0, 12))
+        app.label(filters,tr(app,"Search question text…"),12,"secondary").grid(row=3,column=0,columnspan=2,sticky="w",padx=18)
+        self.search = ctk.CTkEntry(filters, height=38, textvariable=self.query, font=app.font(), placeholder_text=tr(self.app, 'Search question text…'), placeholder_text_color=C["secondary"])
+        self.search.grid(row=4,column=0,columnspan=2,sticky="ew",padx=18,pady=(4,16))
         self.status = app.label(self, "", 12, "secondary", wraplength=650)
         self.status.grid(row=11, column=0, sticky="ew", pady=(0, 12))
         self.question_page=0
         pages=app.frame(self)
         pages.grid(row=12,column=0,sticky='ew',pady=(0,12))
         self.previous_page=app.button(pages,tr(self.app, 'Previous page'),lambda:self.move_question_page(-1),width=130)
-        self.previous_page.pack(side='left',padx=(0,8))
+        self.previous_page.grid(row=0,column=0,sticky='w',padx=(0,8))
         self.next_page=app.button(pages,tr(self.app, 'Next page'),lambda:self.move_question_page(1),width=120)
-        self.next_page.pack(side='left',padx=(0,12))
-        self.page_label=app.label(pages,'',12,'secondary');self.page_label.pack(side='left')
+        self.next_page.grid(row=0,column=1,sticky='w')
+        self.page_label=app.label(pages,'',12,'secondary');self.page_label.grid(row=1,column=0,columnspan=2,sticky='w',pady=(6,0))
         self.cards = app.frame(self)
         self.cards.grid(row=13, column=0, sticky="ew")
         self.cards.grid_columnconfigure(0, weight=1)
         self.importer=CsvImportPanel(self,app,self)
         self.importer.grid(row=4,column=0,sticky='ew',pady=(0,16));self.importer.grid_remove()
         self.query.trace_add("write", lambda *_: self.render_questions())
-        self.bind("<Configure>", lambda event: self.heading.configure(wraplength=max(300, event.width - 20)))
+        for panel in (header,self.topic_form,self.question_form,self.delete_panel):
+            self.wrap_labels(panel)
+        self.answers_panel.bind("<Configure>", self.layout_answers)
+
+    def wrap_labels(self, parent):
+        labels = [w for w in parent.winfo_children() if isinstance(w,ctk.CTkLabel)]
+        for label in labels:
+            label.configure(justify="left",wraplength=500)
+        def resize(event):
+            width=max(200,self.app.scroll.logical_pixels(event.width)-36)
+            for label in labels:
+                label.configure(wraplength=width)
+        parent.bind("<Configure>",resize,add="+")
+
+    def layout_answers(self, event):
+        columns=2 if self.app.scroll.logical_pixels(event.width)>=850 else 1
+        for col in range(2):
+            self.answers_panel.grid_columnconfigure(col,weight=1 if col<columns else 0,
+                uniform="answers" if col<columns else "")
+        for i,field in enumerate(self.answer_fields):
+            field.grid(row=i//columns,column=i%columns,sticky="ew",padx=(0,12) if columns==2 and i%2==0 else 0,pady=(0,12))
 
     def menu(self, parent, variable, values, command=None):
         return LocalizedOptionMenu(parent,owner=self.app, variable=variable, values=values, command=command,
-                                height=36, font=self.app.font(13), fg_color=C["raised"],
+                                height=36, dynamic_resizing=False, font=self.app.font(13), fg_color=C["raised"],
                                 button_color=C["border"], button_hover_color=C["selected"])
 
     def load_subject(self, subject_id):
@@ -388,7 +421,11 @@ class QuestionBankPage(ctk.CTkFrame):
         self.next_page.configure(state='normal' if self.question_page+1<pages else 'disabled')
         if not visible:
             message = "No matching questions. Try different filters." if questions else "No questions yet. Add your first multiple-choice question."
-            self.app.label(self.cards, tr(self.app,message), 14, "secondary", wraplength=600).grid(row=0, column=0, sticky="w", pady=20)
+            empty=self.app.frame(self.cards,card=True)
+            empty.grid(row=0,column=0,sticky="ew")
+            empty.grid_columnconfigure(0,weight=1)
+            self.app.label(empty,tr(self.app,message),14,"secondary").grid(row=0,column=0,sticky="ew",padx=18,pady=20)
+            self.wrap_labels(empty)
             return
         for row, question in enumerate(visible[self.question_page*50:(self.question_page+1)*50]):
             card = self.app.frame(self.cards, card=True)
@@ -396,11 +433,16 @@ class QuestionBankPage(ctk.CTkFrame):
             card.grid_columnconfigure(0, weight=1)
             title = self.app.label(card, question["prompt"], 15, bold=True, wraplength=600)
             title.grid(row=0, column=0, sticky="ew", padx=18, pady=(16, 8))
-            self.app.label(card, tr(self.app, '{v0} · {v1}', v0=question['topic_name'] or tr(self.app,'No topic'), v1=tr(self.app,question['difficulty'])), 12, "secondary", wraplength=600).grid(row=1, column=0, sticky="w", padx=18)
+            self.app.label(card, tr(self.app, '{v0} · {v1}', v0=question['topic_name'] or tr(self.app,'No topic'), v1=tr(self.app,question['difficulty'])), 12, "secondary", wraplength=600).grid(row=1, column=0, sticky="ew", padx=18)
             field = ["option_a", "option_b", "option_c", "option_d"][question["correct_option"]]
-            answer = self.app.label(card, tr(self.app, 'Correct answer: {v0} · {v1}', v0='ABCD'[question['correct_option']], v1=question[field]), 13, "secondary", wraplength=600)
-            answer.grid(row=2, column=0, sticky="ew", padx=18, pady=(6, 12))
-            card.bind("<Configure>", lambda event, title=title, answer=answer: (title.configure(wraplength=max(200, event.width-36)), answer.configure(wraplength=max(200, event.width-36))), add="+")
+            answer_panel=self.app.frame(card)
+            answer_panel.configure(fg_color=C["raised"],corner_radius=8)
+            answer_panel.grid(row=2,column=0,sticky="ew",padx=18,pady=(8,12))
+            answer_panel.grid_columnconfigure(0,weight=1)
+            answer = self.app.label(answer_panel, tr(self.app, 'Correct answer: {v0} · {v1}', v0='ABCD'[question['correct_option']], v1=question[field]), 13, "secondary", wraplength=600)
+            answer.grid(row=0,column=0,sticky="ew",padx=12,pady=12)
+            self.wrap_labels(answer_panel)
+            self.wrap_labels(card)
             actions = self.app.frame(card)
             actions.grid(row=3, column=0, sticky="w", padx=18, pady=(0, 16))
             self.app.button(actions, tr(self.app, 'Edit'), lambda qid=question["id"]: self.show_question_form(qid), width=85).pack(side="left", padx=(0, 8))

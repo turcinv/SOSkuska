@@ -206,6 +206,64 @@ def flashcard_layout(app, scale):
     page.show_decks();app.navigate('Dashboard')
 
 
+def authoring_layout(app, scale):
+    """Compact translated authoring and pure reflow with retained drafts."""
+    name=('Длинный предмет ' + 'математика ' * 9).strip()
+    sid=app.store.create_subject(name,'Описание ' * 100)
+    topic=app.store.create_topic(sid,('Длинная тема ' * 8).strip())
+    prompt=('Подробный вопрос для проверки переноса. ' * 45).strip()
+    qid=app.store.create_question(sid,prompt,['А ' + 'ответ ' * 70,'B','C','D'],0,topic_id=topic)
+    app.refresh_data();app.navigate('My Subjects');page=app.subject_page;app.update_idletasks()
+    canvas=app.scroll._parent_canvas
+    def horizontal(items):
+        app.update_idletasks()
+        for w in items:
+            assert w.winfo_rootx()>=canvas.winfo_rootx(), (w,app.translator.language)
+            assert w.winfo_rootx()+w.winfo_width()<=canvas.winfo_rootx()+canvas.winfo_width(), (w,app.translator.language,scale)
+    assert page.card_columns==1
+    horizontal([page.add_button,page.search,*[w for w in widgets(page.cards) if isinstance(w,ctk.CTkButton)]])
+    labels=[w for w in widgets(page.cards) if isinstance(w,ctk.CTkLabel) and w.cget('text')==name]
+    assert labels and labels[0].cget('justify')=='left'
+    assert 0<labels[0].cget('wraplength')<=labels[0].master.winfo_width()/scale-30
+    page.show_form(sid);page.name_entry.delete(0,'end');page.name_entry.insert(0,'Subject draft')
+    snapshot=page.editing_snapshot
+    # A real resize must not read subjects or recreate cards/form controls.
+    old_cards=tuple(page.subject_cards)
+    with patch.object(app.store,'subjects',side_effect=AssertionError('Resize queried SQLite')):
+        app.geometry('1440x900');app.update_idletasks()
+        assert page.card_columns==2
+        assert tuple(page.subject_cards)==old_cards
+        assert page.name_entry.get()=='Subject draft' and page.editing_snapshot is snapshot
+        app.geometry('1024x700');app.update_idletasks()
+        assert page.card_columns==1
+    app.open_question_bank(sid);bank=app.question_bank;app.update_idletasks()
+    horizontal([bank.heading,bank.count_label,bank.add_question_button,bank.add_topic_button,bank.csv_button,
+        bank.topic_filter_menu,bank.edit_topic_button,bank.delete_topic_button,bank.search,bank.page_label])
+    card=bank.cards.winfo_children()[0]
+    long_label=next(w for w in card.winfo_children() if isinstance(w,ctk.CTkLabel) and w.cget('text')==prompt)
+    assert 0<long_label.cget('wraplength')<=card.winfo_width()/scale-30
+    bank.show_question_form(qid);app.update_idletasks()
+    assert [field.grid_info()['column'] for field in bank.answer_fields]==[0,0,0,0]
+    bank.option_entries[1].delete(0,'end');bank.option_entries[1].insert(0,'Kept authoring draft')
+    original=bank.question_snapshot
+    app.geometry('1440x900');app.update_idletasks()
+    assert [field.grid_info()['column'] for field in bank.answer_fields]==[0,1,0,1]
+    app.geometry('1024x700');app.update_idletasks()
+    horizontal([bank.prompt_entry,*bank.option_entries,bank.question_topic_menu,bank.save_question_button])
+    app.navigate('Dashboard');app.open_question_bank(sid);app.update_idletasks()
+    assert bank.option_entries[1].get()=='Kept authoring draft' and bank.question_snapshot==original
+    assert app.store.question(qid)['option_b']=='B'
+    with patch.object(app.store,'update_question',side_effect=sqlite3.OperationalError('full')):
+        bank.save_question_button.invoke()
+    assert bank.question_error.cget('text') and bank.option_entries[1].get()=='Kept authoring draft'
+    # Leave only the editor on screen, then reach its save/error footer by scrolling.
+    bank.query.set('no matching fixture');app.update_idletasks();canvas.yview_moveto(1);app.update_idletasks()
+    assert bank.save_question_button.winfo_rooty()>=canvas.winfo_rooty()
+    assert bank.save_question_button.winfo_rooty()+bank.save_question_button.winfo_height()<=canvas.winfo_rooty()+canvas.winfo_height()
+    app.navigate('My Subjects');assert page.name_entry.get()=='Subject draft'
+    page.hide_form();app.store.delete_subject(sid);app.refresh_data();app.navigate('Dashboard')
+
+
 def check(path,language,reopen=False,scale=1.0):
     next_language=list(LANGUAGE_CODES)[(list(LANGUAGE_CODES).index(language)+1)%4]
     if not reopen:
@@ -234,6 +292,7 @@ def check(path,language,reopen=False,scale=1.0):
                 dashboard_layout(app, scale)
                 practice_layout(app, scale)
                 flashcard_layout(app, scale)
+                authoring_layout(app, scale)
                 assert tr('Dashboard') in app.nav_buttons[0].cget('text')
                 assert tr('Settings') in app.settings_btn.cget('text')
                 sid=app.store.subjects()[0]['id'];deck=app.store.decks()[0]['id'];qid=app.store.questions(sid)[0]['id']
@@ -332,4 +391,4 @@ if __name__=='__main__':
                     subprocess.run([sys.executable,'-X','faulthandler','-u',str(Path(__file__).resolve()),'--language',language,'--data',str(path),*flags],check=True,timeout=25)
                 scaled=Path(folder)/(language+'-150.db')
                 subprocess.run([sys.executable,'-X','faulthandler','-u',str(Path(__file__).resolve()),'--language',language,'--data',str(scaled),'--scale','1.5'],check=True,timeout=25)
-        print('PASS: four translated interfaces, compact Dashboard at 100/150 percent including recovery/retry/long selected names, Practice selection/rollback/hidden events/long text/results/footer at both scales, Flashcard reveal/rating/long text/postcommit retry at both scales, canonical dropdowns, unchanged user content, independent answer language, draft retention, compact scrolling, trace cleanup and fresh-process language application',flush=True)
+        print('PASS: four translated interfaces, compact Dashboard at 100/150 percent including recovery/retry/long selected names, Practice selection/rollback/hidden events/long text/results/footer at both scales, Flashcard reveal/rating/long text/postcommit retry at both scales, Subjects/Question Bank responsive authoring and retained drafts, canonical dropdowns, unchanged user content, independent answer language, draft retention, compact scrolling, trace cleanup and fresh-process language application',flush=True)
