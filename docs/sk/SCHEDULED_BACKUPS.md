@@ -2,6 +2,10 @@
 
 [English](../SCHEDULED_BACKUPS.md) · [Čeština](../cs/SCHEDULED_BACKUPS.md) · [Slovenčina](SCHEDULED_BACKUPS.md) · [Русский](../ru/SCHEDULED_BACKUPS.md)
 
+## Nevydané — nastavenia a spoločné dátové panely
+
+Plán denných záloh, ručná záloha/obnova a oba importy CSV používajú spoločný vzhľad kariet, odsadenie a zalomené správy. Skupiny akcií majú tri stĺpce v širokom rozložení, inak dva. Varovanie obnovy je nad tlačidlom nevratného potvrdenia a Zrušiť. Polia náhľadu/chýb CSV majú viditeľné okraje a vlastné posúvanie. Pravidlá náhľadu, zrušenia, atomického zápisu, oddelených procesov, zatvorenia po obnove a bezpečnostnej kópie sa nemenia.
+
 Plánované miestne zálohy sú dostupné vo **v0.18.0**. Schéma SQLite zostáva **10**. Ručná záloha a obnova fungujú samostatne.
 
 V Settings prejdi na Daily local backups. Vyber existujúci miestny priečinok, zapni Enable daily backups a klikni na Save backup schedule (popisky sa prekladajú podľa jazyka rozhrania). Plán má vlastné uloženie a načítanie; uloženie študijného/AI formulára plán neukladá. Automatika začne až po výslovnom zapnutí a uložení. Vypnutie uloženého plánu zastaví ďalšie automatické zálohy.

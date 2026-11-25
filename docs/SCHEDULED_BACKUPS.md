@@ -2,6 +2,10 @@
 
 [English](SCHEDULED_BACKUPS.md) · [Čeština](cs/SCHEDULED_BACKUPS.md) · [Slovenčina](sk/SCHEDULED_BACKUPS.md) · [Русский](ru/SCHEDULED_BACKUPS.md)
 
+## Unreleased — Settings and shared data panels
+
+Daily backup schedules, manual backup/restore and both CSV importers now use the shared card style, consistent insets and wrapped messages. Action groups use three columns in wide layouts or two in compact ones. Restore warnings appear above the destructive confirmation and Cancel controls. CSV preview/error fields have visible borders and keep their own scrolling. Preview, cancellation, atomic writes, isolated workers, restore closure and safety-copy rules are unchanged.
+
 Scheduled local backups are available in **v0.18.0**. SQLite schema remains **10**. Manual backup/restore continues to work independently.
 
 In Settings, scroll to **Daily local backups**. Choose an existing local folder, enable **Enable daily backups**, then select **Save backup schedule**. This has its own Save/Reload controls; saving the study/AI form does not save the backup schedule. Automation starts only after explicit opt-in. Disabling the saved schedule stops future automatic backups.

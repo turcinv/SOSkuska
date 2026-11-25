@@ -2,6 +2,11 @@
 
 [English](../../CHANGELOG.md) · [Čeština](../cs/CHANGELOG.md) · [Slovenčina](CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
+## Nevydané — nastavenia a spoločné dátové panely
+
+- Nastavenia zoskupujú študijné predvoľby a rozhranie vedľa seba v širokom okne a pod sebou v kompaktnom; AI má vlastnú kartu cez celú šírku. Správa pre Uložiť/Načítať sa zobrazuje pri ovládaní aj v záhlaví. Zmena veľkosti zachová rovnaké prvky, koncepty a uložené snímky; ukladanie zostáva výslovné a aktívne časovače zachovajú pôvodnú dĺžku.
+- Plán denných záloh, ručná záloha/obnova a oba importy CSV používajú spoločný vzhľad kariet, odsadenie a zalomené správy. Skupiny akcií majú tri stĺpce v širokom rozložení, inak dva. Varovanie obnovy je nad tlačidlom nevratného potvrdenia a Zrušiť. Polia náhľadu/chýb CSV majú viditeľné okraje a vlastné posúvanie. Pravidlá náhľadu, zrušenia, atomického zápisu, oddelených procesov, zatvorenia po obnove a bezpečnostnej kópie sa nemenia.
+
 ## 0.23.0 — 2026-11-25
 
 - Štatistiky zoskupujú výber obdobia a Obnoviť do záhlavia. Tri súhrnné karty sú vedľa seba v širokom okne, inak pod sebou. Aktivita predmetov a dní zostáva nižšie s čitateľne zalomenými popismi. Zmena veľkosti zachová existujúci prehľad bez dotazu do databázy; chyba obnovenia ponechá predchádzajúcu snímku. Definície, vážená úspešnosť a počty vlastných hodnotení sa nemenia.

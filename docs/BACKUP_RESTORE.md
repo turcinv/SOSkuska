@@ -2,6 +2,10 @@
 
 [English](BACKUP_RESTORE.md) · [Čeština](cs/BACKUP_RESTORE.md) · [Slovenčina](sk/BACKUP_RESTORE.md) · [Русский](ru/BACKUP_RESTORE.md)
 
+## Unreleased — Settings and shared data panels
+
+Daily backup schedules, manual backup/restore and both CSV importers now use the shared card style, consistent insets and wrapped messages. Action groups use three columns in wide layouts or two in compact ones. Restore warnings appear above the destructive confirmation and Cancel controls. CSV preview/error fields have visible borders and keep their own scrolling. Preview, cancellation, atomic writes, isolated workers, restore closure and safety-copy rules are unchanged.
+
 ## Create a backup
 
 Open **Settings → Backup and restore → Create backup**, choose a local folder and an unused `.sqlite3` filename, then wait for completion. Existing files are never overwritten. The app remains usable while copying. Normal close/Quit waits for the job to finish.

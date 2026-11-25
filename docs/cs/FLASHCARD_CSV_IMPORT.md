@@ -2,6 +2,10 @@
 
 [English](../FLASHCARD_CSV_IMPORT.md) · [Čeština](FLASHCARD_CSV_IMPORT.md) · [Slovenčina](../sk/FLASHCARD_CSV_IMPORT.md) · [Русский](../ru/FLASHCARD_CSV_IMPORT.md)
 
+## Nevydáno — nastavení a společné datové panely
+
+Plán denních záloh, ruční záloha/obnova a oba importy CSV používají společný vzhled karet, odsazení a zalomené zprávy. Skupiny akcí mají tři sloupce v širokém rozložení, jinak dva. Varování obnovy je nad tlačítkem nevratného potvrzení a Zrušit. Pole náhledu/chyb CSV mají viditelné okraje a vlastní posouvání. Pravidla náhledu, zrušení, atomického zápisu, oddělených procesů, zavření po obnově a bezpečnostní kopie se nemění.
+
 Flashcards nyní podporuje import UTF-8 CSV do existujícího balíčku: šablonu s hlavičkou, stránkovaný náhled, odmítnutí přesných duplicit a jedno atomické uložení. Maximum 2 MiB / 500 záznamů. Nové kartičky jsou ihned splatné; původní termíny a historie hodnocení zůstávají zachované. Aktuální schéma je 10.
 
 1. Otevři **Flashcards → Open deck → Import CSV**. Cílový balíček musí existovat; pro vytvoření nového nejprve založ předmět.

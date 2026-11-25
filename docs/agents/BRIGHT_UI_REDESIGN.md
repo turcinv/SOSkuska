@@ -8,7 +8,7 @@ Read the plan from the documentation PR or from `main` once merged. Start implem
 
 Suggested first prompt for the next session:
 
-> Read `docs/agents/BRIGHT_UI_REDESIGN.md` and the repository guidance. Inspect the implementation handoffs and branch first. After the Step 5 Statistics/Tutor portion is merged, implement Settings and shared backup/import panels only with disposable data and focused checks.
+> Read `docs/agents/BRIGHT_UI_REDESIGN.md` and the repository guidance. Inspect the implementation handoffs and branch first. After the Step 5 Settings/data portion is merged, continue with Step 6 regression checks and teacher demo only with disposable data and focused checks.
 
 ## Design direction
 
@@ -75,6 +75,10 @@ Subjects and Question Bank merged through [PR #50](https://github.com/turcinv/SO
 ### Step 5 Statistics/Tutor handoff · 25 November 2026
 
 Statistics and AI Tutor merged through [PR #52](https://github.com/turcinv/SOSkuska/pull/52), commit `532d13a`, and ship in v0.23.0; see [captures, validation and continuation](design/bright-ui-step5-reports/README.md). Statistics groups period controls and responsive summary cards; Tutor groups connection/history and conversation/composer surfaces, with full-width model selection and recovery feedback beside its controls. Stable parent widths avoid uniform-column rounding loops. Existing calculations, snapshots, drafts, context ownership, streaming, Stop and persistence behavior remain. New four-language 100/150% startup layout/state probes run as a separate bounded GUI script. Release labels align to v0.23.0/schema 10. All five feature CI jobs passed; local validation passed 308 unit tests (two platform skips) and 20 GUI scripts. Next only when requested after merge: **Settings and shared backup/import panels**, then Step 6 acceptance/demo.
+
+### Step 5 Settings/data handoff · 25 November 2026
+
+Implemented on `feature/bright-ui-settings-data`; see [captures, validation and continuation](design/bright-ui-step5-settings/README.md). Grouped Settings cards and mirrored save/reload feedback, shared backup/schedule/CSV surfaces, responsive action groups and visible restore warnings complete the implementation scope of Step 5. `panel_layout.py` contains only widget-local logical wrapping and guarded action reflow. Existing drafts, snapshots, previews, workers, timers and atomic data-transfer operations remain. This portion is unreleased; labels stay v0.23.0/schema 10. Next after merge and user request: **Step 6 regression, platform acceptance and teacher demo**, with recorded evidence rather than assumed manual results.
 
 ## Step 6 — Regression checks and teacher demo
 

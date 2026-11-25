@@ -10,35 +10,38 @@ from tkinter import filedialog
 import customtkinter as ctk
 from automatic_backup import load_config,save_config,due
 from localization import tr
+from panel_layout import wrap_labels, responsive_actions
 from theme import COLORS as C
 from worker_command import worker_command
 
 
 class ScheduledBackups(ctk.CTkFrame):
     def __init__(self,parent,app):
-        super().__init__(parent,fg_color='transparent');self.app=app
+        super().__init__(parent,fg_color=C['card'],corner_radius=12,border_width=1,border_color=C['border']);self.app=app
         self.snapshot=None;self.baseline=None;self.busy=False;self.closed=False
         self.process=None;self.output=None;self.next_check=0;self.pending_reload=False;self.waiting_elsewhere=False;self.backup_failed=False
         self.grid_columnconfigure(0,weight=1)
-        app.label(self,tr(app,'Daily local backups'),20,bold=True).grid(row=0,column=0,sticky='w',pady=(12,8))
-        self.info=app.label(self,tr(app,'Opt in to one backup per local day while the app is open. Only saved data is copied. Existing backups are never deleted. This folder setting stays on this machine.'),12,'secondary',wraplength=600)
+        body=app.frame(self);body.grid(row=0,column=0,sticky='ew',padx=18,pady=16);body.grid_columnconfigure(0,weight=1)
+        app.label(body,tr(app,'Daily local backups'),20,bold=True).grid(row=0,column=0,sticky='w',pady=(12,8))
+        self.info=app.label(body,tr(app,'Opt in to one backup per local day while the app is open. Only saved data is copied. Existing backups are never deleted. This folder setting stays on this machine.'),12,'secondary',wraplength=600)
         self.info.grid(row=1,column=0,sticky='ew',pady=(0,10))
         self.enabled=ctk.BooleanVar(value=False)
-        ctk.CTkCheckBox(self,text=tr(app,'Enable daily backups'),variable=self.enabled,font=app.font(),text_color=C['text']).grid(row=2,column=0,sticky='w',pady=(0,10))
-        self.directory=ctk.CTkEntry(self,height=38,font=app.font())
+        ctk.CTkCheckBox(body,text=tr(app,'Enable daily backups'),variable=self.enabled,font=app.font(),text_color=C['text']).grid(row=2,column=0,sticky='w',pady=(0,10))
+        self.directory=ctk.CTkEntry(body,height=38,font=app.font())
         self.directory.grid(row=3,column=0,sticky='ew',pady=(0,10))
-        self.choose_button=app.button(self,tr(app,'Choose backup folder…'),self.choose,width=190)
+        self.choose_button=app.button(body,tr(app,'Choose backup folder…'),self.choose,width=190)
         self.choose_button.grid(row=4,column=0,sticky='w',pady=(0,10))
-        actions=app.frame(self);actions.grid(row=5,column=0,sticky='w')
-        self.save_button=app.button(actions,tr(app,'Save backup schedule'),self.save,width=185,primary=True);self.save_button.pack(side='left',padx=(0,8))
-        self.reload_button=app.button(actions,tr(app,'Reload'),self.reload,width=100);self.reload_button.pack(side='left',padx=(0,8))
-        self.retry_button=app.button(actions,tr(app,'Retry backup'),self.retry,width=120);self.retry_button.pack(side='left')
-        self.status=app.label(self,'',12,'secondary',wraplength=600);self.status.grid(row=6,column=0,sticky='ew',pady=(10,4))
-        self.runtime=app.label(self,'',12,'secondary',wraplength=600);self.runtime.grid(row=8,column=0,sticky='ew',pady=(6,0))
-        self.last=app.label(self,'',12,'secondary',wraplength=600);self.last.grid(row=7,column=0,sticky='ew')
+        actions=app.frame(body);actions.grid(row=5,column=0,sticky='ew')
+        self.save_button=app.button(actions,tr(app,'Save backup schedule'),self.save,width=185,primary=True)
+        self.reload_button=app.button(actions,tr(app,'Reload'),self.reload,width=100)
+        self.retry_button=app.button(actions,tr(app,'Retry backup'),self.retry,width=120)
+        responsive_actions(actions,app,(self.save_button,self.reload_button,self.retry_button))
+        self.status=app.label(body,'',12,'secondary',wraplength=600);self.status.grid(row=6,column=0,sticky='ew',pady=(10,4))
+        self.runtime=app.label(body,'',12,'secondary',wraplength=600);self.runtime.grid(row=8,column=0,sticky='ew',pady=(6,0))
+        self.last=app.label(body,'',12,'secondary',wraplength=600);self.last.grid(row=7,column=0,sticky='ew')
         self.load(force=True)
-        self.bind('<Configure>',lambda e:[label.configure(wraplength=max(250,e.width-12)) for label in (self.info,self.status,self.last,self.runtime)],add='+')
         self.poll_id=self.after(1000,self.poll)
+        wrap_labels(body,app)
 
     def values(self):return (self.enabled.get(),self.directory.get())
     def dirty(self):return self.values()!=self.baseline

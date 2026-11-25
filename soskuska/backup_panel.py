@@ -1,6 +1,8 @@
 from worker_command import worker_command
 """Main-thread backup/restore controls with worker-owned SQLite connections."""
+from theme import COLORS as C
 from localization import tr
+from panel_layout import wrap_labels
 import json
 import subprocess
 import sys
@@ -17,7 +19,7 @@ import customtkinter as ctk
 
 class BackupPanel(ctk.CTkFrame):
     def __init__(self, parent, app):
-        super().__init__(parent, fg_color='transparent')
+        super().__init__(parent, fg_color=C['card'],corner_radius=12,border_width=1,border_color=C['border'])
         self.app = app
         self.busy = False
         self.kind = None
@@ -28,25 +30,31 @@ class BackupPanel(ctk.CTkFrame):
         self.validation_cancelled = False
         self.closed = False
         self.grid_columnconfigure(0, weight=1)
-        app.label(self, tr(self.app, 'Backup and restore'), 20, bold=True).grid(row=0, column=0, sticky='w', pady=(12, 8))
-        self.status = app.label(self, tr(self.app, 'Backups contain saved data and preferences, including saved AI conversations, not unsaved drafts. Restore replaces saved data and closes the app. Only schema 10 backups are supported.'), 12, 'secondary', wraplength=600)
+        body=app.frame(self);body.grid(row=0,column=0,sticky='ew',padx=18,pady=16);body.grid_columnconfigure(0,weight=1)
+        app.label(body, tr(self.app, 'Backup and restore'), 20, bold=True).grid(row=0, column=0, sticky='w', pady=(12, 8))
+        self.status = app.label(body, tr(self.app, 'Backups contain saved data and preferences, including saved AI conversations, not unsaved drafts. Restore replaces saved data and closes the app. Only schema 10 backups are supported.'), 12, 'secondary', wraplength=600)
         self.status.grid(row=1, column=0, sticky='ew', pady=(0, 12))
-        actions = app.frame(self)
+        actions = app.frame(body)
         actions.grid(row=2, column=0, sticky='w')
         self.create_button = app.button(actions, tr(self.app, 'Create backup'), self.create, primary=True, width=135)
         self.create_button.pack(side='left', padx=(0, 8))
         self.restore_button = app.button(actions, tr(self.app, 'Choose backup…'), self.choose, width=145)
         self.restore_button.pack(side='left')
-        self.confirmation = app.frame(self)
+        self.confirmation = app.frame(body)
         self.confirmation.grid(row=3, column=0, sticky='ew', pady=(12, 0))
         self.confirmation.grid_remove()
-        app.label(self.confirmation, tr(self.app, 'Restore replaces all saved data and preferences. Unsaved forms will be lost; saved conversations are replaced by those in the backup. The app will close; reopen it afterward. A safety copy is saved beside the database in backups/.'), 12, 'secondary', wraplength=600).pack(anchor='w', pady=(0, 8))
-        self.confirm_button = app.button(self.confirmation, tr(self.app, 'Confirm restore and close'), self.confirm, width=210)
-        self.confirm_button.pack(side='left', padx=(0, 8))
-        self.cancel_button = app.button(self.confirmation, tr(self.app, 'Cancel'), self.cancel_pending, width=90)
-        self.cancel_button.pack(side='left')
-        self.bind('<Configure>', lambda event: self.status.configure(wraplength=max(250,event.width-12)), add='+')
+        self.confirmation.configure(fg_color=C['raised'],corner_radius=8)
+        self.warning=app.label(self.confirmation,tr(app,'Restore replaces all saved data and preferences. Unsaved forms will be lost; saved conversations are replaced by those in the backup. The app will close; reopen it afterward. A safety copy is saved beside the database in backups/.'),12,'secondary')
+        self.warning.grid(row=0,column=0,sticky='ew',padx=12,pady=12)
+        self.confirmation.grid_columnconfigure(0,weight=1)
+        confirm_actions=app.frame(self.confirmation);confirm_actions.grid(row=1,column=0,sticky='w',padx=12,pady=(0,12))
+        self.confirm_button=app.button(confirm_actions,tr(app,'Confirm restore and close'),self.confirm,width=210)
+        self.confirm_button.configure(fg_color=C['danger'],hover_color=C['danger_hover'],text_color=C['on_primary'])
+        self.confirm_button.pack(side='left',padx=(0,8))
+        self.cancel_button=app.button(confirm_actions,tr(app,'Cancel'),self.cancel_pending,width=90);self.cancel_button.pack(side='left')
+        wrap_labels(self.confirmation,app,inset=24)
         self.poll_id = self.after(50, self.poll)
+        wrap_labels(body,app)
 
     def cancel_pending(self):
         if self.kind == 'validate':

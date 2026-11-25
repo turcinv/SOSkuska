@@ -2,6 +2,10 @@
 
 [English](../BACKUP_RESTORE.md) · [Čeština](../cs/BACKUP_RESTORE.md) · [Slovenčina](BACKUP_RESTORE.md) · [Русский](../ru/BACKUP_RESTORE.md)
 
+## Nevydané — nastavenia a spoločné dátové panely
+
+Plán denných záloh, ručná záloha/obnova a oba importy CSV používajú spoločný vzhľad kariet, odsadenie a zalomené správy. Skupiny akcií majú tri stĺpce v širokom rozložení, inak dva. Varovanie obnovy je nad tlačidlom nevratného potvrdenia a Zrušiť. Polia náhľadu/chýb CSV majú viditeľné okraje a vlastné posúvanie. Pravidlá náhľadu, zrušenia, atomického zápisu, oddelených procesov, zatvorenia po obnove a bezpečnostnej kópie sa nemenia.
+
 ## Vytvorenie zálohy
 
 Otvor **Settings → Backup and restore → Create backup**, vyber miestny priečinok a doteraz nepoužitý názov `.sqlite3`. Počkaj na dokončenie; existujúce súbory sa neprepisujú. Počas kopírovania možno aplikáciu používať, bežné zatvorenie/Quit počká na dokončenie úlohy.

@@ -2,6 +2,10 @@
 
 [English](../SETTINGS.md) · [Čeština](../cs/SETTINGS.md) · [Slovenčina](SETTINGS.md) · [Русский](../ru/SETTINGS.md)
 
+## Nevydané — nastavenia a spoločné dátové panely
+
+Nastavenia zoskupujú študijné predvoľby a rozhranie vedľa seba v širokom okne a pod sebou v kompaktnom; AI má vlastnú kartu cez celú šírku. Správa pre Uložiť/Načítať sa zobrazuje pri ovládaní aj v záhlaví. Zmena veľkosti zachová rovnaké prvky, koncepty a uložené snímky; ukladanie zostáva výslovné a aktívne časovače zachovajú pôvodnú dĺžku.
+
 Nastavenia sa ukladajú do rovnakej databázy ako študijné údaje.
 
 V **Settings** nastav dĺžku nasledujúcej focus relácie (1–180 minút, predvolene 15), denný cieľ (1–1 440 minút, predvolene 60), URL Ollamy, preferovaný model a jazyk AI odpovede. **Save settings** uloží a použije všetky hodnoty; rozpísané zmeny prežijú prepnutie obrazovky, ale nie zatvorenie aplikácie. Prebiehajúca aj pozastavená relácia si zachová pôvodnú dĺžku. Cieľ sa zmení hneď, historický čas sa neprepočítava.
