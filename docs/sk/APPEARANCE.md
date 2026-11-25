@@ -2,7 +2,7 @@
 
 [English](../APPEARANCE.md) · [Čeština](../cs/APPEARANCE.md) · [Slovenčina](../sk/APPEARANCE.md) · [Русский](../ru/APPEARANCE.md)
 
-**Zatiaľ nevydané — redizajn, krok 1:** spoločný vzhľad používa modré akcie/výber, mätový priebeh, teplé svetlé pozadie v Light a párové tmavé plochy. Vedľajšie tlačidlá majú samostatné pozadie pri prejdení kurzorom; lišty Statistics používajú rovnaké pozadie ako Dashboard. Rozloženie, uložený/predvolený režim, navigácia, dáta aj správanie nastavení zostávajú rovnaké. [Interné snímky, skice a odovzdanie](../agents/design/bright-ui-step1/README.md).
+**v0.19.0 — redizajn, krok 1:** spoločný vzhľad používa modré akcie/výber, mätový priebeh, teplé svetlé pozadie v Light a párové tmavé plochy. Vedľajšie tlačidlá majú samostatné pozadie pri prejdení kurzorom; lišty Statistics používajú rovnaké pozadie ako Dashboard. Rozloženie, uložený/predvolený režim, navigácia, dáta aj správanie nastavení zostávajú rovnaké. [Interné snímky, skice a odovzdanie](../agents/design/bright-ui-step1/README.md).
 
 Nastavenie vzhľadu vyšlo vo **v0.16.0** po potvrdení testovania základu v0.15.0 a schválení zlúčenia PR #32 používateľom 22. novembra 2026. Ďalšie zmeny vyžadujú vlastnú revíziu a schválenie zlúčenia/vydania.
 
@@ -16,6 +16,6 @@ System sleduje natívny vzhľad Windows/macOS a reaguje za behu na zmeny OS. Na 
 
 Schéma **9** pridáva `preferences.appearance_mode` s hodnotami Light/Dark/System a predvolenou Dark. Migrácia zachová obsah, konverzácie, jazyky aj revíziu; pri chybe sa vráti späť. Voľba je súčasťou záloh. Toto vydanie obnovuje samostatné zálohy schémy 9; staršiu dôveryhodnú kópiu možno migrovať otvorením pri štarte a potom znovu zálohovať. Originál zachovaj: v0.15.0 používa schému 8 a dáta schémy 9 neotvorí.
 
-Stav 22. novembra 2026: používateľ potvrdil dokončenie testovania v0.15.0 a schválil PR #32. Tento zoznam teraz cieli na v0.18.1; jednotlivé výsledky čistého počítača/DPI tu nie sú zaznamenané. Nezaškrtnuté body zostávajú neoverené; pri testovaní nového vydania doplň dôkazy pre konkrétne zariadenie. Pre nové kontroly použi `--data .local-data/appearance.sqlite3`. [Ďalšie kroky · 22. novembra 2026](NEXT_STEPS.md).
+Stav 22. novembra 2026: používateľ potvrdil dokončenie testovania v0.15.0 a schválil PR #32. Tento zoznam teraz cieli na v0.19.0; jednotlivé výsledky čistého počítača/DPI tu nie sú zaznamenané. Nezaškrtnuté body zostávajú neoverené; pri testovaní nového vydania doplň dôkazy pre konkrétne zariadenie. Pre nové kontroly použi `--data .local-data/appearance.sqlite3`. [Ďalšie kroky · 22. novembra 2026](NEXT_STEPS.md).
 
 Kontroly: `tests/test_appearance.py`, `soskuska/check_appearance.py`, zachovanie živého streamu v `check_tutor.py`, ovládanie v štyroch jazykoch a štart Windows balíčka vo všetkých 12 kombináciách jazyka/vzhľadu. GUI štandardne v [kontajneri](CONTAINER_TESTS.md). Bez novej závislosti aplikácie.

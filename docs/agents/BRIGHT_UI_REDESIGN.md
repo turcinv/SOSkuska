@@ -38,7 +38,7 @@ Theme foundation merged through [PR #43](https://github.com/turcinv/SOSkuska/pul
 
 ### Step 2 handoff · 25 November 2026
 
-Dashboard/sidebar implemented on `feature/bright-ui-dashboard`, pending PR merge. See [screenshots, validation, reproduction and next-session scope](design/bright-ui-step2/README.md). The study panel, subject/search ordering, compact summary and sidebar selection are in place. Width/wrapping now use logical viewport dimensions; four-language checks cover 100/150% startup scaling, long selected names and recovery/retry controls. Local full suite: 308 unit tests (two platform skips), all 18 GUI scripts passed. Sol medium re-review found no remaining blockers. Published labels stay v0.18.1/schema 10; native hardware/live-DPI claims are excluded. After merge, continue with **Step 3 only**.
+Dashboard/sidebar merged through [PR #44](https://github.com/turcinv/SOSkuska/pull/44), commit `9ecc5dd`; both Steps 1–2 ship in v0.19.0. See [screenshots, validation, reproduction and next-session scope](design/bright-ui-step2/README.md). The study panel, subject/search ordering, compact summary and sidebar selection are in place. Width/wrapping now use logical viewport dimensions; four-language checks cover 100/150% startup scaling, long selected names and recovery/retry controls. Local full suite: 308 unit tests (two platform skips), all 18 GUI scripts passed. Sol medium re-review found no remaining blockers. Release labels align to v0.19.0/schema 10; native hardware/live-DPI claims are excluded. Continue with **Step 3 only** when requested.
 
 ## Step 3 — Practice Tests
 

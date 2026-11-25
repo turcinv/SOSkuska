@@ -2,7 +2,7 @@
 
 [English](../CURRENT_ARCHITECTURE.md) · [Čeština](CURRENT_ARCHITECTURE.md) · [Slovenčina](../sk/CURRENT_ARCHITECTURE.md) · [Русский](../ru/CURRENT_ARCHITECTURE.md)
 
-**Vydaná verze: v0.18.1 · schéma 10.** Historie testů a testy v kontejneru jsou implementované.
+**Vydaná verze: v0.19.0 · schéma 10.** Historie testů a testy v kontejneru jsou implementované.
 
 v0.17.0 přidává obnovu soustředění po pádu se schématem **10**. Před otevřením původních dat vytvoř zálohu: migrace je transakční, ale v0.16.0 databázi schématu 10 neotevře. [Obnova soustředění po pádu](FOCUS_RECOVERY.md).
 
@@ -127,7 +127,7 @@ Karty ukazují počet sezení a uložený čas předmětu, ne smyšlený učebn�
 
 ## Rozložení a ovládání
 
-1440 × 900 / 1024 × 700. **Dosud nevydaný redesign, krok 2:** Today’s Study sdružuje výběr předmětu, Start Studying, časovač/obnovu/opakování zápisu, denní pokrok a checklist. Následují předměty a označené hledání; souhrn metrik je pod sloupci. Hranice viditelné plochy je 1100 logických CTk pixelů bez posuvníku: zkoušky/poslední sezení jsou vedle v širokém režimu a pod obsahem v kompaktním; Dashboard má dva/jeden sloupec předmětů. Sidebar zůstává 230 logických pixelů, sbalený 72. My Subjects dál používá vlastní hranici 850 pixelů. Dlouhá jména se zalamují; prázdný prostor nabízí vytvoření prvního předmětu. Meze se ověřují při počátečním měřítku 100/150 % ve všech čtyřech jazycích; nativní/živé DPI kontroly jsou oddělené.
+1440 × 900 / 1024 × 700. **v0.19.0, redesign, krok 2:** Today’s Study sdružuje výběr předmětu, Start Studying, časovač/obnovu/opakování zápisu, denní pokrok a checklist. Následují předměty a označené hledání; souhrn metrik je pod sloupci. Hranice viditelné plochy je 1100 logických CTk pixelů bez posuvníku: zkoušky/poslední sezení jsou vedle v širokém režimu a pod obsahem v kompaktním; Dashboard má dva/jeden sloupec předmětů. Sidebar zůstává 230 logických pixelů, sbalený 72. My Subjects dál používá vlastní hranici 850 pixelů. Dlouhá jména se zalamují; prázdný prostor nabízí vytvoření prvního předmětu. Meze se ověřují při počátečním měřítku 100/150 % ve všech čtyřech jazycích; nativní/živé DPI kontroly jsou oddělené.
 
 Obrazovky mají nezávislé vyhledávání přes `casefold()`. Ctrl+K / Cmd+K zaměří hledání aktivní obrazovky; Escape vymaže dotaz. Formuláře pro nový/upravený předmět i potvrzení smazání jsou inline. Podpora `TouchpadScroll`, kolečka a staršího Linux/X11 zůstává v adaptéru využívajícím privátní členy CustomTkinteru; při upgradu jej znovu ověřit.
 
@@ -326,4 +326,4 @@ Plánované místní zálohy jsou dostupné ve **v0.18.0**. Schéma SQLite zůst
 
 ## Opravy po revizi hlavní větve
 
-Opravy vydané ve v0.18.1 přes PR #38 sleduje [záznam revize Astra](REVIEW_FINDINGS.md). Schéma zůstává 10 a vydaná verze je v0.18.1. Úpravy předmětu porovnají původní obsah pod zápisovým zámkem; konflikt zachová koncept. Před opětovným otevřením úprav pro načtení nejnovější verze si potřebné změny zkopíruj. Smazání otázky/tématu porovná zobrazený obsah a po změně vyžaduje nové potvrzení. Návrat ke stejnému předmětu zachová editor otázky/tématu, filtry i původní identitu, také při opakování čtení; smazané vybrané téma zůstane nedostupné, dokud výslovně nevybereš jiné téma nebo možnost Bez tématu. Jiný předmět editor stále resetuje. Novější potvrzení úspěšné denní zálohy odstraní staré oznámení chyby bez dalšího zápisu zálohy.
+Opravy vydané ve v0.18.1 přes PR #38 sleduje [záznam revize Astra](REVIEW_FINDINGS.md). Schéma zůstává 10 a vydaná verze je v0.19.0. Úpravy předmětu porovnají původní obsah pod zápisovým zámkem; konflikt zachová koncept. Před opětovným otevřením úprav pro načtení nejnovější verze si potřebné změny zkopíruj. Smazání otázky/tématu porovná zobrazený obsah a po změně vyžaduje nové potvrzení. Návrat ke stejnému předmětu zachová editor otázky/tématu, filtry i původní identitu, také při opakování čtení; smazané vybrané téma zůstane nedostupné, dokud výslovně nevybereš jiné téma nebo možnost Bez tématu. Jiný předmět editor stále resetuje. Novější potvrzení úspěšné denní zálohy odstraní staré oznámení chyby bez dalšího zápisu zálohy.
