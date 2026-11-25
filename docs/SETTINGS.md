@@ -2,6 +2,10 @@
 
 [English](SETTINGS.md) · [Čeština](cs/SETTINGS.md) · [Slovenčina](sk/SETTINGS.md) · [Русский](ru/SETTINGS.md)
 
+## Unreleased — Settings and shared data panels
+
+Settings groups Study and Interface preferences side by side in wide windows and stacked in compact ones; AI preferences have a separate full-width card. Save/Reload feedback appears beside the controls as well as in the header. Resizing preserves the same fields, drafts and saved snapshots; saving remains explicit and active timers retain their original duration.
+
 Preferences use the same local database as study data.
 
 In **Settings**, choose the next focus duration (1–180 minutes; default 15), daily goal (1–1,440 minutes; default 60), Ollama URL, preferred model and AI answer language. **Save settings** saves and applies the whole form. Drafts survive navigation but not closing the app. Active/paused sessions retain their original duration. Goals update immediately without rewriting history.

@@ -2,6 +2,10 @@
 
 [English](../QUESTION_CSV_IMPORT.md) · [Čeština](QUESTION_CSV_IMPORT.md) · [Slovenčina](../sk/QUESTION_CSV_IMPORT.md) · [Русский](../ru/QUESTION_CSV_IMPORT.md)
 
+## Nevydáno — nastavení a společné datové panely
+
+Plán denních záloh, ruční záloha/obnova a oba importy CSV používají společný vzhled karet, odsazení a zalomené zprávy. Skupiny akcí mají tři sloupce v širokém rozložení, jinak dva. Varování obnovy je nad tlačítkem nevratného potvrzení a Zrušit. Pole náhledu/chyb CSV mají viditelné okraje a vlastní posouvání. Pravidla náhledu, zrušení, atomického zápisu, oddělených procesů, zavření po obnově a bezpečnostní kopie se nemění.
+
 Redesign úprav ve v0.22.0 sdružuje filtry a hledání do jedné plochy a ponechává Import CSV v záhlaví banky. Vstup do importu, oddělení náhledu od konceptů a pravidla ukládání a opakování níže se nemění.
 
 Otevři **My Subjects → Questions → Import CSV** u existujícího předmětu. Soubor přidá otázky jen do něj; nevytváří předmět ani neupravuje existující otázky. Kartičky tato první verze neimportuje.

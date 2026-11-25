@@ -1,6 +1,8 @@
 from worker_command import worker_command
 """Shared question/flashcard CSV preview and isolated jobs, owned by Tk."""
+from theme import COLORS as C
 from localization import tr
+from panel_layout import wrap_labels, responsive_actions
 import json
 import sqlite3
 import subprocess
@@ -17,33 +19,36 @@ class CsvImportPanel(ctk.CTkFrame):
     cards = False
     noun = "questions"
     def __init__(self,parent,app,bank,*,cards=False):
-        super().__init__(parent,fg_color='transparent')
+        super().__init__(parent,fg_color=C['card'],corner_radius=12,border_width=1,border_color=C['border'])
         self.cards=cards;self.noun="flashcards" if cards else "questions"
         self.app=app;self.bank=bank;self.process=None;self.output=None;self.payload=None
         self.preview=None;self.position=0;self.kind=None;self.subject_id=None;self.subject_name='';self.closed=False;self.abandoned=[];self.saved_message=None
         self.grid_columnconfigure(0,weight=1)
-        self.heading=app.label(self,tr(self.app, 'Import {v0} from CSV', v0=tr(self.app,self.noun)),20,bold=True,wraplength=600)
+        body=app.frame(self);body.grid(row=0,column=0,sticky='ew',padx=18,pady=16);body.grid_columnconfigure(0,weight=1)
+        self.heading=app.label(body,tr(self.app, 'Import {v0} from CSV', v0=tr(self.app,self.noun)),20,bold=True,wraplength=600)
         self.heading.grid(row=0,column=0,sticky='ew',pady=(0,8))
-        self.status=app.label(self,tr(self.app, 'Choose a UTF-8 comma-separated CSV. Maximum 2 MiB / 500 {v0}. Nothing is saved until Import all is confirmed.', v0=tr(self.app,self.noun)),12,'secondary',wraplength=600)
+        self.status=app.label(body,tr(self.app, 'Choose a UTF-8 comma-separated CSV. Maximum 2 MiB / 500 {v0}. Nothing is saved until Import all is confirmed.', v0=tr(self.app,self.noun)),12,'secondary',wraplength=600)
         self.status.grid(row=1,column=0,sticky='ew',pady=(0,10))
-        actions=app.frame(self);actions.grid(row=2,column=0,sticky='w',pady=(0,10))
-        self.choose_button=app.button(actions,tr(self.app, 'Choose CSV…'),self.choose,primary=True,width=125);self.choose_button.pack(side='left',padx=(0,8))
-        self.template_button=app.button(actions,tr(self.app, 'Save CSV template'),self.save_template,width=155);self.template_button.pack(side='left',padx=(0,8))
-        self.cancel_button=app.button(actions,tr(self.app, 'Close import'),self.cancel,width=115);self.cancel_button.pack(side='left')
-        self.errors=ctk.CTkTextbox(self,height=95,font=app.font(),wrap='word',state='disabled')
+        actions=app.frame(body);actions.grid(row=2,column=0,sticky='ew',pady=(0,10))
+        self.choose_button=app.button(actions,tr(self.app, 'Choose CSV…'),self.choose,primary=True,width=125)
+        self.template_button=app.button(actions,tr(self.app, 'Save CSV template'),self.save_template,width=155)
+        self.cancel_button=app.button(actions,tr(self.app, 'Close import'),self.cancel,width=115)
+        responsive_actions(actions,app,(self.choose_button,self.template_button,self.cancel_button))
+        self.errors=ctk.CTkTextbox(body,height=95,font=app.font(),wrap='word',state='disabled',border_width=1,border_color=C['border'])
         self.errors.grid(row=3,column=0,sticky='ew',pady=(0,10));self.errors.grid_remove()
-        self.record_label=app.label(self,'',13,'secondary');self.record_label.grid(row=4,column=0,sticky='w')
-        self.details=ctk.CTkTextbox(self,height=215,font=app.font(),wrap='word',state='disabled')
+        self.record_label=app.label(body,'',13,'secondary');self.record_label.grid(row=4,column=0,sticky='ew')
+        self.details=ctk.CTkTextbox(body,height=215,font=app.font(),wrap='word',state='disabled',border_width=1,border_color=C['border'])
         self.details.grid(row=5,column=0,sticky='ew',pady=(4,10))
-        pages=app.frame(self);pages.grid(row=6,column=0,sticky='w',pady=(0,10))
+        pages=app.frame(body);pages.grid(row=6,column=0,sticky='w',pady=(0,10))
         self.previous_button=app.button(pages,tr(self.app, 'Previous'),lambda:self.move(-1),width=100);self.previous_button.pack(side='left',padx=(0,8))
         self.next_button=app.button(pages,tr(self.app, 'Next'),lambda:self.move(1),width=90);self.next_button.pack(side='left')
-        save=app.frame(self);save.grid(row=7,column=0,sticky='w')
+        save=app.frame(body);save.grid(row=7,column=0,sticky='w')
         self.import_button=app.button(save,tr(self.app, 'Import all'),self.save,primary=True,width=135);self.import_button.pack(side='left',padx=(0,8))
         self.refresh_button=app.button(save,tr(self.app, 'Refresh totals'),self.refresh_totals,width=145);self.refresh_button.pack(side='left')
         self.buttons=(self.choose_button,self.template_button,self.cancel_button,self.import_button,self.previous_button,self.next_button,self.refresh_button)
-        self.bind('<Configure>',lambda event:[label.configure(wraplength=max(250,event.width-12)) for label in (self.heading,self.status)],add='+')
         self.controls();self.poll_id=self.after(50,self.poll)
+
+        wrap_labels(body,app)
 
     @property
     def saving(self):

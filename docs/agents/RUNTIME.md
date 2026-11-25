@@ -82,3 +82,7 @@ The scrolling adapter converts actual canvas/event widths into CTk logical units
 ## Equal-column wrapping
 
 Derive label wrap lengths in uniform responsive columns from their shared container width, with gutter/inset/rounding allowance, not each child card's rounded width. The Czech Statistics resize probe exposed alternating one-pixel allocations that rewrapped indefinitely. Only re-grid on column-mode changes and avoid configuring unchanged wrap lengths. Keep these callbacks local to destroyed-with-report containers; resizing must not reread data or replace live editors/jobs.
+
+## Settings/data presentation helpers
+
+`panel_layout.py` owns widget-local label wrapping and action reflow with no I/O or domain state. Bind equal-column labels to their shared source width and preserve existing widget instances. Settings `set_status` mirrors header text beside Save/Reload. In asynchronous GUI probes, handle already-finished workers before entering Tcl `wait_variable`; setting the variable before starting that wait will wait for a second write forever. Keep nested waits bounded.

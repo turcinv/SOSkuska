@@ -140,7 +140,9 @@ class SettingsUiTests(unittest.TestCase):
         app = SimpleNamespace(store=store, label=Mock(), button=Mock(), frame=Mock(), font=Mock(), preferences=dict(DEFAULTS))
         language = Entry('Automatic')
 
-        with (patch('settings_page.BackupPanel'),
+        with (patch('settings_page.wrap_labels'),
+              patch('settings_page.responsive_actions'),
+              patch('settings_page.BackupPanel'),
               patch('settings_page.ScheduledBackups'),
               patch.object(ctk.CTkFrame, '__init__', return_value=None),
               patch.object(SettingsPage, 'grid_columnconfigure'),
@@ -148,7 +150,7 @@ class SettingsUiTests(unittest.TestCase):
               patch.object(ctk, 'CTkEntry', side_effect=lambda *args, **kwargs: Entry()),
               patch.object(ctk, 'CTkOptionMenu'),
               patch('settings_page.LocalizedOptionMenu'),
-              patch.object(ctk, 'StringVar', side_effect=[language,Entry('English'),Entry('Dark')])):
+              patch.object(ctk, 'StringVar', side_effect=[Entry('English'),Entry('Dark'),language])):
             page = SettingsPage(None, app)
 
         page.load()

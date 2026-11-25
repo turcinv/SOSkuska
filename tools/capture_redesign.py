@@ -4,6 +4,7 @@ Example: xvfb-run -a -s '-screen 0 1920x1080x24' python tools/capture_redesign.p
 This is a design artifact utility, not a manual platform acceptance test.
 """
 import argparse
+import csv
 from contextlib import ExitStack, closing
 from datetime import date, datetime, timezone
 import json
@@ -30,13 +31,14 @@ def main():
     parser.add_argument('--flashcard-views', action='store_true', help='Capture deck/review/empty/history views only')
     parser.add_argument('--authoring-views', action='store_true', help='Capture Subjects and Question Bank only')
     parser.add_argument('--report-views', action='store_true', help='Capture Statistics and offline Tutor views only')
+    parser.add_argument('--data-views', action='store_true', help='Capture Settings and validated data previews only')
     parser.add_argument('--timed-practice', action='store_true', help='Use a frozen five-minute fixture instead of untimed')
     parser.add_argument('--empty', action='store_true', help='Empty Dashboard; requires --dashboard-only')
     args = parser.parse_args()
     if args.empty and not args.dashboard_only:
         parser.error('--empty requires --dashboard-only')
-    if sum((args.practice_views, args.dashboard_only, args.flashcard_views, args.authoring_views, args.report_views)) > 1:
-        parser.error('Choose only one of --practice-views, --dashboard-only, --flashcard-views, --authoring-views and --report-views')
+    if sum((args.practice_views, args.dashboard_only, args.flashcard_views, args.authoring_views, args.report_views, args.data_views)) > 1:
+        parser.error('Choose only one of --practice-views, --dashboard-only, --flashcard-views, --authoring-views, --report-views and --data-views')
     dimensions = (1440, 900) if args.size == 'wide' else (1024, 700)
     args.output.mkdir(parents=True, exist_ok=True)
     # Xvfb captures must never open a native macOS/Windows application window.
@@ -80,6 +82,8 @@ def main():
                 store.add_session(1500, sid, 'Computer Science')
                 attempt = store.start_practice(sid, 2, minutes=5 if args.timed_practice else None)
                 store.save_practice_answer(attempt, 0, 1)
+                if args.data_views:
+                    store.complete_practice(attempt)
                 if args.report_views:
                     store.complete_practice(attempt)
                     saved=store.begin_tutor_turn(None,'http://127.0.0.1:11434','study-model:latest',
@@ -113,6 +117,10 @@ def main():
             image.save(args.output / (name + '.png'))
 
         def dashboard():
+            if args.data_views:
+                app.navigate("Settings")
+                app.after(400,guard(settings))
+                return
             if args.report_views:
                 app.navigate("Statistics")
                 app.after(400,guard(statistics))
@@ -173,6 +181,79 @@ def main():
         def practice_history_ready():
             capture('practice-history')
             app.close()
+
+        def scroll_to(widget):
+            app.update_idletasks();canvas=app.scroll._parent_canvas
+            canvas.yview_moveto(0);app.update_idletasks()
+            offset=widget.winfo_rooty()-canvas.winfo_rooty()-32
+            canvas.yview_moveto(max(0,offset/canvas.bbox('all')[3]))
+
+        def settings():
+            capture('settings')
+            scroll_to(app.settings_page.entries['ollama_endpoint'])
+            app.after(400,guard(settings_ai))
+
+        def settings_ai():
+            capture('settings-ai')
+            scroll_to(app.settings_page.save_button)
+            app.after(400,guard(settings_actions))
+
+        def settings_actions():
+            capture('settings-actions')
+            scroll_to(app.settings_page.schedule)
+            app.after(400,guard(backup_schedule))
+
+        def backup_schedule():
+            capture('backup-schedule')
+            with sqlite3.connect(Path(folder)/'preview.sqlite3') as dest:
+                app.store.db.backup(dest)
+            with patch('backup_panel.filedialog.askopenfilename',return_value=str(Path(folder)/'preview.sqlite3')):
+                app.settings_page.backups.choose()
+            app.after(100,guard(restore_ready))
+
+        def restore_ready():
+            panel=app.settings_page.backups
+            if panel.busy:
+                app.after(100,guard(restore_ready));return
+            assert panel.pending is not None
+            scroll_to(panel)
+            app.after(400,guard(restore_preview))
+
+        def restore_preview():
+            capture('restore-preview')
+            app.settings_page.backups.cancel_pending()
+            app.open_question_bank(sid)
+            begin_csv(False)
+
+        def begin_csv(cards):
+            file=Path(folder)/('cards.csv' if cards else 'questions.csv')
+            with file.open('w',encoding='utf-8',newline='') as out:
+                writer=csv.writer(out)
+                if cards:
+                    writer.writerow(['front','back']);writer.writerow(['What is a durable snapshot?','A saved copy that can be inspected independently.'])
+                else:
+                    writer.writerow(['prompt','option_a','option_b','option_c','option_d','correct_option','difficulty'])
+                    writer.writerow(['Why keep a backup?','Recover saved data','Change the font','Start the timer','Load a model','A','Easy'])
+            panel=app.flashcard_page.importer if cards else app.question_bank.importer
+            panel.open()
+            with patch('csv_import_panel.filedialog.askopenfilename',return_value=str(file)):
+                panel.choose()
+            app.after(100,guard(lambda:csv_ready(panel,cards)))
+
+        def csv_ready(panel,cards):
+            if panel.process is not None:
+                app.after(100,guard(lambda:csv_ready(panel,cards)));return
+            assert panel.preview and not panel.preview['errors']
+            scroll_to(panel)
+            app.after(400,guard(lambda:csv_capture(panel,cards)))
+
+        def csv_capture(panel,cards):
+            capture('flashcard-import' if cards else 'question-import')
+            panel.cancel()
+            if cards:
+                app.close()
+            else:
+                app.navigate('Flashcards');app.flashcard_page.open_deck(deck);begin_csv(True)
 
         def statistics():
             capture('statistics')
@@ -308,7 +389,8 @@ def main():
         'platform': platform.platform(), 'python': platform.python_version(),
         'customtkinter': ctk.__version__, 'content': 'Disposable fixture only; no user data',
         'scope': 'Linux Xvfb capture; not native Windows/macOS acceptance',
-        'screens': (['statistics', 'statistics-daily', 'statistics-retry', 'tutor', 'tutor-conversation', 'tutor-footer']
+        'screens': (['settings', 'settings-ai', 'settings-actions', 'backup-schedule', 'restore-preview', 'question-import', 'flashcard-import']
+                    if args.data_views else ['statistics', 'statistics-daily', 'statistics-retry', 'tutor', 'tutor-conversation', 'tutor-footer']
                     if args.report_views else ['subjects', 'subject-editor', 'question-bank', 'question-editor', 'question-editor-footer', 'topic-editor', 'question-empty']
                     if args.authoring_views else ['decks', 'deck', 'flashcard', 'flashcard-revealed', 'flashcard-complete', 'deck-no-due', 'flashcard-history']
                     if args.flashcard_views else ['practice', 'practice-setup', 'practice-confirm', 'practice-result', 'practice-history']

@@ -26,6 +26,7 @@ GUI_CHECKS = (
     'check_ui_languages.py',
     'check_authoring_layout.py',
     'check_report_layout.py',
+    'check_data_layout.py',
 )
 
 

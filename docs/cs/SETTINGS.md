@@ -2,6 +2,10 @@
 
 [English](../SETTINGS.md) · [Čeština](SETTINGS.md) · [Slovenčina](../sk/SETTINGS.md) · [Русский](../ru/SETTINGS.md)
 
+## Nevydáno — nastavení a společné datové panely
+
+Nastavení seskupuje studijní předvolby a rozhraní vedle sebe v širokém okně a pod sebou v kompaktním; AI má vlastní kartu přes celou šířku. Zpráva pro Uložit/Načíst se zobrazuje u ovládání i v záhlaví. Změna velikosti zachová stejné prvky, koncepty a uložené snímky; ukládání zůstává výslovné a aktivní časovače zachovají původní délku.
+
 Nastavení se ukládá do stejné databáze jako studijní data.
 
 V **Settings** nastav délku příštího focus sezení (1–180 minut, výchozí 15), denní cíl (1–1 440 minut, výchozí 60), URL Ollamy, preferovaný model a jazyk AI odpovědi. **Save settings** uloží a použije všechny hodnoty; rozepsané změny přežijí přepnutí obrazovky, ale ne zavření aplikace. Probíhající i pozastavené sezení si zachová původní délku. Cíl se změní hned, historický čas se nepřepočítává.

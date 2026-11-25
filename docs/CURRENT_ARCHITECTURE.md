@@ -2,6 +2,10 @@
 
 [English](CURRENT_ARCHITECTURE.md) · [Čeština](cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](sk/CURRENT_ARCHITECTURE.md) · [Русский](ru/CURRENT_ARCHITECTURE.md)
 
+## Unreleased — Settings and shared data panels
+
+Settings groups Study and Interface preferences side by side in wide windows and stacked in compact ones; AI preferences have a separate full-width card. Save/Reload feedback appears beside the controls as well as in the header. Resizing preserves the same fields, drafts and saved snapshots; saving remains explicit and active timers retain their original duration. Daily backup schedules, manual backup/restore and both CSV importers now use the shared card style, consistent insets and wrapped messages. Action groups use three columns in wide layouts or two in compact ones. Restore warnings appear above the destructive confirmation and Cancel controls. CSV preview/error fields have visible borders and keep their own scrolling. Preview, cancellation, atomic writes, isolated workers, restore closure and safety-copy rules are unchanged.
+
 ## v0.23.0 — Statistics and AI Tutor design
 
 Statistics groups the period selector and Refresh in a header, with three summary cards side by side on wide screens or stacked in compact windows. Subject and daily activity remain below, with readable wrapped labels. Resizing preserves the existing report and does not query the database; failed Refresh keeps the prior snapshot. Definitions, weighted accuracy and self-rating counts are unchanged. AI Tutor groups server/model/language controls and saved-history controls into separate cards, side by side on wide screens and stacked in compact windows. The model selector has a full-width row. Conversation ownership, transcript, prompt and Send/Stop controls share a bordered reading/editing surface. Recovery feedback is repeated beside the retry/discard/interruption controls so confirmations remain readable after scrolling. Navigation and resizing keep drafts, widgets, history selection and active jobs. Connection remains explicit; opening history stays offline.

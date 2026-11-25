@@ -2,6 +2,10 @@
 
 [English](../CURRENT_ARCHITECTURE.md) · [Čeština](CURRENT_ARCHITECTURE.md) · [Slovenčina](../sk/CURRENT_ARCHITECTURE.md) · [Русский](../ru/CURRENT_ARCHITECTURE.md)
 
+## Nevydáno — nastavení a společné datové panely
+
+Nastavení seskupuje studijní předvolby a rozhraní vedle sebe v širokém okně a pod sebou v kompaktním; AI má vlastní kartu přes celou šířku. Zpráva pro Uložit/Načíst se zobrazuje u ovládání i v záhlaví. Změna velikosti zachová stejné prvky, koncepty a uložené snímky; ukládání zůstává výslovné a aktivní časovače zachovají původní délku. Plán denních záloh, ruční záloha/obnova a oba importy CSV používají společný vzhled karet, odsazení a zalomené zprávy. Skupiny akcí mají tři sloupce v širokém rozložení, jinak dva. Varování obnovy je nad tlačítkem nevratného potvrzení a Zrušit. Pole náhledu/chyb CSV mají viditelné okraje a vlastní posouvání. Pravidla náhledu, zrušení, atomického zápisu, oddělených procesů, zavření po obnově a bezpečnostní kopie se nemění.
+
 ## v0.23.0 — vzhled statistik a AI Tutora
 
 Statistiky seskupují výběr období a Obnovit do záhlaví. Tři souhrnné karty jsou vedle sebe v širokém okně, jinak pod sebou. Aktivita předmětů a dnů zůstává níže s čitelně zalomenými popisky. Změna velikosti zachová existující přehled bez dotazu na databázi; chyba obnovení ponechá předchozí snímek. Definice, vážená úspěšnost a počty vlastních hodnocení se nemění. AI Tutor odděluje ovládání serveru/modelu/jazyka a uložené historie do karet, vedle sebe v širokém okně a pod sebou v kompaktním. Výběr modelu má celý řádek. Vlastník konverzace, přepis, otázka a Odeslat/Zastavit sdílejí ohraničenou plochu pro čtení a psaní. Zpráva o obnově se opakuje u tlačítek opakování, zahození a přerušení, aby bylo potvrzení čitelné po posunu stránky. Navigace a změna velikosti zachovají koncepty, prvky, výběr historie a běžící úlohy. Připojení je výslovné; otevření historie zůstává offline.

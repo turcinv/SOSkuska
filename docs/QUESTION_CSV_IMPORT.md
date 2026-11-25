@@ -2,6 +2,10 @@
 
 [English](QUESTION_CSV_IMPORT.md) · [Čeština](cs/QUESTION_CSV_IMPORT.md) · [Slovenčina](sk/QUESTION_CSV_IMPORT.md) · [Русский](ru/QUESTION_CSV_IMPORT.md)
 
+## Unreleased — Settings and shared data panels
+
+Daily backup schedules, manual backup/restore and both CSV importers now use the shared card style, consistent insets and wrapped messages. Action groups use three columns in wide layouts or two in compact ones. Restore warnings appear above the destructive confirmation and Cancel controls. CSV preview/error fields have visible borders and keep their own scrolling. Preview, cancellation, atomic writes, isolated workers, restore closure and safety-copy rules are unchanged.
+
 The v0.22.0 authoring redesign groups filters and search in one card and keeps Import CSV in the bank header. Import entry points, preview/draft separation and save/retry rules below are unchanged.
 
 Open **My Subjects → Questions → Import CSV** in an existing subject. The file adds questions to that subject only; it never creates a subject or edits existing questions. Flashcard CSV import is available separately in Flashcards.
