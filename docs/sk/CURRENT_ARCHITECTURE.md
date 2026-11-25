@@ -127,7 +127,7 @@ Karty ukazujú počet relácií a uložený čas predmetu, nie vymyslený pokrok
 
 ## Rozloženie a ovládanie
 
-Okno 1440 × 900, minimum 1024 × 700. Bočný panel 230 px / zbalený 72 px; pri zvyšnej šírke pod 1100 px sa Dashboard usporiada na metriky 2 × 2 a pravý panel pod obsah. My Subjects prepína medzi jedným a dvoma stĺpcami pri šírke 850 px. Dlhé názvy sa na kartách zalamujú.
+1440 × 900 / 1024 × 700. **Zatiaľ nevydaný redizajn, krok 2:** Today’s Study združuje výber predmetu, Start Studying, časovač/obnovu/opakovanie zápisu, denný pokrok a zoznam úloh. Nasledujú predmety a označené hľadanie; súhrn metrík je pod stĺpcami. Hranica viditeľnej plochy je 1100 logických CTk pixelov bez posuvníka: skúšky/posledné sedenia sú vedľa v širokom režime a pod obsahom v kompaktnom; Dashboard má dva/jeden stĺpec predmetov. Sidebar zostáva 230 logických pixelov, zbalený 72. My Subjects naďalej používa vlastnú hranicu 850 pixelov. Dlhé názvy sa zalamujú; prázdny priestor ponúka vytvorenie prvého predmetu. Medze sa overujú pri počiatočnej mierke 100/150 % vo všetkých štyroch jazykoch; natívne/živé DPI kontroly sú oddelené.
 
 Obrazovky majú nezávislé vyhľadávanie cez `casefold()`. Ctrl+K / Cmd+K zameria hľadanie aktívnej obrazovky; Escape vymaže dotaz. Formuláre pre nový/upravený predmet aj potvrdenie vymazania sú inline. Podpora `TouchpadScroll`, kolieska a staršieho Linux/X11 zostáva v adaptéri využívajúcom súkromné členy CustomTkinteru; pri aktualizácii ho znovu overiť.
 

@@ -4,6 +4,7 @@
 
 ## Unreleased
 
+- Dashboard redesign Step 2: grouped Today’s Study controls, clear first-subject action, subjects/search below study, compact summary, responsive rail and sidebar selection. Fix logical viewport/title sizing; verify four-language recovery/retry at 100/150% startup scaling.
 - Shared blue/mint theme foundation with paired Light/Dark surfaces, distinct secondary hover and consistent progress tracks. Preserve existing layouts, defaults and schema 10; retain disposable before/after captures and future layout sketches.
 
 ## 0.18.1 — 2026-11-22

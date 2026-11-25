@@ -9,6 +9,7 @@ from unittest.mock import patch
 import customtkinter as ctk
 from app import Dashboard
 from storage import Store
+from theme import COLORS as C
 
 ctk.set_appearance_mode("dark")
 temp = tempfile.TemporaryDirectory()
@@ -38,11 +39,29 @@ def next_step(callback, delay=120):
     app.after(delay, guarded(callback))
 
 
+def assert_inside(widget, container):
+    app.update_idletasks()
+    assert widget.winfo_rootx() >= container.winfo_rootx()
+    assert widget.winfo_rootx() + widget.winfo_width() <= container.winfo_rootx() + container.winfo_width(), (widget, widget.winfo_width(), container.winfo_width())
+
+
 def check_initial():
     assert app.title() == "SOSkúška"
     assert app.content.winfo_ismapped() and app.empty.winfo_ismapped()
     assert app.metric_values[0].cget("text") == "0h 00m"
     assert app.metric_values[3].cget("text") == "0"
+    assert app.start_button.cget('text') == 'Create your first subject'
+    assert app.subject_picker.cget('state') == 'disabled'
+    assert_inside(app.start_button, app.study_panel)
+    assert_inside(app.subject_picker, app.study_panel)
+    assert app.study_panel.winfo_rooty() < app.search.winfo_rooty() < app.metrics.winfo_rooty()
+    assert int(app.rail.grid_info()['column']) == 1
+    app.navigate('Settings')
+    assert app.settings_btn.cget('fg_color') == C['selected']
+    app.toggle_sidebar(); app.toggle_sidebar()
+    assert app.settings_btn.cget('fg_color') == C['selected']
+    app.navigate('Dashboard')
+    assert app.settings_btn.cget('fg_color') != C['selected']
     app.start_button.invoke()
     next_step(check_form)
 
@@ -73,7 +92,7 @@ def check_saved():
     page.save_button.invoke()
     assert app.store.subject(subject_id)["name"] == "Mathematics – skúška"
     # Test fixtures are explicit test data, not automatic demo content.
-    for name in ["Physics", "English", "Computer Science"]:
+    for name in ["Physics", "English", "Long subject " + "математика " * 9]:
         app.store.create_subject(name)
     app.refresh_data()
     page.query.set("physics")
@@ -129,6 +148,16 @@ def check_empty():
 def check_compact():
     app.reflow()
     assert app.layout_mode == "compact"
+    assert int(app.rail.grid_info()['row']) == 1 and int(app.rail.grid_info()['column']) == 0
+    assert all(int(card.grid_info()['column']) == 0 for _, card in app.subject_cards)
+    assert_inside(app.search, app.main)
+    assert_inside(app.manage_subjects_button, app.main)
+    assert_inside(app.start_button, app.study_panel)
+    assert_inside(app.subject_picker, app.study_panel)
+    app.query.set('Physics')
+    app.toggle_sidebar(); app.toggle_sidebar()
+    assert app.query.get() == 'Physics' and len(app.subject_cards) == 1
+    app.query.set('')
     canvas = app.scroll._parent_canvas
     canvas.yview_moveto(0)
     before = canvas.yview()[0]
@@ -150,12 +179,19 @@ def check_compact():
     app.subject_page.ask_delete(subject_id)
     assert app.subject_page.deleting_id is None
     assert app.store.subject(subject_id) is not None
+    app.scroll._parent_canvas.yview_moveto(0)
+    app.update_idletasks()
+    assert app.finish_button.winfo_ismapped() and app.timer_frame.winfo_ismapped()
+    assert_inside(app.finish_button, app.study_panel)
+    assert app.finish_button.winfo_rooty() + app.finish_button.winfo_height() < app.winfo_rooty() + app.winfo_height()
     app.running_since -= 95
     app.pause_focus()
     assert app.running_since is None
     with patch.object(app.store, "add_session", side_effect=sqlite3.OperationalError("disk full")):
         assert not app.finish_focus()
     assert app.session_open and app.running_since is None
+    assert app.focus_retry_label.winfo_ismapped() and app.focus_retry_label.cget('text')
+    assert app.finish_button.winfo_ismapped()
     assert app.store.seconds() == 0
     assert app.finish_focus()
     assert not app.finish_focus()  # A repeated click must not save a duplicate session.

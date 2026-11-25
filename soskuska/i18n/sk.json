@@ -698,5 +698,9 @@
   "Could not refresh the question bank. Your draft is kept; reopen Questions to retry.": "Banku otázok nemožno obnoviť. Koncept zostáva; pre opakovanie znovu otvor otázky.",
   "Delete question “{v0}” permanently? This cannot be undone.": "Natrvalo vymazať otázku „{v0}“? Akciu nemožno vrátiť.",
   "The selected topic no longer exists. Choose another topic or No topic before saving.": "Vybraná téma už neexistuje. Pred uložením vyber inú tému alebo možnosť Bez témy.",
-  "Unavailable topic: {v0}": "Nedostupná téma: {v0}"
+  "Unavailable topic: {v0}": "Nedostupná téma: {v0}",
+  "Choose a subject and start a focused session.": "Vyber predmet a začni sa sústrediť.",
+  "Create your first subject": "Vytvor svoj prvý predmet",
+  "Lifetime summary": "Celkový prehľad",
+  "Today's Study": "Dnešné štúdium"
 }

@@ -698,5 +698,9 @@
   "Could not refresh the question bank. Your draft is kept; reopen Questions to retry.": "Не удалось обновить банк вопросов. Черновик сохранён; откройте вопросы заново для повтора.",
   "Delete question “{v0}” permanently? This cannot be undone.": "Удалить вопрос «{v0}» навсегда? Это нельзя отменить.",
   "The selected topic no longer exists. Choose another topic or No topic before saving.": "Выбранная тема больше не существует. Перед сохранением выберите другую тему или вариант Без темы.",
-  "Unavailable topic: {v0}": "Недоступная тема: {v0}"
+  "Unavailable topic: {v0}": "Недоступная тема: {v0}",
+  "Choose a subject and start a focused session.": "Выберите предмет и начните занятие.",
+  "Create your first subject": "Создайте первый предмет",
+  "Lifetime summary": "Общая статистика",
+  "Today's Study": "Учёба сегодня"
 }
