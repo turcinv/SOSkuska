@@ -2,6 +2,8 @@
 
 [English](../PRACTICE_HISTORY.md) · [Čeština](../cs/PRACTICE_HISTORY.md) · [Slovenčina](../sk/PRACTICE_HISTORY.md) · [Русский](../ru/PRACTICE_HISTORY.md)
 
+**Zatiaľ nevydané — redizajn testov, krok 3:** Bežiaci test združuje priebeh/čas v záhlaví a ukazuje počet uložených odpovedí lištou. Riadky A–D cez celú šírku zvýraznia uložený výber, nie správnosť; kliknutie na pozadie/text používa pôvodné ukladanie. Previous/Next/Clear a Finish zdieľajú pätu. Nastavenia sú v spoločnej karte, výsledky/história majú zjednotené plochy. Chyba zápisu vráti výber/vzhľad; skryté odpovede pri nastaveniach či inej stránke nezapisujú. Dlhý obsah sa zalamuje a posúva. Skóre, termíny, potvrdenia, pokračovanie, filtre a snímky zostávajú; aktuálna schéma je 10.
+
 Otvor **Practice Tests → Completed tests**. História sprístupňuje všetky dokončené pokusy po 20 na stránku, od najnovšieho dokončenia; pri zhode rozhoduje ID pokusu. Previous / Next prepína stránky, View result otvorí uložené skóre, vybrané aj správne odpovede a vysvetlenia. Návrat do nastavenia/histórie zachová stránku a filtre.
 
 Ak je test rozpracovaný, otvor tento prehľad tlačidlom **← Test setup / history** v bežiacom teste; Resume test ťa vráti k pokusu.

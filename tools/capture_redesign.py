@@ -25,10 +25,14 @@ def main():
     parser.add_argument('--language', choices=('English', 'Czech', 'Slovak', 'Russian'), default='English')
     parser.add_argument('--size', choices=('wide', 'compact'), default='wide')
     parser.add_argument('--dashboard-only', action='store_true')
+    parser.add_argument('--practice-views', action='store_true', help='Capture running/setup/confirmation/result/history only')
+    parser.add_argument('--timed-practice', action='store_true', help='Use a frozen five-minute fixture instead of untimed')
     parser.add_argument('--empty', action='store_true', help='Empty Dashboard; requires --dashboard-only')
     args = parser.parse_args()
     if args.empty and not args.dashboard_only:
         parser.error('--empty requires --dashboard-only')
+    if args.practice_views and args.dashboard_only:
+        parser.error('--practice-views and --dashboard-only are mutually exclusive')
     dimensions = (1440, 900) if args.size == 'wide' else (1024, 700)
     args.output.mkdir(parents=True, exist_ok=True)
     # Xvfb captures must never open a native macOS/Windows application window.
@@ -68,7 +72,7 @@ def main():
                 store.create_flashcard(deck, 'What does FIFO mean?', 'First in, first out: the earliest item added is removed first.')
                 store.create_flashcard(deck, 'What does LIFO mean?', 'Last in, first out: the most recent item added is removed first.')
                 store.add_session(1500, sid, 'Computer Science')
-                attempt = store.start_practice(sid, 2)
+                attempt = store.start_practice(sid, 2, minutes=5 if args.timed_practice else None)
                 store.save_practice_answer(attempt, 0, 1)
         ctk.set_default_color_theme('dark-blue')
         ctk.set_widget_scaling(1)
@@ -96,7 +100,8 @@ def main():
             image.save(args.output / (name + '.png'))
 
         def dashboard():
-            capture('dashboard')
+            if not args.practice_views:
+                capture('dashboard')
             if args.dashboard_only:
                 app.close()
                 return
@@ -107,9 +112,41 @@ def main():
             assert app.practice_page.run.winfo_ismapped()
             assert app.practice_page.choice.get() == 1
             capture('practice')
-            app.navigate('Flashcards')
-            app.flashcard_page.start_review(deck)
-            app.after(400, guard(flashcard))
+            if args.practice_views:
+                app.practice_page.show_config()
+                app.after(400, guard(practice_setup))
+            else:
+                app.navigate('Flashcards')
+                app.flashcard_page.start_review(deck)
+                app.after(400, guard(flashcard))
+
+        def practice_setup():
+            capture('practice-setup')
+            app.practice_page.resume()
+            app.practice_page.finish_button.invoke()
+            app.after(400, guard(practice_confirm))
+
+        def practice_confirm():
+            assert app.practice_page.confirm.winfo_ismapped()
+            capture('practice-confirm')
+            app.practice_page.confirm_button.invoke()
+            app.after(400, guard(practice_result))
+
+        def practice_result():
+            assert app.practice_page.results.winfo_ismapped()
+            capture('practice-result')
+            app.practice_page.show_config()
+            app.scroll._parent_canvas.yview_moveto(1)
+            app.after(400, guard(practice_history))
+
+        def practice_history():
+            app.update_idletasks()
+            app.scroll._parent_canvas.yview_moveto(1)
+            app.after(300, guard(practice_history_ready))
+
+        def practice_history_ready():
+            capture('practice-history')
+            app.close()
 
         def flashcard():
             assert not app.flashcard_page.revealed
@@ -136,7 +173,10 @@ def main():
         'platform': platform.platform(), 'python': platform.python_version(),
         'customtkinter': ctk.__version__, 'content': 'Disposable fixture only; no user data',
         'scope': 'Linux Xvfb capture; not native Windows/macOS acceptance',
-        'screens': ['dashboard'] if args.dashboard_only else ['dashboard', 'practice', 'flashcard', 'flashcard-revealed'],
+        'screens': (['practice', 'practice-setup', 'practice-confirm', 'practice-result', 'practice-history']
+                    if args.practice_views else ['dashboard'] if args.dashboard_only
+                    else ['dashboard', 'practice', 'flashcard', 'flashcard-revealed']),
+        'timed_practice': args.timed_practice,
     }, indent=2) + '\n')
     print('PASS: disposable ' + args.mode + ' design captures')
 

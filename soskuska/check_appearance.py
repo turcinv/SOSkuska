@@ -59,6 +59,9 @@ def run(path, reopen=False, screenshots=None):
                             text=widget.cget('text_color_disabled')
                         bg=background(widget,own)
                         assert contrast(color(text,widget),bg)>=4.5,(type(widget).__name__,text,bg)
+                        if isinstance(widget,ctk.CTkRadioButton):
+                            for role in ('fg_color','hover_color','border_color'):
+                                assert contrast(color(widget.cget(role),widget),bg)>=3.0,(role,bg)
                         if isinstance(widget,ctk.CTkEntry) and widget.cget('placeholder_text'):
                             assert contrast(color(widget.cget('placeholder_text_color'),widget),bg)>=4.5
                     visit(widget)

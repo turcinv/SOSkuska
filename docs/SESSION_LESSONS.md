@@ -61,3 +61,7 @@ The Astra 6.2 low-effort review of main/v0.18.0 identified three P2 issues and o
 ## Dashboard redesign review · 25 November 2026
 
 Dashboard Step 2 groups study actions and keeps subjects/search below them, with a compact metrics summary and explicit sidebar selection. Viewport dimensions and title wrap lengths must be converted from native pixels to CTk logical units inside the scrolling adapter. Bounds checks must use the real viewport. Set simulated DPI before constructing widgets in fresh processes: live CTk 5.2.2 scaling can re-grid hidden pages. Re-review found no blockers; 308 unit tests (two skips) and all 18 container GUI scripts passed, including four-language 100/150% startup recovery/retry checks. Native platform/live-DPI acceptance is separate.
+
+## Practice redesign review · 25 November 2026
+
+CTkFrame.bind forwards Configure to its canvas: widget-local resize callbacks must not reject those events by comparing event.widget with the wrapper. Apply logical-unit conversion before CTk wrap lengths. Render running answer highlights from committed snapshots, restore them after write failure, and guard row/label/radio events with both current page and run visibility; checked radio contrast must be audited against the selected surface. Verify native drawing/text event targets in tests, not only direct callbacks. Progress counts saved answers, never correctness.

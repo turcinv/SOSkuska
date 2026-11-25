@@ -47,3 +47,7 @@ Stav 22. novembra 2026: používateľ potvrdil dokončenie testovania v0.15.0 a 
 ## Revízia Dashboardu · 25. novembra 2026
 
 Dashboard, krok 2, združuje študijné akcie, pod nimi predmety/hľadanie, kompaktný súhrn a výber sidebaru. Rozmery plochy a zalamovanie prevádzať z natívnych pixelov na logické CTk jednotky v adaptéri posúvania; medze overovať oproti skutočnej ploche. Simulované DPI nastaviť pred konštrukciou widgetov v nových procesoch: živá zmena CTk 5.2.2 môže znovu zobraziť skryté stránky. Revízia bez blokujúcich nálezov; 308 unit testov (dva preskočené), všetkých 18 GUI skriptov v kontajneri vrátane štyroch jazykov a obnovy/opakovania pri počiatočnej mierke 100/150 %. Natívne/živé DPI overenie je oddelené.
+
+## Revízia redizajnu testov · 25. novembra 2026
+
+CTkFrame.bind odovzdáva Configure na canvas: lokálnu zmenu veľkosti neodmietať porovnaním event.widget s obalom. Pred zalamovaním previesť pixely na logické jednotky. Výber odpovede kresliť z uloženého snímku, po chybe obnoviť; riadok/text/radio chrániť aktuálnou stránkou aj viditeľnosťou testu. Kontrast radia overiť oproti vybranému pozadiu. Testovať skutočné kresliace/textové ciele udalostí, nielen priame volania. Priebeh počíta uložené odpovede, nie správnosť.

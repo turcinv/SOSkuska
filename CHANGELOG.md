@@ -2,6 +2,10 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
+## Unreleased
+
+- Redesign Practice setup, running header, saved-answer rows, navigation, results and history. Preserve scoring/deadlines/snapshots, reject hidden answer events and verify rollback/long content in four languages at 100/150% startup scaling.
+
 ## 0.19.0 — 2026-11-25
 
 - Dashboard redesign Step 2: grouped Today’s Study controls, clear first-subject action, subjects/search below study, compact summary, responsive rail and sidebar selection. Fix logical viewport/title sizing; verify four-language recovery/retry at 100/150% startup scaling.
