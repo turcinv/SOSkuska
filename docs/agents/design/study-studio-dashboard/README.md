@@ -1,6 +1,6 @@
 # Study studio · substantial redesign, stage 1
 
-26 November 2026 · `feature/study-studio-redesign` · unpublished preview based on v0.26.1 (`5405461586ee9deebb3a96c42df564b5be743d8e`). App/release labels remain unchanged until release authorization.
+26 November 2026 · `feature/study-studio-redesign` · released in v0.27.0 through PR #64; captures based on v0.26.1 (`5405461586ee9deebb3a96c42df564b5be743d8e`). The user authorized merging and releasing stage 1. Capture labels remain historical.
 
 The user explicitly rejected the earlier incremental bright UI work as too small. This stage replaces the Dashboard composition, navigation treatment and shared visual system. It is a working native Python/CustomTkinter implementation. Visual feedback on this stage comes before extending the remaining page compositions. The old bright UI handoffs remain historical evidence.
 
@@ -44,4 +44,4 @@ To reproduce a disposable capture, pass `tools/capture_redesign.py` on stdin to 
 
 ## Next
 
-Review the screenshots with the user, then carry the approved design language into Subjects/Question Bank, Flashcards, Practice, Tutor, Statistics and Settings through separately reviewable steps. Do not treat automated checks as visual approval or manual hardware acceptance. Real-model evaluation remains deferred. Merge/release require separate authorization.
+Stage 1 was approved for merge/release on 26 November 2026. Carry the approved design language into Subjects/Question Bank, Flashcards, Practice, Tutor, Statistics and Settings through separately reviewable steps. Do not treat automated checks as visual approval or manual hardware acceptance. Real-model evaluation remains deferred. Merge/release require separate authorization.

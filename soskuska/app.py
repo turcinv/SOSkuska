@@ -37,7 +37,7 @@ from appearance import apply_appearance
 from studio_widgets import FocusClock, MonthAgenda, MONTHS, nav_icon
 from panel_layout import wrap_labels
 
-APP_VERSION = '0.26.1'
+APP_VERSION = '0.27.0'
 
 from theme import COLORS as C
 

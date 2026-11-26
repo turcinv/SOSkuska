@@ -2,7 +2,7 @@
 
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
-## Unreleased
+## 0.27.0 — 2026-11-26
 
 - Nový studijní prostor: Dashboard, navigation, Dark/Light.
 
