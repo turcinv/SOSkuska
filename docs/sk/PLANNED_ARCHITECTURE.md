@@ -90,6 +90,10 @@ Obnova sústredenia po páde je dostupná vo v0.17.0; pozri [Obnova sústredenia
 
 Stavy AI: nedostupná služba, žiadny model, načítavanie, pripravené, generovanie, zastavené, nedostatok pamäte, model nenájdený. Samotné zlyhanie pripojenia nesmie byť vydávané za istotu, že Ollama nie je nainštalovaná.
 
+**AI generovanie:** generovanie kartičiek/otázok z poznámok s kontrolou a atomickým uložením je implementované (v0.30.0–v0.30.1) vrátane ručného nástroja na hodnotenie so skutočným modelom. Možná budúca práca zahŕňa použitie materiálov vybraného predmetu ako kontextu Tutora s náhľadom, „Vysvetliť túto kartičku“ v Kartičkách a študijný plán podľa slabých tém zo Štatistík. Každá možnosť musí zachovať výslovný súhlas skôr, než sa čokoľvek odošle.
+
+**Integrácie (len návrh):** voliteľné miestne rozhranie len na čítanie pre externých asistentov, napríklad server MCP cez stdio, by mohlo sprístupniť predmety, kartičky na opakovanie a štatistiky. Vyžadovalo by výslovné zapnutie, žiadny sieťový poslucháč v predvolenom stave, zápisy len cez skontrolované návrhy a existujúce pravidlá zámkov/lease. Neimplementované.
+
 Dlhé operácie bežia mimo hlavného UI vlákna. Výsledky prichádzajú cez front a `after`; pracovné vlákno nesmie volať prvky UI. SQLite pripojenie bez návrhu nezdieľať medzi vláknami. Prvé riešenie môže ponechať krátke zápisy v hlavnom vlákne; prípadné pracovné úlohy dostanú vlastné pripojenie.
 
 Odpovede AI najskôr ako text, bloky kódu s písmom s pevnou šírkou a Unicode matematika; pokročilé HTML/LaTeX nie je podmienkou. Jazyk UI oddeliť od jazyka odpovedí AI. Plánované jazyky: English, Czech, Slovak, Russian; AI navyše Automatic s možnosťou ručne prepísať chybnú detekciu. Počítať s dlhšími textami a cyrilikou.

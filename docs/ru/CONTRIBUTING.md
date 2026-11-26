@@ -25,18 +25,11 @@ docker run --rm --init --network none --cpus 2 --memory 2g soskuska-tests
 .venv-macos/bin/python -m unittest discover -s tests -v
 ```
 
-Для обычных проверок UI, таймера и прокрутки используй контейнер выше. Команды ниже открывают нативные окна и нужны только для обязательной платформенной/ручной проверки; сначала согласуй видимый запуск с пользователем. На Windows/Linux используй соответствующий Python:
+Для обычных проверок UI, таймера и прокрутки используй контейнер выше. Нативные GUI-скрипты открывают настоящие окна и нужны только для обязательной платформенной/ручной проверки; сначала согласуй видимый запуск с пользователем. Полный список — `GUI_CHECKS` в `tools/run_checks.py`. На Windows/Linux используй соответствующий Python, например:
 
 ```sh
 .venv-macos/bin/python soskuska/check_dashboard.py
-.venv-macos/bin/python soskuska/check_question_bank.py
-.venv-macos/bin/python soskuska/check_review_fixes.py
-.venv-macos/bin/python soskuska/check_practice.py
-.venv-macos/bin/python soskuska/check_flashcards.py
-.venv-macos/bin/python soskuska/check_statistics.py
-.venv-macos/bin/python soskuska/check_state_fixes.py
-.venv-macos/bin/python soskuska/check_tutor.py
-.venv-macos/bin/python soskuska/check_settings.py
+.venv-macos/bin/python soskuska/check_note_generation.py
 ```
 
 GUI-проверка открывает окно и требует графического сеанса. Для изменения только документации обычно достаточно проверить ссылки, команды и форматирование; запускать весь UI ради неё не нужно.
@@ -51,7 +44,7 @@ GUI-проверка открывает окно и требует графич�
 
 ## Непрерывная интеграция (CI)
 
-CI: Python 3.12, модульные тесты на трёх системах и пятнадцать GUI-проверок на Ubuntu/Xvfb. [Результаты](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
+CI: Python 3.12, модульные тесты на Ubuntu, Windows и macOS, GUI-скрипты из `tools/run_checks.py` (26 в v0.30.1) на Ubuntu/Xvfb и проверка сборки переносимой версии для Windows. [Результаты](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml). Проверки не развёртывают и не публикуют выпуски. При изменении отчётов см. [правила статистики](STATISTICS.md); самооценки нельзя выдавать за измеренное освоение материала. Изменения промптов или схемы AI нужно также повторно проверять с помощью `tools/evaluate_ai.py` на настоящей локальной модели (см. [Разработка](DEVELOPMENT.md)).
 
 ## Статистика (v0.6.0)
 

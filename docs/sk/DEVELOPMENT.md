@@ -77,7 +77,7 @@ Syntax bez otvorenia okna:
 .venv-macos/bin/python -m compileall -q soskuska
 ```
 
-Natívna kontrola funkčnosti s vlastnou dočasnou databázou:
+Natívne kontroly používajú dočasné databázy a otvárajú skutočné okná. Úplný zoznam GUI skriptov je v `tools/run_checks.py` (26 vo v0.30.1); radšej ich spúšťaj v [testovacom kontajneri](CONTAINER_TESTS.md), aby sa na ploche neotvárali okná. Jeden skript natívne spustíš takto:
 
 ```sh
 .venv-macos/bin/python soskuska/check_dashboard.py
@@ -86,6 +86,25 @@ Natívna kontrola funkčnosti s vlastnou dočasnou databázou:
 Na Windows/Linux zameň interpret za cestu zo svojho prostredia. Skript krátko otvorí okno, overí zobrazené prvky, vyhľadávanie/prázdny stav, bočný panel, kompaktné rozloženie, koliesko, v Tk 9 trackpad, časovač a uloženie času. Pri úspechu vypíše `PASS` a okno zatvorí. Nepoužíva bežnú databázu.
 
 Má 12-sekundovú poistku cez Tk; nejde o pevný časový limit procesu pri zamrznutí slučky GUI. V takom prípade ukonči proces cez Ctrl+C. Syntax ani syntetické udalosti nie sú ručná vizuálna kontrola alebo test fyzického trackpadu.
+
+Základ vo v0.30.1: 351 jednotkových testov (dve preskočené kvôli platforme Linux) a všetkých 26 GUI skriptov prešlo v linuxovom kontajneri a prešlo všetkých päť úloh CI. Staré výsledky nevydávaj za overenie netestovaných zmien kódu. Hlavné pokrytie:
+
+| Kontrola / testy | Hlavné pokrytie |
+| --- | --- |
+| `check_dashboard.py`, `test_storage.py`, `test_subjects.py` | Prázdna databáza, skutočné metriky, CRUD predmetov/Unicode/termíny skúšok, väzby sedení/história, široké/kompaktné stĺpce, vyhľadávanie, syntetické posúvanie, opakovanie časovača, polnočný checklist, súbežné migrácie |
+| `check_focus_recovery.py`, `test_focus.py` | Pád procesu/znovuotvorenie, obnova pozastaveného sedenia, výhradné vlastníctvo, obmedzené počty chýb, atomické dokončenie/zahodenie a migrácia schémy 9 |
+| `check_question_bank.py`, `test_questions.py` | CRUD tém/otázok, kombinované filtre, izolácia predmetov, kompaktný editor, zachovaná história, migrácia fixture schémy 2 |
+| `check_review_fixes.py` | Varovania pri zastaranom mazaní, skutočné zámky SQLite, zlyhania čítania/zápisu, denná hlavička/opakovanie, žiadne duplicitné sedenia, gestá vo vnorenom editore/posuvníku; natívny macOS Quit v ohraničenom podriadenom procese |
+| `check_practice.py`, `test_practice.py` | Nastavenie, uloženie odpovede/opakovanie, bodovanie, nemenné snímky, termíny v UTC, idempotentné dokončenie, pokračovanie v novom procese, žiadna zmena posúvania/konceptu na inej obrazovke |
+| `check_flashcards.py`, `test_flashcards.py` | Zachovanie konceptu, opakované hľadanie, ochrana odhalenia/hodnotenia, zastarané revízie, opakovanie zápisu, plánovanie/história, nový proces, migrácia zmrazenej schémy 4 |
+| `check_statistics.py`, `test_statistics.py` | Prázdny stav, miestne obdobia, vážená úspešnosť, úplná história, konzistentná snímka čítania, opakovanie, kompaktné rozloženie, posúvanie a nový proces |
+| `check_state_fixes.py` | Konflikty otázok/opätovné načítanie, obnovené voľby predmetu balíčka, zachovanie po vypršanom zahodení, obnova po chýbajúcom pokuse a prechodné chyby |
+| `check_tutor.py`, `test_tutor.py` | Fake Ollama na loopbacku, chyby Unicode/streamu, Stop/zrušenie TLS, medze kontextu, navigácia, vymazanie a zatvorenie pri generovaní |
+| `check_settings.py`, `test_preferences.py`, `test_settings_ui.py` | Atomické/zastarané zápisy predvolieb, migrácia/rollback zo zmrazenej schémy 5, zachované koncepty, cieľ aktívneho časovača, perzistencia v novom procese, žiadne automatické pripojenie, voľba modelu podľa servera |
+| `check_note_generation.py`, `test_note_generation.py` | AI generovanie z poznámok: žiadna požiadavka pred Generovať, štruktúrované dáta, parsovanie/validácia, odpovede umiestnené aplikáciou, upozornenia na nepodložené návrhy, atomické uloženie, duplicity, zahodenie/premenovanie/Stop/zatvorenie, angličtina a ruština |
+| `check_studio_layout.py`, `check_ui_languages.py` | Štruktúra Dashboardu a banner/scéna s mačacou značkou, prispôsobenie dekorácie bočného panela, štyri jazyky pri počiatočnej mierke 100/150 % |
+
+Ostatné skripty v `tools/run_checks.py` pokrývajú obnovu sústredenia, zálohy a plány, importy CSV, históriu Tutora, vysvetlenia otázok a študijné režimy, vzhľad a responzívne rozloženia.
 
 Po zmene UI ručne over 1440 × 900 aj 1024 × 700, dosiahnutie spodného obsahu, skutočné gesto/koliesko, bočný panel, vyhľadávanie, Ctrl+K / Cmd+K a Escape. Po zmene ukladania zmeň zoznam úloh a dokonči krátku reláciu; reštartuj a skontroluj údaje. Automatické opätovné načítanie kódu nie je implementované — aplikáciu treba reštartovať.
 
@@ -151,11 +170,11 @@ Kontrola tiež overuje, že dokončenie testu na pozadí neposunie otvorenú ban
 
 ## Priebežná integrácia (CI)
 
-GitHub Actions kontroluje pull requesty do main, nové commity na main a ručné spustenie. Workflow `.github/workflows/ci.yml` inštaluje závislosti, overuje ich kompatibilitu, syntax Pythonu a všetky jednotkové testy s Pythonom 3.12 na Ubuntu, Windows a macOS. Samostatná úloha spúšťa pätnásť natívnych kontrolných skriptov na Ubuntu pod virtuálnym displejom Xvfb; každý proces má limit 60 sekúnd. Celá úloha má limit 10 minút. Novší beh rovnakej vetvy zruší predchádzajúci. Token má iba čítanie obsahu; workflow nič nenasadzuje ani nevydáva.
+GitHub Actions kontroluje pull requesty do main, nové commity na main a ručné spustenie. Workflow `.github/workflows/ci.yml` inštaluje závislosti, overuje ich kompatibilitu, syntax Pythonu a všetky jednotkové testy s Pythonom 3.12 na Ubuntu, Windows a macOS. Samostatná úloha spúšťa GUI skripty uvedené v `tools/run_checks.py` (26 vo v0.30.1) na Ubuntu pod virtuálnym displejom Xvfb a piata úloha zostaví a skontroluje prenosný ZIP pre Windows. Každý proces má limit 60 sekúnd (kontroly rozloženia v novom procese vnútri skriptu majú vlastné kratšie medze). Celá úloha má limit 10 minút. Novší beh rovnakej vetvy zruší predchádzajúci. Token má iba čítanie obsahu; workflow nič nenasadzuje ani nevydáva.
 
 Výsledky a logy sú v [Actions](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml) a v kontrolách PR. Otvor červený stav a prečítaj prvý neúspešný krok. Po oprave pushni do rovnakej vetvy a kontroly sa spustia znovu. Ručné spustenie Run workflow je dostupné po zlúčení workflow do predvolenej vetvy. Branch protection týmto nie je zapnutá.
 
-Automatické testy nie sú ručným overením Windows/macOS/Linux ani fyzického trackpadu. Linuxový CI beh neoveruje natívnu ponuku Quit v macOS ani Tk 9 gestá; tie treba naďalej kontrolovať na Macu.
+Automatické testy nie sú ručným overením Windows/macOS/Linux ani fyzického trackpadu. Linuxový CI beh neoveruje natívnu ponuku Quit v macOS ani Tk 9 gestá; tie treba naďalej kontrolovať na Macu. Fake Ollama nepreukazuje kvalitu ani výkon skutočného modelu; na to použi `tools/evaluate_ai.py` (pozri nižšie).
 
 ## Kartičky a opakovanie (v0.5.0)
 
@@ -303,9 +322,9 @@ python soskuska/check_practice_history.py
 
 ## Prenosná verzia Windows a preberacia kontrola
 
-v0.15.0 pridáva nepodpísaný prenosný ZIP pre Windows x64, zostavený a overený piatou úlohou CI. Pribalený pomocný program zachová oddelené CSV/zálohovacie procesy; cieľový počítač nepotrebuje Python. Automatické hostované kontroly a ručný zoznam pre čistý počítač sú oddelené; ručná preberacia kontrola zatiaľ nie je dokončená. Vydaná verzia je v0.18.1, schéma 10. [Prenosná verzia Windows a preberacia kontrola](WINDOWS_PORTABLE.md) · [Kontrolný zoznam](WINDOWS_ACCEPTANCE.md).
+v0.15.0 pridáva nepodpísaný prenosný ZIP pre Windows x64, zostavený a overený piatou úlohou CI. Pribalený pomocný program zachová oddelené CSV/zálohovacie procesy; cieľový počítač nepotrebuje Python. Automatické hostované kontroly a ručný zoznam pre čistý počítač sú oddelené; ručná preberacia kontrola zatiaľ nie je dokončená. Vydaná verzia je v0.30.1, schéma 10. [Prenosná verzia Windows a preberacia kontrola](WINDOWS_PORTABLE.md) · [Kontrolný zoznam](WINDOWS_ACCEPTANCE.md).
 
-Aktuálna práca na balení: lokálne prešlo 251 jednotkových testov. Linuxový kontajner dokončil všetkých 15 GUI skriptov (250 jednotkových testov v danej snímke, dve preskočené kontroly špecifické pre súborový systém). Pre túto vetvu sa natívne GUI na Macu nespúšťalo. Hostované Windows a ručná kontrola sú oddelené; ručná kontrola NEVYKONANÁ.
+Každé vydanie prikladá ZIP, kontrolný súčet a správu o preberacej kontrole zostavené počas CI na presne označenom commite main. Ručná preberacia kontrola na čistom počítači zostáva NEVYKONANÁ.
 
 ## Nastavenie vzhľadu
 
@@ -325,7 +344,7 @@ Plánované miestne zálohy sú dostupné vo **v0.18.0**. Schéma SQLite zostáv
 
 ## Opravy po revízii hlavnej vetvy
 
-Opravy vydané vo v0.18.1 cez PR #38 sleduje [záznam revízie Astra](REVIEW_FINDINGS.md). Schéma zostáva 10 a vydaná verzia je v0.18.1. Úpravy predmetu porovnajú pôvodný obsah pod zápisovým zámkom; konflikt zachová koncept. Pred opätovným otvorením úprav na načítanie najnovšej verzie si potrebné zmeny skopíruj. Vymazanie otázky/témy porovná zobrazený obsah a po zmene vyžaduje nové potvrdenie. Návrat k rovnakému predmetu zachová editor otázky/témy, filtre aj pôvodnú identitu, tiež pri opakovaní čítania; vymazaná vybraná téma zostane nedostupná, kým výslovne nevyberieš inú tému alebo možnosť Bez témy. Iný predmet editor stále resetuje. Novšie potvrdenie úspešnej dennej zálohy odstráni staré oznámenie chyby bez ďalšieho zápisu zálohy.
+Opravy vydané vo v0.18.1 cez PR #38 sleduje [záznam revízie Astra](REVIEW_FINDINGS.md). Schéma zostáva 10 a vydaná verzia je v0.30.1. Úpravy predmetu porovnajú pôvodný obsah pod zápisovým zámkom; konflikt zachová koncept. Pred opätovným otvorením úprav na načítanie najnovšej verzie si potrebné zmeny skopíruj. Vymazanie otázky/témy porovná zobrazený obsah a po zmene vyžaduje nové potvrdenie. Návrat k rovnakému predmetu zachová editor otázky/témy, filtre aj pôvodnú identitu, tiež pri opakovaní čítania; vymazaná vybraná téma zostane nedostupná, kým výslovne nevyberieš inú tému alebo možnosť Bez témy. Iný predmet editor stále resetuje. Novšie potvrdenie úspešnej dennej zálohy odstráni staré oznámenie chyby bez ďalšieho zápisu zálohy.
 
 
 ## Vysvetlenia otázok · v0.25.0
@@ -341,23 +360,45 @@ Implementácia: `question_explanation.py` zostavuje ohraničený dotaz zo snímk
 
 V dokončenom výsledku otvorte **Vysvetliť túto otázku** a pred **Pripraviť v Tutorovi** vyberte **Študijný režim**. **Vysvetliť odpoveď** zachová doterajšie vysvetlenie; **Vysvetliť jednoducho** požaduje krátke kroky pre začiatočníka a príklad; **Dať nápovedu** požaduje jednu pojmovú nápovedu a z otázky pre AI vynechá vašu odpoveď, uložený kľúč aj vysvetlenie; **Precvičiť ma** kladie jednu novú doplňujúcu otázku a pred spätnou väzbou čaká na odpoveď. Ide o neformálne precvičovanie bez zápisu bodovaného testu alebo zmeny zdrojov.
 
-Zmena režimu obnoví presný miestny náhľad a zneplatní jeho predchádzajúcu akciu prípravy. Pripojenie, odoslanie a vytvorenie konverzácie vyžadujú existujúce výslovné ovládanie. Odoslaná otázka sa ukladá do bežnej miestnej histórie; platí doterajší jazyk, limit 4 000 znakov, ochrana čistého chatu, Zastaviť a opakovanie uloženia. Nápoveda stále obsahuje štyri možnosti: model môže odpoveď odvodiť či prezradiť a už zobrazené výsledky zostávajú viditeľné. Kvalita a dodržanie režimu vyžadujú neskorší test skutočného modelu, ktorý používateľ výslovne odložil. Automatické testy používajú miestny FakeOllama. Vydaná verzia je v0.30.1, schéma 10.
+Zmena režimu obnoví presný miestny náhľad a zneplatní jeho predchádzajúcu akciu prípravy. Pripojenie, odoslanie a vytvorenie konverzácie vyžadujú existujúce výslovné ovládanie. Odoslaná otázka sa ukladá do bežnej miestnej histórie; platí doterajší jazyk, limit 4 000 znakov, ochrana čistého chatu, Zastaviť a opakovanie uloženia. Nápoveda stále obsahuje štyri možnosti: model môže odpoveď odvodiť či prezradiť a už zobrazené výsledky zostávajú viditeľné. Kvalita a dodržanie režimu boli prvýkrát overené so skutočným modelom 26. novembra 2026 (pozri hodnotenie AI nižšie); širšie testovanie modelov zostáva ručné. Automatické testy používajú miestny FakeOllama. Vydaná verzia je v0.30.1, schéma 10.
 
 
 ## Opravy po revízii Astra · v0.26.1
 
 Editory balíčka a témy teraz porovnávajú pôvodnú upravovanú snímku pod zápisovým zámkom. Konflikt zachová návrh a zobrazí upozornenie; pred opätovným otvorením úpravy balíčka alebo premenovania témy skopírujte potrebné zmeny. Varovanie balíčka je aj pri Uložiť. Po potvrdenom uložení balíčka zmení chyba načítania tlačidlo na Obnoviť balíček a opakuje iba čítanie, nie zápis.
 
-Počty, zoradené fronty, hodnotenie a kontroly opakovania kartičiek porovnávajú skutočné časové okamihy vrátane obnovených posunov a mikrosekúnd. Štatistiky a história zdieľajú prevod povolených časov ISO na miestny deň vrátane posunov so sekundami. Uložené časy sa neprepisujú. Presné celočíselné kľúče UTC pokrývajú celý prijatý rozsah; ak systém nezvládne miestny prevod krajného dátumu, použije sa deň UTC obmedzený na podporovaný kalendár. Obnova vyžaduje samostatnú zálohu schémy 10; popis migrácií zostáva historický. Vydaná verzia je v0.30.1, schéma 10. Test skutočného modelu zostáva odložený.
+Počty, zoradené fronty, hodnotenie a kontroly opakovania kartičiek porovnávajú skutočné časové okamihy vrátane obnovených posunov a mikrosekúnd. Štatistiky a história zdieľajú prevod povolených časov ISO na miestny deň vrátane posunov so sekundami. Uložené časy sa neprepisujú. Presné celočíselné kľúče UTC pokrývajú celý prijatý rozsah; ak systém nezvládne miestny prevod krajného dátumu, použije sa deň UTC obmedzený na podporovaný kalendár. Obnova vyžaduje samostatnú zálohu schémy 10; popis migrácií zostáva historický. Vydaná verzia je v0.30.1, schéma 10.
 
 
 ## Nový študijný priestor · v0.27.0
 
 Nová kompozícia Dashboardu nahrádza predchádzajúce postupné úpravy: štyri súhrnné dlaždice, výrazná časť sústredenia so živými kruhovými hodinami, karty predmetov s monogramami a mesačný prehľad uložených termínov. Bočný panel používa miestne kreslené ikony a vlastné tmavé farby; zdieľané plochy a párový Dark/Light vzhľad sa menia v celej aplikácii. Táto fáza zavádza Dashboard a spoločný rámec; ostatné stránky nadviažu po vizuálnej spätnej väzbe. [Ukážky a rozsah](../agents/design/study-studio-dashboard/README.md).
 
-Hodiny ukazujú skutočný zostávajúci čas a pôvodný cieľ aktívneho sedenia. Kalendár používa úplnú snímku predmetov; najbližšie skúšky zachovajú presné dátumy a limit piatich položiek. Klávesové hľadanie, chyba uloženia a obnova sústredenia posunú ovládanie do viditeľnej časti kompaktného okna; čakajúci posun zruší navigácia či hľadanie. Zmena rozloženia nečíta dáta. Schéma zostáva 10, vydaná verzia v0.30.1. Kontajnerové a simulované mierky neoverujú natívnu platformu; test skutočného modelu zostáva odložený.
+Hodiny ukazujú skutočný zostávajúci čas a pôvodný cieľ aktívneho sedenia. Kalendár používa úplnú snímku predmetov; najbližšie skúšky zachovajú presné dátumy a limit piatich položiek. Klávesové hľadanie, chyba uloženia a obnova sústredenia posunú ovládanie do viditeľnej časti kompaktného okna; čakajúci posun zruší navigácia či hľadanie. Zmena rozloženia nečíta dáta. Schéma zostáva 10, vydaná verzia v0.30.1. Kontajnerové a simulované mierky neoverujú natívnu platformu.
 
 
 ## Grafické súbory
 
 V prostredí projektu spustite `python tools/build_brand_assets.py` na obnovenie súborov SVG, PNG, ICO a ICNS v `soskuska/assets/brand/`. Generátor vyžaduje iba Pillow; potom aplikáciu reštartujte. CI Windows kontroluje pribalené súbory, ikonu EXE a spustenie balíka. Vizuálne overenie na skutočnej platforme a pri rôznom DPI zostáva ručné.
+
+## Mačacia značka · v0.29.0
+
+`theme.py` obsahuje paletu Charcoal/Lavender/Violet/Cream s párovými rolami Light/Dark; `studio_widgets.py` pomocou Pillow kreslí scénu bannera, avatar, odtlačky labiek, ikony dlaždíc a dekoráciu bočného panela. Pravidlá kontrastu vynucujú `tests/test_appearance.py` a živý audit v `check_appearance.py`. Odovzdanie dizajnu a snímky: [mačacia značka](../agents/design/cat-brand/README.md).
+
+## AI generovanie z poznámok · v0.30.0 / v0.30.1
+
+**Generovať pomocou AI** v sadách kartičiek a bankách otázok vytvára návrhy položiek z vložených poznámok pomocou uloženého modelu Ollama; pozri [používateľského sprievodcu](AI_NOTE_GENERATION.md). `note_generation.py` obsahuje prompt, schému JSON, parsovanie a kontrolu opory v poznámkach; `ai_generation_panel.py` panel na kontrolu. Kontroly:
+
+```sh
+.venv-macos/bin/python -m unittest discover -s tests -p test_note_generation.py
+.venv-macos/bin/python soskuska/check_note_generation.py   # opens windows; prefer the container
+```
+
+Prompty možno vyhodnotiť so skutočným miestnym modelom bez otvárania okien a bez zásahu do akejkoľvek databázy:
+
+```sh
+ollama pull qwen3:4b-instruct-2507-q4_K_M
+.venv-macos/bin/python tools/evaluate_ai.py --model qwen3:4b-instruct-2507-q4_K_M --output .local-data/ai-eval
+```
+
+Nástroj zapíše `ai-evaluation.json` so surovými odpoveďami, počtami platných výstupov, časovaním a heuristickými príznakmi (opora v poznámkach, jazyk, únik nápovedy) na ľudskú kontrolu. Po každej zmene promptu alebo schémy ho spustite znova a porovnajte so [záznamom z 26. novembra 2026](../agents/design/ai-note-generation/EVALUATION.md). Je to ručný nástroj, nie je súčasťou CI.
