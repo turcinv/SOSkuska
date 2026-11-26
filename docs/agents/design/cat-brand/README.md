@@ -1,6 +1,6 @@
 # Cat brand redesign
 
-26 November 2026 · `feature/cat-brand-redesign` · unreleased. Source: the user's "SOSkúška brand & app concept" board (logo, mascot, palette/UI elements, desktop mockup). Native Python/CustomTkinter implementation; no web runtime.
+26 November 2026 · `feature/cat-brand-redesign` · released in v0.29.0 through [PR #68](https://github.com/turcinv/SOSkuska/pull/68). Source: the user's "SOSkúška brand & app concept" board (logo, mascot, palette/UI elements, desktop mockup). Native Python/CustomTkinter implementation; no web runtime.
 
 ## What changed
 

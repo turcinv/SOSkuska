@@ -2,7 +2,7 @@
 
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
-## Nevydáno
+## 0.29.0 — 2026-11-26
 
 - Redesign značky s kočkou: nové logo a ikony s kočkou čtoucí knihu, paleta Charcoal/Lavender/Violet/Cream, tlačítka ve tvaru pilulky, levandulový výběr v postranním panelu, uvítací záhlaví, souhrnné dlaždice s ikonami, banner „Pokračujte ve studiu“ s ilustrovanou scénou a karta „Přidat předmět“. Schéma zůstává 10.
 
