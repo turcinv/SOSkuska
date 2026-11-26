@@ -2,6 +2,10 @@
 
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
+## Nevydáno
+
+- Redesign značky s kočkou: nové logo a ikony s kočkou čtoucí knihu, paleta Charcoal/Lavender/Violet/Cream, tlačítka ve tvaru pilulky, levandulový výběr v postranním panelu, uvítací záhlaví, souhrnné dlaždice s ikonami, banner „Pokračujte ve studiu“ s ilustrovanou scénou a karta „Přidat předmět“. Schéma zůstává 10.
+
 ## 0.28.0 — 2026-11-26
 
 - Místní logo otevřené knihy se značkou zaškrtnutí v postranním panelu a ikonách okna; vlastní ikona Windows EXE.

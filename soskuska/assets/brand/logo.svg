@@ -1,7 +1,36 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
-  <title id="title">SOSkúška — open book and check mark</title>
-  <rect width="512" height="512" rx="112" fill="#7043C1"/>
-  <path d="M112 148 C166 132 205 148 244 174 L244 366 C202 338 162 324 112 338 Z" fill="#FFFFFF"/>
-  <path d="M268 174 C307 148 346 132 400 148 L400 338 C350 324 310 338 268 366 Z" fill="#EFE7FF"/>
-  <path d="M300 252 L327 280 L375 218" fill="none" stroke="#7043C1" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+  <title id="title">SOSkúška — cat reading a book</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8C78CC"/>
+      <stop offset="1" stop-color="#3B3350"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <g fill="none" stroke="#E6DCFB" stroke-width="14" stroke-linecap="round">
+    <path d="M457 219 L486 213"/>
+    <path d="M434 160 L460 144"/>
+    <path d="M400 102 L420 80"/>
+  </g>
+  <path d="M120 244 L122 88 L250 160 Z" fill="#2B2A34" stroke="#2B2A34" stroke-width="16" stroke-linejoin="round"/>
+  <path d="M392 244 L390 88 L262 160 Z" fill="#2B2A34" stroke="#2B2A34" stroke-width="16" stroke-linejoin="round"/>
+  <ellipse cx="256" cy="262" rx="142" ry="116" fill="#2B2A34"/>
+  <path d="M144 214 L146 128 L208 168 Z" fill="#4A4458" stroke="#4A4458" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M368 214 L366 128 L304 168 Z" fill="#4A4458" stroke="#4A4458" stroke-width="8" stroke-linejoin="round"/>
+  <g fill="none" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round">
+    <path d="M180 252 A24 24 0 0 1 228 252"/>
+    <path d="M284 252 A24 24 0 0 1 332 252"/>
+  </g>
+  <ellipse cx="256" cy="284" rx="11" ry="7" fill="#F7B6CF"/>
+  <g fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity="0.9">
+    <path d="M166 278 L82 260"/>
+    <path d="M162 292 L76 290"/>
+    <path d="M166 306 L84 318"/>
+    <path d="M346 278 L430 260"/>
+    <path d="M350 292 L436 290"/>
+    <path d="M346 306 L428 318"/>
+  </g>
+  <path d="M88 326 C150 312 210 322 252 346 L252 452 C210 430 150 420 88 432 Z" fill="#C9B6F2"/>
+  <path d="M260 346 C302 322 362 312 424 326 L424 432 C362 420 302 430 260 452 Z" fill="#E6DCFB"/>
+  <path d="M256 346 L256 452" stroke="#9884D6" stroke-width="8" stroke-linecap="round"/>
 </svg>

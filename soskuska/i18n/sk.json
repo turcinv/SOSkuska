@@ -726,9 +726,7 @@
   "Refresh deck": "Obnoviť balíček",
   "Deck saved. Refresh deck to load saved content; do not save it again.": "Balíček je uložený. Pomocou Obnoviť balíček načítajte uložený obsah; znova ho neukladajte.",
   "YOUR STUDY SPACE": "VÁŠ ŠTUDIJNÝ PRIESTOR",
-  "Make time for what matters.": "Nájdite čas na to podstatné.",
   "FOCUS ROOM": "PRIESTOR NA SÚSTREDENIE",
-  "One thing at a time.": "Jedna vec za druhou.",
   "Focus session": "Sústredené sedenie",
   "Exam dates are marked with a dot.": "Termíny skúšok sú označené bodkou.",
   "{v0} {v1}": "{v0} {v1}",
@@ -756,5 +754,10 @@
   "{v0} question": "{v0} otázka",
   "{v0} questions": "{v0} otázok",
   "{v0} session · {v1} min": "{v0} sedenie · {v1} min",
-  "{v0} day": "{v0} deň"
+  "{v0} day": "{v0} deň",
+  "Good to see you back!": "Vitajte späť!",
+  "Ready for another study session?": "Pripravení na ďalšie štúdium?",
+  "Continue studying": "Pokračujte v štúdiu",
+  "Pick a subject to begin.": "Vyberte predmet a začnite.",
+  "Add subject": "Pridať predmet"
 }

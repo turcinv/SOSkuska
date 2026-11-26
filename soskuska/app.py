@@ -34,7 +34,8 @@ from settings_page import SettingsPage
 from preferences import AI_KEYS
 from startup_errors import report_startup_error
 from appearance import apply_appearance
-from studio_widgets import FocusClock, MonthAgenda, MONTHS, nav_icon
+from studio_widgets import (FocusClock, MonthAgenda, MONTHS, nav_icon, paw_icon, stat_icon,
+                            cat_avatar, study_scene, sidebar_decor)
 from panel_layout import wrap_labels
 from branding import sidebar_logo, install_window_icon
 
@@ -69,6 +70,8 @@ class Dashboard(ctk.CTk):
         self.minsize(1024, 700)
         self.configure(fg_color=C["bg"])
         self.family = "Segoe UI" if platform.system() == "Windows" else "Helvetica" if sys.platform == "darwin" else "Noto Sans"
+        # Editorial serif for the wordmark only; Tk falls back if it is missing.
+        self.serif_family = "Georgia" if sys.platform in ("darwin", "win32") else "DejaVu Serif"
         self.store = Store(database or data_path())
         self.preferences = self.store.preferences()
         apply_appearance(self.preferences["appearance_mode"])
@@ -147,19 +150,20 @@ class Dashboard(ctk.CTk):
 
     def frame(self, parent, card=False, **kwargs):
         return ctk.CTkFrame(parent, fg_color=C["card"] if card else "transparent",
-                            corner_radius=12 if card else 0,
+                            corner_radius=16 if card else 0,
                             border_width=0, border_color=C["border"], **kwargs)
 
     def button(self, parent, text, command, primary=False, **kwargs):
         if self.translator.language!='English' and 'width' in kwargs:
             kwargs['width']=max(kwargs['width'],self.font(14,primary).measure(text)+24)
+        # Pill-shaped controls: deep-lavender primary, outlined soft-violet secondary.
         return ctk.CTkButton(parent, text=text, command=command, height=38,
-                             corner_radius=8, font=self.font(14, primary),
+                             corner_radius=18, font=self.font(14, primary),
                              fg_color=C["primary"] if primary else C["raised"],
                              hover_color=C["primary_hover"] if primary else C["secondary_hover"],
                              text_color=C["on_primary"] if primary else C["text"],
                              text_color_disabled=C["disabled_on_primary"] if primary else C["secondary"], border_width=0 if primary else 1,
-                             border_color=C["border"], **kwargs)
+                             border_color=C["outline"], **kwargs)
 
     def build_sidebar(self):
         self.sidebar = ctk.CTkFrame(self, width=216, corner_radius=0, fg_color=C['nav_bg'])
@@ -172,9 +176,10 @@ class Dashboard(ctk.CTk):
         brand.grid_columnconfigure(1,weight=1)
         self.brand_logo = sidebar_logo()
         self.brand_tile = ctk.CTkLabel(brand, text='', image=self.brand_logo,
-                                     width=36, height=36, fg_color='transparent', text_color=C['nav_text'])
+                                     width=40, height=40, fg_color='transparent', text_color=C['nav_text'])
         self.brand_tile.grid(row=0,column=0,padx=(0,10))
-        self.brand=self.label(brand,'SOSkúška',18,'nav_text',bold=True)
+        self.brand=ctk.CTkLabel(brand,text='SOSkúška',font=ctk.CTkFont(family=self.serif_family,size=17,weight='bold'),
+                                text_color=C['nav_text'],anchor='w')
         self.brand.grid(row=0,column=1,sticky='w')
         self.collapse_btn=ctk.CTkButton(brand,text='‹',width=24,height=30,corner_radius=8,
             fg_color='transparent',hover_color=C['nav_hover'],text_color=C['nav_secondary'],command=self.toggle_sidebar)
@@ -185,15 +190,20 @@ class Dashboard(ctk.CTk):
         self.nav_icons={(name,active):nav_icon(name,active) for name,_ in [*NAV,('Settings','')] for active in (False,True)}
         for index,(name,_) in enumerate(NAV):
             button=ctk.CTkButton(nav,text=tr(self,name),image=self.nav_icons[name,index==0],compound='left',
-                anchor='w',height=46,corner_radius=10,font=self.font(13,index==0),border_width=0,
+                anchor='w',height=44,corner_radius=14,font=self.font(13,index==0),border_width=0,
                 fg_color=C['nav_selected'] if index==0 else 'transparent',hover_color=C['nav_hover'],
                 text_color=C['nav_accent'] if index==0 else C['nav_secondary'],command=lambda name=name:self.navigate(name))
             button.pack(fill='x',pady=4)
             self.nav_buttons.append(button)
         self.settings_btn=ctk.CTkButton(self.sidebar,text=tr(self,'Settings'),image=self.nav_icons['Settings',False],
-            compound='left',anchor='w',height=44,corner_radius=10,font=self.font(13),
+            compound='left',anchor='w',height=44,corner_radius=14,font=self.font(13),
             fg_color='transparent',hover_color=C['nav_hover'],text_color=C['nav_secondary'],command=lambda:self.navigate('Settings'))
         self.settings_btn.grid(row=4,column=0,padx=12,pady=(12,20),sticky='ew')
+        self.sidebar_art=sidebar_decor()
+        self.sidebar_decor=ctk.CTkLabel(self.sidebar,text='',image=self.sidebar_art,fg_color='transparent',text_color=C['nav_text'])
+        self.sidebar_decor.grid(row=3,column=0,sticky='s',padx=12,pady=(12,0))
+        # Purely decorative: show it only when the flexible row can hold it whole.
+        self.sidebar.bind('<Configure>',lambda _e:self.after_idle(self.fit_sidebar_decor),add='+')
         self.footer=self.frame(self.sidebar)
         self.footer.grid(row=5,column=0,sticky='ew',padx=22,pady=(8,24))
         self.label(self.footer,tr(self,'LOCAL WORKSPACE'),10,'nav_secondary').pack(anchor='w',pady=(0,10))
@@ -215,19 +225,39 @@ class Dashboard(ctk.CTk):
         head=self.frame(self.content)
         head.grid(row=0,column=0,sticky='ew',pady=(0,24))
         head.grid_columnconfigure(0,weight=1)
-        self.label(head,tr(self,'YOUR STUDY SPACE'),10,'secondary',bold=True).grid(row=0,column=0,sticky='w')
-        self.date_label=self.label(head,self.display_date(date.today()),11,'secondary')
-        self.date_label.grid(row=0,column=1,sticky='e')
-        self.dashboard_title=self.label(head,tr(self,'Make time for what matters.'),34,bold=True,wraplength=1000)
-        self.dashboard_title.grid(row=1,column=0,columnspan=2,sticky='ew',pady=(10,0))
+        greeting=self.frame(head)
+        greeting.grid(row=0,column=0,sticky='ew')
+        greeting.grid_columnconfigure(1,weight=1)
+        self.greeting_paw=paw_icon(24)
+        self.dashboard_title=self.label(greeting,tr(self,'Good to see you back!'),30,bold=True,wraplength=1000)
+        self.dashboard_title.grid(row=0,column=0,sticky='w')
+        self.greeting_paw_label=ctk.CTkLabel(greeting,text='',image=self.greeting_paw,fg_color='transparent',text_color=C['text'])
+        self.greeting_paw_label.grid(row=0,column=1,sticky='w',padx=(10,0))
+        self.dashboard_subtitle=self.label(greeting,tr(self,'Ready for another study session?'),14,'secondary',wraplength=1000)
+        self.dashboard_subtitle.grid(row=1,column=0,columnspan=2,sticky='ew',pady=(4,0))
+        profile=self.frame(head)
+        profile.grid(row=0,column=1,sticky='ne',padx=(16,0))
+        self.avatar_image=cat_avatar(46)
+        self.avatar=ctk.CTkLabel(profile,text='',image=self.avatar_image,fg_color='transparent',text_color=C['text'])
+        self.avatar.grid(row=0,column=1,rowspan=2,padx=(12,0))
+        self.label(profile,tr(self,'YOUR STUDY SPACE'),10,'secondary',bold=True).grid(row=0,column=0,sticky='e')
+        self.date_label=self.label(profile,self.display_date(date.today()),11,'secondary')
+        self.date_label.grid(row=1,column=0,sticky='e')
         self.metrics=self.frame(self.content)
         self.metrics.grid(row=1,column=0,sticky='ew',pady=(0,24))
         self.metric_cards,self.metric_values=[],[]
-        for name,val in [('Total study time','0h 00m'),('Study sessions','0'),('Current streak','0 days'),('Subjects','0')]:
+        self.metric_icons=[]
+        for kind,name,val in [('time','Total study time','0h 00m'),('sessions','Study sessions','0'),
+                              ('streak','Current streak','0 days'),('subjects','Subjects','0')]:
             card=self.frame(self.metrics,card=True)
-            self.label(card,tr(self,name),11,'secondary').pack(anchor='w',padx=18,pady=(14,5))
-            value=self.label(card,val,24,bold=True)
-            value.pack(anchor='w',padx=18,pady=(0,14))
+            card.grid_columnconfigure(1,weight=1)
+            icon_image=stat_icon(kind);self.metric_icons.append(icon_image)
+            ctk.CTkLabel(card,text='',image=icon_image,fg_color='transparent',text_color=C['text']).grid(
+                row=0,column=0,rowspan=2,padx=(16,12),pady=12)
+            value=self.label(card,val,22,bold=True)
+            value.grid(row=0,column=1,sticky='sw',padx=(0,14),pady=(10,0))
+            caption=self.label(card,tr(self,name),11,'secondary',wraplength=150)
+            caption.grid(row=1,column=1,sticky='nw',padx=(0,14),pady=(0,10))
             self.metric_cards.append(card);self.metric_values.append(value)
         self.columns=self.frame(self.content)
         self.columns.grid(row=2,column=0,sticky='ew')
@@ -242,12 +272,26 @@ class Dashboard(ctk.CTk):
         self.study_panel=ctk.CTkFrame(self.main,fg_color=C['focus_bg'],corner_radius=24)
         self.study_panel.grid(row=0,column=0,sticky='ew')
         self.study_panel.grid_columnconfigure(0,weight=1)
+        # Banner: copy on the left, illustrated window scene fading in on the right.
+        self.focus_hero=ctk.CTkFrame(self.study_panel,fg_color='transparent')
+        self.focus_hero.grid(row=0,column=0,columnspan=2,sticky='ew',padx=(24,10),pady=(8,0))
+        self.focus_hero.grid_columnconfigure(0,weight=1)
+        hero_copy=self.frame(self.focus_hero)
+        hero_copy.grid(row=0,column=0,sticky='ew',pady=(12,0))
+        hero_copy.grid_columnconfigure(0,weight=1)
+        self.label(hero_copy,tr(self,'FOCUS ROOM'),10,'focus_secondary',bold=True).grid(row=0,column=0,sticky='w',pady=(0,6))
+        self.hero_title=self.label(hero_copy,tr(self,'Continue studying'),25,'focus_text',bold=True,wraplength=360)
+        self.hero_title.grid(row=1,column=0,sticky='ew')
+        self.hero_subject=self.label(hero_copy,'',12,'focus_secondary',wraplength=360)
+        self.hero_subject.grid(row=2,column=0,sticky='ew',pady=(6,0))
+        self.scene_image=study_scene('focus_bg')
+        self.focus_scene=ctk.CTkLabel(self.focus_hero,text='',image=self.scene_image,fg_color='transparent',text_color=C['focus_text'])
+        self.focus_scene.grid(row=0,column=1,sticky='e')
+        self.scene_visible=True
         self.focus_controller=self.frame(self.study_panel)
-        self.focus_controller.grid(row=0,column=0,sticky='new',padx=24,pady=24)
+        self.focus_controller.grid(row=1,column=0,sticky='new',padx=24,pady=(12,24))
         focus=self.focus_controller
         focus.grid_columnconfigure(0,weight=1)
-        self.label(focus,tr(self,'FOCUS ROOM'),10,'focus_secondary',bold=True).grid(row=0,column=0,sticky='w',pady=(0,6))
-        self.label(focus,tr(self,'One thing at a time.'),25,'focus_text',bold=True).grid(row=1,column=0,sticky='ew',pady=(0,18))
         self.label(focus,tr(self,'Choose a subject'),11,'focus_secondary').grid(row=2,column=0,sticky='w',pady=(0,6))
         self.study_actions=self.frame(focus)
         self.study_actions.grid(row=3,column=0,sticky='ew')
@@ -303,11 +347,11 @@ class Dashboard(ctk.CTk):
                 command=lambda k=key,v=var:self.save_task(k,v.get()))
             check.grid(row=row,column=0,sticky='w',pady=(0,9))
         self.focus_clock=FocusClock(self.study_panel,self)
-        self.focus_clock.grid(row=0,column=1,sticky='n',padx=(0,24),pady=(30,16))
+        self.focus_clock.grid(row=1,column=1,sticky='n',padx=(0,24),pady=(30,16))
         self.timer_label=self.focus_clock.time_label
         self.focus_clock.set(self.focus_target,self.focus_target,tr(self,'Focus session'))
         self.focus_layout=None
-        for parent in (focus,self.timer_frame,self.recovery_panel):wrap_labels(parent,self,inset=0)
+        for parent in (hero_copy,focus,self.timer_frame,self.recovery_panel):wrap_labels(parent,self,inset=0)
 
     def build_subjects(self):
         self.subject_header=self.frame(self.main)
@@ -318,14 +362,15 @@ class Dashboard(ctk.CTk):
         self.subject_search_label=self.label(header,tr(self,'Search subjects…'),10,'secondary')
         self.subject_search_label.grid(row=0,column=1,sticky='w',padx=(12,10))
         self.query=ctk.StringVar();self.query.trace_add('write',lambda *_:self.filter_subjects())
-        self.search=ctk.CTkEntry(header,placeholder_text=tr(self,'Search subjects…'),width=180,height=36,
-            textvariable=self.query,fg_color=C['card'],border_width=0,text_color=C['text'],font=self.font(12),placeholder_text_color=C['secondary'])
+        self.search=ctk.CTkEntry(header,placeholder_text=tr(self,'Search subjects…'),width=180,height=36,corner_radius=18,
+            textvariable=self.query,fg_color=C['card'],border_width=1,border_color=C['outline'],text_color=C['text'],font=self.font(12),placeholder_text_color=C['secondary'])
         self.search.grid(row=1,column=1,padx=(12,10))
         self.manage_subjects_button=self.button(header,tr(self,'Manage subjects'),lambda:self.navigate('My Subjects'),width=140)
         self.manage_subjects_button.grid(row=0,column=2,rowspan=2)
         self.subject_grid=self.frame(self.main);self.subject_grid.grid(row=2,column=0,sticky='ew')
         self.subject_grid.grid_columnconfigure((0,1),weight=1,uniform='subject')
         self.subject_cards=[]
+        self.add_subject_card=None
         self.empty=self.label(self.subject_grid,'',14,'secondary',wraplength=650,height=100)
 
     def build_rail(self):
@@ -379,14 +424,19 @@ class Dashboard(ctk.CTk):
         wide=available>=1100
         mode='wide' if wide else 'compact'
         main_width=available-56-(324 if wide else 0)
-        self.dashboard_title.configure(wraplength=max(250,available-56))
+        self.dashboard_title.configure(wraplength=max(250,available-56-260))
+        self.dashboard_subtitle.configure(wraplength=max(250,available-56-260))
         self.empty.configure(wraplength=max(200,main_width-32))
+        show_scene=wide and main_width>=720
+        if show_scene!=self.scene_visible:
+            self.scene_visible=show_scene
+            self.focus_scene.grid() if show_scene else self.focus_scene.grid_remove()
         horizontal=main_width>=650
         if horizontal!=self.focus_layout:
             self.focus_layout=horizontal
             self.study_panel.grid_columnconfigure(1,minsize=272 if horizontal else 0)
-            self.focus_controller.grid(row=0,column=0,columnspan=1,sticky='new',padx=24,pady=24)
-            self.focus_clock.grid(row=0 if horizontal else 1,column=1 if horizontal else 0,
+            self.focus_controller.grid(row=1,column=0,columnspan=1,sticky='new',padx=24,pady=(12,24))
+            self.focus_clock.grid(row=1 if horizontal else 2,column=1 if horizontal else 0,
                 sticky='n',padx=(0,24) if horizontal else 24,pady=(30,16) if horizontal else (0,20))
         compact_header=main_width<650
         if compact_header:
@@ -419,6 +469,16 @@ class Dashboard(ctk.CTk):
             card.grid(row=i//columns, column=col, sticky="nsew",
                       padx=(0, 6) if columns == 2 and col == 0 else (6, 0) if columns == 2 else 0,
                       pady=(0, 12))
+        if self.add_subject_card is not None:
+            i = len(self.subject_cards); col = i % columns
+            self.add_subject_card.grid(row=i//columns, column=col, sticky="nsew",
+                padx=(0, 6) if columns == 2 and col == 0 else (6, 0) if columns == 2 else 0, pady=(0, 12))
+
+    def open_new_subject(self):
+        self.navigate("My Subjects")
+        # Never replace an open subject editor draft; only open an empty form.
+        if self.current_page == "My Subjects" and not self.subject_page.form.winfo_manager():
+            self.subject_page.show_form()
 
     def update_sidebar_selection(self,name):
         for button,(item,_) in zip([*self.nav_buttons,self.settings_btn],[*NAV,('Settings','')]):
@@ -426,6 +486,18 @@ class Dashboard(ctk.CTk):
             button.configure(fg_color=C['nav_selected'] if active else 'transparent',
                 text_color=C['nav_accent'] if active else C['nav_secondary'],
                 image=self.nav_icons[item,active],font=self.font(13,active))
+
+    def fit_sidebar_decor(self):
+        """Grid the tail/paw art only if the weighted spacer row has room for all of it."""
+        self.sidebar.update_idletasks()
+        # The weighted row receives exactly the slack (or shrinks to it) whether or not
+        # the decoration is gridded, so its bbox height is the free space either way.
+        free = self.sidebar.grid_bbox(0, 3)[3]
+        height = self.sidebar_decor.winfo_reqheight()
+        needed = height + round(height * 12 / 70)  # art is 70 logical px with 12 px top padding
+        fits = not self.collapsed and free >= needed
+        if fits != bool(self.sidebar_decor.winfo_manager()):
+            self.sidebar_decor.grid() if fits else self.sidebar_decor.grid_remove()
 
     def toggle_sidebar(self):
         self.collapsed=not self.collapsed
@@ -438,6 +510,7 @@ class Dashboard(ctk.CTk):
         for button,(name,_) in zip([*self.nav_buttons,self.settings_btn],[*NAV,('Settings','')]):
             button.configure(text='' if self.collapsed else tr(self,name),anchor='center' if self.collapsed else 'w')
         self.footer.grid_remove() if self.collapsed else self.footer.grid()
+        self.fit_sidebar_decor()
         self.focus_alert.configure(text='!' if self.collapsed else tr(self,'Focus needs saving'))
         self.after_idle(self.reflow)
 
@@ -549,6 +622,9 @@ class Dashboard(ctk.CTk):
         for _, card in self.subject_cards:
             card.destroy()
         self.subject_cards = []
+        if self.add_subject_card is not None:
+            self.add_subject_card.destroy()
+            self.add_subject_card = None
         query = self.query.get().strip().casefold()
         subjects = self.store.subjects()
         visible = [s for s in subjects if query in s["name"].casefold()]
@@ -574,6 +650,12 @@ class Dashboard(ctk.CTk):
             self.button(actions,tr(self,'Study'),lambda sid=subject['id']:self.start_focus(sid),primary=True,width=85).pack(side='left',padx=(0,8))
             self.button(actions,tr(self,'Questions'),lambda sid=subject['id']:self.open_question_bank(sid),width=95).pack(side='left')
             self.subject_cards.append((subject['name'],card))
+        if visible and not query:
+            # Outlined shortcut card, as in the brand concept; opens the real subject form.
+            self.add_subject_card=ctk.CTkButton(self.subject_grid,text='+\n'+tr(self,'Add subject'),
+                command=self.open_new_subject,height=150,corner_radius=18,font=self.font(14,True),
+                fg_color='transparent',hover_color=C['selected'],text_color=C['hover'],
+                border_width=2,border_color=C['outline'])
         self.layout_subject_cards()
         if not visible:
             self.empty.configure(text=tr(self,tr(self, 'No matching subjects. Try another name.') if subjects else tr(self, 'No subjects yet. Open My Subjects to create your first one.')))
@@ -590,6 +672,7 @@ class Dashboard(ctk.CTk):
                                       state="disabled" if self.session_open or not subjects else "normal")
         self.subject_selection.set(selected["name"] if selected else "Add a subject first")
         self.start_button.configure(text=tr(self, 'Start Studying  →' if subjects else 'Create your first subject'))
+        self.update_hero()
         self.update_metrics()
         self.filter_subjects()
         self.refresh_rail()
@@ -598,6 +681,14 @@ class Dashboard(ctk.CTk):
 
     def select_subject(self, name):
         self.selected_subject_id = self.subject_ids.get(name)
+        self.update_hero()
+
+    def update_hero(self):
+        """Show which saved subject the banner's next focus session belongs to."""
+        name = self.session_subject_name if self.session_open else next(
+            (s["name"] for s in getattr(self, "dashboard_subjects", []) if s["id"] == self.selected_subject_id), None)
+        self.hero_subject.configure(text=tr(self, '{v0} · {v1}', v0=name, v1=tr(self, 'Focus session'))
+                                    if name else tr(self, 'Pick a subject to begin.'))
 
     def focus_search(self, _event=None):
         self.cancel_focus_reveal()
@@ -660,6 +751,7 @@ class Dashboard(ctk.CTk):
         self.focus_retry_label.configure(text='')
         self.focus_alert.grid_remove()
         self.focus_subject_label.configure(text=tr(self,'Focus subject: {v0}',v0=row['subject_name']))
+        self.update_hero()
         remaining=max(0,self.focus_target-int(self.elapsed()))
         self.focus_clock.set(remaining,self.focus_target,tr(self,'Paused' if recovered else 'Focus'))
         self.pause_button.configure(text=tr(self,'Resume' if recovered else 'Pause'),state='normal')
@@ -747,6 +839,7 @@ class Dashboard(ctk.CTk):
         self.focus_retry_label.configure(text=tr(self,SAVE_RETRY_NOTICE))
         self.focus_alert.configure(text='!' if self.collapsed else tr(self,'Focus needs saving'))
         self.focus_alert.grid(row=2,column=0,sticky='ew',padx=12,pady=(8,0))
+        self.fit_sidebar_decor()
         self.show_notice(SAVE_RETRY_NOTICE)
 
     def checkpoint_focus(self):

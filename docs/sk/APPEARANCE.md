@@ -2,6 +2,8 @@
 
 [English](../APPEARANCE.md) · [Čeština](../cs/APPEARANCE.md) · [Slovenčina](../sk/APPEARANCE.md) · [Русский](../ru/APPEARANCE.md)
 
+**Nevydané — značka s mačkou:** Light používa krémové pracovné pole s bielymi kartami; Dark používa charcoalové plochy. Obe varianty zdieľajú levanduľové tlačidlá v tvare pilulky, fialové akcenty a vždy charcoalový bočný panel s levanduľovo zvýraznenou vybranou položkou. Uložené správanie Light/Dark/System zostáva rovnaké. [Interné snímky a odovzdanie](../agents/design/cat-brand/README.md).
+
 **v0.19.0 — redizajn, krok 1:** spoločný vzhľad používa modré akcie/výber, mätový priebeh, teplé svetlé pozadie v Light a párové tmavé plochy. Vedľajšie tlačidlá majú samostatné pozadie pri prejdení kurzorom; lišty Statistics používajú rovnaké pozadie ako Dashboard. Rozloženie, uložený/predvolený režim, navigácia, dáta aj správanie nastavení zostávajú rovnaké. [Interné snímky, skice a odovzdanie](../agents/design/bright-ui-step1/README.md).
 
 Nastavenie vzhľadu vyšlo vo **v0.16.0** po potvrdení testovania základu v0.15.0 a schválení zlúčenia PR #32 používateľom 22. novembra 2026. Ďalšie zmeny vyžadujú vlastnú revíziu a schválenie zlúčenia/vydania.
