@@ -12,7 +12,7 @@ The `@path` references are repository-relative reading instructions. Open the li
 | --- | --- |
 | Application runtime, database access, timer, navigation, Tk, scrolling or concurrent state | [@docs/agents/RUNTIME.md](docs/agents/RUNTIME.md) |
 | Subjects/questions, practice, flashcards or statistics | [@docs/agents/STUDY.md](docs/agents/STUDY.md) **and** Runtime |
-| AI Tutor, Ollama or Settings/preferences | [@docs/agents/AI_SETTINGS.md](docs/agents/AI_SETTINGS.md) **and** Runtime |
+| AI Tutor, AI drafting from notes, Ollama or Settings/preferences | [@docs/agents/AI_SETTINGS.md](docs/agents/AI_SETTINGS.md) **and** Runtime |
 | Backup, restore or CSV imports, including shared panel/worker changes | [@docs/agents/DATA_TRANSFER.md](docs/agents/DATA_TRANSFER.md) **and** Runtime; also the affected Study or AI/Settings rules |
 | Branches, PRs, reviews, CI, documentation or releases | [@docs/agents/WORKFLOW.md](docs/agents/WORKFLOW.md) |
 

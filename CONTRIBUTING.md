@@ -24,18 +24,11 @@ On the prepared Mac:
 .venv-macos/bin/python -m unittest discover -s tests -v
 ```
 
-Use the container suite above for routine UI, timer and scrolling checks. The commands below open native windows and are only for required platform-specific/manual verification; arrange those visible runs with the user first. On Windows/Linux, use the Python executable from your local environment:
+Use the container suite above for routine UI, timer and scrolling checks. Native GUI scripts open real windows and are only for required platform-specific/manual verification; arrange those visible runs with the user first. The complete list is `GUI_CHECKS` in `tools/run_checks.py`. On Windows/Linux, use the Python executable from your local environment, for example:
 
 ```sh
 .venv-macos/bin/python soskuska/check_dashboard.py
-.venv-macos/bin/python soskuska/check_question_bank.py
-.venv-macos/bin/python soskuska/check_review_fixes.py
-.venv-macos/bin/python soskuska/check_practice.py
-.venv-macos/bin/python soskuska/check_flashcards.py
-.venv-macos/bin/python soskuska/check_statistics.py
-.venv-macos/bin/python soskuska/check_state_fixes.py
-.venv-macos/bin/python soskuska/check_tutor.py
-.venv-macos/bin/python soskuska/check_settings.py
+.venv-macos/bin/python soskuska/check_note_generation.py
 ```
 
 GUI checks open real windows and need a graphical session. Documentation-only changes normally need link, command and formatting checks rather than the entire UI suite.
@@ -50,6 +43,6 @@ Use the issue templates to report reproduction steps, expected/actual behavior, 
 
 ## Continuous integration
 
-CI runs Python 3.12 unit tests on Ubuntu, Windows and macOS, plus fifteen GUI checks on Ubuntu/Xvfb. [Workflow results](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml). Checks do not deploy or publish releases. See [Statistics rules](docs/STATISTICS.md) when changing reports; self-ratings must not be presented as measured mastery.
+CI runs Python 3.12 unit tests on Ubuntu, Windows and macOS, the GUI scripts listed in `tools/run_checks.py` (26 at v0.30.1) on Ubuntu/Xvfb, and a Windows portable build check. [Workflow results](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml). Checks do not deploy or publish releases. See [Statistics rules](docs/STATISTICS.md) when changing reports; self-ratings must not be presented as measured mastery. AI prompt or schema changes should also be re-run with `tools/evaluate_ai.py` against a real local model (see [Development](docs/DEVELOPMENT.md)).
 
 `tests/test_flashcard_csv_import.py`, `soskuska/check_flashcard_import.py`.

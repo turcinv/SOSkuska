@@ -34,6 +34,7 @@ Each answer and navigation position saves immediately. Use Clear answer, Previou
 - [Flashcards](FLASHCARDS.md): create a deck for a subject, edit cards, Study due, reveal and self-rate Again / Hard / Good / Easy. The app saves next due dates and history. This is custom scheduling, not measured mastery.
 - [Statistics](STATISTICS.md): choose Last 7 days, Last 30 days or All time to inspect saved focus time, question-weighted completed-test accuracy, self-rating counts and daily activity. Refresh or reopening gets a new snapshot.
 - [AI Tutor](AI_TUTOR.md): explicitly Connect / refresh your Ollama server, choose model/language and Send. Replies stream; Stop cancels. Other screens remain usable without Ollama. Chat is saved locally and can be reopened after closing.
+- [AI drafts from notes](AI_NOTE_GENERATION.md): in a deck or question bank, paste notes and press Generate with AI. The saved Ollama model drafts flashcards or questions; you tick the good ones and save them together. Notes are sent only when you press Generate and are never stored.
 - [Settings](SETTINGS.md): explicitly save the next focus duration, daily goal and AI choices. No automatic connection occurs. Active/paused sessions keep their original duration; only the next session changes. Preferences and conversations persist separately.
 
 ## Deletion and error recovery

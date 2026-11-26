@@ -53,7 +53,7 @@ Open **My Subjects → Questions** to author questions. Questions require four d
 
 For **Practice Tests**, create a subject and questions first. Choose a topic, difficulty and 1–100 questions. Time limits are 5, 10, 15, 30 or 60 minutes, or Untimed. Answers and position save as you go. Only one attempt may be unfinished. Resume survives restart; deadlines keep running while away. Finish confirms submission; unanswered questions count incorrect. Correct answers appear only after completion. Discard confirms removal of an unfinished attempt. History provides all completed results in pages of 20, with saved subject-name and local-date filters. Content is snapshotted at start, so later edits/deletions do not change results. Practice does not add invented focus time.
 
-Feature guides: [Flashcards](docs/FLASHCARDS.md) · [Statistics](docs/STATISTICS.md) · [AI Tutor](docs/AI_TUTOR.md) · [Settings](docs/SETTINGS.md).
+Feature guides: [Flashcards](docs/FLASHCARDS.md) · [Statistics](docs/STATISTICS.md) · [AI Tutor](docs/AI_TUTOR.md) · [AI drafts from notes](docs/AI_NOTE_GENERATION.md) · [Settings](docs/SETTINGS.md).
 
 ## Documentation
 
