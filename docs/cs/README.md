@@ -2,7 +2,7 @@
 
 [English](../../README.md) · [Čeština](README.md) · [Slovenčina](../sk/README.md) · [Русский](../ru/README.md)
 
-**Vydání: [v0.29.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.29.0)** — zdrojový kód a přenosný ZIP pro Windows x64. Přehled je v [historii změn](CHANGELOG.md). Instalátor není součástí.
+**Vydání: [v0.30.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.30.0)** — zdrojový kód a přenosný ZIP pro Windows x64. Přehled je v [historii změn](CHANGELOG.md). Instalátor není součástí.
 
 Název aplikace je **SOSkúška**. Repozitář a kořenová složka jsou **SOSkuska**, zdrojový adresář `soskuska/`; technické názvy používají podobu bez diakritiky.
 
@@ -99,7 +99,7 @@ V AI Tutor připoj vlastní Ollama server přes Connect / refresh, vyber model a
 
 ## Návrhy AI z poznámek
 
-V balíčku kartiček nebo v bance otázek předmětu zvolte **Generovat pomocí AI**, vložte poznámky a stiskněte Generovat. Uložený model Ollama navrhne kartičky nebo otázky s výběrem z odpovědí; zkontrolujte je, zrušte zaškrtnutí chybných a výběr uložte jedním krokem. Poznámky se odesílají jen po stisknutí Generovat a neukládají se. Nevydáno; schéma zůstává 10. [Generování kartiček a otázek z poznámek](AI_NOTE_GENERATION.md).
+V balíčku kartiček nebo v bance otázek předmětu zvolte **Generovat pomocí AI**, vložte poznámky a stiskněte Generovat. Uložený model Ollama navrhne kartičky nebo otázky s výběrem z odpovědí; zkontrolujte je, zrušte zaškrtnutí chybných a výběr uložte jedním krokem. Poznámky se odesílají jen po stisknutí Generovat a neukládají se. Vydáno ve v0.30.0; schéma zůstává 10. [Generování kartiček a otázek z poznámek](AI_NOTE_GENERATION.md).
 
 ## Nastavení
 
@@ -137,7 +137,7 @@ Historie testů nyní nabízí všechny dokončené pokusy po 20 na stránku, fi
 
 ## Přenosná verze Windows a přejímka
 
-v0.15.0 přidává nepodepsaný přenosný ZIP pro Windows x64, sestavený a ověřený pátou úlohou CI. Přibalený pomocný program zachová oddělené CSV/zálohovací procesy; cílový počítač nepotřebuje Python. Automatické hostované kontroly a ruční seznam pro čistý počítač jsou oddělené; ruční přejímka zatím není dokončená. Vydaná verze je v0.29.0, schéma 10. [Přenosná verze Windows a přejímka](WINDOWS_PORTABLE.md) · [Kontrolní seznam](WINDOWS_ACCEPTANCE.md).
+v0.15.0 přidává nepodepsaný přenosný ZIP pro Windows x64, sestavený a ověřený pátou úlohou CI. Přibalený pomocný program zachová oddělené CSV/zálohovací procesy; cílový počítač nepotřebuje Python. Automatické hostované kontroly a ruční seznam pro čistý počítač jsou oddělené; ruční přejímka zatím není dokončená. Vydaná verze je v0.30.0, schéma 10. [Přenosná verze Windows a přejímka](WINDOWS_PORTABLE.md) · [Kontrolní seznam](WINDOWS_ACCEPTANCE.md).
 
 ## Nastavení vzhledu
 
@@ -145,7 +145,7 @@ v0.16.0 přidává uložené Light/Dark/System, použité po Save bez obnovy obr
 
 ## Další kroky · 22. listopadu 2026
 
-Stav 22. listopadu 2026: uživatel potvrdil dokončení testování v0.15.0 a schválil PR #32. Tento seznam nyní cílí na v0.29.0; jednotlivé výsledky čistého počítače/DPI zde nejsou zaznamenané. Nezaškrtnuté body zůstávají neověřené; při testování nového vydání doplň důkazy pro konkrétní zařízení. [Další kroky · 22. listopadu 2026](NEXT_STEPS.md).
+Stav 22. listopadu 2026: uživatel potvrdil dokončení testování v0.15.0 a schválil PR #32. Tento seznam nyní cílí na v0.30.0; jednotlivé výsledky čistého počítače/DPI zde nejsou zaznamenané. Nezaškrtnuté body zůstávají neověřené; při testování nového vydání doplň důkazy pro konkrétní zařízení. [Další kroky · 22. listopadu 2026](NEXT_STEPS.md).
 
 ## Obnova soustředění po pádu
 

@@ -2,7 +2,7 @@
 
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
-## Nevydáno
+## 0.30.0 — 2026-11-26
 
 - Návrhy AI z poznámek: vložte poznámky do balíčku nebo banky otázek, uloženým modelem Ollama vygenerujte kartičky nebo otázky s výběrem z odpovědí, návrhy zkontrolujte, zrušte zaškrtnutí chybných a výběr uložte atomicky. [Návod](AI_NOTE_GENERATION.md). Schéma zůstává 10.
 

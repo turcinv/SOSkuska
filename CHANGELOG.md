@@ -2,7 +2,7 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
-## Unreleased
+## 0.30.0 — 2026-11-26
 
 - AI drafting from notes: paste notes in a deck or question bank, generate flashcards or multiple-choice questions with the saved Ollama model, review and untick drafts, then save the selection atomically. [Guide](docs/AI_NOTE_GENERATION.md). Schema remains 10.
 
