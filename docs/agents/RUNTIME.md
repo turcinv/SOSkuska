@@ -86,3 +86,8 @@ Derive label wrap lengths in uniform responsive columns from their shared contai
 ## Settings/data presentation helpers
 
 `panel_layout.py` owns widget-local label wrapping and action reflow with no I/O or domain state. Bind equal-column labels to their shared source width and preserve existing widget instances. Settings `set_status` mirrors header text beside Save/Reload. In asynchronous GUI probes, handle already-finished workers before entering Tcl `wait_variable`; setting the variable before starting that wait will wait for a second write forever. Keep nested waits bounded.
+
+
+## Study-studio presentation
+
+Keep studio_widgets.py drawing/layout free of I/O. The clock must use the original active target while preferences change and reset to the next saved target after Finish. Calendar marks use the full saved subject snapshot, not the limited upcoming rail; display exact dates. Search/retry/recovery reveal uses absolute canvas coordinates through the scrolling adapter, and queued reveals cancel on navigation or explicit search. Resize only regrids existing controls. Sidebar colors have separate always-dark roles in both appearance modes. Preserve first-stage visual-feedback scope before redesigning other page compositions.

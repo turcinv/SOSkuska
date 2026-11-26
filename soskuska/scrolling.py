@@ -53,8 +53,17 @@ class DashboardScrollFrame(ctk.CTkScrollableFrame):
         self.update_idletasks()
         region = self._parent_canvas.bbox('all')
         if region and region[3] > region[1]:
-            offset = widget.winfo_rooty() - self.winfo_rooty() - 12
+            offset = self._parent_canvas.canvasy(
+                widget.winfo_rooty() - self._parent_canvas.winfo_rooty()) - region[1] - 12
             self._parent_canvas.yview_moveto(max(0, offset) / (region[3] - region[1]))
+
+    def reveal_if_outside(self, widget):
+        self.update_idletasks()
+        top=widget.winfo_rooty()
+        bottom=top+widget.winfo_height()
+        viewport_top=self._parent_canvas.winfo_rooty()
+        if top<viewport_top or bottom>viewport_top+self._parent_canvas.winfo_height():
+            self.scroll_to_widget(widget)
 
     def _owns_event(self, widget):
         while widget is not None:

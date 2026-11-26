@@ -2,6 +2,10 @@
 
 [English](../../CHANGELOG.md) · [Čeština](../cs/CHANGELOG.md) · [Slovenčina](CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
+## Unreleased
+
+- Nový študijný priestor: Dashboard, navigation, Dark/Light.
+
 ## 0.26.1 — 2026-11-26
 
 - Opravy po revízii Astra: A62-05–A62-09.

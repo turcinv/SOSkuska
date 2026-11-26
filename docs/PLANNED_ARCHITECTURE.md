@@ -141,3 +141,10 @@ v0.17.0 adds focus-session crash recovery using schema **10**. Keep a backup bef
 ## Scheduled local backups
 
 Scheduled local backups are available in **v0.18.0**. SQLite schema remains **10**. Manual backup/restore continues to work independently. [Scheduled local backups](SCHEDULED_BACKUPS.md).
+
+
+## Study studio redesign · unreleased
+
+A new Dashboard composition replaces the earlier incremental bright UI layout: four summary tiles, a large focus room with a live circular clock, monogram-led subject cards and a saved-date month agenda. The persistent sidebar uses locally drawn icons and separate dark navigation colors; shared card surfaces and paired Dark/Light styling update across the app. This stage implements the Dashboard and shared shell; remaining page compositions follow visual feedback. [Design evidence and scope](agents/design/study-studio-dashboard/README.md).
+
+The clock uses actual remaining time and the active session's original target. Calendar marks use the complete subject snapshot, while the upcoming list keeps exact saved dates and its top-five limit. Keyboard search, focus-save retry and pending recovery reveal their controls in compact windows; deferred reveals cancel on navigation/search. Reflow performs no I/O. Schema remains 10 and the version label remains v0.26.1 until release. Container/synthetic scaling coverage is separate from native platform acceptance; real-model testing remains deferred.

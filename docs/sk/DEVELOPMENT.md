@@ -349,3 +349,10 @@ Zmena režimu obnoví presný miestny náhľad a zneplatní jeho predchádzajúc
 Editory balíčka a témy teraz porovnávajú pôvodnú upravovanú snímku pod zápisovým zámkom. Konflikt zachová návrh a zobrazí upozornenie; pred opätovným otvorením úpravy balíčka alebo premenovania témy skopírujte potrebné zmeny. Varovanie balíčka je aj pri Uložiť. Po potvrdenom uložení balíčka zmení chyba načítania tlačidlo na Obnoviť balíček a opakuje iba čítanie, nie zápis.
 
 Počty, zoradené fronty, hodnotenie a kontroly opakovania kartičiek porovnávajú skutočné časové okamihy vrátane obnovených posunov a mikrosekúnd. Štatistiky a história zdieľajú prevod povolených časov ISO na miestny deň vrátane posunov so sekundami. Uložené časy sa neprepisujú. Presné celočíselné kľúče UTC pokrývajú celý prijatý rozsah; ak systém nezvládne miestny prevod krajného dátumu, použije sa deň UTC obmedzený na podporovaný kalendár. Obnova vyžaduje samostatnú zálohu schémy 10; popis migrácií zostáva historický. Vydaná verzia je v0.26.1, schéma 10. Test skutočného modelu zostáva odložený.
+
+
+## Nový študijný priestor · nevydané
+
+Nová kompozícia Dashboardu nahrádza predchádzajúce postupné úpravy: štyri súhrnné dlaždice, výrazná časť sústredenia so živými kruhovými hodinami, karty predmetov s monogramami a mesačný prehľad uložených termínov. Bočný panel používa miestne kreslené ikony a vlastné tmavé farby; zdieľané plochy a párový Dark/Light vzhľad sa menia v celej aplikácii. Táto fáza zavádza Dashboard a spoločný rámec; ostatné stránky nadviažu po vizuálnej spätnej väzbe. [Ukážky a rozsah](../agents/design/study-studio-dashboard/README.md).
+
+Hodiny ukazujú skutočný zostávajúci čas a pôvodný cieľ aktívneho sedenia. Kalendár používa úplnú snímku predmetov; najbližšie skúšky zachovajú presné dátumy a limit piatich položiek. Klávesové hľadanie, chyba uloženia a obnova sústredenia posunú ovládanie do viditeľnej časti kompaktného okna; čakajúci posun zruší navigácia či hľadanie. Zmena rozloženia nečíta dáta. Schéma zostáva 10, verzia do vydania v0.26.1. Kontajnerové a simulované mierky neoverujú natívnu platformu; test skutočného modelu zostáva odložený.

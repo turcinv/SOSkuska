@@ -48,15 +48,16 @@ def dashboard_layout(app, scale):
     assert app.subject_selection.get() == long_name and app.selected_subject_id == sid
     app.scroll._parent_canvas.yview_moveto(0)
     for widget in (app.start_button, app.subject_picker, app.search, app.manage_subjects_button):
+        app.scroll.scroll_to_widget(widget)
         visible(widget)
     card = next(card for name, card in app.subject_cards if name == long_name)
     title = next(w for w in card.winfo_children() if isinstance(w,ctk.CTkLabel) and w.cget('text') == long_name)
     assert title.cget('wraplength') <= card.winfo_width() / scale - 30
     assert title.winfo_height() > 28 * scale
-    assert any(isinstance(w,ctk.CTkLabel) and w.cget('text')==app.translator.text("Today's Study") for w in widgets(app.study_panel))
+    assert any(isinstance(w,ctk.CTkLabel) and w.cget('text')==app.translator.text("One thing at a time.") for w in widgets(app.study_panel))
     app.store.start_focus_checkpoint(sid, 900)
     app.store.release_focus(); app.refresh_focus_recovery(); settle()
-    app.scroll._parent_canvas.yview_moveto(0)
+    app.scroll.scroll_to_widget(app.recovery_panel)
     for widget in app.recover_focus_button.master.winfo_children():
         if isinstance(widget,ctk.CTkButton): visible(widget)
     visible(app.recovery_status)

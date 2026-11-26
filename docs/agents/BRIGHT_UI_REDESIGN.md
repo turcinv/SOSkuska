@@ -2,6 +2,10 @@
 
 This is an internal implementation plan for the native Python/CustomTkinter app. The goal is to make the redesign visible in a semester presentation and help students identify their next action with less searching. The original Light theme used white cards and purple accents; Step 1 replaces the shared palette. The main visual change is a new dashboard layout, followed by clearer Practice Test and Flashcard review screens.
 
+## New direction · 26 November 2026
+
+The user requested substantially larger visual changes after finding the earlier result too incremental. The [study-studio Dashboard handoff](design/study-studio-dashboard/README.md) supersedes the next-step prompt below for design work. Stage 1 replaces the Dashboard/navigation/shared palette with a working native preview. Obtain visual feedback before extending remaining page compositions. The Steps 1–5 records below remain historical; automated coverage is not visual approval.
+
 ## Session handoff
 
 Read the plan from the documentation PR or from `main` once merged. Start implementation on a feature branch from current `main` and follow the repository's [development workflow](WORKFLOW.md). Read the [runtime](RUNTIME.md) and [study](STUDY.md) instructions before touching the corresponding screens. Use one step per agent session by default. Each step should leave the application runnable and end with a focused check and a commit on its implementation branch. Record the commit, checks run, any unchecked items, and next step in the session handoff or PR. When the next agent starts, have it inspect the branch and continue from the first incomplete step. Open a separate implementation PR for each independently reviewable milestone, or keep related steps on one PR when they depend on each other. Follow the repository's review and merge workflow.

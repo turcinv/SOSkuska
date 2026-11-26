@@ -129,6 +129,14 @@ class AppearanceTests(unittest.TestCase):
         for foreground, background in [('secondary', 'border'), ('border', 'card')]:
             self.assertGreaterEqual(contrast(COLORS[foreground][1], COLORS[background][1]), 3.0)
 
+    def test_studio_navigation_and_focus_roles_are_readable(self):
+        for mode in (0,1):
+            for foreground,background in [('nav_text','nav_bg'),('nav_secondary','nav_bg'),
+                    ('nav_accent','nav_selected'),('focus_text','focus_bg'),('focus_secondary','focus_bg')]:
+                self.assertGreaterEqual(contrast(COLORS[foreground][mode],COLORS[background][mode]),4.5)
+            for foreground,background in [('border','focus_bg'),('focus_accent','focus_track')]:
+                self.assertGreaterEqual(contrast(COLORS[foreground][mode],COLORS[background][mode]),3)
+
 
 class SystemFallbackTests(unittest.TestCase):
     def test_unsupported_system_mode_never_enables_ctk_os_command_polling(self):
