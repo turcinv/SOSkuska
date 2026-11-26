@@ -202,19 +202,20 @@ class QuestionBankPage(ctk.CTkFrame):
             return
         self.subject_id = subject_id
         self.subject_snapshot = None
-        self.generator.close()  # Drafts belong to the previous subject.
+        discarded = self.generator.close()  # Drafts belong to the previous subject.
         self.hide_question_form()
         self.hide_topic_form()
         self.cancel_delete()
         self.topic_filter.set("All topics")
         self.difficulty_filter.set("All difficulties")
         self.query.set("")
-        self.status.configure(text=tr(self.app,''))
+        self.status.configure(text=tr(self.app, 'AI generation was closed; its unsaved drafts were discarded. Your notes are kept.') if discarded else '')
         self.refresh()
 
     def refresh(self):
         subject = self.app.store.subject(self.subject_id)
         self.subject_snapshot = dict(subject) if subject else None
+        self.generator.sync_target()
         if subject is None:
             self.subject_id = None
             self.heading.configure(text=tr(self.app, 'This subject no longer exists.'))
@@ -222,7 +223,7 @@ class QuestionBankPage(ctk.CTkFrame):
             self.add_topic_button.configure(state="disabled")
             self.csv_button.configure(state="disabled")
             self.generate_button.configure(state="disabled")
-            self.generator.close()
+            self.generator.close(notify=True)
             self.hide_question_form()
             self.hide_topic_form()
             self.cancel_delete()

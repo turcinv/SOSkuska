@@ -128,6 +128,10 @@ class NoteGenerationPanel(ctk.CTkFrame):
 
     def describe_server(self):
         endpoint, model, _ = self.settings()
+        try:
+            endpoint = endpoint_url(endpoint)  # Show exactly the address a request would use.
+        except OllamaError:
+            pass
         if not model:
             self.server_label.configure(text=tr(self.app, 'No preferred AI model is saved. Choose one in Settings (or AI Tutor → Use Tutor choices, then Save).'))
         else:
@@ -180,7 +184,7 @@ class NoteGenerationPanel(ctk.CTkFrame):
         self.request = {'count': count, 'target': dict(self.target), 'endpoint': endpoint, 'model': model}
         self.task = task
         task.start()
-        self.status.configure(text=tr(self.app, 'Generating with {v0}… Your notes were sent to {v1}. You can Stop or keep studying.', v0=model, v1=endpoint))
+        self.status.configure(text=tr(self.app, 'Generating with {v0}… Your notes were sent to {v1}. You can Stop or use other pages; leaving this deck or subject discards the drafts.', v0=model, v1=endpoint))
         self.controls()
         self.schedule_poll()
 
@@ -189,12 +193,27 @@ class NoteGenerationPanel(ctk.CTkFrame):
             self.task.cancel()
             self.status.configure(text=tr(self.app, 'Stopping…'))
 
-    def close(self):
+    def close(self, *, notify=False):
         """Hide the panel, cancel a running request and discard drafts; keep the notes."""
+        discarded = self.busy or self.preview is not None
         self.cancel_task()
         self.reset_results()
         self.target = None
         self.grid_remove()
+        if notify and discarded:
+            self.host.status.configure(text=tr(self.app, 'AI generation was closed; its unsaved drafts were discarded. Your notes are kept.'))
+        return discarded
+
+    def sync_target(self):
+        """Follow a rename of the same deck/subject once the host displays it."""
+        snapshot = self.host_snapshot()
+        if self.target is None or snapshot is None or snapshot['id'] != self.target['id']:
+            return
+        if snapshot['name'] != self.target['name']:
+            self.target['name'] = snapshot['name']
+            if self.request is not None and self.request['target']['id'] == snapshot['id']:
+                self.request['target']['name'] = snapshot['name']
+            self.heading.configure(text=tr(self.app, 'Generate {v0} for {v1}', v0=tr(self.app, self.noun), v1=snapshot['name']))
 
     def shutdown(self):
         self.closed = True
@@ -247,20 +266,24 @@ class NoteGenerationPanel(ctk.CTkFrame):
             return
         self.task = None
         event, value = terminal
-        if event == 'done':
-            self.finish(''.join(self.buffer))
-        elif event == 'stopped':
-            self.status.configure(text=tr(self.app, 'Generation stopped. Nothing was saved; your notes are kept.'))
-        else:
-            self.status.configure(text=tr(self.app, 'Generation failed: {v0}', v0=tr(self.app, value)))
-        self.buffer = []
-        self.controls()
+        try:
+            if event == 'done':
+                self.finish(''.join(self.buffer))
+            elif event == 'stopped':
+                self.status.configure(text=tr(self.app, 'Generation stopped. Nothing was saved; your notes are kept.'))
+            else:
+                self.status.configure(text=tr(self.app, 'Generation failed: {v0}', v0=tr(self.app, value)))
+        finally:
+            # Controls always leave the busy state, even if parsing fails unexpectedly.
+            self.buffer = []
+            self.controls()
 
     def finish(self, text):
         try:
             preview = parse_generated(self.kind, text, self.request['count'])
-        except ValueError as exc:
-            self.status.configure(text=tr(self.app, str(exc)))
+        except (ValueError, RecursionError) as exc:
+            message = str(exc) if isinstance(exc, ValueError) else 'The model did not return valid JSON. Try again or choose another model.'
+            self.status.configure(text=tr(self.app, message))
             return
         self.preview = preview
         self.render_results()

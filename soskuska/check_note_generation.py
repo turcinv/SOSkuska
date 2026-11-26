@@ -123,9 +123,10 @@ def check(path, language):
         assert len(store.flashcards(deck)) == 1
         prefix = app.translator.text('Item {v0}: {v1}', v0=1, v1='').strip()
         assert prefix in gen.errors.get('1.0', 'end-1c') and gen.preview is not None, gen.errors.get('1.0', 'end-1c')
-        # Another deck discards drafts for this one.
+        # Another deck discards drafts for this one, with a visible notice.
         flash.open_deck(other); app.update_idletasks()
         assert not gen.winfo_ismapped() and gen.preview is None and gen.target_id is None
+        assert flash.status.cget('text') == app.translator.text('AI generation was closed; its unsaved drafts were discarded. Your notes are kept.')
         flash.open_deck(deck); flash.generate_button.invoke()
         fixture.mode = 'slow'; gen.generate_button.invoke()
         assert gen.busy
@@ -156,6 +157,11 @@ def check(path, language):
 
     def question_saved(qgen):
         assert qgen.preview and len(qgen.preview['rows']) == 1
+        # Renaming the subject elsewhere, then reopening its bank, follows the new name.
+        current = store.subject(sid)
+        store.update_subject(sid, 'Computer Science II', current['description'], current['exam_date'] or '', expected_state=dict(current))
+        app.open_question_bank(sid); app.update_idletasks()
+        assert qgen.preview is not None and qgen.request['target']['name'] == 'Computer Science II'
         qgen.save_button.invoke()
         saved_questions = store.questions(sid)
         assert len(saved_questions) == 1 and saved_questions[0]['correct_option'] == 0

@@ -778,7 +778,6 @@
   "Reopen the deck before generating.": "Reopen the deck before generating.",
   "Reload the question bank before generating.": "Reload the question bank before generating.",
   "Save a preferred AI model in Settings before generating.": "Save a preferred AI model in Settings before generating.",
-  "Generating with {v0}… Your notes were sent to {v1}. You can Stop or keep studying.": "Generating with {v0}… Your notes were sent to {v1}. You can Stop or keep studying.",
   "Stopping…": "Stopping…",
   "Generated drafts discarded. Your notes are kept.": "Generated drafts discarded. Your notes are kept.",
   "Generating… {v0} characters received.": "Generating… {v0} characters received.",
@@ -800,5 +799,7 @@
   "Expected an object.": "Expected an object.",
   "The generated reply was too long. Ask for fewer items or shorten the notes.": "The generated reply was too long. Ask for fewer items or shorten the notes.",
   "Wait for or stop AI generation before changing AI preferences.": "Wait for or stop AI generation before changing AI preferences.",
-  "Wait for or stop AI generation before restoring.": "Wait for or stop AI generation before restoring."
+  "Wait for or stop AI generation before restoring.": "Wait for or stop AI generation before restoring.",
+  "Generating with {v0}… Your notes were sent to {v1}. You can Stop or use other pages; leaving this deck or subject discards the drafts.": "Generating with {v0}… Your notes were sent to {v1}. You can Stop or use other pages; leaving this deck or subject discards the drafts.",
+  "AI generation was closed; its unsaved drafts were discarded. Your notes are kept.": "AI generation was closed; its unsaved drafts were discarded. Your notes are kept."
 }

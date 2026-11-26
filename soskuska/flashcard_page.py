@@ -82,7 +82,7 @@ class FlashcardPage(ctk.CTkFrame):
         # AI drafts belong to one deck: keep them (and a running request) only
         # while that same deck stays open, e.g. across search or refresh.
         if not (view == "deck" and self.generator.target_id == self.deck_id):
-            self.generator.close()
+            self.generator.close(notify=True)
         if view != "deck":
             self.deck_snapshot = None
         for child in self.body.winfo_children():
@@ -191,6 +191,7 @@ class FlashcardPage(ctk.CTkFrame):
         self.deck_id = deck_id
         self.clear("deck", preserve_import=preserve_import)
         self.deck_snapshot = dict(deck)
+        self.generator.sync_target()
         self.queue = []
         self.current_card = None
         head = self.app.frame(self.body, card=True)

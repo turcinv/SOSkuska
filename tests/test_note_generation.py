@@ -74,16 +74,22 @@ class ParseTests(unittest.TestCase):
             self.assertEqual([row['record'] for row in preview['rows']], [2, 3])
 
     def test_invalid_json_and_empty_results_raise(self):
-        for text in ('not json', '{"items": []}', '{"other": 1}', '[]'):
-            with self.subTest(text=text), self.assertRaises(ValueError):
+        for text in ('not json', '{"items": []}', '{"other": 1}', '[]', '[' * 30000):
+            with self.subTest(text=text[:12]), self.assertRaises(ValueError):
                 parse_generated('cards', text, 5)
+
+    def test_repeated_questions_are_dropped_after_the_first(self):
+        preview = parse_generated('questions', json.dumps([QUESTION, QUESTION, dict(QUESTION, question='Other?')]), 5)
+        self.assertEqual([row['record'] for row in preview['rows']], [2, 4])
+        self.assertEqual(preview['errors'], ['Item 2: Duplicate of item 1 (all question fields and topic).'])
 
     def test_invalid_items_are_reported_with_item_numbers_and_extra_items_cut(self):
         items = [{'front': 'A', 'back': 'B'}, {'front': '', 'back': 'B'}, 'text', {'front': 'A', 'back': 'B'},
                  {'front': 3, 'back': 'x'}, {'front': 'C', 'back': 'D'}]
         preview = parse_generated('cards', json.dumps(items), 5)
         self.assertEqual(preview['total'], 5)
-        self.assertEqual([row['fields'][0] for row in preview['rows']], ['A', 'A'])
+        # The repeated copy (item 4) is reported and removed, so a default save cannot fail on it.
+        self.assertEqual([(row['record'], row['fields'][0]) for row in preview['rows']], [(2, 'A')])
         joined = '\n'.join(preview['errors'])
         self.assertIn('only the first 5 are shown', joined)
         self.assertIn('Item 2: Enter a front', joined)

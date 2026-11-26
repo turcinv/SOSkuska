@@ -80,7 +80,7 @@ def _items(text):
         text = fenced[1]
     try:
         data = json.loads(text)
-    except ValueError:
+    except (ValueError, RecursionError):
         raise ValueError('The model did not return valid JSON. Try again or choose another model.') from None
     if isinstance(data, dict):
         data = data.get('items')
@@ -125,6 +125,10 @@ def parse_generated(kind, text, count):
             errors.append(f'Item {index}: {exc}')
     if rows:
         rows, duplicates = (validate_cards if kind == 'cards' else validate_questions)(rows)
+        # Shared validation keeps later duplicates in the batch; drop them here so a
+        # default "all ticked" save cannot fail on a copy the model repeated.
+        repeated = {int(m[1]) for m in (re.match(r'CSV record (\d+): Duplicate of record', d) for d in duplicates) if m}
+        rows = [row for row in rows if row['record'] not in repeated]
         errors.extend(item_message(message) for message in duplicates)
     return {'rows': rows, 'errors': errors, 'total': len(items)}
 

@@ -778,7 +778,6 @@
   "Reopen the deck before generating.": "Pred generovaním balíček znova otvorte.",
   "Reload the question bank before generating.": "Pred generovaním znova načítajte banku otázok.",
   "Save a preferred AI model in Settings before generating.": "Pred generovaním uložte v Nastaveniach preferovaný model AI.",
-  "Generating with {v0}… Your notes were sent to {v1}. You can Stop or keep studying.": "Generuje sa pomocou {v0}… Poznámky boli odoslané na {v1}. Môžete zastaviť alebo pokračovať v štúdiu.",
   "Stopping…": "Zastavuje sa…",
   "Generated drafts discarded. Your notes are kept.": "Vygenerované návrhy boli zahodené. Poznámky zostávajú.",
   "Generating… {v0} characters received.": "Generuje sa… prijatých {v0} znakov.",
@@ -800,5 +799,7 @@
   "Expected an object.": "Očakávaný objekt.",
   "The generated reply was too long. Ask for fewer items or shorten the notes.": "Vygenerovaná odpoveď bola príliš dlhá. Požiadajte o menej položiek alebo skráťte poznámky.",
   "Wait for or stop AI generation before changing AI preferences.": "Pred zmenou nastavení AI počkajte na dokončenie generovania alebo ho zastavte.",
-  "Wait for or stop AI generation before restoring.": "Pred obnovením počkajte na dokončenie generovania alebo ho zastavte."
+  "Wait for or stop AI generation before restoring.": "Pred obnovením počkajte na dokončenie generovania alebo ho zastavte.",
+  "Generating with {v0}… Your notes were sent to {v1}. You can Stop or use other pages; leaving this deck or subject discards the drafts.": "Generuje sa pomocou {v0}… Poznámky boli odoslané na {v1}. Môžete zastaviť alebo prejsť na iné stránky; opustenie tohto balíčka či predmetu návrhy zahodí.",
+  "AI generation was closed; its unsaved drafts were discarded. Your notes are kept.": "Generovanie AI bolo zatvorené; neuložené návrhy boli zahodené. Poznámky zostávajú."
 }
