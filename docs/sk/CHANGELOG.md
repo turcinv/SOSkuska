@@ -2,6 +2,10 @@
 
 [English](../../CHANGELOG.md) · [Čeština](../cs/CHANGELOG.md) · [Slovenčina](CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
+## Nevydané
+
+- Návrhy AI z poznámok: vložte poznámky do balíčka alebo banky otázok, uloženým modelom Ollama vygenerujte kartičky alebo otázky s výberom z odpovedí, návrhy skontrolujte, zrušte začiarknutie chybných a výber uložte atomicky. [Návod](AI_NOTE_GENERATION.md). Schéma zostáva 10.
+
 ## 0.29.0 — 2026-11-26
 
 - Redizajn značky s mačkou: nové logo a ikony s mačkou čítajúcou knihu, paleta Charcoal/Lavender/Violet/Cream, tlačidlá v tvare pilulky, levanduľový výber v bočnom paneli, uvítacia hlavička, súhrnné dlaždice s ikonami, banner „Pokračujte v štúdiu“ s ilustrovanou scénou a karta „Pridať predmet“. Schéma zostáva 10.

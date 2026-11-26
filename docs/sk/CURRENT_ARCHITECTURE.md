@@ -2,6 +2,10 @@
 
 [English](../CURRENT_ARCHITECTURE.md) · [Čeština](../cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](CURRENT_ARCHITECTURE.md) · [Русский](../ru/CURRENT_ARCHITECTURE.md)
 
+## Nevydané — návrhy AI z poznámok
+
+`note_generation.py` zostavuje prompt s poznámkami, JSON schému Ollamy a prevádza odpovede na kanonické importné riadky (bez Tk/SQLite). `ai_generation_panel.py` je panel vlastnený Tk, zdieľaný kartičkami a bankou otázok: explicitné Generovať spustí pracovné vlákno `TutorTask` so štruktúrovaným `format`, teplotou 0,3, limitom odpovede 40 000 znakov a limitom 5 minút. Skontrolovaný výber sa ukladá vo vlákne Tk cez `Store.import_flashcards` / `import_questions`, ktoré pod BEGIN IMMEDIATE znova overujú identitu/názov cieľa a duplicity. Poznámky sa nikdy neukladajú. Zmeny preferencií AI a obnovenie čakajú na nečinný generátor; zatvorenie ruší bez čakania na vlákno. [Návod](AI_NOTE_GENERATION.md). Schéma zostáva 10.
+
 ## v0.29.0
 
 `theme.py` preberá paletu značky Charcoal/Lavender/Violet/Cream; tam, kde biely text vyžaduje kontrast 4,5:1, používa sýtejšie levanduľové výplne, a pribudla nová rola `outline`. `build_brand_assets.py` vykresľuje logo s mačkou čítajúcou knihu. `studio_widgets.py` kreslí ikony súhrnných dlaždíc, labku, avatar maskota, scénu bannera a výzdobu bočného panela lokálne pomocou Pillow; bez siete, databázy a externých súborov. Banner na Dashboarde uvádza vybraný alebo aktívny uložený predmet; scéna sa zobrazuje len v širokom rozložení. Karta „Pridať predmet“ otvorí prázdny formulár a nikdy nenahradí rozpracovaný koncept otvoreného predmetu. Metriky zostávajú existujúce skutočné hodnoty. Schéma zostáva 10.
