@@ -2,7 +2,7 @@
 
 [English](NEXT_STEPS.md) · [Čeština](cs/NEXT_STEPS.md) · [Slovenčina](sk/NEXT_STEPS.md) · [Русский](ru/NEXT_STEPS.md)
 
-Current release: **v0.27.0**, schema **10**. Bright UI implementation Steps 1–5 are complete through PRs #43, #44, #46, #48, #50, #52 and #54. Step 6 acceptance and demo preparation remain.
+Current release: **v0.28.0**, schema **10**. Bright UI implementation Steps 1–5 are complete through PRs #43, #44, #46, #48, #50, #52 and #54. Step 6 acceptance and demo preparation remain.
 
 ## Full Astra review completed · 26 November 2026
 

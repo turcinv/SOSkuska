@@ -2,9 +2,9 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
-## Unreleased
+## 0.28.0 — 2026-11-26
 
-- Added a local open-book/check logo to the sidebar and native window icons, with a custom Windows executable icon. The published v0.27.0 download predates this change.
+- Added a local open-book/check logo to the sidebar and native window icons, with a custom Windows executable icon.
 
 ## 0.27.0 — 2026-11-26
 
