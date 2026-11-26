@@ -272,3 +272,8 @@ Flashcard due counts, ordered queues, rating and review checks compare timezone-
 A new Dashboard composition replaces the earlier incremental bright UI layout: four summary tiles, a large focus room with a live circular clock, monogram-led subject cards and a saved-date month agenda. The persistent sidebar uses locally drawn icons and separate dark navigation colors; shared card surfaces and paired Dark/Light styling update across the app. This stage implements the Dashboard and shared shell; remaining page compositions follow visual feedback. [Design evidence and scope](agents/design/study-studio-dashboard/README.md).
 
 The clock uses actual remaining time and the active session's original target. Calendar marks use the complete subject snapshot, while the upcoming list keeps exact saved dates and its top-five limit. Keyboard search, focus-save retry and pending recovery reveal their controls in compact windows; deferred reveals cancel on navigation/search. Reflow performs no I/O. Schema remains 10 and the released version is v0.27.0. Container/synthetic scaling coverage is separate from native platform acceptance; real-model testing remains deferred.
+
+
+## Brand assets
+
+Run `python tools/build_brand_assets.py` with the project environment to rebuild the committed SVG, PNG, ICO and ICNS files in `soskuska/assets/brand/`. The generator needs only Pillow; restart the app afterward. Windows CI verifies bundled assets, executable icon presence and frozen startup. Native platform/DPI visual acceptance remains manual.

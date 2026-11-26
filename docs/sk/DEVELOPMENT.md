@@ -356,3 +356,8 @@ Počty, zoradené fronty, hodnotenie a kontroly opakovania kartičiek porovnáva
 Nová kompozícia Dashboardu nahrádza predchádzajúce postupné úpravy: štyri súhrnné dlaždice, výrazná časť sústredenia so živými kruhovými hodinami, karty predmetov s monogramami a mesačný prehľad uložených termínov. Bočný panel používa miestne kreslené ikony a vlastné tmavé farby; zdieľané plochy a párový Dark/Light vzhľad sa menia v celej aplikácii. Táto fáza zavádza Dashboard a spoločný rámec; ostatné stránky nadviažu po vizuálnej spätnej väzbe. [Ukážky a rozsah](../agents/design/study-studio-dashboard/README.md).
 
 Hodiny ukazujú skutočný zostávajúci čas a pôvodný cieľ aktívneho sedenia. Kalendár používa úplnú snímku predmetov; najbližšie skúšky zachovajú presné dátumy a limit piatich položiek. Klávesové hľadanie, chyba uloženia a obnova sústredenia posunú ovládanie do viditeľnej časti kompaktného okna; čakajúci posun zruší navigácia či hľadanie. Zmena rozloženia nečíta dáta. Schéma zostáva 10, vydaná verzia v0.27.0. Kontajnerové a simulované mierky neoverujú natívnu platformu; test skutočného modelu zostáva odložený.
+
+
+## Grafické súbory
+
+V prostredí projektu spustite `python tools/build_brand_assets.py` na obnovenie súborov SVG, PNG, ICO a ICNS v `soskuska/assets/brand/`. Generátor vyžaduje iba Pillow; potom aplikáciu reštartujte. CI Windows kontroluje pribalené súbory, ikonu EXE a spustenie balíka. Vizuálne overenie na skutočnej platforme a pri rôznom DPI zostáva ručné.

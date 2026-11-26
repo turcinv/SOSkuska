@@ -2,6 +2,10 @@
 
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
+## Nevydané
+
+- Místní logo otevřené knihy se značkou zaškrtnutí v postranním panelu a ikonách okna; vlastní ikona Windows EXE. Zveřejněný balíček v0.27.0 tuto změnu ještě neobsahuje.
+
 ## 0.27.0 — 2026-11-26
 
 - Nový studijní prostor: Dashboard, navigation, Dark/Light.

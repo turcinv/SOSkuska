@@ -73,3 +73,9 @@ Keep rating-write failure separate from postcommit read failure. Preserve reveal
 ## 2026-11-25 · Responsive reports and Tutor
 
 Use a stable shared-container width to wrap labels inside equal-width columns. Deriving wrap length from each rounded card width can cause a one-pixel geometry loop during resize. Reflow only when the column mode changes, and keep recovery warnings beside their confirmation controls.
+
+## 2026-11-26 — App logo review
+
+- Tk's Aqua implementation consumes only the first `iconphoto` image; use a 512 px source rather than putting the 16 px Windows titlebar size first. Keep images root-owned and use public CustomTkinter icon methods.
+- A Windows executable already has PyInstaller's default icon. Verify branded artwork by comparing embedded RT_ICON payloads against the shipped ICO, rather than testing icon presence alone.
+- New runtime artwork must be included in the restrictive Docker context and frozen build datas. Keep sidebar image labels on the navigation palette so shared appearance checks remain valid.

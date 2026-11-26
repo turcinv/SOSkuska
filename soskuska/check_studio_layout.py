@@ -42,6 +42,11 @@ def verify(app, subject_id, app_date, storage_date):
     app.update()
     viewport = app.scroll._parent_canvas
     clock = app.focus_clock
+    assert app.brand_tile.cget('image') is app.brand_logo
+    assert app.brand_tile.cget('text') == ''
+    assert len(app.brand_window_icons) == (1 if sys.platform == 'darwin' else 6)
+    names = set(app.tk.call('image', 'names'))
+    assert all(str(icon) in names for icon in app.brand_window_icons)
     assert app.layout_mode == 'compact'
     assert (clock.time_label.cget('text'), clock.percent) == ('180:00', 0)
     assert exam_marks(app.agenda) == {'4 •', '10 •', '12 •', '15 •', '17 •', '18 •', '30 •'}
