@@ -2,7 +2,7 @@
 
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
-## Unreleased
+## 0.26.0 — 2026-11-26
 
 - Studijní režimy AI: Explain simply / Give me a hint / Quiz me.
 

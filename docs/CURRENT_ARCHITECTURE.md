@@ -2,6 +2,10 @@
 
 [English](CURRENT_ARCHITECTURE.md) · [Čeština](cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](sk/CURRENT_ARCHITECTURE.md) · [Русский](ru/CURRENT_ARCHITECTURE.md)
 
+## v0.26.0
+
+Completed-question previews now offer Explain simply, Give me a hint and Quiz me, alongside the compatible Explain answer mode. Hint omits saved answer metadata; quiz follow-ups use ordinary unscored chat. Preview consent is mode-specific, preparation and Send remain explicit, and real-model evaluation is deferred. Schema remains 10.
+
 ## v0.25.0
 
 Completed results now offer Explain this question: preview one saved snapshot locally, prepare an editable clean Tutor draft, then explicitly Connect/Send. Existing work is preserved; the full 4,000-character bound, saved-turn history, Stop and save retry apply. Schema remains 10.
@@ -16,13 +20,13 @@ Statistics groups the period selector and Refresh in a header, with three summar
 
 ## v0.22.0 — Subjects and Question Bank design
 
-Subjects and Question Bank now group titles, counts and actions in page headers and put labelled search/filter controls on shared surfaces. Subject actions use two rows; cards use two columns from 950 logical page pixels and one below. Resizing rearranges existing cards without querying the database. Question answer fields use two columns from 850 logical panel pixels and stack below; correct-answer previews are visually grouped in the authoring list only. Pagination remains 50 questions per page. Drafts, original edit snapshots, filters, topic identities, stale-state guards and CSV previews keep their existing behavior. Published version remains v0.25.0, schema 10.
+Subjects and Question Bank now group titles, counts and actions in page headers and put labelled search/filter controls on shared surfaces. Subject actions use two rows; cards use two columns from 950 logical page pixels and one below. Resizing rearranges existing cards without querying the database. Question answer fields use two columns from 850 logical panel pixels and stack below; correct-answer previews are visually grouped in the authoring list only. Pagination remains 50 questions per page. Drafts, original edit snapshots, filters, topic identities, stale-state guards and CSV previews keep their existing behavior. Published version remains v0.26.0, schema 10.
 
 ## v0.21.0 — Flashcard review redesign
 
-Flashcard review now separates the prompt and revealed answer into reading surfaces. Reveal is the primary action until the answer appears; Again / Hard / Good / Easy then replace it in the same footer, in four columns on wide screens or two on compact screens. Long text wraps and scrolls to the rating controls. Deck actions and empty states use the shared layout. A failed rating write keeps the revealed answer for retry. If the rating was saved but loading the next card fails, the old ratings are disabled and Refresh card only reloads the next card; the saved rating is not repeated. Scheduling, history, editor drafts and CSV preview behavior are preserved. Published version remains v0.25.0, schema 10.
+Flashcard review now separates the prompt and revealed answer into reading surfaces. Reveal is the primary action until the answer appears; Again / Hard / Good / Easy then replace it in the same footer, in four columns on wide screens or two on compact screens. Long text wraps and scrolls to the rating controls. Deck actions and empty states use the shared layout. A failed rating write keeps the revealed answer for retry. If the rating was saved but loading the next card fails, the old ratings are disabled and Refresh card only reloads the next card; the saved rating is not repeated. Scheduling, history, editor drafts and CSV preview behavior are preserved. Published version remains v0.26.0, schema 10.
 
-**Published version: v0.25.0 · schema 10.** Practice history and container tests are implemented.
+**Published version: v0.26.0 · schema 10.** Practice history and container tests are implemented.
 
 v0.17.0 adds focus-session crash recovery using schema **10**. Keep a backup before opening existing data: migration is transactional, but v0.16.0 cannot open a schema-10 database. [Focus-session recovery](FOCUS_RECOVERY.md).
 
@@ -321,7 +325,7 @@ Scheduled local backups are available in **v0.18.0**. SQLite schema remains **10
 
 ## Main-branch review fixes
 
-Fixes released in v0.18.1 through PR #38, tracked in [Astra review findings](REVIEW_FINDINGS.md). Schema remains 10 and the published version is v0.25.0. Subject edits compare their original content under the write lock; a conflict keeps your draft. Copy any changes you need before reopening Edit to load the latest version. Question/topic deletions recheck their displayed snapshot and require a refreshed confirmation after changes. Returning to the same subject preserves the active question/topic editor, filters and original editing identity, including read retries; a removed selected topic stays unavailable until you explicitly choose a replacement or No topic. Opening a different subject still resets the editor. A newer successful daily-backup receipt clears the old failure notice without another backup write.
+Fixes released in v0.18.1 through PR #38, tracked in [Astra review findings](REVIEW_FINDINGS.md). Schema remains 10 and the published version is v0.26.0. Subject edits compare their original content under the write lock; a conflict keeps your draft. Copy any changes you need before reopening Edit to load the latest version. Question/topic deletions recheck their displayed snapshot and require a refreshed confirmation after changes. Returning to the same subject preserves the active question/topic editor, filters and original editing identity, including read retries; a removed selected topic stays unavailable until you explicitly choose a replacement or No topic. Opening a different subject still resets the editor. A newer successful daily-backup receipt clears the old failure notice without another backup write.
 
 ## v0.20.0 — Practice redesign Step 3
 
@@ -332,13 +336,13 @@ Running tests now group progress/timing in a header and show a bar of saved answ
 
 Completed Practice results, including reopened history, offer **Explain this question**. Open the local preview, then choose **Prepare in Tutor**. It uses the saved question snapshot (all four choices, selected answer or Unanswered, stored answer key and explanation), even after the original question/subject is deleted. Nothing connects or sends during preview/preparation. In Tutor, review the server, model and answer language, explicitly Connect if needed, then Send. The draft is editable and uses ordinary local chat history, Stop and save-retry paths.
 
-Tutor must be an idle, clean New chat with an empty prompt and no pending confirmation or unsaved reply. Existing work is preserved; finish it or explicitly use the confirmed New chat action before retrying. A complete generated prompt above 4,000 characters is rejected with its measured length; nothing is truncated. The saved answer key and AI explanation may be wrong; scores and source content never change. Automatic asks for the supplied question language; explicit answer language overrides it. Prompt instructions stay in English and user content stays unchanged. No schema change (10), released version is v0.25.0.
+Tutor must be an idle, clean New chat with an empty prompt and no pending confirmation or unsaved reply. Existing work is preserved; finish it or explicitly use the confirmed New chat action before retrying. A complete generated prompt above 4,000 characters is rejected with its measured length; nothing is truncated. The saved answer key and AI explanation may be wrong; scores and source content never change. Automatic asks for the supplied question language; explicit answer language overrides it. Prompt instructions stay in English and user content stays unchanged. No schema change (10), released version is v0.26.0.
 
 Implementation: `question_explanation.py` builds/validates the bounded snapshot prompt; `practice_page.py` owns preview and stale-result checks; `tutor_page.py` guards draft insertion. Existing Send persists the prompt before HTTP. Automated checks use disposable data and loopback FakeOllama; real-model quality and native platform/DPI acceptance remain manual.
 
 
-## AI study modes · unreleased
+## AI study modes · v0.26.0
 
 In a completed result, open **Explain this question**, then choose **Study mode** before **Prepare in Tutor**. **Explain answer** keeps the existing explanation; **Explain simply** requests short beginner-friendly steps and an example; **Give me a hint** requests one conceptual hint and omits your selected answer, stored key and explanation from the prompt; **Quiz me** asks one new follow-up at a time, waiting for your response before feedback. This is informal practice and never writes a scored attempt or changes source content.
 
-Changing mode regenerates the exact local preview and invalidates its previous Prepare action. Nothing connects, sends or creates a conversation until the existing explicit controls are used. The sent prompt is saved in ordinary local chat history, with the existing language, 4,000-character bound, clean-chat guard, Stop and save-retry rules. Hint mode still includes all four choices: a model may infer/reveal the answer, and text already visible in completed results remains visible. Mode following and explanation quality require later real-model testing, explicitly deferred by the user. Automated checks use loopback FakeOllama. Version stays v0.25.0 / schema 10 until release.
+Changing mode regenerates the exact local preview and invalidates its previous Prepare action. Nothing connects, sends or creates a conversation until the existing explicit controls are used. The sent prompt is saved in ordinary local chat history, with the existing language, 4,000-character bound, clean-chat guard, Stop and save-retry rules. Hint mode still includes all four choices: a model may infer/reveal the answer, and text already visible in completed results remains visible. Mode following and explanation quality require later real-model testing, explicitly deferred by the user. Automated checks use loopback FakeOllama. Released version is v0.26.0 / schema 10.

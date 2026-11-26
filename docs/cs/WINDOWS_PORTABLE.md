@@ -2,9 +2,9 @@
 
 [English](../WINDOWS_PORTABLE.md) · [Čeština](../cs/WINDOWS_PORTABLE.md) · [Slovenčina](../sk/WINDOWS_PORTABLE.md) · [Русский](../ru/WINDOWS_PORTABLE.md)
 
-v0.25.0 obsahuje **nepodepsaný přenosný ZIP pro Windows x64**, nikoli instalátor. Uživatel nepotřebuje Python ani práva správce.
+v0.26.0 obsahuje **nepodepsaný přenosný ZIP pro Windows x64**, nikoli instalátor. Uživatel nepotřebuje Python ani práva správce.
 
-1. Stáhni `SOSkuska-windows-x64.zip` a soubor `.sha256` z [v0.25.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.25.0). Soukromý repozitář vyžaduje přihlášení na GitHub a přístup. Vyber pojmenovaný Windows ZIP, nikoli archiv zdrojového kódu GitHubu.
+1. Stáhni `SOSkuska-windows-x64.zip` a soubor `.sha256` z [v0.26.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.26.0). Soukromý repozitář vyžaduje přihlášení na GitHub a přístup. Vyber pojmenovaný Windows ZIP, nikoli archiv zdrojového kódu GitHubu.
 2. Rozbal celý ZIP do zapisovatelné složky. Zachovej celou složku `SOSkuska` včetně `_internal` a `SOSkuska-worker.exe`.
 3. Spusť `SOSkuska.exe`. Nespouštěj jej uvnitř ZIPu, nepřesouvej samotné EXE a nespouštěj pomocný program přímo. Data zůstávají nezávisle v `%LOCALAPPDATA%\SOSkuska\dashboard.sqlite3`; platí i původní náhradní cesta ExamPrep.
 4. Nepodepsaný soubor může blokovat zabezpečení Windows nebo firemní pravidla. Ověř původ/commit a SHA-256, nevypínej ochranu. Při omezení pravidly se obrať na správce.
