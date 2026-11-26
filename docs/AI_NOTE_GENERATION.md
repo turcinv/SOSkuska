@@ -18,7 +18,7 @@ The generator always uses the **saved** server and preferred model shown in its 
 
 Paste notes (up to 12,000 characters), choose how many items you want (3, 5, 10, 15 or 20) and press **Generate**. Only then are your notes sent to the server shown in the panel. You can **Stop** at any time or keep studying on other pages while it runs.
 
-When it finishes, each draft appears with a checkbox. Questions show all four options with the correct one marked, difficulty, optional topic and explanation. Untick anything wrong or unwanted and press **Save selected**. Items that break the usual rules (empty text, duplicate options, invalid answer letter, too long) are listed and skipped automatically.
+When it finishes, each draft appears with a checkbox. Questions show all four options with the correct one marked, difficulty, optional topic and explanation; the model supplies the correct answer as text and SOSkúška chooses its letter, so the marked answer always matches the explanation. Untick anything wrong or unwanted and press **Save selected**. Items that break the usual rules (empty text, duplicate options, too long) and repeated copies are listed and skipped automatically. A draft whose answer is not clearly found in your notes is marked **⚠** and starts unticked; tick it only after checking it.
 
 ## What is saved
 
@@ -30,4 +30,4 @@ When it finishes, each draft appears with a checkbox. Questions show all four op
 
 AI drafts can be wrong, incomplete or not supported by your notes even though the model is told to use only them. Read every item before saving. Smaller models follow the structure less reliably; if you get "did not return valid JSON", retry or choose another model. Requests time out after 5 minutes; long notes or 20 questions take longer on slow computers. Changing AI settings and restoring a backup wait until generation finishes or is stopped.
 
-Automated checks use a local test server, not a real model. The quality of real models has not been evaluated.
+Automated checks use a local test server. A first real-model evaluation on 26 November 2026 used `qwen3:4b-instruct-2507-q4_K_M` with short notes in English, Czech, Slovak and Russian. It produced valid drafts in every case and took about 8–35 seconds per request on an Apple Silicon Mac. Weak distractors still occur, so reviewing every draft remains necessary. Other models, long notes and slower hardware have not been evaluated.

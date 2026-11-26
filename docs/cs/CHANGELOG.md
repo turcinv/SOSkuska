@@ -2,6 +2,10 @@
 
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
+## Nevydáno
+
+- Opravy kvality AI podle vyhodnocení se skutečným modelem: správnou odpověď otázky umisťuje aplikace (žádná nesouhlasná písmena), poznámky jsou chráněny před vloženými pokyny, návrhy jasně nenalezené v poznámkách začínají nezaškrtnuté s varováním a studijní režimy odpovídají v jazyce otázky. Přidává `tools/evaluate_ai.py`. Schéma zůstává 10.
+
 ## 0.30.0 — 2026-11-26
 
 - Návrhy AI z poznámek: vložte poznámky do balíčku nebo banky otázek, uloženým modelem Ollama vygenerujte kartičky nebo otázky s výběrem z odpovědí, návrhy zkontrolujte, zrušte zaškrtnutí chybných a výběr uložte atomicky. [Návod](AI_NOTE_GENERATION.md). Schéma zůstává 10.

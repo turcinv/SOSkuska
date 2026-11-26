@@ -189,7 +189,8 @@ class NoteGenerationPanel(ctk.CTkFrame):
         # A new request always invalidates the previous drafts first.
         self.reset_results()
         self.buffer = []; self.received = 0
-        self.request = {'count': count, 'target': dict(self.target), 'endpoint': endpoint, 'model': model}
+        self.request = {'count': count, 'target': dict(self.target), 'endpoint': endpoint, 'model': model,
+                        'notes': self.notes.get('1.0', 'end-1c'), 'language': language}
         self.task = task
         task.start()
         self.status.configure(text=tr(self.app, 'Generating with {v0}… Your notes were sent to {v1}. You can Stop or use other pages; leaving this deck or subject discards the drafts.', v0=model, v1=endpoint))
@@ -287,8 +288,10 @@ class NoteGenerationPanel(ctk.CTkFrame):
             self.controls()
 
     def finish(self, text):
+        # Support checks compare words with the notes, so only for same-language drafts.
+        notes = self.request['notes'] if self.request.get('language') == 'Automatic' else None
         try:
-            preview = parse_generated(self.kind, text, self.request['count'])
+            preview = parse_generated(self.kind, text, self.request['count'], notes)
         except (ValueError, RecursionError) as exc:
             message = str(exc) if isinstance(exc, ValueError) else 'The model did not return valid JSON. Try again or choose another model.'
             self.status.configure(text=tr(self.app, message))
@@ -308,7 +311,7 @@ class NoteGenerationPanel(ctk.CTkFrame):
             frame = ctk.CTkFrame(self.results, fg_color=C['raised'], corner_radius=12)
             frame.grid(row=index, column=0, sticky='ew', pady=(0, 8))
             frame.grid_columnconfigure(1, weight=1)
-            var = ctk.BooleanVar(master=self, value=True)
+            var = ctk.BooleanVar(master=self, value=not row.get('weak_support'))
             check = ctk.CTkCheckBox(frame, text='', variable=var, width=24, checkbox_width=18, checkbox_height=18,
                 fg_color=C['primary'], hover_color=C['primary_hover'], border_color=C['border'],
                 checkmark_color=C['on_primary'], text_color=C['text'], command=self.controls)
@@ -327,7 +330,14 @@ class NoteGenerationPanel(ctk.CTkFrame):
             heading.grid(row=0, column=1, sticky='ew', padx=(0, 14), pady=(12, 2))
             body = self.app.label(frame, detail, 12, 'secondary', wraplength=600, justify='left')
             body.grid(row=1, column=1, sticky='ew', padx=(0, 14), pady=(0, 12))
-            frame.bind('<Configure>', lambda event, labels=(heading, body): [label.configure(
+            labels = [heading, body]
+            if row.get('weak_support'):
+                body.grid_configure(pady=(0, 4))
+                warning = self.app.label(frame, tr(self.app, '⚠ The answer was not clearly found in your notes, so this draft is unticked. Check it before saving.'),
+                                         12, 'warning', wraplength=600, justify='left')
+                warning.grid(row=2, column=1, sticky='ew', padx=(0, 14), pady=(0, 12))
+                labels.append(warning)
+            frame.bind('<Configure>', lambda event, labels=tuple(labels): [label.configure(
                 wraplength=max(200, self.app.scroll.logical_pixels(event.width) - 70)) for label in labels], add='+')
             self.choices.append(var)
         self.controls()

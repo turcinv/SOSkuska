@@ -61,3 +61,13 @@ Study modes retain the exact v0.25 default prompt for Explain answer, including 
 ## AI drafting from notes safeguards
 
 Notes leave the machine only on an explicit Generate, to the saved endpoint/model displayed in the panel; never on open, navigation or Save. The prompt delimits notes as data and asks for facts from the notes only. Requests use the shared `TutorTask` worker (no Tk/SQLite in the worker) with Ollama structured `format`, a 40,000-character reply bound and a 5-minute wall clock; ordinary Tutor payloads must stay free of `format`/`options`. Parse replies into the same canonical rows as CSV import; invalid items are listed and skipped, never silently repaired. A new Generate, Stop, Close or a different deck/subject discards drafts; the same target keeps them across search, refresh and navigation. Save selected uses the existing atomic import (identity/name and duplicate recheck under BEGIN IMMEDIATE) and consumes the batch before any refresh read; refresh failures must never trigger another write. Notes are not persisted. AI preference changes and restore are refused while a generator is busy; app close cancels without joining. Run `tests/test_note_generation.py` and `check_note_generation.py`; real-model quality remains manual.
+
+## Real-model evaluation lessons · 26 November 2026
+
+`tools/evaluate_ai.py` runs the production prompts against a real Ollama model without Tk or a database. See the [evaluation record](design/ai-note-generation/EVALUATION.md). The first run with a 4B model taught three lessons.
+
+- Never let the model choose the answer letter. The question schema asks for `correct_answer` plus three `wrong_answers`, and `answer_position` places the correct answer.
+- Repeat the task after the notes and declare embedded instructions to be data. Small models otherwise followed injected text.
+- Keep the `note_support` flag as an unticked-by-default warning, not a rejection. Calibrate thresholds on saved real replies, not only fixture text.
+
+Non-default study modes must name the Question text's language explicitly. Keep the exact v0.25 Explain answer prompt unchanged. Re-run the evaluation tool after prompt or schema changes and record results.

@@ -801,5 +801,6 @@
   "Wait for or stop AI generation before changing AI preferences.": "Wait for or stop AI generation before changing AI preferences.",
   "Wait for or stop AI generation before restoring.": "Wait for or stop AI generation before restoring.",
   "Generating with {v0}… Your notes were sent to {v1}. You can Stop or use other pages; leaving this deck or subject discards the drafts.": "Generating with {v0}… Your notes were sent to {v1}. You can Stop or use other pages; leaving this deck or subject discards the drafts.",
-  "AI generation was closed; its unsaved drafts were discarded. Your notes are kept.": "AI generation was closed; its unsaved drafts were discarded. Your notes are kept."
+  "AI generation was closed; its unsaved drafts were discarded. Your notes are kept.": "AI generation was closed; its unsaved drafts were discarded. Your notes are kept.",
+  "⚠ The answer was not clearly found in your notes, so this draft is unticked. Check it before saving.": "⚠ The answer was not clearly found in your notes, so this draft is unticked. Check it before saving."
 }

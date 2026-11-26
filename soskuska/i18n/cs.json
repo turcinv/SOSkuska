@@ -801,5 +801,6 @@
   "Wait for or stop AI generation before changing AI preferences.": "Před změnou nastavení AI počkejte na dokončení generování nebo ho zastavte.",
   "Wait for or stop AI generation before restoring.": "Před obnovením počkejte na dokončení generování nebo ho zastavte.",
   "Generating with {v0}… Your notes were sent to {v1}. You can Stop or use other pages; leaving this deck or subject discards the drafts.": "Generuje se pomocí {v0}… Poznámky byly odeslány na {v1}. Můžete zastavit nebo přejít na jiné stránky; opuštění tohoto balíčku či předmětu návrhy zahodí.",
-  "AI generation was closed; its unsaved drafts were discarded. Your notes are kept.": "Generování AI bylo zavřeno; neuložené návrhy byly zahozeny. Poznámky zůstávají."
+  "AI generation was closed; its unsaved drafts were discarded. Your notes are kept.": "Generování AI bylo zavřeno; neuložené návrhy byly zahozeny. Poznámky zůstávají.",
+  "⚠ The answer was not clearly found in your notes, so this draft is unticked. Check it before saving.": "⚠ Odpověď nebyla v poznámkách jasně nalezena, proto návrh není zaškrtnutý. Před uložením ho zkontrolujte."
 }

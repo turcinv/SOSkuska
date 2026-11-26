@@ -22,10 +22,11 @@ from ollama_fixture import FakeOllama
 
 CARDS = {'items': [{'front': 'What is FIFO?', 'back': 'First in, first out.'},
                    {'front': 'What is LIFO?', 'back': 'Last in, first out.'},
-                   {'front': '', 'back': 'invalid'}]}
-QUESTIONS = {'items': [{'question': 'Which structure is FIFO?', 'options': ['Queue', 'Stack', 'Tree', 'Graph'],
-                        'correct': 'A', 'difficulty': 'Easy', 'explanation': 'Oldest first.', 'topic': 'Structures'}]}
-NOTES = 'Queues are FIFO. Stacks are LIFO.'
+                   {'front': '', 'back': 'invalid'},
+                   {'front': 'What do cats like?', 'back': 'Cats sleep in sunny windows dreaming about mice.'}]}
+QUESTIONS = {'items': [{'question': 'Which structure is FIFO?', 'correct_answer': 'Queue', 'wrong_answers': ['Stack', 'Tree', 'Graph'],
+                        'difficulty': 'Easy', 'explanation': 'Oldest first.', 'topic': 'Structures'}]}
+NOTES = 'Queues are FIFO: first in, first out, so the queue serves the oldest item. Stacks are LIFO: last in, first out.'
 
 
 def inside(widget, container):
@@ -82,7 +83,7 @@ def check(path, language):
         assert gen.task is None and fixture.requests == []  # Empty notes never send.
         gen.notes.insert('1.0', NOTES)
         fixture.mode = 'content'; fixture.content = json.dumps(CARDS)
-        gen.count.set('3')
+        gen.count.set('5')
         gen.generate_button.invoke()
         assert gen.busy and gen.generate_button.cget('state') == 'disabled'
         try:
@@ -96,9 +97,14 @@ def check(path, language):
 
     def generated():
         payload = fixture.requests[-1][2]
-        assert payload['format']['properties']['items']['maxItems'] == 3
+        assert payload['format']['properties']['items']['maxItems'] == 5
         assert NOTES in payload['messages'][1]['content']
-        assert gen.preview and len(gen.preview['rows']) == 2 and len(gen.choices) == 2
+        assert gen.preview and len(gen.preview['rows']) == 3 and len(gen.choices) == 3
+        # The unsupported card is flagged and starts unticked; supported ones are ticked.
+        assert [var.get() for var in gen.choices] == [True, True, False], [var.get() for var in gen.choices]
+        warning = app.translator.text('⚠ The answer was not clearly found in your notes, so this draft is unticked. Check it before saving.')
+        assert any(isinstance(w, ctk.CTkLabel) and w.cget('text') == warning
+                   for frame in gen.results.winfo_children() for w in frame.winfo_children())
         assert gen.errors.get('1.0', 'end-1c').strip()  # The invalid third item is reported.
         app.navigate('Flashcards'); app.update_idletasks()
         assert gen.winfo_ismapped() and gen.preview is not None
@@ -164,7 +170,9 @@ def check(path, language):
         assert qgen.preview is not None and qgen.request['target']['name'] == 'Computer Science II'
         qgen.save_button.invoke()
         saved_questions = store.questions(sid)
-        assert len(saved_questions) == 1 and saved_questions[0]['correct_option'] == 0
+        assert len(saved_questions) == 1
+        saved_question = saved_questions[0]
+        assert saved_question['option_' + 'abcd'[saved_question['correct_option']]] == 'Queue'
         assert [t['name'] for t in store.topics(sid)] == ['Structures']
         # Close during a request cancels it without joining the worker.
         fixture.mode = 'slow'; qgen.generate_button.invoke()

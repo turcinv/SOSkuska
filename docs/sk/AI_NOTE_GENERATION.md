@@ -18,7 +18,7 @@ Generátor vždy používa **uložený** server a preferovaný model zobrazené 
 
 Vložte poznámky (najviac 12 000 znakov), zvoľte, koľko položiek chcete (3, 5, 10, 15 alebo 20), a stlačte **Generovať**. Až potom sa vaše poznámky odošlú na server zobrazený v paneli. Kedykoľvek môžete stlačiť **Zastaviť**, alebo sa počas generovania venovať štúdiu na iných stránkach.
 
-Po dokončení sa každý návrh zobrazí s políčkom. Pri otázkach vidíte všetky štyri možnosti so zvýraznenou správnou odpoveďou, náročnosť, prípadnú tému a vysvetlenie. Zrušte začiarknutie pri všetkom, čo je chybné alebo nechcené, a stlačte **Uložiť vybrané**. Položky, ktoré porušujú obvyklé pravidlá (prázdny text, duplicitné možnosti, neplatné písmeno odpovede, príliš dlhý text), sa vypíšu a automaticky preskočia.
+Po dokončení sa každý návrh zobrazí s políčkom. Pri otázkach vidíte všetky štyri možnosti so zvýraznenou správnou odpoveďou, náročnosť, prípadnú tému a vysvetlenie; model dodá správnu odpoveď ako text a písmeno jej pridelí SOSkúška, takže označená odpoveď vždy zodpovedá vysvetleniu. Zrušte začiarknutie pri všetkom, čo je chybné alebo nechcené, a stlačte **Uložiť vybrané**. Položky, ktoré porušujú obvyklé pravidlá (prázdny text, duplicitné možnosti, príliš dlhý text), a opakované kópie sa vypíšu a automaticky preskočia. Návrh, ktorého odpoveď sa v poznámkach jasne nenašla, je označený **⚠** a nie je začiarknutý; začiarknite ho až po kontrole.
 
 ## Čo sa ukladá
 
@@ -30,4 +30,4 @@ Po dokončení sa každý návrh zobrazí s políčkom. Pri otázkach vidíte v�
 
 Návrhy od AI môžu byť chybné, neúplné alebo nepodložené vašimi poznámkami, hoci model dostane pokyn použiť len ich. Pred uložením si prečítajte každú položku. Menšie modely dodržiavajú štruktúru menej spoľahlivo; ak sa zobrazí „did not return valid JSON", skúste to znova alebo zvoľte iný model. Požiadavky vypršia po 5 minútach; dlhé poznámky alebo 20 otázok trvajú na pomalých počítačoch dlhšie. Zmena nastavení AI a obnovenie zálohy počkajú, kým generovanie neskončí alebo sa nezastaví.
 
-Automatické kontroly používajú miestny testovací server, nie skutočný model. Kvalita skutočných modelov nebola vyhodnotená.
+Automatické kontroly používajú miestny testovací server. Prvé vyhodnotenie so skutočným modelom prebehlo 26. novembra 2026 s modelom `qwen3:4b-instruct-2507-q4_K_M` a krátkymi poznámkami v angličtine, češtine, slovenčine a ruštine. Vo všetkých prípadoch vytvoril platné návrhy a na počítači Mac s Apple Silicon trvala jedna požiadavka asi 8–35 sekúnd. Slabé nesprávne možnosti sa stále vyskytujú, preto je kontrola každého návrhu nutná. Iné modely, dlhé poznámky a pomalší hardvér vyhodnotené neboli.
