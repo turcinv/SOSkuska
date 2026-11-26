@@ -2,7 +2,7 @@
 
 [English](../../CHANGELOG.md) · [Čeština](../cs/CHANGELOG.md) · [Slovenčina](CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
-## Unreleased
+## 0.26.1 — 2026-11-26
 
 - Opravy po revízii Astra: A62-05–A62-09.
 
