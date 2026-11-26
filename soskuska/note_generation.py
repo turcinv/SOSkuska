@@ -182,9 +182,9 @@ def parse_generated(kind, text, count, notes=None):
             fields = row['fields']
             prompt, answer = (fields[0], fields[1]) if kind == 'cards' else (fields[0], fields[1 + fields[5]])
             weak = note_support(answer, notes) < SUPPORT_THRESHOLD[kind]
-            # One inflected word (e.g. Russian "ноль" vs "нулю") is too little evidence
-            # alone; then also require the question and answer together to be unsupported.
-            if weak and len(word_stems(answer)) < 2:
+            # One or two inflected words (e.g. Russian "ноль" vs "нулю") are too little
+            # evidence alone; then also require question and answer together to be unsupported.
+            if weak and len(word_stems(answer)) < 3:
                 weak = note_support(f'{prompt} {answer}', notes) < 0.5
             row['weak_support'] = weak
     return {'rows': rows, 'errors': errors, 'total': len(items)}

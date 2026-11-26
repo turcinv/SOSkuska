@@ -208,6 +208,7 @@ class NoteGenerationPanel(ctk.CTkFrame):
         self.cancel_task()
         self.reset_results()
         self.target = None
+        self.request = None  # Do not keep a copy of the notes once drafts are gone.
         self.grid_remove()
         if notify and discarded:
             self.host.status.configure(text=tr(self.app, 'AI generation was closed; its unsaved drafts were discarded. Your notes are kept.'))
@@ -240,6 +241,7 @@ class NoteGenerationPanel(ctk.CTkFrame):
         if self.busy:
             return
         self.reset_results()
+        self.request = None
         self.status.configure(text=tr(self.app, 'Generated drafts discarded. Your notes are kept.'))
 
     def reset_results(self):

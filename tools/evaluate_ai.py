@@ -112,7 +112,7 @@ def generation_case(endpoint, model, kind, lang, notes, count, language='Automat
         return case
     try:
         preview = parse_generated(kind, result['text'], count, notes if language == 'Automatic' else None)
-    except ValueError as exc:
+    except (ValueError, RecursionError) as exc:
         case.update(valid_json=False, parse_error=str(exc))
         return case
     rows = preview['rows']
