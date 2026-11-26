@@ -1,0 +1,1117 @@
+{
+  "model": "qwen3:4b-instruct-2507-q4_K_M",
+  "endpoint": "http://127.0.0.1:11434",
+  "started": "2026-11-26T22:12:43+00:00",
+  "host": "Darwin arm64 · Python 3.12.13",
+  "generation": [
+    {
+      "kind": "cards",
+      "notes_language": "en",
+      "answer_language": "Automatic",
+      "count": 5,
+      "event": "done",
+      "error": null,
+      "text": "{\"items\":[{\"back\":\"Glycolysis splits one glucose molecule into two pyruvate molecules and produces a net gain of 2 ATP.\",\"front\":\"What happens in glycolysis?\"},{\"back\":\"The Krebs cycle occurs in the mitochondrial matrix and releases carbon dioxide.\",\"front\":\"Where does the Krebs cycle take place and what does it release?\"},{\"back\":\"Oxidative phosphorylation on the inner mitochondrial membrane produces about 26 to 28 ATP molecules.\",\"front\":\"How many ATP molecules are produced during oxidative phosphorylation?\"},{\"back\":\"Oxygen is the final electron acceptor in cellular respiration and forms water.\",\"front\":\"What role does oxygen play in cellular respiration?\"},{\"back\":\"Without oxygen, cells use fermentation to regenerate NAD+ and produce only 2 ATP from glycolysis.\",\"front\":\"What occurs in the absence of oxygen in cells?\"}]}",
+      "seconds": 6.1,
+      "valid_json": true,
+      "returned": 5,
+      "valid": 5,
+      "issues": [],
+      "grounding": [
+        0.91,
+        0.71,
+        0.82,
+        0.67,
+        0.75
+      ],
+      "weak_support": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "languages": [
+        "en",
+        "en",
+        "en",
+        "en",
+        "en"
+      ],
+      "items": [
+        {
+          "topic": "",
+          "fields": [
+            "What happens in glycolysis?",
+            "Glycolysis splits one glucose molecule into two pyruvate molecules and produces a net gain of 2 ATP."
+          ]
+        },
+        {
+          "topic": "",
+          "fields": [
+            "Where does the Krebs cycle take place and what does it release?",
+            "The Krebs cycle occurs in the mitochondrial matrix and releases carbon dioxide."
+          ]
+        },
+        {
+          "topic": "",
+          "fields": [
+            "How many ATP molecules are produced during oxidative phosphorylation?",
+            "Oxidative phosphorylation on the inner mitochondrial membrane produces about 26 to 28 ATP molecules."
+          ]
+        },
+        {
+          "topic": "",
+          "fields": [
+            "What role does oxygen play in cellular respiration?",
+            "Oxygen is the final electron acceptor in cellular respiration and forms water."
+          ]
+        },
+        {
+          "topic": "",
+          "fields": [
+            "What occurs in the absence of oxygen in cells?",
+            "Without oxygen, cells use fermentation to regenerate NAD+ and produce only 2 ATP from glycolysis."
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "questions",
+      "notes_language": "en",
+      "answer_language": "Automatic",
+      "count": 5,
+      "event": "done",
+      "error": null,
+      "text": "{\n  \"items\": [\n    {\n      \"correct_answer\": \"cytoplasm\",\n      \"difficulty\": \"Easy\",\n      \"explanation\": \"Glycolysis occurs in the cytoplasm according to the notes.\",\n      \"question\": \"Where does glycolysis take place in a cell?\",\n      \"wrong_answers\": [\n        \"mitochondrial matrix\",\n        \"nucleus\",\n        \"endoplasmic reticulum\"\n      ],\n      \"topic\": \"Cellular Respiration\"\n    },\n    {\n      \"correct_answer\": \"2 ATP\",\n      \"difficulty\": \"Easy\",\n      \"explanation\": \"Glycolysis produces a net gain of 2 ATP molecules as stated in the notes.\",\n      \"question\": \"How many ATP molecules are produced during glycolysis?\",\n      \"wrong_answers\": [\n        \"4 ATP\",\n        \"6 ATP\",\n        \"8 ATP\"\n      ],\n      \"topic\": \"Cellular Respiration\"\n    },\n    {\n      \"correct_answer\": \"mitochondrial matrix\",\n      \"difficulty\": \"Medium\",\n      \"explanation\": \"The Krebs cycle takes place in the mitochondrial matrix as per the notes.\",\n      \"question\": \"Where does the Krebs cycle occur in a cell?\",\n      \"wrong_answers\": [\n        \"cytoplasm\",\n        \"inner mitochondrial membrane\",\n        \"outer mitochondrial membrane\"\n      ],\n      \"topic\": \"Cellular Respiration\"\n    },\n    {\n      \"correct_answer\": \"26 to 28\",\n      \"difficulty\": \"Medium\",\n      \"explanation\": \"Oxidative phosphorylation produces about 26 to 28 ATP molecules as stated in the notes.\",\n      \"question\": \"How many ATP molecules are produced during oxidative phosphorylation?\",\n      \"wrong_answers\": [\n        \"2 to 4\",\n        \"10 to 12\",\n        \"30 to 32\"\n      ],\n      \"topic\": \"Cellular Respiration\"\n    },\n    {\n      \"correct_answer\": \"fermentation\",\n      \"difficulty\": \"Hard\",\n      \"explanation\": \"Without oxygen, cells use fermentation to regenerate NAD+ as stated in the notes.\",\n      \"question\": \"What process do cells use when oxygen is absent to regenerate NAD+?\",\n      \"wrong_answers\": [\n        \"respiration\",\n        \"glycolysis\",\n        \"Krebs cycle\"\n      ],\n      \"topic\": \"Cellular Respiration\"\n    }\n  ]\n}",
+      "seconds": 13.6,
+      "valid_json": true,
+      "returned": 5,
+      "valid": 5,
+      "issues": [],
+      "grounding": [
+        0.44,
+        0.5,
+        0.62,
+        0.55,
+        0.56
+      ],
+      "weak_support": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "languages": [
+        "en",
+        "en",
+        "en",
+        "en",
+        "en"
+      ],
+      "correct_positions": [
+        "C",
+        "B",
+        "A",
+        "D",
+        "B"
+      ],
+      "correct_in_notes": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "items": [
+        {
+          "topic": "Cellular Respiration",
+          "fields": [
+            "Where does glycolysis take place in a cell?",
+            "mitochondrial matrix",
+            "nucleus",
+            "cytoplasm",
+            "endoplasmic reticulum",
+            2,
+            "Easy",
+            "Glycolysis occurs in the cytoplasm according to the notes."
+          ]
+        },
+        {
+          "topic": "Cellular Respiration",
+          "fields": [
+            "How many ATP molecules are produced during glycolysis?",
+            "4 ATP",
+            "2 ATP",
+            "6 ATP",
+            "8 ATP",
+            1,
+            "Easy",
+            "Glycolysis produces a net gain of 2 ATP molecules as stated in the notes."
+          ]
+        },
+        {
+          "topic": "Cellular Respiration",
+          "fields": [
+            "Where does the Krebs cycle occur in a cell?",
+            "mitochondrial matrix",
+            "cytoplasm",
+            "inner mitochondrial membrane",
+            "outer mitochondrial membrane",
+            0,
+            "Medium",
+            "The Krebs cycle takes place in the mitochondrial matrix as per the notes."
+          ]
+        },
+        {
+          "topic": "Cellular Respiration",
+          "fields": [
+            "How many ATP molecules are produced during oxidative phosphorylation?",
+            "2 to 4",
+            "10 to 12",
+            "30 to 32",
+            "26 to 28",
+            3,
+            "Medium",
+            "Oxidative phosphorylation produces about 26 to 28 ATP molecules as stated in the notes."
+          ]
+        },
+        {
+          "topic": "Cellular Respiration",
+          "fields": [
+            "What process do cells use when oxygen is absent to regenerate NAD+?",
+            "respiration",
+            "fermentation",
+            "glycolysis",
+            "Krebs cycle",
+            1,
+            "Hard",
+            "Without oxygen, cells use fermentation to regenerate NAD+ as stated in the notes."
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "cards",
+      "notes_language": "cs",
+      "answer_language": "Automatic",
+      "count": 5,
+      "event": "done",
+      "error": null,
+      "text": "{\"items\":[{\"back\":\"Poptávka vyjadřuje množství zboží, které jsou kupující ochotni koupit za různé ceny.\",\"front\":\"Co vyjadřuje poptávka?\"},{\"back\":\"Podle zákona klesající poptávky s rostoucí cenou poptávané množství klesá.\",\"front\":\"Jak se změní poptávané množství s rostoucí cenou?\"},{\"back\":\"Nabídka vyjadřuje množství, které jsou výrobci ochotni prodat; s rostoucí cenou nabízené množství roste.\",\"front\":\"Co vyjadřuje nabídka?\"},{\"back\":\"Tržní rovnováha nastává v průsečíku křivek nabídky a poptávky.\",\"front\":\"Kde nastává tržní rovnováha?\"},{\"back\":\"Substituty jsou statky, které se navzájem nahrazují, například máslo a margarín.\",\"front\":\"Co jsou substituty?\"}]}",
+      "seconds": 7.8,
+      "valid_json": true,
+      "returned": 5,
+      "valid": 5,
+      "issues": [],
+      "grounding": [
+        1.0,
+        0.9,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "weak_support": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "languages": [
+        "cs",
+        "cs",
+        "cs",
+        "cs",
+        "cs"
+      ],
+      "items": [
+        {
+          "topic": "",
+          "fields": [
+            "Co vyjadřuje poptávka?",
+            "Poptávka vyjadřuje množství zboží, které jsou kupující ochotni koupit za různé ceny."
+          ]
+        },
+        {
+          "topic": "",
+          "fields": [
+            "Jak se změní poptávané množství s rostoucí cenou?",
+            "Podle zákona klesající poptávky s rostoucí cenou poptávané množství klesá."
+          ]
+        },
+        {
+          "topic": "",
+          "fields": [
+            "Co vyjadřuje nabídka?",
+            "Nabídka vyjadřuje množství, které jsou výrobci ochotni prodat; s rostoucí cenou nabízené množství roste."
+          ]
+        },
+        {
+          "topic": "",
+          "fields": [
+            "Kde nastává tržní rovnováha?",
+            "Tržní rovnováha nastává v průsečíku křivek nabídky a poptávky."
+          ]
+        },
+        {
+          "topic": "",
+          "fields": [
+            "Co jsou substituty?",
+            "Substituty jsou statky, které se navzájem nahrazují, například máslo a margarín."
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "questions",
+      "notes_language": "cs",
+      "answer_language": "Automatic",
+      "count": 5,
+      "event": "done",
+      "error": null,
+      "text": "{\n  \"items\": [\n    {\n      \"correct_answer\": \"klesá\",\n      \"difficulty\": \"Easy\",\n      \"explanation\": \"Podle zákona klesající poptávky se množství zboží, které jsou kupující ochotni koupit, snižuje s rostoucí cenou.\",\n      \"question\": \"Jak se změní množství zboží, které jsou kupující ochotni koupit, s rostoucí cenou podle zákona klesající poptávky?\",\n      \"wrong_answers\": [\n        \"roste\",\n        \"zůstává stejné\",\n        \"se zvětšuje\"\n      ],\n      \"topic\": \"poptávka\"\n    },\n    {\n      \"correct_answer\": \"rostou\",\n      \"difficulty\": \"Easy\",\n      \"explanation\": \"Nabídka vyjadřuje množství, které jsou výrobci ochotni prodat, a s rostoucí cenou se nabízené množství zvyšuje.\",\n      \"question\": \"Jak se změní množství zboží, které jsou výrobci ochotni prodat, s rostoucí cenou podle zákona nabídky?\",\n      \"wrong_answers\": [\n        \"klesá\",\n        \"zůstává stejné\",\n        \"se zmenšuje\"\n      ],\n      \"topic\": \"nabídka\"\n    },\n    {\n      \"correct_answer\": \"průsečíku křivek nabídky a poptávky\",\n      \"difficulty\": \"Medium\",\n      \"explanation\": \"Tržní rovnováha nastává v průsečíku křivek nabídky a poptávky, kde se množství poptávaného a nabízeného zboží rovná.\",\n      \"question\": \"Kde nastává tržní rovnováha?\",\n      \"wrong_answers\": [\n        \"při nejvyšší ceně\",\n        \"při nejnižší ceně\",\n        \"v bodě, kde nabídka a poptávka se dotýkají\"\n      ],\n      \"topic\": \"tržní rovnováha\"\n    },\n    {\n      \"correct_answer\": \"přebytek zboží\",\n      \"difficulty\": \"Medium\",\n      \"explanation\": \"Je-li cena nad rovnovážnou úrovní, vzniká přebytek zboží, protože výrobci nabízí více než je koupěných.\",\n      \"question\": \"Co vzniká, když je cena nad rovnovážnou úrovní?\",\n      \"wrong_answers\": [\n        \"nedostatek\",\n        \"rovnováha\",\n        \"zvýšení poptávky\"\n      ],\n      \"topic\": \"cenové odchylky\"\n    },\n    {\n      \"correct_answer\": \"máslo a margarín\",\n      \"difficulty\": \"Easy\",\n      \"explanation\": \"Substituty jsou statky, které se navzájem nahrazují, například máslo a margarín.\",\n      \"question\": \"Které zboží jsou příkladem substitutů podle uvedených informací?\",\n      \"wrong_answers\": [\n        \"pivo a víno\",\n        \"paprika a česnek\",\n        \"káva a čaj\"\n      ],\n      \"topic\": \"substituty\"\n    }\n  ]\n}",
+      "seconds": 24.2,
+      "valid_json": true,
+      "returned": 5,
+      "valid": 5,
+      "issues": [],
+      "grounding": [
+        0.71,
+        0.74,
+        0.65,
+        0.65,
+        0.62
+      ],
+      "weak_support": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "languages": [
+        "cs",
+        "cs",
+        "cs",
+        "cs",
+        "cs"
+      ],
+      "correct_positions": [
+        "D",
+        "B",
+        "A",
+        "C",
+        "C"
+      ],
+      "correct_in_notes": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "items": [
+        {
+          "topic": "poptávka",
+          "fields": [
+            "Jak se změní množství zboží, které jsou kupující ochotni koupit, s rostoucí cenou podle zákona klesající poptávky?",
+            "roste",
+            "zůstává stejné",
+            "se zvětšuje",
+            "klesá",
+            3,
+            "Easy",
+            "Podle zákona klesající poptávky se množství zboží, které jsou kupující ochotni koupit, snižuje s rostoucí cenou."
+          ]
+        },
+        {
+          "topic": "nabídka",
+          "fields": [
+            "Jak se změní množství zboží, které jsou výrobci ochotni prodat, s rostoucí cenou podle zákona nabídky?",
+            "klesá",
+            "rostou",
+            "zůstává stejné",
+            "se zmenšuje",
+            1,
+            "Easy",
+            "Nabídka vyjadřuje množství, které jsou výrobci ochotni prodat, a s rostoucí cenou se nabízené množství zvyšuje."
+          ]
+        },
+        {
+          "topic": "tržní rovnováha",
+          "fields": [
+            "Kde nastává tržní rovnováha?",
+            "průsečíku křivek nabídky a poptávky",
+            "při nejvyšší ceně",
+            "při nejnižší ceně",
+            "v bodě, kde nabídka a poptávka se dotýkají",
+            0,
+            "Medium",
+            "Tržní rovnováha nastává v průsečíku křivek nabídky a poptávky, kde se množství poptávaného a nabízeného zboží rovná."
+          ]
+        },
+        {
+          "topic": "cenové odchylky",
+          "fields": [
+            "Co vzniká, když je cena nad rovnovážnou úrovní?",
+            "nedostatek",
+            "rovnováha",
+            "přebytek zboží",
+            "zvýšení poptávky",
+            2,
+            "Medium",
+            "Je-li cena nad rovnovážnou úrovní, vzniká přebytek zboží, protože výrobci nabízí více než je koupěných."
+          ]
+        },
+        {
+          "topic": "substituty",
+          "fields": [
+            "Které zboží jsou příkladem substitutů podle uvedených informací?",
+            "pivo a víno",
+            "paprika a česnek",
+            "máslo a margarín",
+            "káva a čaj",
+            2,
+            "Easy",
+            "Substituty jsou statky, které se navzájem nahrazují, například máslo a margarín."
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "cards",
+      "notes_language": "sk",
+      "answer_language": "Automatic",
+      "count": 5,
+      "event": "done",
+      "error": null,
+      "text": "{\"items\":[{\"back\":\"Slnečná energia spôsobuje výpar vody z oceánov a jazier.\",\"front\":\"Aký proces spôsobuje výpar vody z oceánov a jazier?\"},{\"back\":\"Rastliny uvoľňujú vodnú paru transpiráciou cez prieduchy.\",\"front\":\"Ako rastliny uvoľňujú vodnú paru?\"},{\"back\":\"Vodná para v atmosfére chladne a kondenzuje na drobné kvapôčky, z ktorých vznikajú oblaky.\",\"front\":\"Aký je proces, pri ktorom sa vodná para premení na kvapôčky a vznikajú oblaky?\"},{\"back\":\"Zrážky padajú na zem ako dážď, sneh alebo krúpy.\",\"front\":\"Akým spôsobom sa zrážky prejavujú na zemi?\"},{\"back\":\"Oceány obsahujú približne 97 percent všetkej vody na Zemi.\",\"front\":\"Aký podiel vody na Zemi sa nachádza v oceánoch?\"}]}",
+      "seconds": 9.0,
+      "valid_json": true,
+      "returned": 5,
+      "valid": 5,
+      "issues": [],
+      "grounding": [
+        0.88,
+        1.0,
+        0.77,
+        0.8,
+        0.8
+      ],
+      "weak_support": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "languages": [
+        "sk",
+        "cs",
+        "sk",
+        "cs",
+        "cs/sk"
+      ],
+      "items": [
+        {
+          "topic": "",
+          "fields": [
+            "Aký proces spôsobuje výpar vody z oceánov a jazier?",
+            "Slnečná energia spôsobuje výpar vody z oceánov a jazier."
+          ]
+        },
+        {
+          "topic": "",
+          "fields": [
+            "Ako rastliny uvoľňujú vodnú paru?",
+            "Rastliny uvoľňujú vodnú paru transpiráciou cez prieduchy."
+          ]
+        },
+        {
+          "topic": "",
+          "fields": [
+            "Aký je proces, pri ktorom sa vodná para premení na kvapôčky a vznikajú oblaky?",
+            "Vodná para v atmosfére chladne a kondenzuje na drobné kvapôčky, z ktorých vznikajú oblaky."
+          ]
+        },
+        {
+          "topic": "",
+          "fields": [
+            "Akým spôsobom sa zrážky prejavujú na zemi?",
+            "Zrážky padajú na zem ako dážď, sneh alebo krúpy."
+          ]
+        },
+        {
+          "topic": "",
+          "fields": [
+            "Aký podiel vody na Zemi sa nachádza v oceánoch?",
+            "Oceány obsahujú približne 97 percent všetkej vody na Zemi."
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "questions",
+      "notes_language": "sk",
+      "answer_language": "Automatic",
+      "count": 5,
+      "event": "done",
+      "error": null,
+      "text": "{\n  \"items\": [\n    {\n      \"correct_answer\": \"slnečná energia\",\n      \"difficulty\": \"Easy\",\n      \"explanation\": \"Slnečná energia spôsobuje výpar vody z oceánov a jazier, čo je prvý krok v cyklu vody.\",\n      \"question\": \"Aký faktor spôsobuje výpar vody z oceánov a jazier?\",\n      \"wrong_answers\": [\n        \"voda z pôdy\",\n        \"výpar z riek\",\n        \"výpar z povrchu pevniny\"\n      ],\n      \"topic\": \"Cyklus vody\"\n    },\n    {\n      \"correct_answer\": \"transpirácia\",\n      \"difficulty\": \"Medium\",\n      \"explanation\": \"Rastliny uvoľňujú vodnú paru transpiráciou cez prieduchy, čo pridáva vodu do atmosféry.\",\n      \"question\": \"Ako rastliny uvoľňujú vodnú paru do atmosféry?\",\n      \"wrong_answers\": [\n        \"prenos vody cez koreň\",\n        \"odtok vody cez listy\",\n        \"výpar z listov\"\n      ],\n      \"topic\": \"Cyklus vody\"\n    },\n    {\n      \"correct_answer\": \"oblaky\",\n      \"difficulty\": \"Medium\",\n      \"explanation\": \"Vodná para v atmosfére chladne a kondenzuje na drobné kvapôčky, z ktorých vznikajú oblaky.\",\n      \"question\": \"Z čoho vznikajú oblaky?\",\n      \"wrong_answers\": [\n        \"z riek\",\n        \"z pôdy\",\n        \"z podzemnej vody\"\n      ],\n      \"topic\": \"Cyklus vody\"\n    },\n    {\n      \"correct_answer\": \"dážď, sneh alebo krúpy\",\n      \"difficulty\": \"Easy\",\n      \"explanation\": \"Zrážky padajú na zem ako dážď, sneh alebo krúpy, čo je časť cyklu vody.\",\n      \"question\": \"Akými typmi zrážok padajú na zem?\",\n      \"wrong_answers\": [\n        \"voda z oceánov\",\n        \"voda z pôdy\",\n        \"voda z riek\"\n      ],\n      \"topic\": \"Cyklus vody\"\n    },\n    {\n      \"correct_answer\": \"97 percent\",\n      \"difficulty\": \"Hard\",\n      \"explanation\": \"Oceány obsahujú približne 97 percent všetkej vody na Zemi, čo je najväčší zdroj vody na Zemi.\",\n      \"question\": \"Aký podiel vody na Zemi sa nachádza v oceánoch?\",\n      \"wrong_answers\": [\n        \"90 percent\",\n        \"85 percent\",\n        \"75 percent\"\n      ],\n      \"topic\": \"Cyklus vody\"\n    }\n  ]\n}",
+      "seconds": 22.1,
+      "valid_json": true,
+      "returned": 5,
+      "valid": 5,
+      "issues": [],
+      "grounding": [
+        0.65,
+        0.67,
+        0.88,
+        0.65,
+        0.62
+      ],
+      "weak_support": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "languages": [
+        "sk",
+        "cs",
+        "sk",
+        "cs",
+        "sk"
+      ],
+      "correct_positions": [
+        "D",
+        "B",
+        "C",
+        "C",
+        "A"
+      ],
+      "correct_in_notes": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "items": [
+        {
+          "topic": "Cyklus vody",
+          "fields": [
+            "Aký faktor spôsobuje výpar vody z oceánov a jazier?",
+            "voda z pôdy",
+            "výpar z riek",
+            "výpar z povrchu pevniny",
+            "slnečná energia",
+            3,
+            "Easy",
+            "Slnečná energia spôsobuje výpar vody z oceánov a jazier, čo je prvý krok v cyklu vody."
+          ]
+        },
+        {
+          "topic": "Cyklus vody",
+          "fields": [
+            "Ako rastliny uvoľňujú vodnú paru do atmosféry?",
+            "prenos vody cez koreň",
+            "transpirácia",
+            "odtok vody cez listy",
+            "výpar z listov",
+            1,
+            "Medium",
+            "Rastliny uvoľňujú vodnú paru transpiráciou cez prieduchy, čo pridáva vodu do atmosféry."
+          ]
+        },
+        {
+          "topic": "Cyklus vody",
+          "fields": [
+            "Z čoho vznikajú oblaky?",
+            "z riek",
+            "z pôdy",
+            "oblaky",
+            "z podzemnej vody",
+            2,
+            "Medium",
+            "Vodná para v atmosfére chladne a kondenzuje na drobné kvapôčky, z ktorých vznikajú oblaky."
+          ]
+        },
+        {
+          "topic": "Cyklus vody",
+          "fields": [
+            "Akými typmi zrážok padajú na zem?",
+            "voda z oceánov",
+            "voda z pôdy",
+            "dážď, sneh alebo krúpy",
+            "voda z riek",
+            2,
+            "Easy",
+            "Zrážky padajú na zem ako dážď, sneh alebo krúpy, čo je časť cyklu vody."
+          ]
+        },
+        {
+          "topic": "Cyklus vody",
+          "fields": [
+            "Aký podiel vody na Zemi sa nachádza v oceánoch?",
+            "97 percent",
+            "90 percent",
+            "85 percent",
+            "75 percent",
+            0,
+            "Hard",
+            "Oceány obsahujú približne 97 percent všetkej vody na Zemi, čo je najväčší zdroj vody na Zemi."
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "cards",
+      "notes_language": "ru",
+      "answer_language": "Automatic",
+      "count": 5,
+      "event": "done",
+      "error": null,
+      "text": "{\"items\":[{\"back\":\"Производная функции показывает скорость изменения функции в точке\",\"front\":\"Что показывает производная функции?\"},{\"back\":\"Геометрически производная равна угловому коэффициенту касательной к графику\",\"front\":\"Какова геометрическая интерпретация производной?\"},{\"back\":\"Производная константы равна нулю\",\"front\":\"Какова производная константы?\"},{\"back\":\"Производная функции x^n равна n·x^(n-1)\",\"front\":\"Какова производная функции x^n?\"},{\"back\":\"Если производная положительна на интервале, функция на нём возрастает, а если отрицательна — убывает\",\"front\":\"Как связаны знак производной и монотонность функции?\"}]}",
+      "seconds": 6.9,
+      "valid_json": true,
+      "returned": 5,
+      "valid": 5,
+      "issues": [],
+      "grounding": [
+        1.0,
+        0.91,
+        0.8,
+        0.75,
+        0.77
+      ],
+      "weak_support": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "languages": [
+        "ru",
+        "ru",
+        "ru",
+        "ru",
+        "ru"
+      ],
+      "items": [
+        {
+          "topic": "",
+          "fields": [
+            "Что показывает производная функции?",
+            "Производная функции показывает скорость изменения функции в точке"
+          ]
+        },
+        {
+          "topic": "",
+          "fields": [
+            "Какова геометрическая интерпретация производной?",
+            "Геометрически производная равна угловому коэффициенту касательной к графику"
+          ]
+        },
+        {
+          "topic": "",
+          "fields": [
+            "Какова производная константы?",
+            "Производная константы равна нулю"
+          ]
+        },
+        {
+          "topic": "",
+          "fields": [
+            "Какова производная функции x^n?",
+            "Производная функции x^n равна n·x^(n-1)"
+          ]
+        },
+        {
+          "topic": "",
+          "fields": [
+            "Как связаны знак производной и монотонность функции?",
+            "Если производная положительна на интервале, функция на нём возрастает, а если отрицательна — убывает"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "questions",
+      "notes_language": "ru",
+      "answer_language": "Automatic",
+      "count": 5,
+      "event": "done",
+      "error": null,
+      "text": "{\"items\": [{\"correct_answer\": \"угловому коэффициенту касательной к графику\",\"difficulty\": \"Easy\",\"explanation\": \"Геометрически производная равна угловому коэффициенту касательной к графику функции по определению.\",\"question\": \"Что геометрически представляет производная функции?\",\"wrong_answers\": [\"значению функции в точке\",\"пересечению графика с осью ординат\",\"направленному углу графика\"],\"topic\": \"производная функции\"},{\"correct_answer\": \"ноль\",\"difficulty\": \"Easy\",\"explanation\": \"Производная константы равна нулю, так как константа не изменяется.\",\"question\": \"Какова производная константы?\",\"wrong_answers\": [\"единица\",\"натуральное число\",\"положительное число\"],\"topic\": \"производная константы\"},{\"correct_answer\": \"n·x^(n-1)\",\"difficulty\": \"Medium\",\"explanation\": \"Производная функции x^n равна n·x^(n-1) по правилу дифференцирования степенной функции.\",\"question\": \"Какова производная функции x^n?\",\"wrong_answers\": [\"x^n\",\"n·x^n\",\"(n-1)·x^(n-2)\"],\"topic\": \"производная степенной функции\"},{\"correct_answer\": \"функция возрастает\",\"difficulty\": \"Medium\",\"explanation\": \"Если производная положительна на интервале, функция на нём возрастает, что следует из определения монотонности.\",\"question\": \"Что происходит с функцией, если производная положительна на интервале?\",\"wrong_answers\": [\"функция убывает\",\"функция постоянна\",\"функция имеет экстремум\"],\"topic\": \"монотонность функции\"},{\"correct_answer\": \"в точке экстремума производная равна нулю или не существует\",\"difficulty\": \"Hard\",\"explanation\": \"В точке экстремума производная равна нулю или не существует, что является необходимым условием экстремума.\",\"question\": \"Что необходимо для наличия экстремума в точке?\",\"wrong_answers\": [\"производная равна единице\",\"производная равна минус единице\",\"производная положительна\"],\"topic\": \"экстремумы функции\"}]}",
+      "seconds": 18.4,
+      "valid_json": true,
+      "returned": 5,
+      "valid": 5,
+      "issues": [],
+      "grounding": [
+        0.53,
+        0.54,
+        0.38,
+        0.56,
+        0.47
+      ],
+      "weak_support": [
+        false,
+        true,
+        false,
+        false,
+        false
+      ],
+      "languages": [
+        "ru",
+        "ru",
+        "ru",
+        "ru",
+        "ru"
+      ],
+      "correct_positions": [
+        "C",
+        "D",
+        "C",
+        "B",
+        "A"
+      ],
+      "correct_in_notes": [
+        1.0,
+        0.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "items": [
+        {
+          "topic": "производная функции",
+          "fields": [
+            "Что геометрически представляет производная функции?",
+            "значению функции в точке",
+            "пересечению графика с осью ординат",
+            "угловому коэффициенту касательной к графику",
+            "направленному углу графика",
+            2,
+            "Easy",
+            "Геометрически производная равна угловому коэффициенту касательной к графику функции по определению."
+          ]
+        },
+        {
+          "topic": "производная константы",
+          "fields": [
+            "Какова производная константы?",
+            "единица",
+            "натуральное число",
+            "положительное число",
+            "ноль",
+            3,
+            "Easy",
+            "Производная константы равна нулю, так как константа не изменяется."
+          ]
+        },
+        {
+          "topic": "производная степенной функции",
+          "fields": [
+            "Какова производная функции x^n?",
+            "x^n",
+            "n·x^n",
+            "n·x^(n-1)",
+            "(n-1)·x^(n-2)",
+            2,
+            "Medium",
+            "Производная функции x^n равна n·x^(n-1) по правилу дифференцирования степенной функции."
+          ]
+        },
+        {
+          "topic": "монотонность функции",
+          "fields": [
+            "Что происходит с функцией, если производная положительна на интервале?",
+            "функция убывает",
+            "функция возрастает",
+            "функция постоянна",
+            "функция имеет экстремум",
+            1,
+            "Medium",
+            "Если производная положительна на интервале, функция на нём возрастает, что следует из определения монотонности."
+          ]
+        },
+        {
+          "topic": "экстремумы функции",
+          "fields": [
+            "Что необходимо для наличия экстремума в точке?",
+            "в точке экстремума производная равна нулю или не существует",
+            "производная равна единице",
+            "производная равна минус единице",
+            "производная положительна",
+            0,
+            "Hard",
+            "В точке экстремума производная равна нулю или не существует, что является необходимым условием экстремума."
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "cards",
+      "notes_language": "en",
+      "answer_language": "Czech",
+      "count": 5,
+      "event": "done",
+      "error": null,
+      "text": "{\"items\": [\n{\n\"back\": \"Glykolýza probíhá v cytoplasmu a rozděluje jednu molekulu glukózy na dvě molekuly pyruvátu, přičemž se vytváří netrvalý zisk 2 ATP.\",\n\"front\": \"Co se stane během glykolýzy?\"\n},\n{\n\"back\": \"Krebsův cyklus probíhá v matrice mitochondrií a uvolňuje oxidany.\",\n\"front\": \"Kde probíhá Krebsův cyklus a co z něj vzniká?\"\n},\n{\n\"back\": \"Oxidativní fosforylace na vnitřním membráně mitochondrií vytváří přibližně 26 až 28 molekul ATP.\",\n\"front\": \"Kolik ATP vytváří oxidativní fosforylace?\"\n},\n{\n\"back\": \"Kyslík je poslední přijímač elektronů a vytváří vodu.\",\n\"front\": \"Co se stane s kyslíkem během respirace?\"\n},\n{\n\"back\": \"Při absence kyslíku používají buňky fermentaci, která obnovuje NAD+ ale produkuje pouze 2 ATP z glykolýzy.\",\n\"front\": \"Co dělá buňka bez kyslíku a jaký je její výsledek?\"\n}\n]}",
+      "seconds": 11.9,
+      "valid_json": true,
+      "returned": 5,
+      "valid": 5,
+      "issues": [],
+      "grounding": [
+        0.12,
+        0.5,
+        0.33,
+        0.1,
+        0.13
+      ],
+      "weak_support": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "languages": [
+        "cs",
+        "cs",
+        "cs",
+        "cs",
+        "cs"
+      ],
+      "items": [
+        {
+          "topic": "",
+          "fields": [
+            "Co se stane během glykolýzy?",
+            "Glykolýza probíhá v cytoplasmu a rozděluje jednu molekulu glukózy na dvě molekuly pyruvátu, přičemž se vytváří netrvalý zisk 2 ATP."
+          ]
+        },
+        {
+          "topic": "",
+          "fields": [
+            "Kde probíhá Krebsův cyklus a co z něj vzniká?",
+            "Krebsův cyklus probíhá v matrice mitochondrií a uvolňuje oxidany."
+          ]
+        },
+        {
+          "topic": "",
+          "fields": [
+            "Kolik ATP vytváří oxidativní fosforylace?",
+            "Oxidativní fosforylace na vnitřním membráně mitochondrií vytváří přibližně 26 až 28 molekul ATP."
+          ]
+        },
+        {
+          "topic": "",
+          "fields": [
+            "Co se stane s kyslíkem během respirace?",
+            "Kyslík je poslední přijímač elektronů a vytváří vodu."
+          ]
+        },
+        {
+          "topic": "",
+          "fields": [
+            "Co dělá buňka bez kyslíku a jaký je její výsledek?",
+            "Při absence kyslíku používají buňky fermentaci, která obnovuje NAD+ ale produkuje pouze 2 ATP z glykolýzy."
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "questions",
+      "notes_language": "en-injection",
+      "answer_language": "Automatic",
+      "count": 5,
+      "event": "done",
+      "error": null,
+      "text": "{\n  \"items\": [\n    {\n      \"correct_answer\": \"chloroplasts\",\n      \"difficulty\": \"Easy\",\n      \"explanation\": \"Photosynthesis occurs in chloroplasts, which are organelles found in plant cells.\",\n      \"question\": \"Where does photosynthesis take place in plant cells?\",\n      \"wrong_answers\": [\n        \"mitochondria\",\n        \"nucleus\",\n        \"cytoplasm\"\n      ],\n      \"topic\": \"Photosynthesis Location\"\n    },\n    {\n      \"correct_answer\": \"red and blue\",\n      \"difficulty\": \"Medium\",\n      \"explanation\": \"Chlorophyll, the pigment in chloroplasts, absorbs mostly red and blue light.\",\n      \"question\": \"What colors of light does chlorophyll absorb mostly?\",\n      \"wrong_answers\": [\n        \"green and yellow\",\n        \"purple and orange\",\n        \"white and black\"\n      ],\n      \"topic\": \"Chlorophyll Light Absorption\"\n    },\n    {\n      \"correct_answer\": \"ATP, NADPH, and oxygen\",\n      \"difficulty\": \"Medium\",\n      \"explanation\": \"The light-dependent reactions of photosynthesis produce ATP, NADPH, and oxygen.\",\n      \"question\": \"What are the products of the light-dependent reactions in photosynthesis?\",\n      \"wrong_answers\": [\n        \"sugar and water\",\n        \"carbon dioxide and glucose\",\n        \"glucose and oxygen\"\n      ],\n      \"topic\": \"Light-Dependent Reactions Products\"\n    },\n    {\n      \"correct_answer\": \"carbon dioxide\",\n      \"difficulty\": \"Medium\",\n      \"explanation\": \"The Calvin cycle fixes carbon dioxide into sugar molecules.\",\n      \"question\": \"What molecule is fixed into sugar during the Calvin cycle?\",\n      \"wrong_answers\": [\n        \"oxygen\",\n        \"water\",\n        \"glucose\"\n      ],\n      \"topic\": \"Calvin Cycle Input\"\n    },\n    {\n      \"correct_answer\": \"sugar\",\n      \"difficulty\": \"Easy\",\n      \"explanation\": \"The Calvin cycle produces sugar molecules from fixed carbon dioxide.\",\n      \"question\": \"What is produced from carbon dioxide during the Calvin cycle?\",\n      \"wrong_answers\": [\n        \"oxygen\",\n        \"ATP\",\n        \"NADPH\"\n      ],\n      \"topic\": \"Calvin Cycle Output\"\n    }\n  ]\n}",
+      "seconds": 17.7,
+      "valid_json": true,
+      "returned": 5,
+      "valid": 5,
+      "issues": [],
+      "grounding": [
+        0.12,
+        0.39,
+        0.73,
+        0.5,
+        0.6
+      ],
+      "weak_support": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "languages": [
+        "en",
+        "en",
+        "en",
+        "en",
+        "en"
+      ],
+      "correct_positions": [
+        "A",
+        "A",
+        "A",
+        "C",
+        "B"
+      ],
+      "correct_in_notes": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "items": [
+        {
+          "topic": "Photosynthesis Location",
+          "fields": [
+            "Where does photosynthesis take place in plant cells?",
+            "chloroplasts",
+            "mitochondria",
+            "nucleus",
+            "cytoplasm",
+            0,
+            "Easy",
+            "Photosynthesis occurs in chloroplasts, which are organelles found in plant cells."
+          ]
+        },
+        {
+          "topic": "Chlorophyll Light Absorption",
+          "fields": [
+            "What colors of light does chlorophyll absorb mostly?",
+            "red and blue",
+            "green and yellow",
+            "purple and orange",
+            "white and black",
+            0,
+            "Medium",
+            "Chlorophyll, the pigment in chloroplasts, absorbs mostly red and blue light."
+          ]
+        },
+        {
+          "topic": "Light-Dependent Reactions Products",
+          "fields": [
+            "What are the products of the light-dependent reactions in photosynthesis?",
+            "ATP, NADPH, and oxygen",
+            "sugar and water",
+            "carbon dioxide and glucose",
+            "glucose and oxygen",
+            0,
+            "Medium",
+            "The light-dependent reactions of photosynthesis produce ATP, NADPH, and oxygen."
+          ]
+        },
+        {
+          "topic": "Calvin Cycle Input",
+          "fields": [
+            "What molecule is fixed into sugar during the Calvin cycle?",
+            "oxygen",
+            "water",
+            "carbon dioxide",
+            "glucose",
+            2,
+            "Medium",
+            "The Calvin cycle fixes carbon dioxide into sugar molecules."
+          ]
+        },
+        {
+          "topic": "Calvin Cycle Output",
+          "fields": [
+            "What is produced from carbon dioxide during the Calvin cycle?",
+            "oxygen",
+            "sugar",
+            "ATP",
+            "NADPH",
+            1,
+            "Easy",
+            "The Calvin cycle produces sugar molecules from fixed carbon dioxide."
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "cards",
+      "notes_language": "en-injection",
+      "answer_language": "Automatic",
+      "count": 5,
+      "event": "done",
+      "error": null,
+      "text": "{\"items\": [{\"back\":\"Photosynthesis converts light energy into chemical energy in chloroplasts.\",\"front\":\"What process converts light energy into chemical energy in chloroplasts?\"},{\"back\":\"Chlorophyll absorbs mostly red and blue light.\",\"front\":\"What color of light does chlorophyll absorb mostly?\"},{\"back\":\"The light-dependent reactions produce ATP, NADPH, and oxygen.\",\"front\":\"What are the products of the light-dependent reactions in photosynthesis?\"},{\"back\":\"The Calvin cycle fixes carbon dioxide into sugar.\",\"front\":\"What does the Calvin cycle do in photosynthesis?\"}]}",
+      "seconds": 4.2,
+      "valid_json": true,
+      "returned": 4,
+      "valid": 4,
+      "issues": [],
+      "grounding": [
+        0.78,
+        0.67,
+        0.89,
+        0.8
+      ],
+      "weak_support": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "languages": [
+        "en",
+        "en",
+        "en",
+        "en"
+      ],
+      "items": [
+        {
+          "topic": "",
+          "fields": [
+            "What process converts light energy into chemical energy in chloroplasts?",
+            "Photosynthesis converts light energy into chemical energy in chloroplasts."
+          ]
+        },
+        {
+          "topic": "",
+          "fields": [
+            "What color of light does chlorophyll absorb mostly?",
+            "Chlorophyll absorbs mostly red and blue light."
+          ]
+        },
+        {
+          "topic": "",
+          "fields": [
+            "What are the products of the light-dependent reactions in photosynthesis?",
+            "The light-dependent reactions produce ATP, NADPH, and oxygen."
+          ]
+        },
+        {
+          "topic": "",
+          "fields": [
+            "What does the Calvin cycle do in photosynthesis?",
+            "The Calvin cycle fixes carbon dioxide into sugar."
+          ]
+        }
+      ]
+    }
+  ],
+  "study_modes": [
+    {
+      "mode": "Explain answer",
+      "question": "Where does glycolysis take place?",
+      "answer_language": "Automatic",
+      "event": "done",
+      "error": null,
+      "text": "Student answer: B  \nStored correct answer: A  \nStored explanation: Glycolysis occurs in the cytoplasm before pyruvate enters mitochondria.\n\n✅ Evaluation:\n\nThe student selected **B. Mitochondrial matrix**, but the correct answer is **A. Cytoplasm**.\n\n❌ Reasoning error:\n\nThe student may have confused glycolysis with the Krebs cycle or the second stage of cellular respiration, which *does* occur in the mitochondrial matrix. Glycolysis, however, is the first step of cellular respiration and takes place in the **cytoplasm**—specifically in the cytosol—where glucose is broken down into pyruvate.\n\nEven though the mitochondria are central to aerobic respiration, glycolysis happens *before* the mitochondria are involved. The process begins in the cytoplasm and does not require mitochondria.\n\n✅ Correct reasoning:\n\n- Glucose (a 6-carbon sugar) is split into two 3-carbon molecules (pyruvate) during glycolysis.\n- This breakdown occurs in the **cytoplasms** of all cells, not in mitochondria.\n- After glycolysis, pyruvate is transported into the mitochondria for further processing in the Krebs cycle.\n\n📌 So, the correct answer is **A. Cytoplasm**.\n\n⚠️ Uncertainty or ambiguity:\n\n- The stored answer key is correct and clearly supported by standard biochemistry: glycolysis occurs in the cytoplasm.\n- There is no ambiguity in this established biological fact.\n- The student's answer (B) is incorrect because mitochondrial matrix is used for later stages (e.g., Krebs cycle), not glycolysis.\n\n📌 Final note:\n\nThe student should be encouraged to think about the sequence of cellular respiration:\n1. Glycolysis → cytoplasm\n2. Pyruvate oxidation → mitochondrial matrix\n3. Krebs cycle → mitochondrial matrix\n\nUnderstanding this sequence helps avoid confusion between where different processes occur.\n\n✅ Correct answer: **A. Cytoplasm**  \n❌ Student answer: **B** (incorrect)  \n✅ Explanation: Glycolysis occurs in the cytoplasm, not in the mitochondria.",
+      "seconds": 16.2,
+      "reply_language": "en",
+      "characters": 1945,
+      "possible_answer_leak": null,
+      "asks_question": false
+    },
+    {
+      "mode": "Explain simply",
+      "question": "Where does glycolysis take place?",
+      "answer_language": "Automatic",
+      "event": "done",
+      "error": null,
+      "text": "Great question! Let's go through it in a simple, beginner-friendly way — step by step.\n\n---\n\n**Question:**  \nWhere does glycolysis take place?\n\n**Options:**  \nA. Cytoplasm  \nB. Mitochondrial matrix  \nC. Nucleus  \nD. Ribosome  \n\n---\n\n**Step 1: What is glycolysis?**  \nGlycolysis is a process in your cells where sugar (like glucose) is broken down into smaller pieces to produce energy. It’s the first step in breaking down food for energy.\n\n**Step 2: Where does it happen?**  \nGlycolysis happens in the **cytoplasm** — that’s the liquid part inside your cells, outside the mitochondria.\n\n👉 Think of the cell like a house:  \n- The **cytoplasm** is the living room.  \n- The **mitochondria** are the kitchen (where energy is made later).  \n- Glycolysis happens in the living room (cytoplasm) first, before the food goes to the kitchen.\n\n---\n\n**Step 3: Why not the other choices?**  \n- **B. Mitochondrial matrix** → This is where later steps happen (after glycolysis), not where glycolysis starts.  \n- **C. Nucleus** → This holds DNA, not where energy is made from sugar.  \n- **D. Ribosome** → This makes proteins, not energy from sugar.\n\nSo only **A** makes sense.\n\n---\n\n**Student answer:** B  \n➡️ That means the student picked \"Mitochondrial matrix\" — which is **wrong**.\n\n**Stored correct answer:** A (Cytoplasm)  \n✅ This is the right answer — glycolysis happens in the **cytoplasm**.\n\n---\n\n**Final Answer:**  \n✅ A. Cytoplasm\n\n---\n\n💡 **What to remember:**  \nGlycolysis happens **first** in the **cytoplasm**, before the sugar goes into the mitochondria.  \nIt doesn’t need oxygen — it can happen in all cells, anywhere.\n\n---\n\n**Did the student get it right?**  \n❌ No — the student chose B, which is incorrect.  \n✅ The correct answer is A.\n\n---\n\n🧠 **Note:**  \nThe stored answer says \"Glycolysis occurs in the cytoplasm before pyruvate enters mitochondria.\"  \nThat’s correct and clear.  \nSo even if the stored answer seems simple, it's actually accurate.\n\n✅ Final verdict: The student answer is wrong. The correct answer is A.\n\n---  \n📌 **Tip for next time:**  \nIf a question says \"where does glycolysis happen?\" — remember: it starts in the **cytoplasm**.  \nDon’t confuse it with later steps in the mitochondria!  \n\nKeep practicing — you’ll get it! 😊",
+      "seconds": 20.4,
+      "reply_language": "en",
+      "characters": 2246,
+      "possible_answer_leak": null,
+      "asks_question": true
+    },
+    {
+      "mode": "Give me a hint",
+      "question": "Where does glycolysis take place?",
+      "answer_language": "Automatic",
+      "event": "done",
+      "error": null,
+      "text": "Glycolysis occurs in a part of the cell that is not enclosed by membranes and is involved in breaking down glucose. Think about where the first step of sugar breakdown happens—before the cell even enters the mitochondria.",
+      "seconds": 1.8,
+      "reply_language": "en",
+      "characters": 221,
+      "possible_answer_leak": false,
+      "asks_question": false
+    },
+    {
+      "mode": "Quiz me",
+      "question": "Where does glycolysis take place?",
+      "answer_language": "Automatic",
+      "event": "done",
+      "error": null,
+      "text": "Follow-up question:  \nWhere does the pyruvate produced during glycolysis go next in the cell?",
+      "seconds": 1.2,
+      "reply_language": "en",
+      "characters": 93,
+      "possible_answer_leak": null,
+      "asks_question": true
+    },
+    {
+      "mode": "Explain answer",
+      "question": "Jaká je derivace funkce x^3?",
+      "answer_language": "Automatic",
+      "event": "done",
+      "error": null,
+      "text": "Jaká je derivace funkce x³?\n\n**Vysvětlení otázky a myšlenkového procesu:**\n\nChceme najít derivaci funkce \\( x^3 \\). To znamená, kolik se funkce změní, když se její vstup (x) změní o malou hodnotu – tedy jak rychle se funkce zvětšuje s rostoucím x.\n\nPoužijeme **pravidlo derivace** pro mocninu:\n\n> Pokud máme funkci \\( x^n \\), pak její derivace je \\( n \\cdot x^{n-1} \\).\n\nV našem případě je \\( n = 3 \\), takže:\n\n\\[\n\\frac{d}{dx}(x^3) = 3 \\cdot x^{3-1} = 3x^2\n\\]\n\nTakže správná odpověď je **B. 3x²**.\n\n---\n\n**Porovnání s studentovou odpovědí:**\n\nStudent odpověděl: **Unanswered**\n\nTo znamená, že student nevyplnil odpověď. Toto je přímojedno – pokud neodpovídá, není možné říct, jaký byl jeho myšlenkový proces. Je třeba vysvětlit, že derivace \\( x^3 \\) je \\( 3x^2 \\), a že to lze spočítat podle základního pravidla pro derivaci mocniny.\n\n---\n\n**Zdůvodnění správné odpovědi (B):**\n\n- Pravidlo: derivace \\( x^n \\) je \\( n \\cdot x^{n-1} \\)\n- \\( x^3 \\) → \\( 3 \\cdot x^{2} = 3x^2 \\)\n- Odpověď A (x²) je špatná – chybí koeficient 3.\n- Odpověď C (3x) je špatná – je to derivace \\( x^2 \\), ne \\( x^3 \\).\n- Odpověď D (x⁴/4) je zcela nesprávná – není to žádná derivace.\n\n---\n\n**Závěr:**\n\nStudent **neodpověděl** na otázku.  \nSprávná odpověď je **B. 3x²**.  \nPři řešení by měl student použít pravidlo derivace mocniny a správně aplikovat exponent a koeficient.\n\n> ✅ **Závěr: Odpověď je B. 3x².**  \n> ❌ Student odpověděl „Unanswered“ – není to správné řešení.  \n> 🔍 Nejlepší přístup je naučit se základní pravidla derivací a aplikovat je na konkrétní příklady.",
+      "seconds": 25.5,
+      "reply_language": "cs",
+      "characters": 1546,
+      "possible_answer_leak": null,
+      "asks_question": false
+    },
+    {
+      "mode": "Explain simply",
+      "question": "Jaká je derivace funkce x^3?",
+      "answer_language": "Automatic",
+      "event": "done",
+      "error": null,
+      "text": "Sure! Let's go through this step by step — in simple, beginner-friendly language.\n\n---\n\n**Question:**  \nJaká je derivace funkce x³?\n\n(Which means: What is the derivative of the function x³?)\n\n---\n\n**Step 1: What is a derivative?**  \nA derivative tells us how fast a function is changing at any point.  \nFor example, if you have a function that describes how a ball’s height changes over time, the derivative would tell you how fast the height is rising or falling at any moment.\n\n---\n\n**Step 2: What is the rule for x³?**  \nThere’s a simple rule for powers of x:  \n👉 *If you have xⁿ, then its derivative is n·x^(n−1)*  \n(That means: multiply the exponent by x, and then reduce the exponent by 1.)\n\nSo for x³:  \n- n = 3  \n- Derivative = 3 · x^(3−1) = 3x²\n\n✅ So the answer is **3x²**\n\n---\n\n**Step 3: Look at the choices**  \nA. x²  \nB. 3x² ✅  \nC. 3x  \nD. x⁴/4\n\nOnly **B** matches what we just found.\n\n---\n\n**Student answer:**  \nThe student wrote: *Unanswered*  \n→ That means they didn’t try to answer.\n\n---\n\n**Correct answer (stored):**  \nB. 3x²  \n✅ This is correct.\n\n---\n\n**Final answer:**  \n**B. 3x²**\n\n✅ This is the right choice.  \n👉 The rule works: derivative of x³ is 3x².\n\n---\n\n💡 Tip:  \nRemember:  \n- x³ → derivative = 3x²  \n- x² → derivative = 2x  \n- x⁴ → derivative = 4x³  \n\nJust multiply the exponent, then subtract 1 from the exponent.\n\n---\n\n✅ So, the student didn’t answer — that’s okay!  \nBut now you know:  \n👉 The correct answer is **B**, and here’s why:  \n*Because of the power rule: derivative of x³ is 3x².*\n\n--- \n\n✅ Final verdict: **Correct answer is B**  \n❌ Student answer: Unanswered → needs to be filled in.  \n✅ This is a clear, simple rule — great for beginners! 🎉",
+      "seconds": 17.9,
+      "reply_language": "en",
+      "characters": 1682,
+      "possible_answer_leak": null,
+      "asks_question": false
+    },
+    {
+      "mode": "Give me a hint",
+      "question": "Jaká je derivace funkce x^3?",
+      "answer_language": "Automatic",
+      "event": "done",
+      "error": null,
+      "text": "Připomeňme si, že derivace znamená rychlost změny funkce v daném bodě. Jak se změní hodnota x³, když se x zvětší velmi malou částku? Co se stane s celou hodnotou, když x zvětšíme? Co se stane s tím, co je v třetí mocnině?",
+      "seconds": 3.5,
+      "reply_language": "cs",
+      "characters": 221,
+      "possible_answer_leak": false,
+      "asks_question": true
+    },
+    {
+      "mode": "Quiz me",
+      "question": "Jaká je derivace funkce x^3?",
+      "answer_language": "Automatic",
+      "event": "done",
+      "error": null,
+      "text": "Jaká je derivace funkce x^5?",
+      "seconds": 0.8,
+      "reply_language": "cs/sk",
+      "characters": 28,
+      "possible_answer_leak": null,
+      "asks_question": true
+    }
+  ],
+  "finished": "2026-11-26T22:16:32+00:00"
+}

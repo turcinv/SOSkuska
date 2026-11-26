@@ -801,5 +801,6 @@
   "Wait for or stop AI generation before changing AI preferences.": "Перед изменением настроек AI дождитесь завершения создания или остановите его.",
   "Wait for or stop AI generation before restoring.": "Перед восстановлением дождитесь завершения создания или остановите его.",
   "Generating with {v0}… Your notes were sent to {v1}. You can Stop or use other pages; leaving this deck or subject discards the drafts.": "Создание с помощью {v0}… Конспект отправлен на {v1}. Можно остановить или перейти на другие страницы; если покинуть эту колоду или предмет, черновики будут отброшены.",
-  "AI generation was closed; its unsaved drafts were discarded. Your notes are kept.": "Создание AI закрыто; несохранённые черновики отброшены. Конспект сохранён."
+  "AI generation was closed; its unsaved drafts were discarded. Your notes are kept.": "Создание AI закрыто; несохранённые черновики отброшены. Конспект сохранён.",
+  "⚠ The answer was not clearly found in your notes, so this draft is unticked. Check it before saving.": "⚠ Ответ не удалось однозначно найти в конспекте, поэтому черновик не отмечен. Проверьте его перед сохранением."
 }

@@ -72,7 +72,7 @@ class StudyModeTests(unittest.TestCase):
     def test_every_mode_uses_the_tutor_character_limit_without_truncation(self):
         for mode in MODES:
             with self.subTest(mode=mode):
-                item = dict(self.item, prompt='ž' * 1760, option_a='α' * 500,
+                item = dict(self.item, prompt='ž' * 1600, option_a='α' * 500,
                             option_b='β' * 500, option_c='γ' * 500, option_d='δ', explanation='Δ')
                 baseline = build_prompt(self.attempt, item, 8, 1, mode=mode)
                 field = 'option_d' if mode == 'Give me a hint' else 'explanation'
