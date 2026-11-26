@@ -17,6 +17,7 @@ GUI_CHECKS = (
     'check_state_fixes.py',
     'check_tutor.py',
     'check_question_explanation.py',
+    'check_study_modes.py',
     'check_settings.py',
     'check_appearance.py',
     'check_backup.py',

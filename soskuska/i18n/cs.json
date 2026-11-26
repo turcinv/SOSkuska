@@ -713,5 +713,12 @@
   "Tutor has existing work or a pending action. Finish it or explicitly start a New chat with an empty prompt, then retry. Your work is kept.": "Tutor obsahuje rozpracovanou práci nebo čekající akci. Dokončete ji nebo výslovně otevřete Nový chat s prázdným dotazem a zkuste to znovu. Vaše práce zůstala zachována.",
   "Question draft prepared. Review the server, model and answer language. Connect if needed; only Send generates an answer.": "Koncept otázky je připraven. Zkontrolujte server, model a jazyk odpovědi. Podle potřeby použijte Připojit / obnovit; odpověď vytvoří až Odeslat.",
   "This completed question is no longer available. Reopen the result and retry.": "Tato dokončená otázka již není dostupná. Otevřete výsledek znovu a opakujte akci.",
-  "The full explanation prompt has {v0} characters; the limit is {v1}. This shortcut cannot include this whole question yet. Nothing was sent.": "Celý dotaz má {v0} znaků; limit je {v1}. Tato zkratka zatím nemůže zahrnout celou otázku. Nic se neodeslalo."
+  "The full explanation prompt has {v0} characters; the limit is {v1}. This shortcut cannot include this whole question yet. Nothing was sent.": "Celý dotaz má {v0} znaků; limit je {v1}. Tato zkratka zatím nemůže zahrnout celou otázku. Nic se neodeslalo.",
+  "Study mode": "Studijní režim",
+  "Explain answer": "Vysvětlit odpověď",
+  "Explain simply": "Vysvětlit jednoduše",
+  "Give me a hint": "Dát nápovědu",
+  "Quiz me": "Procvičit mě",
+  "Choose a supported study mode.": "Vyberte podporovaný studijní režim.",
+  "Preview only. Hint mode shares the question and four choices, without your answer, the stored answer key or explanation. Only Send shares this prompt with the selected Ollama server. AI may still reveal an answer.": "Pouze náhled. Režim nápovědy sdílí otázku a čtyři možnosti bez vaší odpovědi, uloženého klíče a vysvětlení. Dotaz odešle vybranému serveru Ollama až Odeslat. AI může přesto prozradit odpověď."
 }

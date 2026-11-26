@@ -713,5 +713,12 @@
   "Tutor has existing work or a pending action. Finish it or explicitly start a New chat with an empty prompt, then retry. Your work is kept.": "В Tutor есть текущая работа или ожидающее действие. Завершите его или явно откройте Новый чат с пустым запросом и повторите попытку. Ваша работа сохранена.",
   "Question draft prepared. Review the server, model and answer language. Connect if needed; only Send generates an answer.": "Черновик вопроса подготовлен. Проверьте сервер, модель и язык ответа. При необходимости нажмите Подключить / обновить; ответ создаётся только после Отправить.",
   "This completed question is no longer available. Reopen the result and retry.": "Этот завершённый вопрос больше недоступен. Откройте результат снова и повторите попытку.",
-  "The full explanation prompt has {v0} characters; the limit is {v1}. This shortcut cannot include this whole question yet. Nothing was sent.": "Полный запрос содержит {v0} символов; ограничение — {v1}. Этот способ пока не поддерживает вопрос целиком. Ничего не отправлено."
+  "The full explanation prompt has {v0} characters; the limit is {v1}. This shortcut cannot include this whole question yet. Nothing was sent.": "Полный запрос содержит {v0} символов; ограничение — {v1}. Этот способ пока не поддерживает вопрос целиком. Ничего не отправлено.",
+  "Study mode": "Режим обучения",
+  "Explain answer": "Объяснить ответ",
+  "Explain simply": "Объяснить просто",
+  "Give me a hint": "Дать подсказку",
+  "Quiz me": "Проверить меня",
+  "Choose a supported study mode.": "Выберите поддерживаемый режим обучения.",
+  "Preview only. Hint mode shares the question and four choices, without your answer, the stored answer key or explanation. Only Send shares this prompt with the selected Ollama server. AI may still reveal an answer.": "Только предпросмотр. В режиме подсказки передаются вопрос и четыре варианта без вашего ответа, сохранённого ключа и объяснения. Запрос передаётся выбранному серверу Ollama только после Отправить. ИИ всё же может раскрыть ответ."
 }

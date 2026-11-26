@@ -713,5 +713,12 @@
   "Tutor has existing work or a pending action. Finish it or explicitly start a New chat with an empty prompt, then retry. Your work is kept.": "Tutor has existing work or a pending action. Finish it or explicitly start a New chat with an empty prompt, then retry. Your work is kept.",
   "Question draft prepared. Review the server, model and answer language. Connect if needed; only Send generates an answer.": "Question draft prepared. Review the server, model and answer language. Connect if needed; only Send generates an answer.",
   "This completed question is no longer available. Reopen the result and retry.": "This completed question is no longer available. Reopen the result and retry.",
-  "The full explanation prompt has {v0} characters; the limit is {v1}. This shortcut cannot include this whole question yet. Nothing was sent.": "The full explanation prompt has {v0} characters; the limit is {v1}. This shortcut cannot include this whole question yet. Nothing was sent."
+  "The full explanation prompt has {v0} characters; the limit is {v1}. This shortcut cannot include this whole question yet. Nothing was sent.": "The full explanation prompt has {v0} characters; the limit is {v1}. This shortcut cannot include this whole question yet. Nothing was sent.",
+  "Study mode": "Study mode",
+  "Explain answer": "Explain answer",
+  "Explain simply": "Explain simply",
+  "Give me a hint": "Give me a hint",
+  "Quiz me": "Quiz me",
+  "Choose a supported study mode.": "Choose a supported study mode.",
+  "Preview only. Hint mode shares the question and four choices, without your answer, the stored answer key or explanation. Only Send shares this prompt with the selected Ollama server. AI may still reveal an answer.": "Preview only. Hint mode shares the question and four choices, without your answer, the stored answer key or explanation. Only Send shares this prompt with the selected Ollama server. AI may still reveal an answer."
 }

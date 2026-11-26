@@ -7,7 +7,7 @@ from datetime import datetime
 
 import customtkinter as ctk
 from content import DIFFICULTIES
-from question_explanation import read_prompt
+from question_explanation import MODES, read_prompt
 from practice import MissingPracticeError, expired, seconds_left, utc_now
 
 
@@ -593,44 +593,58 @@ class PracticePage(ctk.CTkFrame):
             self.explanation_panel.destroy()
             self.explanation_panel = None
 
-    def explain_question(self, attempt_id, position):
-        if not self.result_visible(attempt_id):
+    def explain_question(self, attempt_id, position, mode='Explain answer'):
+        if not self.result_visible(attempt_id) or mode not in MODES:
             return
         self.cancel_explanation()
         panel = self.explanation_panel = self.app.frame(self.results, card=True)
         panel.grid(row=2, column=0, sticky="ew", pady=(0, 16))
         panel.grid_columnconfigure(0, weight=1)
-        message = self.app.label(panel, tr(self.app, 'Preview only. This question, all choices, your answer, the stored answer key and explanation will be shared with the selected Ollama server only after Send. AI may be wrong.'), 13, wraplength=600)
+        privacy = 'Preview only. Hint mode shares the question and four choices, without your answer, the stored answer key or explanation. Only Send shares this prompt with the selected Ollama server. AI may still reveal an answer.' if mode == 'Give me a hint' else 'Preview only. This question, all choices, your answer, the stored answer key and explanation will be shared with the selected Ollama server only after Send. AI may be wrong.'
+        message = self.app.label(panel, tr(self.app, privacy), 13, wraplength=600)
         message.grid(row=0, column=0, sticky="ew", padx=18, pady=14)
         self.explanation_feedback = self.app.label(panel, "", 13, wraplength=600)
-        self.explanation_feedback.grid(row=3, column=0, sticky="ew", padx=18, pady=(0, 14))
+        self.explanation_feedback.grid(row=4, column=0, sticky="ew", padx=18, pady=(0, 14))
         panel.bind('<Configure>', lambda event: [label.configure(wraplength=max(200,
             self.app.scroll.logical_pixels(event.width)-36)) for label in (message, self.explanation_feedback)], add='+')
-        actions = self.app.frame(panel)
-        actions.grid(row=2, column=0, sticky="w", padx=18, pady=14)
+        selector = self.app.frame(panel)
+        selector.grid(row=1, column=0, sticky='ew', padx=18)
+        selector.grid_columnconfigure(0, weight=1)
+        self.app.label(selector, tr(self.app, 'Study mode'), 13).grid(row=0, column=0, sticky='w', pady=(0, 6))
+        choice = ctk.StringVar(master=selector, value=mode)
+        self.explanation_mode_menu = LocalizedOptionMenu(selector, owner=self.app, variable=choice,
+            values=list(MODES), font=self.app.font(), height=38, dynamic_resizing=False,
+            command=lambda value: self.change_explanation_mode(panel, attempt_id, position, value))
+        self.explanation_mode_menu.grid(row=1, column=0, sticky='ew', pady=(0, 12))
+        actions = self.explanation_actions = self.app.frame(panel)
+        actions.grid(row=3, column=0, sticky="w", padx=18, pady=14)
         try:
-            prompt = read_prompt(self.app.store, attempt_id, position)
+            prompt = read_prompt(self.app.store, attempt_id, position, mode=mode)
         except (ValueError, sqlite3.Error) as exc:
             self.explanation_feedback.configure(text=tr(self.app, str(exc)) if isinstance(exc, ValueError)
                 else tr(self.app, 'Could not read the saved question. Nothing was sent. Reopen the preview to retry.'))
         else:
-            self.explanation_identity = (attempt_id, position, prompt)
+            self.explanation_identity = (attempt_id, position, prompt, mode)
             preview = ctk.CTkTextbox(panel, height=230, font=self.app.font(), wrap='word',
                 border_width=1, border_color=C['border'])
             preview.insert('1.0', prompt)
             preview.configure(state='disabled')
-            preview.grid(row=1, column=0, sticky='ew', padx=18)
+            preview.grid(row=2, column=0, sticky='ew', padx=18)
             self.app.button(actions, tr(self.app, 'Prepare in Tutor'),
                 lambda identity=self.explanation_identity: self.prepare_explanation(identity),
                 primary=True, width=180).pack(side='left', padx=(0, 8))
         self.app.button(actions, tr(self.app, 'Cancel'), self.cancel_explanation, width=85).pack(side='left')
         self.scroll_to_top()
 
+    def change_explanation_mode(self, panel, attempt_id, position, mode):
+        if self.explanation_panel is panel and self.result_visible(attempt_id) and mode in MODES:
+            self.explain_question(attempt_id, position, mode)
+
     def prepare_explanation(self, identity):
         if identity is not self.explanation_identity or identity is None or not self.result_visible(identity[0]):
             return
         try:
-            prompt = read_prompt(self.app.store, identity[0], identity[1])
+            prompt = read_prompt(self.app.store, identity[0], identity[1], mode=identity[3])
             if prompt != identity[2]:
                 raise ValueError('This completed question is no longer available. Reopen the result and retry.')
         except (ValueError, sqlite3.Error) as exc:

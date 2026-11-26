@@ -2,6 +2,10 @@
 
 [English](../../CHANGELOG.md) · [Čeština](../cs/CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](CHANGELOG.md)
 
+## Unreleased
+
+- Режимы обучения с ИИ: Explain simply / Give me a hint / Quiz me.
+
 ## 0.25.0 — 2026-11-26
 
 - Объяснения вопросов: Explain this question → Prepare in Tutor → Connect / Send.
