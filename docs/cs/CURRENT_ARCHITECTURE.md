@@ -2,6 +2,10 @@
 
 [English](../CURRENT_ARCHITECTURE.md) · [Čeština](CURRENT_ARCHITECTURE.md) · [Slovenčina](../sk/CURRENT_ARCHITECTURE.md) · [Русский](../ru/CURRENT_ARCHITECTURE.md)
 
+## Nevydáno — značka s kočkou
+
+`theme.py` přebírá paletu značky Charcoal/Lavender/Violet/Cream; tam, kde bílý text vyžaduje kontrast 4,5:1, používá sytější levandulové výplně, a přibyla nová role `outline`. `build_brand_assets.py` vykresluje logo s kočkou čtoucí knihu. `studio_widgets.py` kreslí ikony souhrnných dlaždic, packu, avatar maskota, scénu banneru a výzdobu postranního panelu lokálně pomocí Pillow; bez sítě, databáze a externích souborů. Banner na Dashboardu uvádí vybraný nebo aktivní uložený předmět; scéna se zobrazuje jen v širokém rozložení. Karta „Přidat předmět“ otevře prázdný formulář a nikdy nenahradí rozpracovaný koncept otevřeného předmětu. Metriky zůstávají stávající skutečné hodnoty. Schéma zůstává 10.
+
 ## v0.28.0
 
 Postranní panel používá místní CTkImage; každé okno uchovává vlastní obrázky ikon Tk. Soubory se hledají vůči branding.py i v zabalené aplikaci, bez sítě a databázových operací. Balíček Windows obsahuje grafiku a ICO. ICNS je připraven pro budoucí balíček macOS; spuštění ze zdrojů může v Docku zachovat ikonu Pythonu. Schéma zůstává 10.
