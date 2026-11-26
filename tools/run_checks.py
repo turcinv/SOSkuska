@@ -7,6 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 GUI_CHECKS = (
     'check_dashboard.py',
+    'check_studio_layout.py',
     'check_focus_recovery.py',
     'check_question_bank.py',
     'check_review_fixes.py',

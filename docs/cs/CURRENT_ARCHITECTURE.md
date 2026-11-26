@@ -382,3 +382,10 @@ Změna režimu obnoví přesný místní náhled a zneplatní jeho předchozí a
 Editory balíčku a tématu nyní porovnávají původní upravovaný snímek pod zápisovým zámkem. Konflikt zachová koncept a zobrazí upozornění; před opětovným otevřením úpravy balíčku nebo přejmenování tématu zkopírujte potřebné změny. Varování balíčku je také u Uložit. Po potvrzeném uložení balíčku změní chyba načtení tlačítko na Obnovit balíček a opakuje jen čtení, nikoli zápis.
 
 Počty, seřazené fronty, hodnocení a kontroly opakování kartiček porovnávají skutečné časové okamžiky včetně obnovených posunů a mikrosekund. Statistiky a historie sdílejí převod povolených časů ISO na místní den, včetně posunů se sekundami. Uložené časy se nepřepisují. Přesné celočíselné klíče UTC pokrývají celý přijatý rozsah; pokud systém nezvládne místní převod krajního data, použije se den UTC omezený na podporovaný kalendář. Obnova vyžaduje samostatnou zálohu schématu 10; popis migrací zůstává historický. Vydaná verze je v0.26.1, schéma 10. Test skutečného modelu zůstává odložený.
+
+
+## Nový studijní prostor · nevydáno
+
+Nová kompozice Dashboardu nahrazuje předchozí postupné úpravy: čtyři souhrnné dlaždice, výrazná část soustředění s živými kruhovými hodinami, karty předmětů s monogramy a měsíční přehled uložených termínů. Postranní panel používá místně kreslené ikony a vlastní tmavé barvy; sdílené plochy a párový Dark/Light vzhled se mění v celé aplikaci. Tato fáze zavádí Dashboard a společný rámec; ostatní stránky navážou po vizuální zpětné vazbě. [Ukázky a rozsah](../agents/design/study-studio-dashboard/README.md).
+
+Hodiny ukazují skutečný zbývající čas a původní cíl aktivního sezení. Kalendář používá úplný snímek předmětů; nejbližší zkoušky zachovají přesná data a limit pěti položek. Klávesové hledání, chyba uložení a obnova soustředění posunou ovládání do viditelné části kompaktního okna; čekající posun zruší navigace či hledání. Změna rozložení nečte data. Schéma zůstává 10, verze do vydání v0.26.1. Kontejnerové a simulované měřítko neověřují nativní platformu; test skutečného modelu zůstává odložený.

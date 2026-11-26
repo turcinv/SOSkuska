@@ -54,14 +54,14 @@ def check_initial():
     assert app.subject_picker.cget('state') == 'disabled'
     assert_inside(app.start_button, app.study_panel)
     assert_inside(app.subject_picker, app.study_panel)
-    assert app.study_panel.winfo_rooty() < app.search.winfo_rooty() < app.metrics.winfo_rooty()
+    assert app.metrics.winfo_rooty() < app.study_panel.winfo_rooty() < app.search.winfo_rooty()
     assert int(app.rail.grid_info()['column']) == 1
     app.navigate('Settings')
-    assert app.settings_btn.cget('fg_color') == C['selected']
+    assert app.settings_btn.cget('fg_color') == C['nav_selected']
     app.toggle_sidebar(); app.toggle_sidebar()
-    assert app.settings_btn.cget('fg_color') == C['selected']
+    assert app.settings_btn.cget('fg_color') == C['nav_selected']
     app.navigate('Dashboard')
-    assert app.settings_btn.cget('fg_color') != C['selected']
+    assert app.settings_btn.cget('fg_color') != C['nav_selected']
     app.start_button.invoke()
     next_step(check_form)
 

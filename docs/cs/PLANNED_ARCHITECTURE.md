@@ -158,3 +158,10 @@ v0.17.0 přidává obnovu soustředění po pádu se schématem **10**. Před ot
 ## Plánované místní zálohy
 
 Plánované místní zálohy jsou dostupné ve **v0.18.0**. Schéma SQLite zůstává **10**. Ruční záloha a obnova fungují samostatně. [Plánované místní zálohy](SCHEDULED_BACKUPS.md).
+
+
+## Nový studijní prostor · nevydáno
+
+Nová kompozice Dashboardu nahrazuje předchozí postupné úpravy: čtyři souhrnné dlaždice, výrazná část soustředění s živými kruhovými hodinami, karty předmětů s monogramy a měsíční přehled uložených termínů. Postranní panel používá místně kreslené ikony a vlastní tmavé barvy; sdílené plochy a párový Dark/Light vzhled se mění v celé aplikaci. Tato fáze zavádí Dashboard a společný rámec; ostatní stránky navážou po vizuální zpětné vazbě. [Ukázky a rozsah](../agents/design/study-studio-dashboard/README.md).
+
+Hodiny ukazují skutečný zbývající čas a původní cíl aktivního sezení. Kalendář používá úplný snímek předmětů; nejbližší zkoušky zachovají přesná data a limit pěti položek. Klávesové hledání, chyba uložení a obnova soustředění posunou ovládání do viditelné části kompaktního okna; čekající posun zruší navigace či hledání. Změna rozložení nečte data. Schéma zůstává 10, verze do vydání v0.26.1. Kontejnerové a simulované měřítko neověřují nativní platformu; test skutečného modelu zůstává odložený.

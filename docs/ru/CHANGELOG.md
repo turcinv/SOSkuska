@@ -2,6 +2,10 @@
 
 [English](../../CHANGELOG.md) · [Čeština](../cs/CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](CHANGELOG.md)
 
+## Unreleased
+
+- Новое учебное пространство: Dashboard, navigation, Dark/Light.
+
 ## 0.26.1 — 2026-11-26
 
 - Исправления по проверке Astra: A62-05–A62-09.
