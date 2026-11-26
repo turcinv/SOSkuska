@@ -2,7 +2,7 @@
 
 [English](../NEXT_STEPS.md) · [Čeština](../cs/NEXT_STEPS.md) · [Slovenčina](NEXT_STEPS.md) · [Русский](../ru/NEXT_STEPS.md)
 
-Aktuálne vydanie: **v0.25.0**, schéma **10**. Implementácia krokov dizajnu 1–5 je hotová cez PR #43, #44, #46, #48, #50, #52 a #54. Zostáva krok 6: akceptácia a príprava ukážky.
+Aktuálne vydanie: **v0.26.0**, schéma **10**. Implementácia krokov dizajnu 1–5 je hotová cez PR #43, #44, #46, #48, #50, #52 a #54. Zostáva krok 6: akceptácia a príprava ukážky.
 
 1. **Ďalej: krok 6, regresné kontroly a ukážka vyučujúcemu.** Použiť [plán](../agents/BRIGHT_UI_REDESIGN.md) a [odovzdanie nastavení/dát](../agents/design/bright-ui-step5-settings/README.md). Na dočasných dátach overiť celý študijný postup, Light/Dark/System, štyri jazyky a kompaktné/široké okno; obnoviť finálne snímky a dôkazy pre ukážku. Prípadné opravy riešiť samostatnou revidovanou vetvou/PR. Z automatických kontrol nevyvodzovať ručnú akceptáciu hardvéru.
 2. **Po redizajne dokončiť akceptáciu.** Použiť [Windows zoznam](WINDOWS_ACCEPTANCE.md), dočasné dáta a zapísať OS/build, hardvér, mierku, verziu/súčet a výsledky. Počiatočná mierka neoveruje natívne/živé DPI. Samostatne otestovať skutočnú Ollamu: verzie servera/modelu, hardvér, stream/Stop/opätovné pripojenie/história a offline štúdium.

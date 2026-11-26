@@ -4,7 +4,7 @@
 
 **Future design, not a description of everything implemented today.** Proposed files/tables exist only where confirmed by [current architecture](CURRENT_ARCHITECTURE.md). A roadmap does not authorize implementing every feature at once.
 
-Published baseline is v0.25.0, with interface languages, saved AI conversations and schema 10. The history guide below describes the implemented behavior. Settings Save does not start networking.
+Published baseline is v0.26.0, with interface languages, saved AI conversations and schema 10. The history guide below describes the implemented behavior. Settings Save does not start networking.
 
 ## Direction
 
