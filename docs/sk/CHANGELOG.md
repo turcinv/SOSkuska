@@ -2,9 +2,9 @@
 
 [English](../../CHANGELOG.md) · [Čeština](../cs/CHANGELOG.md) · [Slovenčina](CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
-## Nevydané
+## 0.28.0 — 2026-11-26
 
-- Miestne logo otvorenej knihy so značkou zaškrtnutia v bočnom paneli a ikonách okna; vlastná ikona Windows EXE. Zverejnený balík v0.27.0 túto zmenu ešte neobsahuje.
+- Miestne logo otvorenej knihy so značkou zaškrtnutia v bočnom paneli a ikonách okna; vlastná ikona Windows EXE.
 
 ## 0.27.0 — 2026-11-26
 

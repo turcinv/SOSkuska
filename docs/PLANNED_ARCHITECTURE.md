@@ -4,7 +4,7 @@
 
 **Future design, not a description of everything implemented today.** Proposed files/tables exist only where confirmed by [current architecture](CURRENT_ARCHITECTURE.md). A roadmap does not authorize implementing every feature at once.
 
-Published baseline is v0.27.0, with interface languages, saved AI conversations and schema 10. The history guide below describes the implemented behavior. Settings Save does not start networking.
+Published baseline is v0.28.0, with interface languages, saved AI conversations and schema 10. The history guide below describes the implemented behavior. Settings Save does not start networking.
 
 ## Direction
 
@@ -147,4 +147,4 @@ Scheduled local backups are available in **v0.18.0**. SQLite schema remains **10
 
 A new Dashboard composition replaces the earlier incremental bright UI layout: four summary tiles, a large focus room with a live circular clock, monogram-led subject cards and a saved-date month agenda. The persistent sidebar uses locally drawn icons and separate dark navigation colors; shared card surfaces and paired Dark/Light styling update across the app. This stage implements the Dashboard and shared shell; remaining page compositions follow visual feedback. [Design evidence and scope](agents/design/study-studio-dashboard/README.md).
 
-The clock uses actual remaining time and the active session's original target. Calendar marks use the complete subject snapshot, while the upcoming list keeps exact saved dates and its top-five limit. Keyboard search, focus-save retry and pending recovery reveal their controls in compact windows; deferred reveals cancel on navigation/search. Reflow performs no I/O. Schema remains 10 and the released version is v0.27.0. Container/synthetic scaling coverage is separate from native platform acceptance; real-model testing remains deferred.
+The clock uses actual remaining time and the active session's original target. Calendar marks use the complete subject snapshot, while the upcoming list keeps exact saved dates and its top-five limit. Keyboard search, focus-save retry and pending recovery reveal their controls in compact windows; deferred reveals cancel on navigation/search. Reflow performs no I/O. Schema remains 10 and the released version is v0.28.0. Container/synthetic scaling coverage is separate from native platform acceptance; real-model testing remains deferred.
