@@ -2,7 +2,7 @@
 
 [English](../../CHANGELOG.md) · [Čeština](../cs/CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](CHANGELOG.md)
 
-## Unreleased
+## 0.25.0 — 2026-11-26
 
 - Объяснения вопросов: Explain this question → Prepare in Tutor → Connect / Send.
 
