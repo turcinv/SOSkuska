@@ -2,7 +2,7 @@
 
 [English](../../CHANGELOG.md) · [Čeština](../cs/CHANGELOG.md) · [Slovenčina](CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
-## Nevydané
+## 0.29.0 — 2026-11-26
 
 - Redizajn značky s mačkou: nové logo a ikony s mačkou čítajúcou knihu, paleta Charcoal/Lavender/Violet/Cream, tlačidlá v tvare pilulky, levanduľový výber v bočnom paneli, uvítacia hlavička, súhrnné dlaždice s ikonami, banner „Pokračujte v štúdiu“ s ilustrovanou scénou a karta „Pridať predmet“. Schéma zostáva 10.
 

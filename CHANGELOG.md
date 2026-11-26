@@ -2,7 +2,7 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
-## Unreleased
+## 0.29.0 — 2026-11-26
 
 - Cat brand redesign: new cat-reading-a-book logo and icons, Charcoal/Lavender/Violet/Cream palette, pill buttons, lavender sidebar selection, greeting header, icon summary tiles, a "Continue studying" banner with an illustrated scene and an Add subject card. Schema remains 10.
 

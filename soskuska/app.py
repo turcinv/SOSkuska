@@ -39,7 +39,7 @@ from studio_widgets import (FocusClock, MonthAgenda, MONTHS, nav_icon, paw_icon,
 from panel_layout import wrap_labels
 from branding import sidebar_logo, install_window_icon
 
-APP_VERSION = '0.28.0'
+APP_VERSION = '0.29.0'
 
 from theme import COLORS as C
 
