@@ -95,3 +95,7 @@ Keep studio_widgets.py drawing/layout free of I/O. The clock must use the origin
 ## App branding resources
 
 `branding.py` resolves committed assets relative to its own module so source and frozen launches work from arbitrary working directories. Keep Tk icon images owned by their current root; never cache PhotoImages across interpreters. Aqua consumes only the first `iconphoto` image: supply the 512 px source. On Windows use public `iconbitmap` before `iconphoto` to prevent CustomTkinter's delayed stock-icon callback. Keep image-only sidebar labels on the navigation palette. Rebuild assets with `tools/build_brand_assets.py`; include them in both the Docker allowlist and frozen datas. Windows acceptance compares actual PE icon payloads with the ICO, since merely detecting an icon also accepts PyInstaller's default.
+
+## Cat brand presentation
+
+Decorative images (banner scene, avatar, paws, tile icons, sidebar tail) are drawn by `studio_widgets.py` with Pillow and carry a readable `text_color` because the live contrast audit inspects every mapped label. Keep the scene out of the compact layout: the 1024 × 700 Finish-visibility check has little vertical slack. Decorations in the sidebar belong in its weighted row so they shrink before navigation or footer content. Shortcuts that open editors (Add subject) must not call `show_form` over an open draft.

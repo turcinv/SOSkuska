@@ -756,5 +756,10 @@
   "{v0} question": "{v0} question",
   "{v0} questions": "{v0} questions",
   "{v0} session · {v1} min": "{v0} session · {v1} min",
-  "{v0} day": "{v0} day"
+  "{v0} day": "{v0} day",
+  "Good to see you back!": "Good to see you back!",
+  "Ready for another study session?": "Ready for another study session?",
+  "Continue studying": "Continue studying",
+  "Pick a subject to begin.": "Pick a subject to begin.",
+  "Add subject": "Add subject"
 }

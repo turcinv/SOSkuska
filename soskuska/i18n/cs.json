@@ -756,5 +756,10 @@
   "{v0} question": "{v0} otázka",
   "{v0} questions": "{v0} otázek",
   "{v0} session · {v1} min": "{v0} sezení · {v1} min",
-  "{v0} day": "{v0} den"
+  "{v0} day": "{v0} den",
+  "Good to see you back!": "Vítejte zpět!",
+  "Ready for another study session?": "Připraveni na další studium?",
+  "Continue studying": "Pokračujte ve studiu",
+  "Pick a subject to begin.": "Vyberte předmět a začněte.",
+  "Add subject": "Přidat předmět"
 }

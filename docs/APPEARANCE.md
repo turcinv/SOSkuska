@@ -2,6 +2,8 @@
 
 [English](APPEARANCE.md) · [Čeština](cs/APPEARANCE.md) · [Slovenčina](sk/APPEARANCE.md) · [Русский](ru/APPEARANCE.md)
 
+**Unreleased — cat brand:** Light uses a Cream workspace with white cards; Dark uses Charcoal surfaces. Both share lavender pill buttons, violet accents and an always-charcoal sidebar with a lavender selected item. Saved Light/Dark/System behaviour is unchanged. [Internal captures and handoff](agents/design/cat-brand/README.md).
+
 **v0.19.0 — redesign Step 1:** the shared theme now uses blue actions/selection, mint progress, a warm off-white Light workspace and paired Dark surfaces. Secondary buttons have a separate hover surface; Statistics progress tracks match Dashboard. Layouts, saved mode/default, navigation, data and settings behaviour are unchanged. [Internal captures, sketches and handoff](agents/design/bright-ui-step1/README.md).
 
 Appearance settings were released in **v0.16.0** after the user confirmed v0.15.0 baseline testing complete and approved merging PR #32 on 22 November 2026. Future changes still require their own review and merge/release authorization.

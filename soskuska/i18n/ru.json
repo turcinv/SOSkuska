@@ -756,5 +756,10 @@
   "{v0} question": "{v0} вопрос",
   "{v0} questions": "{v0} вопросов",
   "{v0} session · {v1} min": "{v0} занятие · {v1} мин",
-  "{v0} day": "{v0} день"
+  "{v0} day": "{v0} день",
+  "Good to see you back!": "С возвращением!",
+  "Ready for another study session?": "Готовы к новому занятию?",
+  "Continue studying": "Продолжить учёбу",
+  "Pick a subject to begin.": "Выберите предмет, чтобы начать.",
+  "Add subject": "Добавить предмет"
 }

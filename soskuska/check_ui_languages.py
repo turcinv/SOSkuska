@@ -54,7 +54,8 @@ def dashboard_layout(app, scale):
     title = next(w for w in card.winfo_children() if isinstance(w,ctk.CTkLabel) and w.cget('text') == long_name)
     assert title.cget('wraplength') <= card.winfo_width() / scale - 30
     assert title.winfo_height() > 28 * scale
-    assert any(isinstance(w,ctk.CTkLabel) and w.cget('text')==app.translator.text("One thing at a time.") for w in widgets(app.study_panel))
+    assert any(isinstance(w,ctk.CTkLabel) and w.cget('text')==app.translator.text("Continue studying") for w in widgets(app.study_panel))
+    assert app.hero_subject.cget('text').startswith(long_name)
     app.store.start_focus_checkpoint(sid, 900)
     app.store.release_focus(); app.refresh_focus_recovery(); settle()
     app.scroll.scroll_to_widget(app.recovery_panel)

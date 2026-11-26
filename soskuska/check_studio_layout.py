@@ -48,6 +48,21 @@ def verify(app, subject_id, app_date, storage_date):
     names = set(app.tk.call('image', 'names'))
     assert all(str(icon) in names for icon in app.brand_window_icons)
     assert app.layout_mode == 'compact'
+    # Cat-brand banner: compact hides the decorative scene so study controls stay high.
+    assert not app.focus_scene.winfo_ismapped() and not app.scene_visible
+    selected_name = app.subject_selection.get()
+    assert app.hero_subject.cget('text').startswith(selected_name)
+    assert app.add_subject_card is not None and app.add_subject_card.winfo_ismapped()
+    app.query.set('zzz-no-match')
+    assert app.add_subject_card is None
+    app.query.set('')
+    assert app.add_subject_card is not None
+    app.add_subject_card.invoke()
+    assert app.current_page == 'My Subjects' and app.subject_page.form.winfo_manager() == 'grid'
+    app.subject_page.name_entry.insert(0, 'Draft kept')
+    app.navigate('Dashboard'); app.add_subject_card.invoke()
+    assert app.subject_page.name_entry.get() == 'Draft kept'
+    app.subject_page.hide_form(); app.navigate('Dashboard'); app.update()
     assert (clock.time_label.cget('text'), clock.percent) == ('180:00', 0)
     assert exam_marks(app.agenda) == {'4 •', '10 •', '12 •', '15 •', '17 •', '18 •', '30 •'}
     selected = next(cell for cell in app.agenda.cells if cell.cget('text') == '10 •')

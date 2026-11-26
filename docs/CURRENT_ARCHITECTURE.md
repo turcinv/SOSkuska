@@ -2,6 +2,10 @@
 
 [English](CURRENT_ARCHITECTURE.md) · [Čeština](cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](sk/CURRENT_ARCHITECTURE.md) · [Русский](ru/CURRENT_ARCHITECTURE.md)
 
+## Unreleased — cat brand
+
+`theme.py` adopts the Charcoal/Lavender/Violet/Cream brand palette, with deeper lavender fills where white text needs 4.5:1 contrast and a new `outline` role. `build_brand_assets.py` renders the cat-reading-a-book logo. `studio_widgets.py` draws the summary-tile icons, paw mark, mascot avatar, banner scene and sidebar decoration locally with Pillow; no network, database or external assets. The Dashboard banner names the selected or active saved subject; the scene is shown only in the wide layout. The Add subject card opens an empty form and never replaces an open subject draft. Metrics stay the existing real values. Schema remains 10.
+
 ## v0.28.0
 
 The sidebar uses a local CTkImage; each window owns its Tk icon images. Resources resolve relative to branding.py, including frozen builds, with no network or database work. Windows packaging includes the assets and ICO. ICNS is prepared for future macOS packaging; source launches may retain Python’s Dock icon. Schema remains 10.
