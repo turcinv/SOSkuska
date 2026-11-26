@@ -23,3 +23,18 @@ Místní Docker/Xvfb: prošlo **306 testů** (dvě platformní přeskočení) a 
 - A62-04: `test_real_external_worker_success_reconciles_failed_window`, `test_older_or_invalid_receipt_does_not_clear_unresolved_failure`; `check_scheduled_backups.py`.
 
 [Jednotkové testy](../../tests/test_review_findings.py) · [Kontroly stavů GUI](../../soskuska/check_state_fixes.py) · [Kontroly GUI záloh](../../soskuska/check_scheduled_backups.py).
+
+
+## Úplná revize main · 26. listopadu 2026 · Astra 6.2 medium
+
+`main` · v0.26.0 · `db38e08802058480bbed250c16eeffc23bad143b`
+
+| ID | Priorita | Stav | Nález | Reprodukce / místo | Požadované chování |
+| --- | --- | --- | --- | --- | --- |
+| A62-05 | P2 | Otevřeno | Starší editor balíčku při uložení názvu vrátí původní popis, přestože jiné okno uložilo nový. | `flashcard_page.py:291`, `storage.py:713`. Otevřít úpravu balíčku, jinde uložit nový popis, v původním formuláři změnit jen název a uložit: oba zápisy uspějí a nový popis se ztratí. | Pod zápisovým zámkem porovnat původní upravovaný snímek a zachovat odmítnutý koncept. |
+| A62-06 | P2 | Otevřeno | Starší formulář přejmenování tématu přepíše novější název z jiného okna. | `question_bank.py:284`, `storage.py:402`. Otevřít přejmenování, jinde téma přejmenovat a poté uložit původní formulář: bez upozornění přepíše aktuální název. | Atomicky porovnat původní identitu a název tématu; zachovat odmítnutý koncept. |
+| A62-07 | P3 | Otevřeno | Obnovená kartička s přijatým časem mimo UTC může chybět ve frontě a odmítat hodnocení, i když už je splatná. | `storage.py:687,811,823`, `flashcard_page.py:388`. Čas před pěti minutami uložit s `+10:00`, zálohovat, ověřit, obnovit a otevřít: fronta je prázdná a hodnocení tvrdí, že kartička ještě není splatná. | Ve všech počtech, frontách a kontrolách hodnotit skutečné časové okamžiky. |
+| A62-08 | P3 | Otevřeno | Statistiky vynechají obnovený dokončený test s přijatým posunem UTC obsahujícím sekundy. | `study_statistics.py:42,45`, `backup_validation.py:28`. Po obnově času s `+03:00:07` historie počítá 1 a Statistiky za celé období 0; SQLite vrací NULL. | Sjednotit čtení časů statistik s povoleným formátem záloh a historie pro testy i opakování. |
+| A62-09 | P3 | Otevřeno | Návody historie Tutora a jazyků stále uvádějí obnovu schématu 9. | `docs/TUTOR_HISTORY.md:31`, `docs/UI_LANGUAGES.md:13` a překlady; `backup.py:102` vyžaduje schéma 10. | Opravit aktuální požadavky obnovy ve čtyřech jazycích; zachovat historický popis migrací. |
+
+CI přesného commitu prošlo všemi pěti úlohami: 322 jednotkových testů na každé platformě a všech 23 kontrol rozhraní v Linuxu. Cílené kontroly na dočasných datech reprodukovaly oba formuláře skutečnými tlačítky Uložit v Docker/Xvfb a oba časové případy přes ověření zálohy, obnovu a opětovné otevření; hlavní agent je nezávisle zopakoval. Časové nálezy vyžadují povolené formáty odlišné od běžného zápisu UTC aplikace. Širší revize pokryla běh, úložiště/migrace, studium, Tutor/režimy, předvolby, přenosy, CI/balení Windows a dokumentaci. Jde o nálezy, nikoli opravy; aplikační kód se nezměnil. Test skutečného modelu zůstává odložený a ruční přejímka hardwaru/platformy neproběhla.
