@@ -17,3 +17,12 @@ Editing filter controls creates a draft until Apply. Moving pages or leaving/ret
 Results remain immutable snapshots of the test’s original questions/options, correct answers, explanations and subject name. Source edits/deletions do not rewrite them. Opening history does not answer or complete an unfinished test; its existing timer still runs and deadline completion can take precedence as before. No schema change, network connection or new dependency is required; this history feature was introduced at schema 8, and the current database schema is 10.
 
 Developer checks: `tests/test_practice_history.py` and `soskuska/check_practice_history.py` use disposable databases. The GUI check covers older results, filters, errors/retries, drafts/navigation, active-attempt isolation, compact scrolling and a fresh process. Automated checks do not establish manual Windows UI or physical trackpad verification.
+
+
+## Question explanations · unreleased
+
+Completed Practice results, including reopened history, offer **Explain this question**. Open the local preview, then choose **Prepare in Tutor**. It uses the saved question snapshot (all four choices, selected answer or Unanswered, stored answer key and explanation), even after the original question/subject is deleted. Nothing connects or sends during preview/preparation. In Tutor, review the server, model and answer language, explicitly Connect if needed, then Send. The draft is editable and uses ordinary local chat history, Stop and save-retry paths.
+
+Tutor must be an idle, clean New chat with an empty prompt and no pending confirmation or unsaved reply. Existing work is preserved; finish it or explicitly use the confirmed New chat action before retrying. A complete generated prompt above 4,000 characters is rejected with its measured length; nothing is truncated. The saved answer key and AI explanation may be wrong; scores and source content never change. Automatic asks for the supplied question language; explicit answer language overrides it. Prompt instructions stay in English and user content stays unchanged. No schema change (10), version labels remain v0.24.0 until release.
+
+Implementation: `question_explanation.py` builds/validates the bounded snapshot prompt; `practice_page.py` owns preview and stale-result checks; `tutor_page.py` guards draft insertion. Existing Send persists the prompt before HTTP. Automated checks use disposable data and loopback FakeOllama; real-model quality and native platform/DPI acceptance remain manual.

@@ -705,5 +705,13 @@
   "Today's Study": "Учёба сегодня",
   "Rate your recall": "Оцените, насколько хорошо вспомнили",
   "Review saved. Refresh card to continue; do not rate it again.": "Оценка сохранена. Для продолжения нажмите «Обновить карточку»; не оценивайте её повторно.",
-  "Interface": "Интерфейс"
+  "Interface": "Интерфейс",
+  "Explain this question": "Объяснить этот вопрос",
+  "Prepare in Tutor": "Подготовить в Tutor",
+  "Preview only. This question, all choices, your answer, the stored answer key and explanation will be shared with the selected Ollama server only after Send. AI may be wrong.": "Только предпросмотр. Вопрос, все варианты, ваш ответ, сохранённый ключ и объяснение будут переданы выбранному серверу Ollama только после Отправить. ИИ может ошибаться.",
+  "Could not read the saved question. Nothing was sent. Reopen the preview to retry.": "Не удалось прочитать сохранённый вопрос. Ничего не отправлено. Откройте предпросмотр снова.",
+  "Tutor has existing work or a pending action. Finish it or explicitly start a New chat with an empty prompt, then retry. Your work is kept.": "В Tutor есть текущая работа или ожидающее действие. Завершите его или явно откройте Новый чат с пустым запросом и повторите попытку. Ваша работа сохранена.",
+  "Question draft prepared. Review the server, model and answer language. Connect if needed; only Send generates an answer.": "Черновик вопроса подготовлен. Проверьте сервер, модель и язык ответа. При необходимости нажмите Подключить / обновить; ответ создаётся только после Отправить.",
+  "This completed question is no longer available. Reopen the result and retry.": "Этот завершённый вопрос больше недоступен. Откройте результат снова и повторите попытку.",
+  "The full explanation prompt has {v0} characters; the limit is {v1}. This shortcut cannot include this whole question yet. Nothing was sent.": "Полный запрос содержит {v0} символов; ограничение — {v1}. Этот способ пока не поддерживает вопрос целиком. Ничего не отправлено."
 }

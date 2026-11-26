@@ -322,3 +322,12 @@ Fixes released in v0.18.1 through PR #38, tracked in [Astra review findings](REV
 ## v0.20.0 — Practice redesign Step 3
 
 Running tests now group progress/timing in a header and show a bar of saved answers. Full-width A–D rows highlight the saved choice, not correctness; background/text clicks save through the existing answer path. Previous/Next/Clear and Finish share a footer. Setup selectors share a card, and results/history use matching surfaces. Failed saves restore selection/style; hidden setup or off-page answer callbacks do not write. Long content wraps and scrolls at compact size. Scoring, deadlines, confirmations, resume, filters and retained snapshots remain unchanged; current schema is 10.
+
+
+## Question explanations · unreleased
+
+Completed Practice results, including reopened history, offer **Explain this question**. Open the local preview, then choose **Prepare in Tutor**. It uses the saved question snapshot (all four choices, selected answer or Unanswered, stored answer key and explanation), even after the original question/subject is deleted. Nothing connects or sends during preview/preparation. In Tutor, review the server, model and answer language, explicitly Connect if needed, then Send. The draft is editable and uses ordinary local chat history, Stop and save-retry paths.
+
+Tutor must be an idle, clean New chat with an empty prompt and no pending confirmation or unsaved reply. Existing work is preserved; finish it or explicitly use the confirmed New chat action before retrying. A complete generated prompt above 4,000 characters is rejected with its measured length; nothing is truncated. The saved answer key and AI explanation may be wrong; scores and source content never change. Automatic asks for the supplied question language; explicit answer language overrides it. Prompt instructions stay in English and user content stays unchanged. No schema change (10), version labels remain v0.24.0 until release.
+
+Implementation: `question_explanation.py` builds/validates the bounded snapshot prompt; `practice_page.py` owns preview and stale-result checks; `tutor_page.py` guards draft insertion. Existing Send persists the prompt before HTTP. Automated checks use disposable data and loopback FakeOllama; real-model quality and native platform/DPI acceptance remain manual.

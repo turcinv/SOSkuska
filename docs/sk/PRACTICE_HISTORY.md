@@ -17,3 +17,12 @@ Názvy pochádzajú z dokončených snímok vrátane zmazaných predmetov. Po pr
 Výsledky sú nemenné snímky pôvodných otázok, možností, správnych odpovedí, vysvetlení a názvu predmetu. Neskoršie úpravy a zmazanie ich nemenia. Prezeranie histórie nevyplní ani nedokončí rozpracovaný test; časový limit ďalej beží a automatické dokončenie môže ako doteraz prevziať obrazovku. Schéma zostáva 8, bez novej závislosti a sieťového pripojenia.
 
 Vývojárske kontroly `tests/test_practice_history.py` a `soskuska/check_practice_history.py` používajú dočasné databázy. GUI kontroluje staršie výsledky, filtre, chyby/opakovanie, koncepty/navigáciu, oddelenie aktívneho testu, kompaktné posúvanie a nový proces. Nenahrádza ručné overenie Windows ani fyzického trackpadu.
+
+
+## Vysvetlenia otázok · nevydané
+
+Dokončené výsledky Practice vrátane histórie ponúkajú **Vysvetliť túto otázku**. Otvorte miestny náhľad a zvoľte **Pripraviť v Tutorovi**. Použije sa uložená snímka otázky, štyri možnosti, vaša odpoveď alebo Unanswered, uložený kľúč a vysvetlenie, aj po odstránení pôvodného obsahu. Náhľad ani príprava nič nepripájajú ani neposielajú. V Tutorovi skontrolujte server, model a jazyk, podľa potreby výslovne použite Connect a potom Send. Upraviteľný návrh využíva bežnú miestnu históriu, Stop a opakovanie uloženia.
+
+Tutor musí byť nečinný, v čistom New chat s prázdnou otázkou a bez čakajúceho potvrdenia či neuloženej odpovede. Existujúca práca zostáva zachovaná; dokončite ju alebo výslovne potvrďte New chat a zopakujte akciu. Celý dotaz nad 4 000 znakov je odmietnutý s uvedením dĺžky, bez skracovania. Kľúč aj AI sa môžu mýliť; skóre ani zdrojové dáta sa nemenia. Automatic požaduje jazyk dodanej otázky; výslovná voľba jazyka má prednosť. Pokyny dotazu sú anglicky, obsah používateľa sa nemení. Schéma zostáva 10 a verzia v0.24.0 do vydania.
+
+Implementácia: `question_explanation.py` zostavuje ohraničený dotaz zo snímky, `practice_page.py` riadi náhľad a kontrolu aktuálneho výsledku, `tutor_page.py` chráni vloženie návrhu. Send uloží otázku pred HTTP. Automatické testy používajú dočasné dáta a miestny FakeOllama; kvalita modelu a natívne overenie platformy/DPI zostávajú ručné.

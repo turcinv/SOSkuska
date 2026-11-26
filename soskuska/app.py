@@ -435,6 +435,7 @@ class Dashboard(ctk.CTk):
         if name not in ("Dashboard", "My Subjects", "Practice Tests", "Flashcards", "Statistics", "AI Tutor", "Settings"):
             self.show_notice(tr(self, '{v0} will be available in a later version.', v0=name))
             return
+        self.practice_page.cancel_explanation()
         self.cancel_focus_discard()
         self.subject_page.cancel_delete()
         self.settings_page.backups.cancel_pending()

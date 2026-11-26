@@ -50,3 +50,7 @@ Schema 9 adds appearance_mode Light/Dark/System with Dark default. Keep migratio
 ## Tutor feedback placement
 
 Tutor `set_status` updates both the header and the feedback beside recovery controls. Keep copy-before-discard and other-window interruption warnings visible near their confirmation buttons after scrolling. The model selector needs a full-width row for localized instructions; preserve its canonical value and explicit connection semantics. Geometry changes only reposition existing setup/recovery widgets.
+
+## Completed-question explanation safeguards
+
+Only completed result snapshots may prepare a Tutor draft, identified by `(attempt_id, position)`. Preview and prepare perform no HTTP or chat writes; Send retains the normal persist-before-request path. Reject complete prompts over 4,000 characters without truncation. Capture the exact preview identity in consent callbacks, invalidate it on navigation, and revalidate the completed snapshot before handoff. Require an idle, clean New chat with a literally empty prompt, no unsaved reply and no pending confirmation; preserve all existing work. Reveal the draft only while Tutor still owns that exact content and the shared viewport. `test_question_explanation.py` and `check_question_explanation.py` cover the shortcut; real-model explanation quality remains manual.

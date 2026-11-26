@@ -7,6 +7,7 @@ from datetime import datetime
 
 import customtkinter as ctk
 from content import DIFFICULTIES
+from question_explanation import read_prompt
 from practice import MissingPracticeError, expired, seconds_left, utc_now
 
 
@@ -21,6 +22,9 @@ class PracticePage(ctk.CTkFrame):
         self.subject_ids = {}
         self.topic_ids = {"All topics": "all", "No topic": None}
         self.pending_action = None
+        self.result_id = None
+        self.explanation_identity = None
+        self.explanation_panel = None
         self.history_filters = (None, "", "")
         self.history_page = 0
         self.history_subjects = {tr(self.app, 'All subjects'): None}
@@ -216,6 +220,7 @@ class PracticePage(ctk.CTkFrame):
             self.error(exc)
 
     def show_config(self):
+        self.cancel_explanation()
         try:
             subjects = self.app.store.subjects()
             active = self.app.store.active_practice()
@@ -532,6 +537,8 @@ class PracticePage(ctk.CTkFrame):
             raise MissingPracticeError("This test no longer exists.")
         if attempt["status"] != "completed":
             raise ValueError("This test has not been completed.")
+        self.cancel_explanation()
+        self.result_id = attempt_id
         for child in self.results.winfo_children():
             child.destroy()
         self.app.button(self.results, tr(self.app, '← Test setup / history'), self.show_config, width=195).grid(row=0, column=0, sticky="w", pady=(0, 16))
@@ -562,6 +569,9 @@ class PracticePage(ctk.CTkFrame):
                 label = self.app.label(card, text, 14, bold=row == 0, wraplength=600)
                 label.grid(row=row, column=0, sticky="ew", padx=18, pady=(14 if row == 0 else 0, 12))
                 labels.append(label)
+            self.app.button(card, tr(self.app, 'Explain this question'),
+                lambda aid=attempt_id, pos=item['position']: self.explain_question(aid, pos),
+                width=210).grid(row=len(texts), column=0, sticky="w", padx=18, pady=(0, 14))
             card.bind("<Configure>", lambda event, labels=labels: [label.configure(wraplength=max(200, self.app.scroll.logical_pixels(event.width)-36)) for label in labels], add="+")
         if self.active_id == attempt_id:
             self.active_id = None
@@ -572,6 +582,69 @@ class PracticePage(ctk.CTkFrame):
         self.results.grid()
         self.scroll_to_top()
         self.status.configure(text=tr(self.app, 'Result saved. Questions and explanations below are snapshots from this test.'))
+
+    def result_visible(self, attempt_id):
+        return (self.app.current_page == "Practice Tests" and bool(self.results.grid_info())
+                and self.result_id == attempt_id and not self.app.data_restoring)
+
+    def cancel_explanation(self):
+        self.explanation_identity = None
+        if self.explanation_panel is not None:
+            self.explanation_panel.destroy()
+            self.explanation_panel = None
+
+    def explain_question(self, attempt_id, position):
+        if not self.result_visible(attempt_id):
+            return
+        self.cancel_explanation()
+        panel = self.explanation_panel = self.app.frame(self.results, card=True)
+        panel.grid(row=2, column=0, sticky="ew", pady=(0, 16))
+        panel.grid_columnconfigure(0, weight=1)
+        message = self.app.label(panel, tr(self.app, 'Preview only. This question, all choices, your answer, the stored answer key and explanation will be shared with the selected Ollama server only after Send. AI may be wrong.'), 13, wraplength=600)
+        message.grid(row=0, column=0, sticky="ew", padx=18, pady=14)
+        self.explanation_feedback = self.app.label(panel, "", 13, wraplength=600)
+        self.explanation_feedback.grid(row=3, column=0, sticky="ew", padx=18, pady=(0, 14))
+        panel.bind('<Configure>', lambda event: [label.configure(wraplength=max(200,
+            self.app.scroll.logical_pixels(event.width)-36)) for label in (message, self.explanation_feedback)], add='+')
+        actions = self.app.frame(panel)
+        actions.grid(row=2, column=0, sticky="w", padx=18, pady=14)
+        try:
+            prompt = read_prompt(self.app.store, attempt_id, position)
+        except (ValueError, sqlite3.Error) as exc:
+            self.explanation_feedback.configure(text=tr(self.app, str(exc)) if isinstance(exc, ValueError)
+                else tr(self.app, 'Could not read the saved question. Nothing was sent. Reopen the preview to retry.'))
+        else:
+            self.explanation_identity = (attempt_id, position, prompt)
+            preview = ctk.CTkTextbox(panel, height=230, font=self.app.font(), wrap='word',
+                border_width=1, border_color=C['border'])
+            preview.insert('1.0', prompt)
+            preview.configure(state='disabled')
+            preview.grid(row=1, column=0, sticky='ew', padx=18)
+            self.app.button(actions, tr(self.app, 'Prepare in Tutor'),
+                lambda identity=self.explanation_identity: self.prepare_explanation(identity),
+                primary=True, width=180).pack(side='left', padx=(0, 8))
+        self.app.button(actions, tr(self.app, 'Cancel'), self.cancel_explanation, width=85).pack(side='left')
+        self.scroll_to_top()
+
+    def prepare_explanation(self, identity):
+        if identity is not self.explanation_identity or identity is None or not self.result_visible(identity[0]):
+            return
+        try:
+            prompt = read_prompt(self.app.store, identity[0], identity[1])
+            if prompt != identity[2]:
+                raise ValueError('This completed question is no longer available. Reopen the result and retry.')
+        except (ValueError, sqlite3.Error) as exc:
+            self.explanation_feedback.configure(text=tr(self.app, str(exc)) if isinstance(exc, ValueError)
+                else tr(self.app, 'Could not read the saved question. Nothing was sent. Reopen the preview to retry.'))
+            return
+        if not self.app.tutor_page.can_prepare_question():
+            self.explanation_feedback.configure(text=tr(self.app, 'Tutor has existing work or a pending action. Finish it or explicitly start a New chat with an empty prompt, then retry. Your work is kept.'))
+            return
+        if self.app.question_bank.importer.saving or self.app.flashcard_page.importer.saving:
+            return
+        self.app.navigate('AI Tutor')
+        if self.app.current_page == 'AI Tutor':
+            self.app.tutor_page.prepare_question_draft(prompt)
 
     def tick(self):
         try:

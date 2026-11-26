@@ -2,6 +2,10 @@
 
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
+## Unreleased
+
+- Vysvětlení otázek: Explain this question → Prepare in Tutor → Connect / Send.
+
 ## 0.24.0 — 2026-11-25
 
 - Nastavení seskupuje studijní předvolby a rozhraní vedle sebe v širokém okně a pod sebou v kompaktním; AI má vlastní kartu přes celou šířku. Zpráva pro Uložit/Načíst se zobrazuje u ovládání i v záhlaví. Změna velikosti zachová stejné prvky, koncepty a uložené snímky; ukládání zůstává výslovné a aktivní časovače zachovají původní délku.

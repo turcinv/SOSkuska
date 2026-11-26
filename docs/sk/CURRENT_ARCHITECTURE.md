@@ -347,3 +347,12 @@ Opravy vydané vo v0.18.1 cez PR #38 sleduje [záznam revízie Astra](REVIEW_FIN
 ## v0.20.0 — redizajn testov, krok 3
 
 Bežiaci test združuje priebeh/čas v záhlaví a ukazuje počet uložených odpovedí lištou. Riadky A–D cez celú šírku zvýraznia uložený výber, nie správnosť; kliknutie na pozadie/text používa pôvodné ukladanie. Previous/Next/Clear a Finish zdieľajú pätu. Nastavenia sú v spoločnej karte, výsledky/história majú zjednotené plochy. Chyba zápisu vráti výber/vzhľad; skryté odpovede pri nastaveniach či inej stránke nezapisujú. Dlhý obsah sa zalamuje a posúva. Skóre, termíny, potvrdenia, pokračovanie, filtre a snímky zostávajú; aktuálna schéma je 10.
+
+
+## Vysvetlenia otázok · nevydané
+
+Dokončené výsledky Practice vrátane histórie ponúkajú **Vysvetliť túto otázku**. Otvorte miestny náhľad a zvoľte **Pripraviť v Tutorovi**. Použije sa uložená snímka otázky, štyri možnosti, vaša odpoveď alebo Unanswered, uložený kľúč a vysvetlenie, aj po odstránení pôvodného obsahu. Náhľad ani príprava nič nepripájajú ani neposielajú. V Tutorovi skontrolujte server, model a jazyk, podľa potreby výslovne použite Connect a potom Send. Upraviteľný návrh využíva bežnú miestnu históriu, Stop a opakovanie uloženia.
+
+Tutor musí byť nečinný, v čistom New chat s prázdnou otázkou a bez čakajúceho potvrdenia či neuloženej odpovede. Existujúca práca zostáva zachovaná; dokončite ju alebo výslovne potvrďte New chat a zopakujte akciu. Celý dotaz nad 4 000 znakov je odmietnutý s uvedením dĺžky, bez skracovania. Kľúč aj AI sa môžu mýliť; skóre ani zdrojové dáta sa nemenia. Automatic požaduje jazyk dodanej otázky; výslovná voľba jazyka má prednosť. Pokyny dotazu sú anglicky, obsah používateľa sa nemení. Schéma zostáva 10 a verzia v0.24.0 do vydania.
+
+Implementácia: `question_explanation.py` zostavuje ohraničený dotaz zo snímky, `practice_page.py` riadi náhľad a kontrolu aktuálneho výsledku, `tutor_page.py` chráni vloženie návrhu. Send uloží otázku pred HTTP. Automatické testy používajú dočasné dáta a miestny FakeOllama; kvalita modelu a natívne overenie platformy/DPI zostávajú ručné.

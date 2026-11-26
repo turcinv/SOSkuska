@@ -48,6 +48,14 @@ class DashboardScrollFrame(ctk.CTkScrollableFrame):
     def scroll_to_top(self):
         self._parent_canvas.yview_moveto(0)
 
+    def scroll_to_widget(self, widget):
+        """Reveal a descendant after geometry settles; keep private canvas access here."""
+        self.update_idletasks()
+        region = self._parent_canvas.bbox('all')
+        if region and region[3] > region[1]:
+            offset = widget.winfo_rooty() - self.winfo_rooty() - 12
+            self._parent_canvas.yview_moveto(max(0, offset) / (region[3] - region[1]))
+
     def _owns_event(self, widget):
         while widget is not None:
             if widget in (self._parent_canvas, self._scrollbar):
