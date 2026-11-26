@@ -15,6 +15,7 @@ GUI_CHECKS = (
     'check_flashcards.py',
     'check_statistics.py',
     'check_state_fixes.py',
+    'check_astra026_fixes.py',
     'check_tutor.py',
     'check_question_explanation.py',
     'check_study_modes.py',

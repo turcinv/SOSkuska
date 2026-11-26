@@ -10,6 +10,6 @@ Navigation, forms, controls, status messages, confirmations, preview headings an
 
 Subject/topic/deck names, questions, answers, explanations, chat content, model identifiers, URLs, paths, CSV headers and stored ISO dates are not translated. The Dashboard uses a numeric date in non-English interfaces. No process-wide locale is changed. Translated buttons expand to fit their labels; the minimum window remains 1024 × 700 and lower content stays scrollable.
 
-Schema **8** adds `preferences.ui_language` with an English default. Migration preserves existing content, chat history, answer language and preference revisions. Saving remains explicit, atomic and protected against stale edits. Restore accepts standalone schema 9 backups; keep older originals and convert a separate copy by opening it with the new app through `--data`, then export a current backup. See [Backup and restore](BACKUP_RESTORE.md).
+Schema **8** adds `preferences.ui_language` with an English default. Migration preserves existing content, chat history, answer language and preference revisions. Saving remains explicit, atomic and protected against stale edits. Restore accepts standalone schema 10 backups; keep older originals and convert a separate copy by opening it with the new app through `--data`, then export a current backup. See [Backup and restore](BACKUP_RESTORE.md).
 
 Guides use English UI labels as the shared reference. The app uses the matching translated controls when another interface language is selected.

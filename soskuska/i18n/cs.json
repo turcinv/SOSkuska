@@ -720,5 +720,9 @@
   "Give me a hint": "Dát nápovědu",
   "Quiz me": "Procvičit mě",
   "Choose a supported study mode.": "Vyberte podporovaný studijní režim.",
-  "Preview only. Hint mode shares the question and four choices, without your answer, the stored answer key or explanation. Only Send shares this prompt with the selected Ollama server. AI may still reveal an answer.": "Pouze náhled. Režim nápovědy sdílí otázku a čtyři možnosti bez vaší odpovědi, uloženého klíče a vysvětlení. Dotaz odešle vybranému serveru Ollama až Odeslat. AI může přesto prozradit odpověď."
+  "Preview only. Hint mode shares the question and four choices, without your answer, the stored answer key or explanation. Only Send shares this prompt with the selected Ollama server. AI may still reveal an answer.": "Pouze náhled. Režim nápovědy sdílí otázku a čtyři možnosti bez vaší odpovědi, uloženého klíče a vysvětlení. Dotaz odešle vybranému serveru Ollama až Odeslat. AI může přesto prozradit odpověď.",
+  "This deck changed in another window. Your draft is kept; copy your changes, then reopen Edit deck to reload.": "Tento balíček se změnil v jiném okně. Koncept zůstal zachován; zkopírujte své změny a znovu otevřete Upravit balíček pro načtení aktuálních dat.",
+  "This topic changed in another window. Your draft is kept; copy your changes, then reopen Rename topic to reload.": "Toto téma se změnilo v jiném okně. Koncept zůstal zachován; zkopírujte své změny a znovu otevřete Přejmenovat téma pro načtení aktuálních dat.",
+  "Refresh deck": "Obnovit balíček",
+  "Deck saved. Refresh deck to load saved content; do not save it again.": "Balíček je uložen. Pomocí Obnovit balíček načtěte uložený obsah; znovu jej neukládejte."
 }

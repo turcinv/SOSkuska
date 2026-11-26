@@ -3,11 +3,11 @@ from theme import COLORS as C
 from localization_widgets import LocalizedOptionMenu
 from localization import tr
 import sqlite3
-from datetime import datetime
 
 import customtkinter as ctk
 from content import DIFFICULTIES
 from question_explanation import MODES, read_prompt
+from study_time import display_time
 from practice import MissingPracticeError, expired, seconds_left, utc_now
 
 
@@ -316,7 +316,7 @@ class PracticePage(ctk.CTkFrame):
 
     @staticmethod
     def local_time(value):
-        return datetime.fromisoformat(value).astimezone().strftime("%Y-%m-%d %H:%M")
+        return display_time(value)
 
     def subject_changed(self, _value=None):
         self.start_button.configure(state="disabled")

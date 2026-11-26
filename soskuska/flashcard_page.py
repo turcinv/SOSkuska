@@ -7,9 +7,11 @@ from datetime import datetime
 from functools import wraps
 
 import customtkinter as ctk
+from study_time import display_time
 from practice import utc_now
 from repetition import RATINGS, next_review
 from csv_import_panel import CsvImportPanel
+from panel_layout import wrap_labels
 
 
 def safe(method):
@@ -21,7 +23,12 @@ def safe(method):
             message = tr(self.app,str(exc)) if isinstance(exc,ValueError) else tr(self.app,'Could not access flashcard data. Please retry.')
             if self.review_refresh_pending:
                 message += ' ' + tr(self.app,'Review saved. Refresh card to continue; do not rate it again.')
+            if self.deck_refresh_pending is not None:
+                message += ' ' + tr(self.app, 'Deck saved. Refresh deck to load saved content; do not save it again.')
             self.status.configure(text=message)
+            form_notice = getattr(self, 'deck_form_notice', None)
+            if self.view == 'deck_form' and form_notice is not None and form_notice.winfo_exists():
+                form_notice.configure(text=message)
             notice = getattr(self,'review_notice',None)
             if self.view == 'review' and notice is not None and notice.winfo_exists():
                 notice.configure(text=message)
@@ -37,6 +44,8 @@ class FlashcardPage(ctk.CTkFrame):
         self.deck_id = None
         self.deck_snapshot = None
         self.editing_deck = None
+        self.editing_deck_snapshot = None
+        self.deck_refresh_pending = None
         self.editing_card = None
         self.editing_revision = None
         self.pending_delete = None
@@ -72,6 +81,8 @@ class FlashcardPage(ctk.CTkFrame):
         for child in self.body.winfo_children():
             child.destroy()
         self.view = view
+        if view != 'deck_form':
+            self.deck_refresh_pending = None
         self.pending_delete = None
         if view != "review":
             self.review_refresh_pending = False
@@ -88,13 +99,16 @@ class FlashcardPage(ctk.CTkFrame):
 
     @staticmethod
     def local_time(value):
-        return datetime.fromisoformat(value).astimezone().strftime("%Y-%m-%d %H:%M")
+        return display_time(value)
 
     def subject_text(self, deck):
         return deck["current_subject_name"] or tr(self.app,'{v0} (subject deleted)',v0=deck['subject_name'])
 
     @safe
     def load(self):
+        if self.deck_refresh_pending is not None:
+            self.retry_deck_refresh()
+            return
         if self.view in ("deck_form", "card_form"):
             if self.view == "deck_form" and self.editing_deck is None:
                 self.refresh_deck_subjects()
@@ -110,6 +124,9 @@ class FlashcardPage(ctk.CTkFrame):
 
     @safe
     def refresh(self):
+        if self.deck_refresh_pending is not None:
+            self.retry_deck_refresh()
+            return
         if self.view == "deck_form" and self.editing_deck is None:
             self.refresh_deck_subjects()
             self.status.configure(text=tr(self.app, 'Subject list refreshed. Your draft is kept.'))
@@ -231,7 +248,9 @@ class FlashcardPage(ctk.CTkFrame):
         subjects = self.app.store.subjects()
         self.subject_ids = {f'Subject: {s["name"]}': s["id"] for s in subjects}
         self.editing_deck = deck_id
+        self.editing_deck_snapshot = deck
         self.clear("deck_form")
+        self.deck_refresh_pending = None
         self.app.label(self.body, tr(self.app, 'Edit deck') if deck else tr(self.app, 'New deck'), 22, bold=True).grid(row=0, column=0, sticky="w", pady=(0, 16))
         self.app.label(self.body, tr(self.app, 'Name (1–120 characters; unique across decks)'), 13, "secondary").grid(row=1, column=0, sticky="w")
         self.name_entry = ctk.CTkEntry(self.body, height=38, font=self.app.font(), placeholder_text_color=C["secondary"])
@@ -248,11 +267,17 @@ class FlashcardPage(ctk.CTkFrame):
         self.description = ctk.CTkTextbox(self.body, height=90, font=self.app.font(), wrap="word")
         self.description.grid(row=6, column=0, sticky="ew", pady=(4, 14))
         self.description.insert("1.0", deck["description"] if deck else "")
-        actions = self.app.frame(self.body)
-        actions.grid(row=7, column=0, sticky="w")
+        footer = self.app.frame(self.body)
+        footer.grid(row=7, column=0, sticky="ew")
+        footer.grid_columnconfigure(0, weight=1)
+        actions = self.app.frame(footer)
+        actions.grid(row=0, column=0, sticky="w")
         self.save_button = self.app.button(actions, tr(self.app, 'Save deck'), self.save_deck, primary=True, width=125)
         self.save_button.pack(side="left", padx=(0, 8))
         self.app.button(actions, tr(self.app, 'Cancel'), self.show_decks, width=85).pack(side="left")
+        self.deck_form_notice = self.app.label(footer, "", 13, wraplength=500)
+        self.deck_form_notice.grid(row=1, column=0, sticky="ew", pady=(10, 0))
+        wrap_labels(footer, self.app, inset=0)
 
     def select_deck_subject(self, label):
         self.subject_choice_id = self.subject_ids.get(label)
@@ -281,14 +306,28 @@ class FlashcardPage(ctk.CTkFrame):
         self.subject_choice_id = selected_id
         self.subject.set(selected)
 
+    def retry_deck_refresh(self):
+        if self.deck_refresh_pending is not None:
+            self.status.configure(text=tr(self.app, 'Deck saved on this device.'))
+            self.show_deck(self.deck_refresh_pending)
+
     @safe
     def save_deck(self):
+        if self.deck_refresh_pending is not None:
+            self.retry_deck_refresh()
+            return
         values = (self.name_entry.get(), self.description.get("1.0", "end-1c"))
         if self.editing_deck is None:
             self.refresh_deck_subjects()
             self.editing_deck = self.app.store.create_deck(self.subject_choice_id, *values)
         else:
-            self.app.store.update_deck(self.editing_deck, *values)
+            self.app.store.update_deck(self.editing_deck, *values, expected_state=self.editing_deck_snapshot)
+        self.deck_refresh_pending = self.editing_deck
+        self.save_button.configure(text=tr(self.app, 'Refresh deck'))
+        self.name_entry.configure(state='disabled')
+        self.description.configure(state='disabled')
+        if self.editing_deck_snapshot is None:
+            self.subject_menu.configure(state='disabled')
         self.status.configure(text=tr(self.app, 'Deck saved on this device.'))
         self.show_deck(self.editing_deck)
 
@@ -385,7 +424,7 @@ class FlashcardPage(ctk.CTkFrame):
         card = None
         while self.queue:
             candidate = self.app.store.flashcard(self.queue[0])
-            if candidate and candidate["deck_id"] == self.deck_id and candidate["due_at"] <= utc_now().isoformat():
+            if candidate and candidate["deck_id"] == self.deck_id and datetime.fromisoformat(candidate["due_at"]) <= utc_now():
                 card = candidate
                 break
             self.queue.pop(0)

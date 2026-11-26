@@ -29,7 +29,7 @@ def statistics_report(db, period="Last 7 days", *, today=None):
             FROM sessions WHERE seconds>0 AND day BETWEEN ? AND ?
             GROUP BY day ORDER BY day""", params)]
         practice = [dict(row) for row in db.execute("""
-            SELECT date(a.completed_at,'localtime') AS day,
+            SELECT study_local_day(a.completed_at) AS day,
                    COUNT(*) AS attempts, SUM(a.question_count) AS questions,
                    SUM(COALESCE(i.answered,0)) AS answered,
                    SUM(COALESCE(i.correct,0)) AS correct
@@ -39,11 +39,11 @@ def statistics_report(db, period="Last 7 days", *, today=None):
                     SUM(CASE WHEN selected_option=correct_option THEN 1 ELSE 0 END) AS correct
                 FROM practice_items GROUP BY attempt_id
             ) i ON i.attempt_id=a.id
-            WHERE a.status='completed' AND date(a.completed_at,'localtime') BETWEEN ? AND ?
+            WHERE a.status='completed' AND study_local_day(a.completed_at) BETWEEN ? AND ?
             GROUP BY day ORDER BY day""", params)]
         reviews = [dict(row) for row in db.execute("""
-            SELECT date(reviewed_at,'localtime') AS day, rating, COUNT(*) AS count
-            FROM review_events WHERE date(reviewed_at,'localtime') BETWEEN ? AND ?
+            SELECT study_local_day(reviewed_at) AS day, rating, COUNT(*) AS count
+            FROM review_events WHERE study_local_day(reviewed_at) BETWEEN ? AND ?
             GROUP BY day,rating ORDER BY day,rating""", params)]
         subjects = [dict(row) for row in db.execute("""
             SELECT s.subject_id,
