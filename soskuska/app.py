@@ -172,7 +172,7 @@ class Dashboard(ctk.CTk):
         brand.grid_columnconfigure(1,weight=1)
         self.brand_logo = sidebar_logo()
         self.brand_tile = ctk.CTkLabel(brand, text='', image=self.brand_logo,
-                                     width=36, height=36, fg_color='transparent')
+                                     width=36, height=36, fg_color='transparent', text_color=C['nav_text'])
         self.brand_tile.grid(row=0,column=0,padx=(0,10))
         self.brand=self.label(brand,'SOSkúška',18,'nav_text',bold=True)
         self.brand.grid(row=0,column=1,sticky='w')

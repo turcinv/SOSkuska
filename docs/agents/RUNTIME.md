@@ -91,3 +91,7 @@ Derive label wrap lengths in uniform responsive columns from their shared contai
 ## Study-studio presentation
 
 Keep studio_widgets.py drawing/layout free of I/O. The clock must use the original active target while preferences change and reset to the next saved target after Finish. Calendar marks use the full saved subject snapshot, not the limited upcoming rail; display exact dates. Search/retry/recovery reveal uses absolute canvas coordinates through the scrolling adapter, and queued reveals cancel on navigation or explicit search. Resize only regrids existing controls. Sidebar colors have separate always-dark roles in both appearance modes. Preserve first-stage visual-feedback scope before redesigning other page compositions.
+
+## App branding resources
+
+`branding.py` resolves committed assets relative to its own module so source and frozen launches work from arbitrary working directories. Keep Tk icon images owned by their current root; never cache PhotoImages across interpreters. Aqua consumes only the first `iconphoto` image: supply the 512 px source. On Windows use public `iconbitmap` before `iconphoto` to prevent CustomTkinter's delayed stock-icon callback. Keep image-only sidebar labels on the navigation palette. Rebuild assets with `tools/build_brand_assets.py`; include them in both the Docker allowlist and frozen datas. Windows acceptance compares actual PE icon payloads with the ICO, since merely detecting an icon also accepts PyInstaller's default.
