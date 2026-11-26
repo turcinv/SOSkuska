@@ -2,12 +2,13 @@
 import random
 import sqlite3
 import unicodedata
-from datetime import date, datetime, timedelta, timezone
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from content import question_fields, topic_fields
 from practice import MissingPracticeError, expired, practice_settings, utc_now
 from repetition import card_fields, deck_fields, next_review
 from study_statistics import statistics_report
+from study_time import register_sql_functions, utc_key
 from preferences import DEFAULTS, preference_fields
 from database_lock import DatabaseLease
 from csv_import import ImportValidationError, validate_rows, signature
@@ -53,6 +54,7 @@ class Store(FocusStoreMixin):
         try:
             self.db = sqlite3.connect(str(path))
             self.db.row_factory = sqlite3.Row
+            register_sql_functions(self.db)
             self.db.execute("PRAGMA foreign_keys = ON")
             self._migrate()
         except Exception:
@@ -73,6 +75,7 @@ class Store(FocusStoreMixin):
         try:
             store.db=sqlite3.connect(path.as_uri()+('?mode=ro' if readonly else '?mode=rw'),uri=True)
             store.db.row_factory=sqlite3.Row
+            register_sql_functions(store.db)
             store.db.execute('PRAGMA foreign_keys=ON')
             if store.db.execute('PRAGMA user_version').fetchone()[0]!=SCHEMA_VERSION:
                 raise ValueError('The database version changed. Reopen the app before importing.')
@@ -395,10 +398,17 @@ class Store(FocusStoreMixin):
         except sqlite3.IntegrityError:
             raise ValueError("A topic with this name already exists in this subject.") from None
 
-    def update_topic(self, topic_id, name):
+    def update_topic(self, topic_id, name, *, expected_state=None):
         name, key = topic_fields(name)
         try:
             with self.db:
+                self.db.execute("BEGIN IMMEDIATE")
+                current = self.topic(topic_id)
+                if current is None:
+                    raise ValueError("This topic no longer exists.")
+                if expected_state is not None and any(current[key] != expected_state[key]
+                        for key in ("id", "subject_id", "name")):
+                    raise ValueError("This topic changed in another window. Your draft is kept; copy your changes, then reopen Rename topic to reload.")
                 cursor = self.db.execute("UPDATE topics SET name=?,name_key=? WHERE id=?", (name, key, topic_id))
                 if cursor.rowcount == 0:
                     raise ValueError("This topic no longer exists.")
@@ -596,18 +606,14 @@ class Store(FocusStoreMixin):
             raise ValueError("History start date must not be after the end date.")
         # Use the same parser as result display/backup validation, including
         # accepted ISO offsets and fractional seconds SQLite date() cannot parse.
-        self.db.create_function('practice_local_day', 1, lambda value:
-            datetime.fromisoformat(value).astimezone().date().isoformat() if value else None)
-        self.db.create_function('practice_completion_utc', 1, lambda value:
-            datetime.fromisoformat(value).astimezone(timezone.utc).isoformat(timespec='microseconds') if value else None)
         where = ["status='completed'"]
         params = []
         if subject_name is not None:
             where.append('subject_name=?'); params.append(subject_name)
         if date_from:
-            where.append("practice_local_day(completed_at)>=?"); params.append(date_from)
+            where.append("study_local_day(completed_at)>=?"); params.append(date_from)
         if date_to:
-            where.append("practice_local_day(completed_at)<=?"); params.append(date_to)
+            where.append("study_local_day(completed_at)<=?"); params.append(date_to)
         clause = ' AND '.join(where)
         with self.db:
             self.db.execute('BEGIN')
@@ -619,7 +625,7 @@ class Store(FocusStoreMixin):
             rows = self.db.execute("""SELECT a.*,
                 (SELECT COUNT(*) FROM practice_items WHERE attempt_id=a.id AND selected_option IS NOT NULL) AS answered,
                 (SELECT COUNT(*) FROM practice_items WHERE attempt_id=a.id AND selected_option=correct_option) AS correct
-                FROM practice_attempts a WHERE """+clause+" ORDER BY practice_completion_utc(completed_at) DESC,id DESC LIMIT ? OFFSET ?",
+                FROM practice_attempts a WHERE """+clause+" ORDER BY study_utc_key(completed_at) DESC,id DESC LIMIT ? OFFSET ?",
                 [*params,page_size,page*page_size]).fetchall()
         return dict(rows=[dict(row) for row in rows], total=total, page=page, pages=pages, subjects=names)
 
@@ -684,8 +690,8 @@ class Store(FocusStoreMixin):
     def decks(self):
         return [dict(row) for row in self.db.execute("""SELECT d.*,s.name AS current_subject_name,
             (SELECT COUNT(*) FROM flashcards WHERE deck_id=d.id) AS card_count,
-            (SELECT COUNT(*) FROM flashcards WHERE deck_id=d.id AND due_at<=?) AS due_count
-            FROM decks d LEFT JOIN subjects s ON s.id=d.subject_id ORDER BY d.name_key,d.id""", (utc_now().isoformat(),))]
+            (SELECT COUNT(*) FROM flashcards WHERE deck_id=d.id AND study_utc_key(due_at)<=?) AS due_count
+            FROM decks d LEFT JOIN subjects s ON s.id=d.subject_id ORDER BY d.name_key,d.id""", (utc_key(utc_now().isoformat()),))]
 
     def deck(self, deck_id):
         row = self.db.execute("""SELECT d.*,s.name AS current_subject_name FROM decks d
@@ -706,9 +712,16 @@ class Store(FocusStoreMixin):
                 raise ValueError("A deck with this name already exists.") from None
         return cursor.lastrowid
 
-    def update_deck(self, deck_id, name, description=""):
+    def update_deck(self, deck_id, name, description="", *, expected_state=None):
         name, key, description = deck_fields(name, description)
         with self.db:
+            self.db.execute("BEGIN IMMEDIATE")
+            current = self.deck(deck_id)
+            if current is None:
+                raise ValueError("This deck no longer exists.")
+            if expected_state is not None and any(current[key] != expected_state[key]
+                    for key in ("id", "name", "description")):
+                raise ValueError("This deck changed in another window. Your draft is kept; copy your changes, then reopen Edit deck to reload.")
             try:
                 cursor = self.db.execute("UPDATE decks SET name=?,name_key=?,description=? WHERE id=?", (name, key, description, deck_id))
             except sqlite3.IntegrityError:
@@ -808,8 +821,8 @@ class Store(FocusStoreMixin):
         return True
 
     def due_flashcards(self, deck_id, limit=100):
-        return [dict(row) for row in self.db.execute("SELECT * FROM flashcards WHERE deck_id=? AND due_at<=? ORDER BY due_at,id LIMIT ?",
-                                                   (deck_id, utc_now().isoformat(), limit))]
+        return [dict(row) for row in self.db.execute("SELECT * FROM flashcards WHERE deck_id=? AND study_utc_key(due_at)<=? ORDER BY study_utc_key(due_at),id LIMIT ?",
+                                                   (deck_id, utc_key(utc_now().isoformat()), limit))]
 
     def rate_flashcard(self, card_id, rating, expected_revision):
         with self.db:
@@ -820,7 +833,7 @@ class Store(FocusStoreMixin):
             if type(expected_revision) is not int or card["revision"] != expected_revision:
                 raise ValueError("This card changed. Reveal its current answer before rating it.")
             now = utc_now()
-            if card["due_at"] > now.isoformat():
+            if datetime.fromisoformat(card["due_at"]) > now:
                 raise ValueError("This card is not due yet.")
             due, interval, _label = next_review(card["interval_days"], rating, now)
             deck = self.deck(card["deck_id"])

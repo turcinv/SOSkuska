@@ -30,8 +30,8 @@ Open Questions from a subject card. Questions have four distinct answers, one co
 
 ## Statistics safeguards
 
-- StatisticsPage uses Store.statistics() / study_statistics.py. Keep all four read aggregates in one deferred SQLite transaction; no writes or migration. Statistics introduced no schema change (schema 5 in v0.6.0; current schema is 9).
-- Last 7/30 days includes today and previous 6/29 local calendar days; all-time totals exclude future days and chart only the latest 30 days. Focus uses stored local day; UTC completion/review times use SQLite localtime. Time-zone changes can rebucket events.
+- StatisticsPage uses Store.statistics() / study_statistics.py. Keep all four read aggregates in one deferred SQLite transaction; no writes or migration. Statistics introduced no schema change (schema 5 in v0.6.0; current schema is 10).
+- Last 7/30 days includes today and previous 6/29 local calendar days; all-time totals exclude future days and chart only the latest 30 days. Focus uses stored local day; UTC completion/review times use the shared timezone-aware local-day parser. Time-zone changes can rebucket events.
 - Practice accuracy is total correct / total questions from completed snapshots; unanswered questions count incorrect, unfinished/discarded tests excluded. Include full retained history beyond Flashcards’ 20-row review-history display limit.
 - Flashcard ratings are self-assessments, not accuracy/mastery. Never infer focus time from tests/reviews. Empty history has zero counts and no percentage. Keep deleted/unassigned focus history visible and document name-based grouping after deletion.
 - Refresh or reopening loads a new snapshot. Read failure preserves the previous report with a retry notice. Resize bindings must die with their labels; do not accumulate Configure callbacks on persistent report containers. Statistics shortcuts must not modify hidden search drafts.
@@ -49,3 +49,8 @@ Show saved answer selection independently of correctness and restore both radio 
 ### Flashcard review footer and refresh
 
 Keep reveal/rating controls in the same footer; order is Again, Hard, Good, Easy. Hidden ratings remain disabled until Reveal. Treat `review_refresh_pending` as UI-only committed-write state: invalidate the old card and disable its ratings before reading the next card, then clear the flag only after that read succeeds. A failed write retains the revealed card for retry. Surface errors beside the footer as well as the page status; localize referenced action names. Test the next-card read separately from precommit Store validation.
+
+
+## Astra v0.26 review fixes
+
+Deck/topic saves compare the original editable fields under BEGIN IMMEDIATE; conflicts retain drafts and require explicit reload. Deck postcommit display retries must consume the save first and expose Refresh deck with disabled saved inputs; do not repeat writes. study_time.py registers integer microsecond UTC keys and local-day functions on every Store connection, including open_existing; do not recreate them during reports with active cursors. Due counts/ordering, review/rating checks and history/Statistics must accept the same aware ISO domain as restore, without rewriting stored timestamps. UTC keys avoid datetime year-boundary overflow; local-day conversion falls back to a calendar-clamped UTC day only when the host rejects the extreme local conversion. Preserve microseconds and one read transaction. Track A62-05–09 in REVIEW_FINDINGS.md.

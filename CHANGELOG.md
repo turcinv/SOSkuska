@@ -2,6 +2,10 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
+## Unreleased
+
+- Astra review fixes: A62-05–A62-09.
+
 ## 0.26.0 — 2026-11-26
 
 - AI study modes: Explain simply / Give me a hint / Quiz me.

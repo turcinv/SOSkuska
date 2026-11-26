@@ -20,6 +20,7 @@ class QuestionBankPage(ctk.CTkFrame):
         self.question_snapshot = None
         self.unavailable_topic_id = None
         self.editing_topic_id = None
+        self.editing_topic_snapshot = None
         self.pending_delete = None
         self.filter_topics = {"All topics": "all", "No topic": None}
         self.form_topics = {"No topic": None}
@@ -259,6 +260,7 @@ class QuestionBankPage(ctk.CTkFrame):
         self.hide_question_form()
         self.cancel_delete()
         self.editing_topic_id = topic_id
+        self.editing_topic_snapshot = topic
         self.topic_form_title.configure(text=tr(self.app, 'Rename topic') if topic else tr(self.app, 'New topic'))
         self.topic_entry.delete(0, "end")
         self.topic_entry.insert(0, topic["name"] if topic else "")
@@ -281,7 +283,7 @@ class QuestionBankPage(ctk.CTkFrame):
             if self.editing_topic_id is None:
                 self.app.store.create_topic(self.subject_id, self.topic_entry.get())
             else:
-                self.app.store.update_topic(self.editing_topic_id, self.topic_entry.get())
+                self.app.store.update_topic(self.editing_topic_id, self.topic_entry.get(), expected_state=self.editing_topic_snapshot)
         except (ValueError, sqlite3.Error) as exc:
             self.topic_error.configure(text=tr(self.app,tr(self.app, str(exc)) if isinstance(exc, ValueError) else tr(self.app, 'Could not save the topic. Please try again.')))
             return

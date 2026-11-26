@@ -191,7 +191,7 @@ class StatisticsTests(unittest.TestCase):
         self.addCleanup(other.close)
         fired = []
         def trace(sql):
-            if "SELECT date(a.completed_at" in sql and not fired:
+            if "SELECT study_local_day(a.completed_at" in sql and not fired:
                 fired.append(True)
                 with other.db:
                     other.db.execute("INSERT INTO sessions(day,seconds) VALUES (?,?)", (TODAY.isoformat(), 90))

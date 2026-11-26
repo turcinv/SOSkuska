@@ -2,6 +2,10 @@
 
 [English](../../CHANGELOG.md) · [Čeština](../cs/CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](CHANGELOG.md)
 
+## Unreleased
+
+- Исправления по проверке Astra: A62-05–A62-09.
+
 ## 0.26.0 — 2026-11-26
 
 - Режимы обучения с ИИ: Explain simply / Give me a hint / Quiz me.
