@@ -2,6 +2,10 @@
 
 [English](../CURRENT_ARCHITECTURE.md) · [Čeština](CURRENT_ARCHITECTURE.md) · [Slovenčina](../sk/CURRENT_ARCHITECTURE.md) · [Русский](../ru/CURRENT_ARCHITECTURE.md)
 
+## v0.30.1
+
+Na základě vyhodnocení se skutečným modelem (`tools/evaluate_ai.py`, záznam v `agents/design/ai-note-generation/EVALUATION.md`) přibyly tyto změny. Generované otázky nyní vracejí `correct_answer` a tři `wrong_answers` a správnou odpověď umístí `note_generation.answer_position`. Poznámky jsou označené jako data a zadání se za nimi opakuje. `note_support` označí návrhy ve stejném jazyce, jejichž odpověď nebyla v poznámkách jasně nalezena; panel je zobrazí nezaškrtnuté s varováním. Ostatní studijní režimy výslovně uvádějí jazyk odpovědi; prompt Explain answer se nemění. Schéma zůstává 10.
+
 ## v0.30.0
 
 `note_generation.py` sestavuje prompt s poznámkami, JSON schéma Ollamy a převádí odpovědi na kanonické importní řádky (bez Tk/SQLite). `ai_generation_panel.py` je panel vlastněný Tk, sdílený kartičkami a bankou otázek: explicitní Generovat spustí pracovní vlákno `TutorTask` se strukturovaným `format`, teplotou 0,3, limitem odpovědi 40 000 znaků a limitem 5 minut. Zkontrolovaný výběr se ukládá ve vlákně Tk přes `Store.import_flashcards` / `import_questions`, které pod BEGIN IMMEDIATE znovu ověřují identitu/název cíle a duplicity. Poznámky se nikdy neukládají. Změny preferencí AI a obnovení čekají na nečinný generátor; zavření ruší bez čekání na vlákno. [Návod](AI_NOTE_GENERATION.md). Schéma zůstává 10.
@@ -40,13 +44,13 @@ Statistiky seskupují výběr období a Obnovit do záhlaví. Tři souhrnné kar
 
 ## v0.22.0 — vzhled předmětů a banky otázek
 
-Předměty a banka otázek nyní seskupují názvy, počty a akce v záhlaví a označené hledání a filtry na společných plochách. Akce předmětu mají dva řádky; kartičky mají dva sloupce od 950 logických pixelů stránky, jinak jeden. Změna velikosti přeskládá existující kartičky bez dotazu na databázi. Pole odpovědí mají dva sloupce od 850 logických pixelů panelu, jinak jsou pod sebou; náhled správné odpovědi je zvýrazněný pouze v seznamu pro úpravy. Stránkování zůstává po 50 otázkách. Koncepty, původní snímky úprav, filtry, identita témat, kontroly zastaralého stavu a náhled CSV zachovávají dosavadní chování. Vydaná verze zůstává v0.30.0, schéma 10.
+Předměty a banka otázek nyní seskupují názvy, počty a akce v záhlaví a označené hledání a filtry na společných plochách. Akce předmětu mají dva řádky; kartičky mají dva sloupce od 950 logických pixelů stránky, jinak jeden. Změna velikosti přeskládá existující kartičky bez dotazu na databázi. Pole odpovědí mají dva sloupce od 850 logických pixelů panelu, jinak jsou pod sebou; náhled správné odpovědi je zvýrazněný pouze v seznamu pro úpravy. Stránkování zůstává po 50 otázkách. Koncepty, původní snímky úprav, filtry, identita témat, kontroly zastaralého stavu a náhled CSV zachovávají dosavadní chování. Vydaná verze zůstává v0.30.1, schéma 10.
 
 ## v0.21.0 — nový vzhled opakování kartiček
 
-Opakování kartiček nyní odděluje otázku a odhalenou odpověď do čtecích ploch. Hlavní akcí je odhalení odpovědi; poté ji na stejném místě nahradí hodnocení Again / Hard / Good / Easy, ve čtyřech sloupcích v širokém okně nebo ve dvou v kompaktním. Dlouhý text se zalamuje a k hodnocení lze posunout stránku. Akce balíčku a prázdné stavy používají společné rozvržení. Selhání zápisu zachová odhalenou odpověď pro opakování. Když se hodnocení uloží, ale načtení další kartičky selže, stará hodnocení se vypnou a Obnovit kartičku pouze znovu načte další kartičku; uložené hodnocení se neopakuje. Plánování, historie, rozepsané úpravy a náhled CSV zůstávají zachovány. Vydaná verze zůstává v0.30.0, schéma 10.
+Opakování kartiček nyní odděluje otázku a odhalenou odpověď do čtecích ploch. Hlavní akcí je odhalení odpovědi; poté ji na stejném místě nahradí hodnocení Again / Hard / Good / Easy, ve čtyřech sloupcích v širokém okně nebo ve dvou v kompaktním. Dlouhý text se zalamuje a k hodnocení lze posunout stránku. Akce balíčku a prázdné stavy používají společné rozvržení. Selhání zápisu zachová odhalenou odpověď pro opakování. Když se hodnocení uloží, ale načtení další kartičky selže, stará hodnocení se vypnou a Obnovit kartičku pouze znovu načte další kartičku; uložené hodnocení se neopakuje. Plánování, historie, rozepsané úpravy a náhled CSV zůstávají zachovány. Vydaná verze zůstává v0.30.1, schéma 10.
 
-**Vydaná verze: v0.30.0 · schéma 10.** Historie testů a testy v kontejneru jsou implementované.
+**Vydaná verze: v0.30.1 · schéma 10.** Historie testů a testy v kontejneru jsou implementované.
 
 v0.17.0 přidává obnovu soustředění po pádu se schématem **10**. Před otevřením původních dat vytvoř zálohu: migrace je transakční, ale v0.16.0 databázi schématu 10 neotevře. [Obnova soustředění po pádu](FOCUS_RECOVERY.md).
 
@@ -370,7 +374,7 @@ Plánované místní zálohy jsou dostupné ve **v0.18.0**. Schéma SQLite zůst
 
 ## Opravy po revizi hlavní větve
 
-Opravy vydané ve v0.18.1 přes PR #38 sleduje [záznam revize Astra](REVIEW_FINDINGS.md). Schéma zůstává 10 a vydaná verze je v0.30.0. Úpravy předmětu porovnají původní obsah pod zápisovým zámkem; konflikt zachová koncept. Před opětovným otevřením úprav pro načtení nejnovější verze si potřebné změny zkopíruj. Smazání otázky/tématu porovná zobrazený obsah a po změně vyžaduje nové potvrzení. Návrat ke stejnému předmětu zachová editor otázky/tématu, filtry i původní identitu, také při opakování čtení; smazané vybrané téma zůstane nedostupné, dokud výslovně nevybereš jiné téma nebo možnost Bez tématu. Jiný předmět editor stále resetuje. Novější potvrzení úspěšné denní zálohy odstraní staré oznámení chyby bez dalšího zápisu zálohy.
+Opravy vydané ve v0.18.1 přes PR #38 sleduje [záznam revize Astra](REVIEW_FINDINGS.md). Schéma zůstává 10 a vydaná verze je v0.30.1. Úpravy předmětu porovnají původní obsah pod zápisovým zámkem; konflikt zachová koncept. Před opětovným otevřením úprav pro načtení nejnovější verze si potřebné změny zkopíruj. Smazání otázky/tématu porovná zobrazený obsah a po změně vyžaduje nové potvrzení. Návrat ke stejnému předmětu zachová editor otázky/tématu, filtry i původní identitu, také při opakování čtení; smazané vybrané téma zůstane nedostupné, dokud výslovně nevybereš jiné téma nebo možnost Bez tématu. Jiný předmět editor stále resetuje. Novější potvrzení úspěšné denní zálohy odstraní staré oznámení chyby bez dalšího zápisu zálohy.
 
 ## v0.20.0 — redesign testů, krok 3
 
@@ -381,7 +385,7 @@ Běžící test sdružuje postup/čas v záhlaví a ukazuje počet uložených o
 
 Dokončené výsledky Practice včetně historie nabízejí **Vysvětlit tuto otázku**. Otevřete místní náhled a zvolte **Připravit v Tutorovi**. Použije se uložený snímek otázky, čtyři možnosti, vaše odpověď nebo Unanswered, uložený klíč a vysvětlení, i po smazání původního obsahu. Náhled ani příprava nic nepřipojují a neodesílají. V Tutorovi zkontrolujte server, model a jazyk, podle potřeby výslovně použijte Connect a poté Send. Upravitelný koncept využívá běžnou místní historii, Stop a opakování uložení.
 
-Tutor musí být nečinný, v čistém New chat s prázdným dotazem a bez čekajícího potvrzení či neuložené odpovědi. Stávající práce zůstává zachována; dokončete ji nebo výslovně potvrďte New chat a opakujte akci. Celý dotaz přes 4 000 znaků je odmítnut s uvedením délky, bez zkracování. Klíč i AI se mohou mýlit; skóre ani zdrojová data se nemění. Automatic požaduje jazyk dodané otázky; výslovná volba jazyka má přednost. Pokyny dotazu jsou anglicky, obsah uživatele se nemění. Schéma zůstává 10 a vydaná verze je v0.30.0.
+Tutor musí být nečinný, v čistém New chat s prázdným dotazem a bez čekajícího potvrzení či neuložené odpovědi. Stávající práce zůstává zachována; dokončete ji nebo výslovně potvrďte New chat a opakujte akci. Celý dotaz přes 4 000 znaků je odmítnut s uvedením délky, bez zkracování. Klíč i AI se mohou mýlit; skóre ani zdrojová data se nemění. Automatic požaduje jazyk dodané otázky; výslovná volba jazyka má přednost. Pokyny dotazu jsou anglicky, obsah uživatele se nemění. Schéma zůstává 10 a vydaná verze je v0.30.1.
 
 Implementace: `question_explanation.py` sestavuje omezený dotaz ze snímku, `practice_page.py` řídí náhled a kontrolu aktuálního výsledku, `tutor_page.py` chrání vložení konceptu. Send uloží dotaz před HTTP. Automatické testy používají dočasná data a místní FakeOllama; kvalita modelu a nativní ověření platformy/DPI zůstávají ruční.
 
@@ -390,18 +394,18 @@ Implementace: `question_explanation.py` sestavuje omezený dotaz ze snímku, `pr
 
 V dokončeném výsledku otevřete **Vysvětlit tuto otázku** a před **Připravit v Tutorovi** vyberte **Studijní režim**. **Vysvětlit odpověď** zachová dosavadní vysvětlení; **Vysvětlit jednoduše** požaduje krátké kroky pro začátečníka a příklad; **Dát nápovědu** požaduje jednu pojmovou nápovědu a z dotazu vynechá vaši odpověď, uložený klíč i vysvětlení; **Procvičit mě** klade jednu novou doplňující otázku a před zpětnou vazbou čeká na odpověď. Jde o neformální procvičování bez zápisu bodovaného testu nebo změny zdrojů.
 
-Změna režimu obnoví přesný místní náhled a zneplatní jeho předchozí akci přípravy. Připojení, odeslání a vytvoření konverzace vyžadují stávající výslovné ovládání. Odeslaný dotaz se ukládá do běžné místní historie; platí dosavadní jazyk, limit 4 000 znaků, ochrana čistého chatu, Zastavit a opakování uložení. Nápověda stále obsahuje čtyři možnosti: model může odpověď odvodit či prozradit a již zobrazené výsledky zůstávají viditelné. Kvalita a dodržení režimu vyžadují pozdější test skutečného modelu, který uživatel výslovně odložil. Automatické testy používají místní FakeOllama. Vydaná verze je v0.30.0, schéma 10.
+Změna režimu obnoví přesný místní náhled a zneplatní jeho předchozí akci přípravy. Připojení, odeslání a vytvoření konverzace vyžadují stávající výslovné ovládání. Odeslaný dotaz se ukládá do běžné místní historie; platí dosavadní jazyk, limit 4 000 znaků, ochrana čistého chatu, Zastavit a opakování uložení. Nápověda stále obsahuje čtyři možnosti: model může odpověď odvodit či prozradit a již zobrazené výsledky zůstávají viditelné. Kvalita a dodržení režimu vyžadují pozdější test skutečného modelu, který uživatel výslovně odložil. Automatické testy používají místní FakeOllama. Vydaná verze je v0.30.1, schéma 10.
 
 
 ## Opravy po revizi Astra · v0.26.1
 
 Editory balíčku a tématu nyní porovnávají původní upravovaný snímek pod zápisovým zámkem. Konflikt zachová koncept a zobrazí upozornění; před opětovným otevřením úpravy balíčku nebo přejmenování tématu zkopírujte potřebné změny. Varování balíčku je také u Uložit. Po potvrzeném uložení balíčku změní chyba načtení tlačítko na Obnovit balíček a opakuje jen čtení, nikoli zápis.
 
-Počty, seřazené fronty, hodnocení a kontroly opakování kartiček porovnávají skutečné časové okamžiky včetně obnovených posunů a mikrosekund. Statistiky a historie sdílejí převod povolených časů ISO na místní den, včetně posunů se sekundami. Uložené časy se nepřepisují. Přesné celočíselné klíče UTC pokrývají celý přijatý rozsah; pokud systém nezvládne místní převod krajního data, použije se den UTC omezený na podporovaný kalendář. Obnova vyžaduje samostatnou zálohu schématu 10; popis migrací zůstává historický. Vydaná verze je v0.30.0, schéma 10. Test skutečného modelu zůstává odložený.
+Počty, seřazené fronty, hodnocení a kontroly opakování kartiček porovnávají skutečné časové okamžiky včetně obnovených posunů a mikrosekund. Statistiky a historie sdílejí převod povolených časů ISO na místní den, včetně posunů se sekundami. Uložené časy se nepřepisují. Přesné celočíselné klíče UTC pokrývají celý přijatý rozsah; pokud systém nezvládne místní převod krajního data, použije se den UTC omezený na podporovaný kalendář. Obnova vyžaduje samostatnou zálohu schématu 10; popis migrací zůstává historický. Vydaná verze je v0.30.1, schéma 10. Test skutečného modelu zůstává odložený.
 
 
 ## Nový studijní prostor · v0.27.0
 
 Nová kompozice Dashboardu nahrazuje předchozí postupné úpravy: čtyři souhrnné dlaždice, výrazná část soustředění s živými kruhovými hodinami, karty předmětů s monogramy a měsíční přehled uložených termínů. Postranní panel používá místně kreslené ikony a vlastní tmavé barvy; sdílené plochy a párový Dark/Light vzhled se mění v celé aplikaci. Tato fáze zavádí Dashboard a společný rámec; ostatní stránky navážou po vizuální zpětné vazbě. [Ukázky a rozsah](../agents/design/study-studio-dashboard/README.md).
 
-Hodiny ukazují skutečný zbývající čas a původní cíl aktivního sezení. Kalendář používá úplný snímek předmětů; nejbližší zkoušky zachovají přesná data a limit pěti položek. Klávesové hledání, chyba uložení a obnova soustředění posunou ovládání do viditelné části kompaktního okna; čekající posun zruší navigace či hledání. Změna rozložení nečte data. Schéma zůstává 10, vydaná verze v0.30.0. Kontejnerové a simulované měřítko neověřují nativní platformu; test skutečného modelu zůstává odložený.
+Hodiny ukazují skutečný zbývající čas a původní cíl aktivního sezení. Kalendář používá úplný snímek předmětů; nejbližší zkoušky zachovají přesná data a limit pěti položek. Klávesové hledání, chyba uložení a obnova soustředění posunou ovládání do viditelné části kompaktního okna; čekající posun zruší navigace či hledání. Změna rozložení nečte data. Schéma zůstává 10, vydaná verze v0.30.1. Kontejnerové a simulované měřítko neověřují nativní platformu; test skutečného modelu zůstává odložený.

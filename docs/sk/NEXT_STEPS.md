@@ -2,7 +2,7 @@
 
 [English](../NEXT_STEPS.md) · [Čeština](../cs/NEXT_STEPS.md) · [Slovenčina](NEXT_STEPS.md) · [Русский](../ru/NEXT_STEPS.md)
 
-Aktuálne vydanie: **v0.30.0**, schéma **10**. Implementácia krokov dizajnu 1–5 je hotová cez PR #43, #44, #46, #48, #50, #52 a #54. Zostáva krok 6: akceptácia a príprava ukážky.
+Aktuálne vydanie: **v0.30.1**, schéma **10**. Implementácia krokov dizajnu 1–5 je hotová cez PR #43, #44, #46, #48, #50, #52 a #54. Zostáva krok 6: akceptácia a príprava ukážky.
 
 ## Úplná revízia Astra dokončená · 26. novembra 2026
 
