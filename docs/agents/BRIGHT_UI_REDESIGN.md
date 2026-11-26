@@ -4,7 +4,7 @@ This is an internal implementation plan for the native Python/CustomTkinter app.
 
 ## New direction · 26 November 2026
 
-The user requested substantially larger visual changes after finding the earlier result too incremental. The [study-studio Dashboard handoff](design/study-studio-dashboard/README.md) supersedes the next-step prompt below for design work. Stage 1 replaces the Dashboard/navigation/shared palette with a working native preview. Obtain visual feedback before extending remaining page compositions. The Steps 1–5 records below remain historical; automated coverage is not visual approval.
+The user requested substantially larger visual changes after finding the earlier result too incremental. The [study-studio Dashboard handoff](design/study-studio-dashboard/README.md) supersedes the next-step prompt below for design work. Stage 1 replaces the Dashboard/navigation/shared palette with a working native preview. The user approved stage 1 for release in v0.27.0; remaining page compositions need their own implementation request. The Steps 1–5 records below remain historical; automated coverage is not visual approval.
 
 ## Session handoff
 
