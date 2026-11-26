@@ -8,6 +8,7 @@ import unicodedata
 import customtkinter as ctk
 from content import DIFFICULTIES
 from csv_import_panel import CsvImportPanel
+from ai_generation_panel import NoteGenerationPanel
 
 
 class QuestionBankPage(ctk.CTkFrame):
@@ -41,7 +42,9 @@ class QuestionBankPage(ctk.CTkFrame):
         self.add_topic_button = app.button(actions, tr(self.app, '+ New topic'), self.show_topic_form, width=125)
         self.add_topic_button.pack(side="left", padx=(0, 8))
         self.csv_button=app.button(actions,tr(self.app, 'Import CSV'),lambda:self.importer.open(),width=125)
-        self.csv_button.pack(side='left')
+        self.csv_button.pack(side='left', padx=(0, 8))
+        self.generate_button=app.button(actions,tr(self.app, 'Generate with AI'),lambda:self.generator.open(),width=150)
+        self.generate_button.pack(side='left')
 
         self.topic_form = app.frame(self, card=True)
         self.topic_form.grid(row=5, column=0, sticky="ew", pady=(0, 16))
@@ -156,6 +159,8 @@ class QuestionBankPage(ctk.CTkFrame):
         self.cards.grid_columnconfigure(0, weight=1)
         self.importer=CsvImportPanel(self,app,self)
         self.importer.grid(row=4,column=0,sticky='ew',pady=(0,16));self.importer.grid_remove()
+        self.generator=NoteGenerationPanel(self,app,self)
+        self.generator.grid(row=9,column=0,sticky='ew',pady=(0,16));self.generator.grid_remove()
         self.query.trace_add("write", lambda *_: self.render_questions())
         for panel in (header,self.topic_form,self.question_form,self.delete_panel):
             self.wrap_labels(panel)
@@ -197,6 +202,7 @@ class QuestionBankPage(ctk.CTkFrame):
             return
         self.subject_id = subject_id
         self.subject_snapshot = None
+        self.generator.close()  # Drafts belong to the previous subject.
         self.hide_question_form()
         self.hide_topic_form()
         self.cancel_delete()
@@ -215,6 +221,8 @@ class QuestionBankPage(ctk.CTkFrame):
             self.add_question_button.configure(state="disabled")
             self.add_topic_button.configure(state="disabled")
             self.csv_button.configure(state="disabled")
+            self.generate_button.configure(state="disabled")
+            self.generator.close()
             self.hide_question_form()
             self.hide_topic_form()
             self.cancel_delete()
@@ -223,6 +231,7 @@ class QuestionBankPage(ctk.CTkFrame):
             self.add_question_button.configure(state="normal")
             self.add_topic_button.configure(state="normal")
             self.csv_button.configure(state="normal")
+            self.generate_button.configure(state="normal")
         selected_filter = self.filter_topics.get(self.topic_filter.get(), "all")
         selected_label = self.question_topic.get()
         selected_form = self.form_topics.get(selected_label)

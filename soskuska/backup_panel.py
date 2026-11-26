@@ -76,6 +76,9 @@ class BackupPanel(ctk.CTkFrame):
             raise ValueError('Retry save reply or Discard unsaved in AI Tutor before restoring.')
         if self.app.tutor_page.task is not None:
             raise ValueError('Wait for or stop the Tutor request before restoring.')
+        from ai_generation_panel import generation_busy
+        if generation_busy(self.app):
+            raise ValueError('Wait for or stop AI generation before restoring.')
         if self.app.store.active_practice() is not None:
             raise ValueError('Finish or discard the current practice test before restoring.')
 

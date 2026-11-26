@@ -11,6 +11,7 @@ class FakeOllama:
         self.model_names = ['study-model:latest']
         self.models_payload = None
         self.error_detail = 'model unavailable'
+        self.content = ''
         self.requests = []
         self.gate = threading.Event()
         fixture = self
@@ -68,6 +69,13 @@ class FakeOllama:
                         return
                     if mode == 'empty':
                         self.wfile.write(b'{"done":true}\n')
+                        return
+                    if mode == 'content':
+                        # Structured-output style reply streamed in two chunks.
+                        half = len(fixture.content) // 2
+                        for index, piece in enumerate((fixture.content[:half], fixture.content[half:])):
+                            self.wfile.write((json.dumps({'message': {'content': piece}, 'done': index == 1}, ensure_ascii=False)+'\n').encode())
+                            self.wfile.flush()
                         return
                     if mode == 'thinking':
                         self.wfile.write(b'{"message":{"thinking":"internal"},"done":false}\n')

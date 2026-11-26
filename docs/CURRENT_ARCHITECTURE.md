@@ -2,6 +2,10 @@
 
 [English](CURRENT_ARCHITECTURE.md) · [Čeština](cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](sk/CURRENT_ARCHITECTURE.md) · [Русский](ru/CURRENT_ARCHITECTURE.md)
 
+## Unreleased — AI drafting from notes
+
+`note_generation.py` builds the notes prompt, Ollama JSON schema and parses replies into canonical import rows (no Tk/SQLite). `ai_generation_panel.py` is a Tk-owned panel shared by Flashcards and the question bank: an explicit Generate starts a `TutorTask` worker with structured `format`, temperature 0.3, a 40,000-character reply bound and 5-minute limit. Reviewed selections save on the Tk thread through `Store.import_flashcards` / `import_questions`, which recheck target identity/name and duplicates under BEGIN IMMEDIATE. Notes are never stored. AI preference changes and restore wait for an idle generator; close cancels without joining. [Guide](AI_NOTE_GENERATION.md). Schema remains 10.
+
 ## v0.29.0
 
 `theme.py` adopts the Charcoal/Lavender/Violet/Cream brand palette, with deeper lavender fills where white text needs 4.5:1 contrast and a new `outline` role. `build_brand_assets.py` renders the cat-reading-a-book logo. `studio_widgets.py` draws the summary-tile icons, paw mark, mascot avatar, banner scene and sidebar decoration locally with Pillow; no network, database or external assets. The Dashboard banner names the selected or active saved subject; the scene is shown only in the wide layout. The Add subject card opens an empty form and never replaces an open subject draft. Metrics stay the existing real values. Schema remains 10.

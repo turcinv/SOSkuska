@@ -99,6 +99,10 @@ Flashcards now supports UTF-8 CSV import into an existing deck: a header-only te
 
 AI Tutor now saves conversations locally, including the original server/model and reply status. Open saved history without networking, reconnect explicitly to continue, or delete a selected conversation after confirmation. Released in v0.12.0 with schema 7, which migrates existing study data transactionally. [Saved AI Tutor conversations](docs/TUTOR_HISTORY.md).
 
+## AI drafts from notes
+
+In a flashcard deck or a subject's question bank, choose **Generate with AI**, paste your notes and press Generate. The saved Ollama model drafts flashcards or multiple-choice questions; review them, untick anything wrong and save the selection in one step. Notes are sent only when you press Generate and are not stored. Unreleased; schema remains 10. [Generate flashcards and questions from notes](docs/AI_NOTE_GENERATION.md).
+
 ## Interface language
 
 UI language selection is available in v0.13.0: English, Czech, Slovak and Russian, saved separately from AI answer language and applied after restart. Current schema is 10. [Interface language](docs/UI_LANGUAGES.md).

@@ -11,6 +11,7 @@ from study_time import display_time
 from practice import utc_now
 from repetition import RATINGS, next_review
 from csv_import_panel import CsvImportPanel
+from ai_generation_panel import NoteGenerationPanel
 from panel_layout import wrap_labels
 
 
@@ -67,8 +68,10 @@ class FlashcardPage(ctk.CTkFrame):
         app.button(toolbar, tr(self.app, 'Refresh'), self.refresh, width=90).pack(side="left")
         self.importer = CsvImportPanel(self, app, self, cards=True)
         self.importer.grid(row=3, column=0, sticky="ew", pady=(0,18));self.importer.grid_remove()
+        self.generator = NoteGenerationPanel(self, app, self, cards=True)
+        self.generator.grid(row=4, column=0, sticky="ew", pady=(0,18));self.generator.grid_remove()
         self.body = app.frame(self)
-        self.body.grid(row=4, column=0, sticky="ew")
+        self.body.grid(row=5, column=0, sticky="ew")
         self.body.grid_columnconfigure(0, weight=1)
 
     def clear(self, view, *, preserve_import=False):
@@ -76,6 +79,10 @@ class FlashcardPage(ctk.CTkFrame):
             raise ValueError("Wait for the flashcard import to finish.")
         if not preserve_import:
             self.importer.cancel()
+        # AI drafts belong to one deck: keep them (and a running request) only
+        # while that same deck stays open, e.g. across search or refresh.
+        if not (view == "deck" and self.generator.target_id == self.deck_id):
+            self.generator.close()
         if view != "deck":
             self.deck_snapshot = None
         for child in self.body.winfo_children():
@@ -207,7 +214,9 @@ class FlashcardPage(ctk.CTkFrame):
         self.app.button(actions, tr(self.app, 'Edit deck'), lambda: self.deck_form(deck_id), width=100).grid(
             row=1, column=0, padx=(0, 8), sticky="w")
         self.app.button(actions, tr(self.app, 'Delete deck'), lambda: self.ask_delete("deck", deck_id), width=115).grid(
-            row=1, column=1, sticky="w")
+            row=1, column=1, padx=(0, 8), sticky="w")
+        self.generate_button = self.app.button(actions, tr(self.app, 'Generate with AI'), self.generator.open, width=150)
+        self.generate_button.grid(row=1, column=2, sticky="w")
         search = self.app.frame(self.body)
         search.grid(row=2, column=0, sticky="ew", pady=(0, 14))
         search.grid_columnconfigure(0, weight=1)
