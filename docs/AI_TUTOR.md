@@ -18,7 +18,7 @@ Connect your Ollama server through **Connect / refresh**, choose a model and ans
 
 ## Privacy and limits
 
-Only Connect or Send starts a request; startup and navigation send nothing. The selected server receives the question and bounded context from this chat, never automatic attachments of SQLite records, subjects, results or files. The default server is local; another server/model determines how it processes data. Start New chat before connecting an existing chat to a different server. There is no automatic cloud fallback.
+Only Connect or Send starts a request; startup and navigation send nothing. The selected server receives the question and bounded context from this chat, no automatic attachments. If you explicitly prepare a completed-question draft, that selected snapshot (choices, your answer, answer key and explanation) becomes part of the prompt sent after Send. Other SQLite records, subjects, results and files are not attached. The default server is local; another server/model determines how it processes data. Start New chat before connecting an existing chat to a different server. There is no automatic cloud fallback.
 
 Chats are saved locally and included in backups. Connection choices may be explicitly saved in [Settings](SETTINGS.md), while conversations save separately when you Send. Limits: 12 turns per chat, 4,000 characters per question, 16,000 per answer. Context includes at most six complete pairs / 24,000 characters; the model may not know older content. Output is plain text without Markdown/LaTeX rendering or attached materials. Replies are not verified facts or automatic grading.
 
@@ -29,3 +29,12 @@ API references: [models](https://docs.ollama.com/api/tags) · [chat](https://doc
 ## Saved AI Tutor conversations
 
 AI Tutor now saves conversations locally, including the original server/model and reply status. Open saved history without networking, reconnect explicitly to continue, or delete a selected conversation after confirmation. Released in v0.12.0 with schema 7, which migrates existing study data transactionally. [Saved AI Tutor conversations](TUTOR_HISTORY.md).
+
+
+## Question explanations · unreleased
+
+Completed Practice results, including reopened history, offer **Explain this question**. Open the local preview, then choose **Prepare in Tutor**. It uses the saved question snapshot (all four choices, selected answer or Unanswered, stored answer key and explanation), even after the original question/subject is deleted. Nothing connects or sends during preview/preparation. In Tutor, review the server, model and answer language, explicitly Connect if needed, then Send. The draft is editable and uses ordinary local chat history, Stop and save-retry paths.
+
+Tutor must be an idle, clean New chat with an empty prompt and no pending confirmation or unsaved reply. Existing work is preserved; finish it or explicitly use the confirmed New chat action before retrying. A complete generated prompt above 4,000 characters is rejected with its measured length; nothing is truncated. The saved answer key and AI explanation may be wrong; scores and source content never change. Automatic asks for the supplied question language; explicit answer language overrides it. Prompt instructions stay in English and user content stays unchanged. No schema change (10), version labels remain v0.24.0 until release.
+
+Implementation: `question_explanation.py` builds/validates the bounded snapshot prompt; `practice_page.py` owns preview and stale-result checks; `tutor_page.py` guards draft insertion. Existing Send persists the prompt before HTTP. Automated checks use disposable data and loopback FakeOllama; real-model quality and native platform/DPI acceptance remain manual.

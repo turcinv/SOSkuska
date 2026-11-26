@@ -18,7 +18,7 @@ V AI Tutor připoj vlastní Ollama server přes Connect / refresh, vyber model a
 
 ## Soukromí a limity
 
-Síťový požadavek začíná pouze po Connect nebo Send; spuštění aplikace ani navigace nic neodesílá. Na zvolený server jde otázka a omezený kontext tohoto chatu, nikoli obsah SQLite, předměty, výsledky nebo soubory. Výchozí server je místní; při změně adresy rozhoduje zvolený server/model o zpracování dat. Před připojením k jinému serveru je potřeba New chat. Automatický přechod na cloud neexistuje.
+Síťový požadavek začíná pouze po Connect nebo Send; spuštění aplikace ani navigace nic neodesílá. Na zvolený server jde otázka a omezený kontext tohoto chatu, bez automatických příloh. Výslovně připravený koncept z dokončené otázky obsahuje vybraný snímek (možnosti, vaši odpověď, klíč a vysvětlení) a odešle se po Send. Ostatní záznamy SQLite, předměty, výsledky a soubory se nepřikládají. Výchozí server je místní; při změně adresy rozhoduje zvolený server/model o zpracování dat. Před připojením k jinému serveru je potřeba New chat. Automatický přechod na cloud neexistuje.
 
 Konverzace se ukládají do místní databáze. Volby spojení lze uložit zvlášť přes [Settings](SETTINGS.md). Limit je 12 dotazů na chat, otázka 4 000 znaků, odpověď 16 000 znaků. Kontext zahrnuje nejvýše šest posledních úplných dvojic, celkem 24 000 znaků; starší obsah model nemusí znát. Text je prostý, bez vykreslování Markdown/LaTeX či připojených materiálů. Nejde o ověřené správné odpovědi ani automatické hodnocení učiva.
 
@@ -30,3 +30,12 @@ API: [models](https://docs.ollama.com/api/tags) · [chat](https://docs.ollama.co
 ## Uložené konverzace AI Tutor
 
 AI Tutor nyní ukládá konverzace lokálně včetně původního serveru/modelu a stavu odpovědi. Historii lze otevřít bez sítě, výslovně se připojit pro pokračování nebo vybranou konverzaci po potvrzení smazat. Vydáno ve v0.12.0 se schématem 7, které transakčně migruje původní studijní data. [Uložené konverzace AI Tutor](TUTOR_HISTORY.md).
+
+
+## Vysvětlení otázek · nevydáno
+
+Dokončené výsledky Practice včetně historie nabízejí **Vysvětlit tuto otázku**. Otevřete místní náhled a zvolte **Připravit v Tutorovi**. Použije se uložený snímek otázky, čtyři možnosti, vaše odpověď nebo Unanswered, uložený klíč a vysvětlení, i po smazání původního obsahu. Náhled ani příprava nic nepřipojují a neodesílají. V Tutorovi zkontrolujte server, model a jazyk, podle potřeby výslovně použijte Connect a poté Send. Upravitelný koncept využívá běžnou místní historii, Stop a opakování uložení.
+
+Tutor musí být nečinný, v čistém New chat s prázdným dotazem a bez čekajícího potvrzení či neuložené odpovědi. Stávající práce zůstává zachována; dokončete ji nebo výslovně potvrďte New chat a opakujte akci. Celý dotaz přes 4 000 znaků je odmítnut s uvedením délky, bez zkracování. Klíč i AI se mohou mýlit; skóre ani zdrojová data se nemění. Automatic požaduje jazyk dodané otázky; výslovná volba jazyka má přednost. Pokyny dotazu jsou anglicky, obsah uživatele se nemění. Schéma zůstává 10 a verze v0.24.0 do vydání.
+
+Implementace: `question_explanation.py` sestavuje omezený dotaz ze snímku, `practice_page.py` řídí náhled a kontrolu aktuálního výsledku, `tutor_page.py` chrání vložení konceptu. Send uloží dotaz před HTTP. Automatické testy používají dočasná data a místní FakeOllama; kvalita modelu a nativní ověření platformy/DPI zůstávají ruční.

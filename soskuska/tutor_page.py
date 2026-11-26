@@ -148,6 +148,27 @@ class TutorPage(ctk.CTkFrame):
         for index,button in enumerate((self.retry_button,self.discard_button,self.recover_button)):
             button.grid(row=index//columns,column=index%columns,sticky='w',padx=(0,8),pady=(0,8))
 
+    def can_prepare_question(self):
+        return (not self.closed and self.task is None and not self.unsaved_reply
+                and not any((self.pending_clear, self.pending_discard, self.pending_delete, self.pending_recover))
+                and self.conversation_id is None and not self.turns
+                and not self.prompt.get('1.0', 'end-1c'))
+
+    def prepare_question_draft(self, prompt):
+        if not self.can_prepare_question() or not prompt or len(prompt) > 4000:
+            return False
+        self.prompt.insert('1.0', prompt)
+        self.set_status(tr(self.app, 'Question draft prepared. Review the server, model and answer language. Connect if needed; only Send generates an answer.'))
+        self.prompt.focus_set()
+        self.prompt.see('1.0')
+        self.after_idle(lambda: self.reveal_question_draft(prompt))
+        return True
+
+    def reveal_question_draft(self, prompt):
+        if (not self.closed and self.app.current_page == 'AI Tutor'
+                and self.prompt.get('1.0', 'end-1c') == prompt):
+            self.app.scroll.scroll_to_widget(self.prompt)
+
     def load(self):
         self.pending_clear = False  # Navigation preserves chat; cancels clear confirmation.
         self.clear_button.configure(text=tr(self.app, 'New chat'))

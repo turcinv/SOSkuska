@@ -705,5 +705,13 @@
   "Today's Study": "Dnešní studium",
   "Rate your recall": "Ohodnoť, jak sis vzpomněl/a",
   "Review saved. Refresh card to continue; do not rate it again.": "Hodnocení je uložené. Pro pokračování použij Obnovit kartičku; nehodnoť ji znovu.",
-  "Interface": "Rozhraní"
+  "Interface": "Rozhraní",
+  "Explain this question": "Vysvětlit tuto otázku",
+  "Prepare in Tutor": "Připravit v Tutorovi",
+  "Preview only. This question, all choices, your answer, the stored answer key and explanation will be shared with the selected Ollama server only after Send. AI may be wrong.": "Pouze náhled. Otázka, všechny možnosti, vaše odpověď, uložený klíč a vysvětlení se odešlou vybranému serveru Ollama až po Odeslat. AI se může mýlit.",
+  "Could not read the saved question. Nothing was sent. Reopen the preview to retry.": "Nepodařilo se načíst uloženou otázku. Nic se neodeslalo. Otevřete náhled znovu.",
+  "Tutor has existing work or a pending action. Finish it or explicitly start a New chat with an empty prompt, then retry. Your work is kept.": "Tutor obsahuje rozpracovanou práci nebo čekající akci. Dokončete ji nebo výslovně otevřete Nový chat s prázdným dotazem a zkuste to znovu. Vaše práce zůstala zachována.",
+  "Question draft prepared. Review the server, model and answer language. Connect if needed; only Send generates an answer.": "Koncept otázky je připraven. Zkontrolujte server, model a jazyk odpovědi. Podle potřeby použijte Připojit / obnovit; odpověď vytvoří až Odeslat.",
+  "This completed question is no longer available. Reopen the result and retry.": "Tato dokončená otázka již není dostupná. Otevřete výsledek znovu a opakujte akci.",
+  "The full explanation prompt has {v0} characters; the limit is {v1}. This shortcut cannot include this whole question yet. Nothing was sent.": "Celý dotaz má {v0} znaků; limit je {v1}. Tato zkratka zatím nemůže zahrnout celou otázku. Nic se neodeslalo."
 }
