@@ -360,3 +360,10 @@ Dokončené výsledky Practice vrátane histórie ponúkajú **Vysvetliť túto 
 Tutor musí byť nečinný, v čistom New chat s prázdnou otázkou a bez čakajúceho potvrdenia či neuloženej odpovede. Existujúca práca zostáva zachovaná; dokončite ju alebo výslovne potvrďte New chat a zopakujte akciu. Celý dotaz nad 4 000 znakov je odmietnutý s uvedením dĺžky, bez skracovania. Kľúč aj AI sa môžu mýliť; skóre ani zdrojové dáta sa nemenia. Automatic požaduje jazyk dodanej otázky; výslovná voľba jazyka má prednosť. Pokyny dotazu sú anglicky, obsah používateľa sa nemení. Schéma zostáva 10 a vydaná verzia je v0.25.0.
 
 Implementácia: `question_explanation.py` zostavuje ohraničený dotaz zo snímky, `practice_page.py` riadi náhľad a kontrolu aktuálneho výsledku, `tutor_page.py` chráni vloženie návrhu. Send uloží otázku pred HTTP. Automatické testy používajú dočasné dáta a miestny FakeOllama; kvalita modelu a natívne overenie platformy/DPI zostávajú ručné.
+
+
+## Študijné režimy AI · nevydané
+
+V dokončenom výsledku otvorte **Vysvetliť túto otázku** a pred **Pripraviť v Tutorovi** vyberte **Študijný režim**. **Vysvetliť odpoveď** zachová doterajšie vysvetlenie; **Vysvetliť jednoducho** požaduje krátke kroky pre začiatočníka a príklad; **Dať nápovedu** požaduje jednu pojmovú nápovedu a z otázky pre AI vynechá vašu odpoveď, uložený kľúč aj vysvetlenie; **Precvičiť ma** kladie jednu novú doplňujúcu otázku a pred spätnou väzbou čaká na odpoveď. Ide o neformálne precvičovanie bez zápisu bodovaného testu alebo zmeny zdrojov.
+
+Zmena režimu obnoví presný miestny náhľad a zneplatní jeho predchádzajúcu akciu prípravy. Pripojenie, odoslanie a vytvorenie konverzácie vyžadujú existujúce výslovné ovládanie. Odoslaná otázka sa ukladá do bežnej miestnej histórie; platí doterajší jazyk, limit 4 000 znakov, ochrana čistého chatu, Zastaviť a opakovanie uloženia. Nápoveda stále obsahuje štyri možnosti: model môže odpoveď odvodiť či prezradiť a už zobrazené výsledky zostávajú viditeľné. Kvalita a dodržanie režimu vyžadujú neskorší test skutočného modelu, ktorý používateľ výslovne odložil. Automatické testy používajú miestny FakeOllama. Verzia do vydania zostáva v0.25.0, schéma 10.

@@ -11,6 +11,7 @@ from unittest.mock import patch
 import customtkinter as ctk
 from app import Dashboard
 from storage import Store
+from question_explanation import MODES
 from localization import tr
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tests'))
 from ollama_fixture import FakeOllama
@@ -73,14 +74,21 @@ def run(path, language='English', scale=1, layout=False):
         assert 'Pôvodné vysvetlenie' in prompt and 'Student answer: A' in prompt
         assert fixture.requests == [] and not tutor.turns
         if layout:
-            for geometry in ('1024x700', '1440x900'):
-                app.geometry(geometry)
-                for mode in ('Light', 'Dark', 'System'):
-                    ctk.set_appearance_mode(mode)
-                    app.update_idletasks()
-                    bounds(page.explanation_panel)
-                    for button in page.explanation_panel.winfo_children()[2].winfo_children():
-                        bounds(button)
+            for study_mode in MODES:
+                page.explanation_mode_menu.selected(tr(app, study_mode))
+                identity = page.explanation_identity
+                prompt = identity[2]
+                assert identity[3] == study_mode
+                assert page.explanation_mode_menu.display_variable.get() == tr(app, study_mode)
+                for geometry in ('1024x700', '1440x900'):
+                    app.geometry(geometry)
+                    for mode in ('Light', 'Dark', 'System'):
+                        ctk.set_appearance_mode(mode)
+                        app.update_idletasks()
+                        bounds(page.explanation_panel)
+                        bounds(page.explanation_mode_menu)
+                        for button in page.explanation_actions.winfo_children():
+                            bounds(button)
             page.prepare_explanation(identity)
             assert tutor.prompt.get('1.0', 'end-1c') == prompt
             app.update_idletasks()

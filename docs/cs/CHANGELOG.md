@@ -2,6 +2,10 @@
 
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
+## Unreleased
+
+- Studijní režimy AI: Explain simply / Give me a hint / Quiz me.
+
 ## 0.25.0 — 2026-11-26
 
 - Vysvětlení otázek: Explain this question → Prepare in Tutor → Connect / Send.

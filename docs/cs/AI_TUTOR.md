@@ -18,7 +18,7 @@ V AI Tutor připoj vlastní Ollama server přes Connect / refresh, vyber model a
 
 ## Soukromí a limity
 
-Síťový požadavek začíná pouze po Connect nebo Send; spuštění aplikace ani navigace nic neodesílá. Na zvolený server jde otázka a omezený kontext tohoto chatu, bez automatických příloh. Výslovně připravený koncept z dokončené otázky obsahuje vybraný snímek (možnosti, vaši odpověď, klíč a vysvětlení) a odešle se po Send. Ostatní záznamy SQLite, předměty, výsledky a soubory se nepřikládají. Výchozí server je místní; při změně adresy rozhoduje zvolený server/model o zpracování dat. Před připojením k jinému serveru je potřeba New chat. Automatický přechod na cloud neexistuje.
+Síťový požadavek začíná pouze po Connect nebo Send; spuštění aplikace ani navigace nic neodesílá. Na zvolený server jde otázka a omezený kontext tohoto chatu, bez automatických příloh. Výslovně připravený koncept z dokončené otázky obsahuje vybraný snímek a odešle se po Send. Režim nápovědy zahrnuje pouze otázku a možnosti; ostatní režimy také vaši odpověď, uložený klíč a vysvětlení. Ostatní záznamy SQLite, předměty, výsledky a soubory se nepřikládají. Výchozí server je místní; při změně adresy rozhoduje zvolený server/model o zpracování dat. Před připojením k jinému serveru je potřeba New chat. Automatický přechod na cloud neexistuje.
 
 Konverzace se ukládají do místní databáze. Volby spojení lze uložit zvlášť přes [Settings](SETTINGS.md). Limit je 12 dotazů na chat, otázka 4 000 znaků, odpověď 16 000 znaků. Kontext zahrnuje nejvýše šest posledních úplných dvojic, celkem 24 000 znaků; starší obsah model nemusí znát. Text je prostý, bez vykreslování Markdown/LaTeX či připojených materiálů. Nejde o ověřené správné odpovědi ani automatické hodnocení učiva.
 
@@ -39,3 +39,10 @@ Dokončené výsledky Practice včetně historie nabízejí **Vysvětlit tuto ot
 Tutor musí být nečinný, v čistém New chat s prázdným dotazem a bez čekajícího potvrzení či neuložené odpovědi. Stávající práce zůstává zachována; dokončete ji nebo výslovně potvrďte New chat a opakujte akci. Celý dotaz přes 4 000 znaků je odmítnut s uvedením délky, bez zkracování. Klíč i AI se mohou mýlit; skóre ani zdrojová data se nemění. Automatic požaduje jazyk dodané otázky; výslovná volba jazyka má přednost. Pokyny dotazu jsou anglicky, obsah uživatele se nemění. Schéma zůstává 10 a vydaná verze je v0.25.0.
 
 Implementace: `question_explanation.py` sestavuje omezený dotaz ze snímku, `practice_page.py` řídí náhled a kontrolu aktuálního výsledku, `tutor_page.py` chrání vložení konceptu. Send uloží dotaz před HTTP. Automatické testy používají dočasná data a místní FakeOllama; kvalita modelu a nativní ověření platformy/DPI zůstávají ruční.
+
+
+## Studijní režimy AI · nevydáno
+
+V dokončeném výsledku otevřete **Vysvětlit tuto otázku** a před **Připravit v Tutorovi** vyberte **Studijní režim**. **Vysvětlit odpověď** zachová dosavadní vysvětlení; **Vysvětlit jednoduše** požaduje krátké kroky pro začátečníka a příklad; **Dát nápovědu** požaduje jednu pojmovou nápovědu a z dotazu vynechá vaši odpověď, uložený klíč i vysvětlení; **Procvičit mě** klade jednu novou doplňující otázku a před zpětnou vazbou čeká na odpověď. Jde o neformální procvičování bez zápisu bodovaného testu nebo změny zdrojů.
+
+Změna režimu obnoví přesný místní náhled a zneplatní jeho předchozí akci přípravy. Připojení, odeslání a vytvoření konverzace vyžadují stávající výslovné ovládání. Odeslaný dotaz se ukládá do běžné místní historie; platí dosavadní jazyk, limit 4 000 znaků, ochrana čistého chatu, Zastavit a opakování uložení. Nápověda stále obsahuje čtyři možnosti: model může odpověď odvodit či prozradit a již zobrazené výsledky zůstávají viditelné. Kvalita a dodržení režimu vyžadují pozdější test skutečného modelu, který uživatel výslovně odložil. Automatické testy používají místní FakeOllama. Verze do vydání zůstává v0.25.0, schéma 10.
