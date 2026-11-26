@@ -2,7 +2,7 @@
 
 [English](../../CHANGELOG.md) · [Čeština](../cs/CHANGELOG.md) · [Slovenčina](CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
-## Nevydané
+## 0.30.1 — 2026-11-26
 
 - Opravy kvality AI podľa vyhodnotenia so skutočným modelom: správnu odpoveď otázky umiestňuje aplikácia (žiadne nesúhlasné písmená), poznámky sú chránené pred vloženými pokynmi, návrhy jasne nenájdené v poznámkach začínajú nezačiarknuté s varovaním a študijné režimy odpovedajú v jazyku otázky. Pridáva `tools/evaluate_ai.py`. Schéma zostáva 10.
 
