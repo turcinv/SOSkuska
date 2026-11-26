@@ -141,3 +141,7 @@ v0.17.0 adds focus-session crash recovery using schema **10**. Keep a backup bef
 ## Scheduled local backups
 
 Scheduled local backups are available in **v0.18.0**. SQLite schema remains **10**. Manual backup/restore continues to work independently. [Scheduled local backups](SCHEDULED_BACKUPS.md).
+
+## AI improvement plan · 26 November 2026
+
+A separate [stepped AI plan](AI_IMPROVEMENTS.md) proposes Explain this question for completed Practice results first. It is planning only; implementation, merge and release need separate decisions. The existing final acceptance/demo work remains outstanding.

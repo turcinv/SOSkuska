@@ -9,3 +9,7 @@ Current release: **v0.24.0**, schema **10**. Bright UI implementation Steps 1–
 3. **Finish the semester report and presentation separately.** Keep identity/course/language/deadline placeholders until supplied; add real screenshots, references and evaluation evidence. Follow the course instructions, refresh document fields and inspect final pagination.
 
 Before v1.0.0, resolve acceptance findings through reviewed PRs and rerun the relevant checks. New work, merge and publication need their own authorization. No manual result is marked passed by this status update.
+
+## AI improvement plan · 26 November 2026
+
+A separate [stepped AI plan](AI_IMPROVEMENTS.md) proposes Explain this question for completed Practice results first. It is planning only; implementation, merge and release need separate decisions. The existing final acceptance/demo work remains outstanding.

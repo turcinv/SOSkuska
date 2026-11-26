@@ -9,3 +9,7 @@ Aktuálne vydanie: **v0.24.0**, schéma **10**. Implementácia krokov dizajnu 1�
 3. **Samostatne dokončiť prácu a prezentáciu.** Osobné údaje/predmet/jazyk/termín ponechať ako zástupné polia do dodania; doplniť skutočné snímky, zdroje a dôkazy. Riadiť sa zadaním, aktualizovať polia dokumentu a prezrieť stránkovanie.
 
 Pred v1.0.0 vyriešiť nálezy cez revidované PR a zopakovať kontroly. Nová práca, zlúčenie aj vydanie potrebujú vlastné schválenie. Táto aktualizácia nepotvrdzuje ručné výsledky.
+
+## Plán zlepšení AI · 26. novembra 2026
+
+Samostatný [krokový plán AI](AI_IMPROVEMENTS.md) navrhuje najprv vysvetlenie otázky z dokončeného výsledku Practice. Ide iba o plán; implementácia, zlúčenie a vydanie potrebujú vlastné rozhodnutie. Finálna akceptácia a ukážka stále zostávajú.

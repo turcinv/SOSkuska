@@ -158,3 +158,7 @@ v0.17.0 přidává obnovu soustředění po pádu se schématem **10**. Před ot
 ## Plánované místní zálohy
 
 Plánované místní zálohy jsou dostupné ve **v0.18.0**. Schéma SQLite zůstává **10**. Ruční záloha a obnova fungují samostatně. [Plánované místní zálohy](SCHEDULED_BACKUPS.md).
+
+## Plán zlepšení AI · 26. listopadu 2026
+
+Samostatný [krokový plán AI](AI_IMPROVEMENTS.md) navrhuje nejprve vysvětlení otázky z dokončeného výsledku Practice. Jde pouze o plán; implementace, sloučení a vydání potřebují vlastní rozhodnutí. Finální přejímka a ukázka stále zbývají.
