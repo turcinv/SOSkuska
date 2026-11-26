@@ -2,6 +2,10 @@
 
 [English](CURRENT_ARCHITECTURE.md) · [Čeština](cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](sk/CURRENT_ARCHITECTURE.md) · [Русский](ru/CURRENT_ARCHITECTURE.md)
 
+## Branding (unreleased)
+
+The sidebar uses a local CTkImage; each window owns its Tk icon images. Resources resolve relative to branding.py, including frozen builds, with no network or database work. Windows packaging includes the assets and ICO. ICNS is prepared for future macOS packaging; source launches may retain Python’s Dock icon. Schema remains 10.
+
 ## v0.27.0
 
 Study-studio stage 1 ships a new native Dashboard composition, persistent dark navigation with locally drawn icons, separate summary tiles, a live circular focus clock, subject-library cards and a saved-date month agenda. Shared Dark/Light styling applies across the app; other page compositions remain follow-up work. The user approved merging and releasing this stage. Schema remains 10.

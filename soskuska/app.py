@@ -36,6 +36,7 @@ from startup_errors import report_startup_error
 from appearance import apply_appearance
 from studio_widgets import FocusClock, MonthAgenda, MONTHS, nav_icon
 from panel_layout import wrap_labels
+from branding import sidebar_logo, install_window_icon
 
 APP_VERSION = '0.27.0'
 
@@ -63,6 +64,7 @@ class Dashboard(ctk.CTk):
         ctk.set_appearance_mode("Dark")  # Disable implicit OS polling before constructing Tk.
         super().__init__()
         self.title(tr(self, 'SOSkúška'))
+        install_window_icon(self)
         self.geometry("1440x900")
         self.minsize(1024, 700)
         self.configure(fg_color=C["bg"])
@@ -168,8 +170,9 @@ class Dashboard(ctk.CTk):
         brand=self.frame(self.sidebar)
         brand.grid(row=0,column=0,padx=18,pady=(28,36),sticky='ew')
         brand.grid_columnconfigure(1,weight=1)
-        self.brand_tile=ctk.CTkLabel(brand,text='S',width=34,height=36,corner_radius=10,
-            fg_color=C['primary'],text_color=C['on_primary'],font=self.font(22,True))
+        self.brand_logo = sidebar_logo()
+        self.brand_tile = ctk.CTkLabel(brand, text='', image=self.brand_logo,
+                                     width=36, height=36, fg_color='transparent')
         self.brand_tile.grid(row=0,column=0,padx=(0,10))
         self.brand=self.label(brand,'SOSkúška',18,'nav_text',bold=True)
         self.brand.grid(row=0,column=1,sticky='w')

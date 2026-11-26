@@ -84,6 +84,31 @@ def main():
         bundle = folder/'extracted/SOSkuska'
         app, worker = bundle/'SOSkuska.exe', bundle/'SOSkuska-worker.exe'
         assert app.is_file() and worker.is_file()
+        from PIL import Image
+        brand = bundle / '_internal' / 'assets' / 'brand'
+        for filename in ('logo-16.png', 'logo-128.png', 'logo-256.png', 'soskuska.ico'):
+            with Image.open(brand / filename) as icon:
+                icon.load()
+        # Check the artwork payloads, not just icon presence (PyInstaller has a stock icon).
+        import struct
+        import pefile
+        ico = (brand / 'soskuska.ico').read_bytes()
+        reserved, kind, count = struct.unpack_from('<HHH', ico)
+        assert (reserved, kind) == (0, 1) and count > 0
+        expected_icons = set()
+        for index in range(count):
+            size, offset = struct.unpack_from('<II', ico, 6 + index * 16 + 8)
+            assert size > 0 and offset + size <= len(ico)
+            expected_icons.add(ico[offset:offset + size])
+        with pefile.PE(str(app)) as executable:
+            embedded_icons = {
+                executable.get_data(image.data.struct.OffsetToData, image.data.struct.Size)
+                for resource in executable.DIRECTORY_ENTRY_RESOURCE.entries if resource.id == 3
+                for name in resource.directory.entries
+                for image in name.directory.entries
+            }
+        assert expected_icons <= embedded_icons, 'EXE does not contain the shipped branded ICO artwork'
+        results.append('Bundled branding assets decode and GUI executable embeds the branded ICO artwork')
         cwd = folder/'another working directory'; cwd.mkdir()
         env = dict(os.environ)
         env.pop('PYTHONPATH', None); env.pop('PYTHONHOME', None)

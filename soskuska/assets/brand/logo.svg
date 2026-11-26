@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">SOSkúška — open book and check mark</title>
+  <rect width="512" height="512" rx="112" fill="#7043C1"/>
+  <path d="M112 148 C166 132 205 148 244 174 L244 366 C202 338 162 324 112 338 Z" fill="#FFFFFF"/>
+  <path d="M268 174 C307 148 346 132 400 148 L400 338 C350 324 310 338 268 366 Z" fill="#EFE7FF"/>
+  <path d="M300 252 L327 280 L375 218" fill="none" stroke="#7043C1" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

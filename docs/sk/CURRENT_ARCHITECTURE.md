@@ -2,6 +2,10 @@
 
 [English](../CURRENT_ARCHITECTURE.md) · [Čeština](../cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](CURRENT_ARCHITECTURE.md) · [Русский](../ru/CURRENT_ARCHITECTURE.md)
 
+## Logo (nevydané)
+
+Bočný panel používa miestny CTkImage; každé okno uchováva vlastné obrázky ikon Tk. Súbory sa hľadajú voči branding.py aj v zabalenej aplikácii, bez siete a databázových operácií. Balík Windows obsahuje grafiku a ICO. ICNS je pripravený pre budúci balík macOS; spustenie zo zdrojov môže v Docku zachovať ikonu Pythonu. Schéma zostáva 10.
+
 ## v0.27.0
 
 Prvá fáza študijného priestoru prináša novú kompozíciu Dashboardu, tmavú navigáciu s miestnymi ikonami, súhrnné dlaždice, živé kruhové hodiny, karty predmetov a mesačný prehľad uložených termínov. Zdieľaný Dark/Light vzhľad platí v celej aplikácii; kompozície ostatných stránok nadviažu neskôr. Používateľ schválil zlúčenie a vydanie tejto fázy. Schéma zostáva 10.

@@ -2,6 +2,10 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
+## Unreleased
+
+- Added a local open-book/check logo to the sidebar and native window icons, with a custom Windows executable icon. The published v0.27.0 download predates this change.
+
 ## 0.27.0 — 2026-11-26
 
 - Study studio redesign: Dashboard, navigation, Dark/Light.
