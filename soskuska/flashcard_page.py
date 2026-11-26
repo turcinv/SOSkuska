@@ -11,6 +11,7 @@ from study_time import display_time
 from practice import utc_now
 from repetition import RATINGS, next_review
 from csv_import_panel import CsvImportPanel
+from ai_generation_panel import NoteGenerationPanel
 from panel_layout import wrap_labels
 
 
@@ -67,15 +68,30 @@ class FlashcardPage(ctk.CTkFrame):
         app.button(toolbar, tr(self.app, 'Refresh'), self.refresh, width=90).pack(side="left")
         self.importer = CsvImportPanel(self, app, self, cards=True)
         self.importer.grid(row=3, column=0, sticky="ew", pady=(0,18));self.importer.grid_remove()
+        self._generator = None  # Built on first use to keep startup light.
         self.body = app.frame(self)
-        self.body.grid(row=4, column=0, sticky="ew")
+        self.body.grid(row=5, column=0, sticky="ew")
         self.body.grid_columnconfigure(0, weight=1)
+
+    @property
+    def generator(self):
+        if self._generator is None:
+            self._generator = NoteGenerationPanel(self, self.app, self, cards=True)
+            self._generator.grid(row=4, column=0, sticky="ew", pady=(0,18));self._generator.grid_remove()
+        return self._generator
+
+    def open_generator(self):
+        self.generator.open()
 
     def clear(self, view, *, preserve_import=False):
         if self.importer.saving:
             raise ValueError("Wait for the flashcard import to finish.")
         if not preserve_import:
             self.importer.cancel()
+        # AI drafts belong to one deck: keep them (and a running request) only
+        # while that same deck stays open, e.g. across search or refresh.
+        if self._generator is not None and not (view == "deck" and self._generator.target_id == self.deck_id):
+            self._generator.close(notify=True)
         if view != "deck":
             self.deck_snapshot = None
         for child in self.body.winfo_children():
@@ -184,6 +200,8 @@ class FlashcardPage(ctk.CTkFrame):
         self.deck_id = deck_id
         self.clear("deck", preserve_import=preserve_import)
         self.deck_snapshot = dict(deck)
+        if self._generator is not None:
+            self._generator.sync_target()
         self.queue = []
         self.current_card = None
         head = self.app.frame(self.body, card=True)
@@ -207,7 +225,9 @@ class FlashcardPage(ctk.CTkFrame):
         self.app.button(actions, tr(self.app, 'Edit deck'), lambda: self.deck_form(deck_id), width=100).grid(
             row=1, column=0, padx=(0, 8), sticky="w")
         self.app.button(actions, tr(self.app, 'Delete deck'), lambda: self.ask_delete("deck", deck_id), width=115).grid(
-            row=1, column=1, sticky="w")
+            row=1, column=1, padx=(0, 8), sticky="w")
+        self.generate_button = self.app.button(actions, tr(self.app, 'Generate with AI'), self.open_generator, width=150)
+        self.generate_button.grid(row=1, column=2, sticky="w")
         search = self.app.frame(self.body)
         search.grid(row=2, column=0, sticky="ew", pady=(0, 14))
         search.grid_columnconfigure(0, weight=1)

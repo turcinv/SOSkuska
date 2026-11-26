@@ -36,10 +36,11 @@ def chat_messages(turns, prompt, language='Automatic'):
 
 
 class TutorTask:
-    def __init__(self, kind, endpoint, *, model=None, messages=None, client_factory=OllamaClient):
+    def __init__(self, kind, endpoint, *, model=None, messages=None, client_factory=OllamaClient, chat_options=None):
         self.events = queue.Queue()
         self.control = RequestControl()
         self.kind = kind
+        self.chat_options = dict(chat_options or {})
         self.client = client_factory(endpoint)
         self.thread = threading.Thread(target=self._run, args=(model, messages), daemon=True)
 
@@ -51,7 +52,8 @@ class TutorTask:
             if self.kind == 'models':
                 result = self.client.models(self.control)
             else:
-                self.client.chat(model, messages, self.control, lambda value: self.events.put(('text', value)))
+                self.client.chat(model, messages, self.control, lambda value: self.events.put(('text', value)),
+                                 **self.chat_options)
                 result = None
             self.control.check()
             self.events.put(('done', result))

@@ -94,6 +94,10 @@ V AI Tutor pripoj vlastný server Ollama cez Connect / refresh, vyber model a ja
 
 [Návod AI Tutor](AI_TUTOR.md).
 
+## Návrhy AI z poznámok
+
+V balíčku kartičiek alebo v banke otázok predmetu zvoľte **Generovať pomocou AI**, vložte poznámky a stlačte Generovať. Uložený model Ollama navrhne kartičky alebo otázky s výberom z odpovedí; skontrolujte ich, zrušte začiarknutie chybných a výber uložte jedným krokom. Poznámky sa odosielajú len po stlačení Generovať a neukladajú sa. Nevydané; schéma zostáva 10. [Generovanie kartičiek a otázok z poznámok](AI_NOTE_GENERATION.md).
+
 ## Nastavenia
 
 Konverzácie sa ukladajú do miestnej databázy a záloh. Voľby spojenia možno výslovne uložiť v [Settings](SETTINGS.md); bez Save sú dočasné.

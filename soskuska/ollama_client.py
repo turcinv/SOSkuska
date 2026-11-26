@@ -247,10 +247,16 @@ class OllamaClient:
                 raise OllamaError('The server returned an invalid Ollama model list.') from None
             return sorted(names)[:200]
 
-    def chat(self, model, messages, control, on_text):
+    def chat(self, model, messages, control, on_text, *, response_format=None, options=None, max_reply=MAX_REPLY):
         if not isinstance(model, str) or not model.strip() or len(model) > 200:
             raise OllamaError('Choose an available model.')
         payload = {'model': model, 'messages': messages, 'stream': True}
+        # Optional structured output (JSON schema) and sampling options; ordinary
+        # Tutor chat sends neither, keeping its payload unchanged.
+        if response_format is not None:
+            payload['format'] = response_format
+        if options:
+            payload['options'] = options
         length = 0
         with self._request('/api/chat', control, payload) as response:
             while True:
@@ -278,7 +284,9 @@ class OllamaClient:
                     if isinstance(exc, OllamaError):
                         raise
                     raise OllamaError('Ollama returned invalid streamed data. Partial text is kept.') from None
-                if length + len(text) > MAX_REPLY:
+                if length + len(text) > max_reply:
+                    if max_reply != MAX_REPLY:
+                        raise OllamaError('The generated reply was too long. Ask for fewer items or shorten the notes.')
                     raise OllamaError('Reply reached the 16,000-character limit. Partial text is kept; ask a shorter question.')
                 if text:
                     length += len(text)

@@ -38,6 +38,7 @@ from studio_widgets import (FocusClock, MonthAgenda, MONTHS, nav_icon, paw_icon,
                             cat_avatar, study_scene, sidebar_decor)
 from panel_layout import wrap_labels
 from branding import sidebar_logo, install_window_icon
+from ai_generation_panel import generation_busy, shutdown_generators
 
 APP_VERSION = '0.29.0'
 
@@ -927,6 +928,8 @@ class Dashboard(ctk.CTk):
         tutor = self.tutor_page
         if any(fields[key] != self.preferences[key] for key in AI_KEYS) and tutor.task is not None:
             raise ValueError("Wait for or stop the Tutor request before changing AI preferences.")
+        if any(fields[key] != self.preferences[key] for key in AI_KEYS) and generation_busy(self):
+            raise ValueError("Wait for or stop AI generation before changing AI preferences.")
         if (fields["ollama_endpoint"] != self.preferences["ollama_endpoint"] and tutor.turns
                 and fields["ollama_endpoint"] != (tutor.conversation_endpoint or tutor.connected_endpoint)):
             raise ValueError("Start a New chat in AI Tutor before saving a different server.")
@@ -992,6 +995,8 @@ class Dashboard(ctk.CTk):
             self.navigate("AI Tutor")
             return
         self.tutor_page.shutdown()
+        # Cancel AI drafting without joining its worker on the Tk thread.
+        shutdown_generators(self)
         self.store.close()
         self.destroy()
 
