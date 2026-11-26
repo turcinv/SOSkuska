@@ -2,7 +2,7 @@
 
 [English](README.md) · [Čeština](docs/cs/README.md) · [Slovenčina](docs/sk/README.md) · [Русский](docs/ru/README.md)
 
-**Release: [v0.29.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.29.0)** — source code and a Windows x64 portable ZIP. See the [changelog](CHANGELOG.md). An installer is not included.
+**Release: [v0.30.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.30.0)** — source code and a Windows x64 portable ZIP. See the [changelog](CHANGELOG.md). An installer is not included.
 
 SOSkúška is a local desktop study assistant built with Python, CustomTkinter and SQLite for a semester project. The product name uses accents; repository, source and data-folder names use `SOSkuska` / `soskuska`.
 
@@ -101,7 +101,7 @@ AI Tutor now saves conversations locally, including the original server/model an
 
 ## AI drafts from notes
 
-In a flashcard deck or a subject's question bank, choose **Generate with AI**, paste your notes and press Generate. The saved Ollama model drafts flashcards or multiple-choice questions; review them, untick anything wrong and save the selection in one step. Notes are sent only when you press Generate and are not stored. Unreleased; schema remains 10. [Generate flashcards and questions from notes](docs/AI_NOTE_GENERATION.md).
+In a flashcard deck or a subject's question bank, choose **Generate with AI**, paste your notes and press Generate. The saved Ollama model drafts flashcards or multiple-choice questions; review them, untick anything wrong and save the selection in one step. Notes are sent only when you press Generate and are not stored. Released in v0.30.0; schema remains 10. [Generate flashcards and questions from notes](docs/AI_NOTE_GENERATION.md).
 
 ## Interface language
 
@@ -113,7 +113,7 @@ Practice history now supports pages of 20 across all completed attempts, histori
 
 ## Windows portable build and acceptance
 
-v0.15.0 adds an unsigned Windows x64 portable ZIP, built and checked by a fifth CI job. Bundled helper executables preserve isolated CSV/backup jobs; Python is not required on the target machine. Automated hosted Windows checks and the manual clean-machine checklist are separate; manual acceptance is not yet completed. Published version is v0.29.0, schema 10. [Windows portable build and acceptance](docs/WINDOWS_PORTABLE.md) · [Checklist](docs/WINDOWS_ACCEPTANCE.md).
+v0.15.0 adds an unsigned Windows x64 portable ZIP, built and checked by a fifth CI job. Bundled helper executables preserve isolated CSV/backup jobs; Python is not required on the target machine. Automated hosted Windows checks and the manual clean-machine checklist are separate; manual acceptance is not yet completed. Published version is v0.30.0, schema 10. [Windows portable build and acceptance](docs/WINDOWS_PORTABLE.md) · [Checklist](docs/WINDOWS_ACCEPTANCE.md).
 
 ## Appearance settings
 
@@ -121,7 +121,7 @@ v0.16.0 adds saved Light/Dark/System choices, applied on Save without rebuilding
 
 ## Next steps · 22 November 2026
 
-Status updated 22 November 2026: the user confirmed v0.15.0 baseline testing complete and approved appearance PR #32. This checklist now targets v0.29.0; item-by-item clean-machine/DPI results are not recorded here. Leave unchecked items unverified and record device-specific evidence when testing the new release. [Next steps · 22 November 2026](docs/NEXT_STEPS.md).
+Status updated 22 November 2026: the user confirmed v0.15.0 baseline testing complete and approved appearance PR #32. This checklist now targets v0.30.0; item-by-item clean-machine/DPI results are not recorded here. Leave unchecked items unverified and record device-specific evidence when testing the new release. [Next steps · 22 November 2026](docs/NEXT_STEPS.md).
 
 ## Focus-session recovery
 

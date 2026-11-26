@@ -40,7 +40,7 @@ from panel_layout import wrap_labels
 from branding import sidebar_logo, install_window_icon
 from ai_generation_panel import generation_busy, shutdown_generators
 
-APP_VERSION = '0.29.0'
+APP_VERSION = '0.30.0'
 
 from theme import COLORS as C
 
