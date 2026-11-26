@@ -8,7 +8,7 @@ BRAND = dict(charcoal='#2B2A34', lavender='#9884D6', violet='#C9B6F2', cream='#F
 COLORS = dict(
     bg=('#F6F3FA','#1F1E26'), sidebar=('#FFFFFF','#2B2A34'),
     card=('#FFFFFF','#2B2A34'), raised=('#EFE9FA','#383642'),
-    border=('#7D7394','#77728A'), outline=('#9884D6','#9884D6'),
+    border=('#7D7394','#77728A'), outline=('#8873CC','#9884D6'),
     accent=('#6B57B8','#C9B6F2'),
     hover=('#5E4AA8','#C9B6F2'), primary=('#6E5ABF','#6E5ABF'),
     primary_hover=('#5B48A8','#5B48A8'), selected=('#ECE4FA','#3E3655'),

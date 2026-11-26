@@ -124,6 +124,9 @@ class AppearanceTests(unittest.TestCase):
     def test_progress_and_dark_control_outlines_remain_distinguishable(self):
         for mode in (0, 1):
             self.assertGreaterEqual(contrast(COLORS['accent'][mode], COLORS['raised'][mode]), 3.0)
+            # Lavender outlines delimit secondary buttons, search and the Add subject card.
+            for background in ('bg', 'card'):
+                self.assertGreaterEqual(contrast(COLORS['outline'][mode], COLORS[background][mode]), 3.0)
         # Disabled selector chevrons share the border fill; unchecked boxes use
         # that same border on cards. Both need to stay identifiable in Dark mode.
         for foreground, background in [('secondary', 'border'), ('border', 'card')]:

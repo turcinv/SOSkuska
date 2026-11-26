@@ -48,6 +48,11 @@ def verify(app, subject_id, app_date, storage_date):
     names = set(app.tk.call('image', 'names'))
     assert all(str(icon) in names for icon in app.brand_window_icons)
     assert app.layout_mode == 'compact'
+    # The sidebar decoration is either hidden or entirely inside the sidebar.
+    decor = app.sidebar_decor
+    if decor.winfo_ismapped():
+        assert decor.winfo_height() >= decor.winfo_reqheight()
+        assert decor.winfo_rooty() + decor.winfo_height() <= app.settings_btn.winfo_rooty()
     # Cat-brand banner: compact hides the decorative scene so study controls stay high.
     assert not app.focus_scene.winfo_ismapped() and not app.scene_visible
     selected_name = app.subject_selection.get()

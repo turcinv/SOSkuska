@@ -202,6 +202,8 @@ class Dashboard(ctk.CTk):
         self.sidebar_art=sidebar_decor()
         self.sidebar_decor=ctk.CTkLabel(self.sidebar,text='',image=self.sidebar_art,fg_color='transparent',text_color=C['nav_text'])
         self.sidebar_decor.grid(row=3,column=0,sticky='s',padx=12,pady=(12,0))
+        # Purely decorative: show it only when the flexible row can hold it whole.
+        self.sidebar.bind('<Configure>',lambda _e:self.after_idle(self.fit_sidebar_decor),add='+')
         self.footer=self.frame(self.sidebar)
         self.footer.grid(row=5,column=0,sticky='ew',padx=22,pady=(8,24))
         self.label(self.footer,tr(self,'LOCAL WORKSPACE'),10,'nav_secondary').pack(anchor='w',pady=(0,10))
@@ -485,6 +487,18 @@ class Dashboard(ctk.CTk):
                 text_color=C['nav_accent'] if active else C['nav_secondary'],
                 image=self.nav_icons[item,active],font=self.font(13,active))
 
+    def fit_sidebar_decor(self):
+        """Grid the tail/paw art only if the weighted spacer row has room for all of it."""
+        self.sidebar.update_idletasks()
+        # The weighted row receives exactly the slack (or shrinks to it) whether or not
+        # the decoration is gridded, so its bbox height is the free space either way.
+        free = self.sidebar.grid_bbox(0, 3)[3]
+        height = self.sidebar_decor.winfo_reqheight()
+        needed = height + round(height * 12 / 70)  # art is 70 logical px with 12 px top padding
+        fits = not self.collapsed and free >= needed
+        if fits != bool(self.sidebar_decor.winfo_manager()):
+            self.sidebar_decor.grid() if fits else self.sidebar_decor.grid_remove()
+
     def toggle_sidebar(self):
         self.collapsed=not self.collapsed
         self.sidebar.configure(width=76 if self.collapsed else 216)
@@ -496,7 +510,7 @@ class Dashboard(ctk.CTk):
         for button,(name,_) in zip([*self.nav_buttons,self.settings_btn],[*NAV,('Settings','')]):
             button.configure(text='' if self.collapsed else tr(self,name),anchor='center' if self.collapsed else 'w')
         self.footer.grid_remove() if self.collapsed else self.footer.grid()
-        self.sidebar_decor.grid_remove() if self.collapsed else self.sidebar_decor.grid()
+        self.fit_sidebar_decor()
         self.focus_alert.configure(text='!' if self.collapsed else tr(self,'Focus needs saving'))
         self.after_idle(self.reflow)
 
@@ -825,6 +839,7 @@ class Dashboard(ctk.CTk):
         self.focus_retry_label.configure(text=tr(self,SAVE_RETRY_NOTICE))
         self.focus_alert.configure(text='!' if self.collapsed else tr(self,'Focus needs saving'))
         self.focus_alert.grid(row=2,column=0,sticky='ew',padx=12,pady=(8,0))
+        self.fit_sidebar_decor()
         self.show_notice(SAVE_RETRY_NOTICE)
 
     def checkpoint_focus(self):
