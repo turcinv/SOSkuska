@@ -159,12 +159,21 @@ class QuestionBankPage(ctk.CTkFrame):
         self.cards.grid_columnconfigure(0, weight=1)
         self.importer=CsvImportPanel(self,app,self)
         self.importer.grid(row=4,column=0,sticky='ew',pady=(0,16));self.importer.grid_remove()
-        self.generator=NoteGenerationPanel(self,app,self)
-        self.generator.grid(row=9,column=0,sticky='ew',pady=(0,16));self.generator.grid_remove()
+        self._generator=None  # Built on first use to keep startup light.
         self.query.trace_add("write", lambda *_: self.render_questions())
         for panel in (header,self.topic_form,self.question_form,self.delete_panel):
             self.wrap_labels(panel)
         self.answers_panel.bind("<Configure>", self.layout_answers)
+
+    @property
+    def generator(self):
+        if self._generator is None:
+            self._generator=NoteGenerationPanel(self,self.app,self)
+            self._generator.grid(row=9,column=0,sticky='ew',pady=(0,16));self._generator.grid_remove()
+        return self._generator
+
+    def close_generator(self, *, notify=False):
+        return self._generator.close(notify=notify) if self._generator is not None else False
 
     def wrap_labels(self, parent):
         labels = [w for w in parent.winfo_children() if isinstance(w,ctk.CTkLabel)]
@@ -202,7 +211,7 @@ class QuestionBankPage(ctk.CTkFrame):
             return
         self.subject_id = subject_id
         self.subject_snapshot = None
-        discarded = self.generator.close()  # Drafts belong to the previous subject.
+        discarded = self.close_generator()  # Drafts belong to the previous subject.
         self.hide_question_form()
         self.hide_topic_form()
         self.cancel_delete()
@@ -215,7 +224,8 @@ class QuestionBankPage(ctk.CTkFrame):
     def refresh(self):
         subject = self.app.store.subject(self.subject_id)
         self.subject_snapshot = dict(subject) if subject else None
-        self.generator.sync_target()
+        if self._generator is not None:
+            self._generator.sync_target()
         if subject is None:
             self.subject_id = None
             self.heading.configure(text=tr(self.app, 'This subject no longer exists.'))
@@ -223,7 +233,7 @@ class QuestionBankPage(ctk.CTkFrame):
             self.add_topic_button.configure(state="disabled")
             self.csv_button.configure(state="disabled")
             self.generate_button.configure(state="disabled")
-            self.generator.close(notify=True)
+            self.close_generator(notify=True)
             self.hide_question_form()
             self.hide_topic_form()
             self.cancel_delete()

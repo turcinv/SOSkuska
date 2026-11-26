@@ -38,7 +38,7 @@ from studio_widgets import (FocusClock, MonthAgenda, MONTHS, nav_icon, paw_icon,
                             cat_avatar, study_scene, sidebar_decor)
 from panel_layout import wrap_labels
 from branding import sidebar_logo, install_window_icon
-from ai_generation_panel import generation_busy
+from ai_generation_panel import generation_busy, shutdown_generators
 
 APP_VERSION = '0.29.0'
 
@@ -996,8 +996,7 @@ class Dashboard(ctk.CTk):
             return
         self.tutor_page.shutdown()
         # Cancel AI drafting without joining its worker on the Tk thread.
-        self.flashcard_page.generator.shutdown()
-        self.question_bank.generator.shutdown()
+        shutdown_generators(self)
         self.store.close()
         self.destroy()
 

@@ -29,7 +29,15 @@ def generation_client(endpoint):
 def generation_busy(app):
     """True while either note-generation panel has an Ollama request running."""
     pages = (getattr(app, 'flashcard_page', None), getattr(app, 'question_bank', None))
-    return any(getattr(getattr(page, 'generator', None), 'busy', False) for page in pages)
+    # Inspect only panels that exist; never build one just to ask.
+    return any(getattr(getattr(page, '_generator', None), 'busy', False) for page in pages)
+
+
+def shutdown_generators(app):
+    for page in (getattr(app, 'flashcard_page', None), getattr(app, 'question_bank', None)):
+        panel = getattr(page, '_generator', None)
+        if panel is not None:
+            panel.shutdown()
 
 
 class NoteGenerationPanel(ctk.CTkFrame):
