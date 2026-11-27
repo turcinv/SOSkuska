@@ -134,6 +134,8 @@ class StudyQueryTests(unittest.TestCase):
         self.assertEqual(ids(topic_id=None), [self.q3])
         self.assertEqual(ids(difficulty="Hard"), [self.q2])
         self.assertEqual(ids(query="ribosome"), [self.q1])
+        # Explanations are answer keys: searching them would reveal answers.
+        self.assertEqual(ids(query="make ATP"), [])
         self.assertEqual(ids(limit=1), [self.q3])
         self.assertEqual(q.find_questions(self.store, self.bio, limit=1)["total"], 3)
 
@@ -148,6 +150,7 @@ class StudyQueryTests(unittest.TestCase):
             lambda: q.find_questions(self.store, self.bio, difficulty="Impossible"),
             lambda: q.find_questions(self.store, self.bio, include_answers="yes"),
             lambda: q.find_questions(self.store, self.bio, limit=0),
+            lambda: q.find_questions(self.store, self.bio, limit=True),
             lambda: q.find_questions(self.store, self.bio, query="x" * 201),
             lambda: q.due_cards(self.store, 999),
             lambda: q.study_report(self.store, "Forever"),

@@ -3,7 +3,8 @@
 Every function takes an open `Store` (normally `Store.open_existing(path,
 readonly=True)`) and returns plain JSON-compatible dicts. Nothing here imports
 Tk or MCP, and nothing writes: multi-statement reads share one deferred SQLite
-read transaction so their counts agree with each other.
+read transaction so their counts agree with each other (see `practice_results`
+for the one documented exception).
 
 Results are bounded for language-model context. Limits are clamped to a
 maximum, long text is shortened with a trailing ellipsis, and lists stop once
@@ -255,6 +256,11 @@ def practice_results(store, *, subject_name=None, limit=10):
 
     Subject names are the names saved with each attempt, so tests of deleted or
     renamed subjects keep the name they were taken under.
+
+    `practice_history_page` opens its own read transaction, so the per-topic
+    scores are read just after it. They still agree with the page: items of a
+    completed attempt never change, completed attempts are never deleted, and
+    restore cannot replace the file while this store holds its shared lease.
     """
     limit = _limit(limit, 10, 50)
     page = store.practice_history_page(subject_name=subject_name, page=0, page_size=limit)
