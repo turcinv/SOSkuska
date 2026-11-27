@@ -36,7 +36,7 @@ English instructions for development agents, referenced by [AGENTS.md](../../AGE
 
 ## Continuous integration
 
-- `.github/workflows/ci.yml` runs for PRs targeting main, pushes to main and manual dispatch. Python 3.12 unit tests/syntax/dependency checks run on Linux, Windows and macOS; twenty-five GUI checks run under Xvfb on Ubuntu.
+- `.github/workflows/ci.yml` runs for PRs targeting main, pushes to main and manual dispatch. Python 3.12 unit tests/syntax/dependency checks run on Linux, Windows and macOS; the GUI scripts in `tools/run_checks.py` (twenty-six at v0.30.1) run under Xvfb on Ubuntu. Fresh-process layout probes have tight per-probe bounds (7 s): avoid adding startup work; build optional panels on first use.
 - Keep action references pinned to verified release commit SHAs, contents permission read-only, and process/job timeouts. CI does not publish releases or deploy. Avoid duplicate feature-branch push and PR runs.
 - CI results are automated coverage, not manual platform or hardware verification. Native Aqua Quit and Tk 9 trackpad behavior still require the Mac checks. Do not claim those are tested by the Linux GUI job.
 - Read failed job logs, fix the cause and keep fixes on the same PR branch. Do not disable a meaningful failing check to obtain a green status. Branch protection is not configured by this workflow.
@@ -49,6 +49,7 @@ English instructions for development agents, referenced by [AGENTS.md](../../AGE
 - The user authorizes merging and publishing separately from ordinary feature implementation. A request to merge and create a release authorizes the necessary release-label PR and publication steps. Never infer merge authorization just from green CI.
 - A new feature normally increments the minor version while the project is 0.x; a fix-only release increments the patch. Check existing tags/releases before choosing the next number. Never invent historical release tags.
 - Align `APP_VERSION` and the footer in `soskuska/app.py`, all four READMEs, changelog headings and architecture status. Preserve previous release entries. Make release-label changes through a branch/PR, then tag the exact merged commit and publish release notes for that tag. Do not publish a tag with stale footer/unreleased labels.
+- Release-label pattern used since v0.28.0: replace current-version labels such as "Published/Released version is …" and release links in all four languages. Keep historical `## <version>` headings and "first released in" notes. Turn each language's Unreleased heading (Unreleased / Nevydáno / Nevydané / Не выпущено) into the version heading. Verify that no unreleased labels remain before tagging. Feature work and fixes add their Unreleased entries in all four languages as part of the feature PR.
 - For label/documentation-only release alignment, the user has preferred focused local checks without waiting for the entire hosted suite again; this does not waive failing checks or apply to feature changes.
 - After publication verify the release URL, tag target, clean local main and synchronization with origin. Branch cleanup is a separate request; preserve unmerged work, main and release tags.
 - Keep AGENTS.md concise. Put durable decisions in these topic files and dated lessons in `docs/SESSION_LESSONS.md`; do not copy the full chat or duplicate entire guides into the startup instructions.

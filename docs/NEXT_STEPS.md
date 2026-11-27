@@ -1,15 +1,29 @@
-# Next steps · 26 November 2026
+# Next steps · 27 November 2026
 
 [English](NEXT_STEPS.md) · [Čeština](cs/NEXT_STEPS.md) · [Slovenčina](sk/NEXT_STEPS.md) · [Русский](ru/NEXT_STEPS.md)
 
-Current release: **v0.30.1**, schema **10**. Bright UI implementation Steps 1–5 are complete through PRs #43, #44, #46, #48, #50, #52 and #54. Step 6 acceptance and demo preparation remain.
+Current release: **v0.30.1**, schema **10**.
 
-## Full Astra review completed · 26 November 2026
+## Since 26 November 2026
 
-The requested full **Astra 6.2 medium** review of main/v0.26.0 is complete. Reviewed commit: `db38e08802058480bbed250c16eeffc23bad143b`. **All five findings are released in v0.26.1** in [Review findings](REVIEW_FINDINGS.md), IDs A62-05–A62-09. Fixes should use a separate branch/PR; merge and release require their own authorization. Existing automated checks passed; targeted checks used disposable data and Docker/Xvfb. Real-model LLM testing remains deferred.
+- **v0.27.0:** study-studio Dashboard.
+- **v0.28.0:** app logo.
+- **v0.29.0:** cat brand redesign ([handoff](agents/design/cat-brand/README.md)).
+- **v0.30.0:** AI drafting of flashcards and questions from notes ([guide](AI_NOTE_GENERATION.md)).
+- **v0.30.1:** fixes from the first real-model evaluation ([record](agents/design/ai-note-generation/EVALUATION.md)). The fixes cover app-placed answers, prompt-injection hardening, a warning for drafts not found in the notes, and study-mode language.
+- The earlier bright UI Steps 1–5 are historical; the cat brand supersedes their visual direction.
 
-1. **Next: Step 6, regression checks and teacher demo.** Follow the [design plan](agents/BRIGHT_UI_REDESIGN.md) and [Settings/data handoff](agents/design/bright-ui-step5-settings/README.md). Use disposable data to verify the complete study flow, Light/Dark/System, four languages and compact/wide layouts; refresh the final screenshot/demo evidence. Make any fixes through a separate reviewed branch/PR. Do not infer manual hardware acceptance from automated checks.
-2. **Complete release acceptance after the redesign.** Use the [Windows checklist](WINDOWS_ACCEPTANCE.md) with disposable data and recorded OS/build, hardware, scaling, version/hash and outcomes. Startup scaling checks are not native/live-DPI acceptance. Test a real Ollama model separately, recording server/model versions, hardware, streaming/Stop/reconnect/history and offline study.
-3. **Finish the semester report and presentation separately.** Keep identity/course/language/deadline placeholders until supplied; add real screenshots, references and evaluation evidence. Follow the course instructions, refresh document fields and inspect final pagination.
+## Recommended order
+
+1. **Native visual acceptance of v0.29–v0.30.1.** The design and AI panels have only been checked in Linux/Xvfb captures.
+   - On the Mac, and ideally a Windows PC at 100% and 150% scaling, use disposable data (`--data .local-data/acceptance.sqlite3`).
+   - Check Light/Dark, four languages, 1440 × 900 and 1024 × 700, sidebar collapse, the Dashboard banner, and Generate with AI in a deck and a question bank.
+   - Record OS/build, scaling and findings in the [Windows checklist](WINDOWS_ACCEPTANCE.md). Fix problems through reviewed PRs.
+2. **Broader AI evaluation.** Re-run `tools/evaluate_ai.py` with at least one more model (for example `llama3.2:3b`) and with long notes and 20 items. Compare with the 26 November record. Tutor streaming/Stop/reconnect/history with a real model still needs a manual pass.
+3. **Teacher demo and semester report.**
+   - Script a short demo: create a subject, generate questions from notes, practise, review flashcards, open Statistics.
+   - Refresh screenshots from disposable data.
+   - Keep identity, course, language and deadline placeholders until supplied, and inspect final pagination.
+4. **Housekeeping.** Delete merged remote branches only on explicit request; keep `main` and release tags.
 
 Before v1.0.0, resolve acceptance findings through reviewed PRs and rerun the relevant checks. New work, merge and publication need their own authorization. No manual result is marked passed by this status update.

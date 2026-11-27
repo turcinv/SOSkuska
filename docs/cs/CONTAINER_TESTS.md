@@ -13,6 +13,12 @@ Zachovej `--init`: zajistí správné doručení startovacího signálu virtuál
 
 Sestavení stahuje Python, systémové knihovny a závislosti, proto vyžaduje internet. Po změně zdrojů obraz znovu sestav; soubory se kopírují do obrazu, nejsou připojené živě. Další sestavení využije mezipaměť závislostí. Testy potřebují jen místní smyčku pro falešnou Ollamu, takže vnější síť je vypnutá. Limity CPU/paměti omezují rušení ostatní práce; případně je uprav. Nepřipojuje se displej ani datová složka hostitele a neotevírají se porty. `.dockerignore` povoluje pouze testované zdroje; prostředí, databáze, tajné údaje a historie Gitu zůstávají mimo kontext sestavení. Kontejner se potom odstraní, obraz a mezipaměť zůstanou.
 
-Obraz běží jako běžný uživatel bez práv root. Xvfb vytvoří vnitřní virtuální obrazovku pro všech 16 GUI skriptů; na hostiteli se neotevřou okna aplikace. Společný `tools/run_checks.py` spustí kontrolu závislostí, syntaxe, 261 jednotkových testů a GUI skripty s časovým limitem pro každý proces. Celek trvá několik minut; chyba vrací nenulový kód. CI používá stejný seznam GUI přes `--gui-only` po samostatných jednotkových kontrolách.
+Obraz běží jako běžný uživatel bez práv root. Xvfb vytvoří vnitřní virtuální obrazovku pro každý GUI skript; na hostiteli se neotevřou okna aplikace. Společný `tools/run_checks.py` spustí kontrolu závislostí, syntaxe, jednotkové testy a GUI skripty (351 jednotkových testů a 26 GUI skriptů ve v0.30.1) s časovým limitem pro každý proces. Celek trvá zhruba pět minut; chyba vrací nenulový kód. CI používá stejný seznam GUI přes `--gui-only` po samostatných jednotkových kontrolách.
+
+Chceš-li spustit jediný skript, přepiš příkaz; ponech `--init` a pevný časový limit:
+
+```sh
+docker run --rm --init --network none soskuska-tests timeout 150 xvfb-run -a -s '-screen 0 1920x1080x24' python -X faulthandler -u soskuska/check_note_generation.py
+```
 
 Linuxový kontejner neověřuje nativní Quit na macOS, trackpad Tk 9 ani UI Windows. Nativní kontroly na Macu spouštěj jen při relevantní platformní změně a viditelný běh nejprve domluv s uživatelem. Úspěšný kontejner nenahrazuje důležitou selhávající platformní kontrolu.

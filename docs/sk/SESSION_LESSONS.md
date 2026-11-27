@@ -59,3 +59,12 @@ Rozlišuj chybu zápisu hodnotenia od chyby následného čítania. Pri chybe z�
 ## 2026-11-25 · Responzívne prehľady a Tutor
 
 Popisy v rovnako širokých stĺpcoch zalamuj podľa stabilnej šírky spoločného kontajnera. Šírka jednotlivých zaokrúhlených kariet môže pri zmene veľkosti spôsobiť slučku o jeden pixel. Rozloženie meň len pri prepnutí počtu stĺpcov a varovania zobraz pri potvrdzovacích tlačidlách.
+
+## 2026-11-26 · Mačacia značka, AI generovanie a hodnotenie so skutočným modelom (v0.29.0–v0.30.1)
+
+- **Paleta značky a kontrast.** Značková levanduľová `#9884D6` dáva bielemu textu len asi 3,2:1. Tlačidlá používajú tmavšiu `#6E5ABF`, značková farba zostáva pre obrysy. Každý dekoratívny obrázkový štítok potrebuje čitateľné `text_color`, pretože živý audit kontroluje všetky namapované štítky.
+- **Kompaktné rozloženie má málo zvislej rezervy.** Kontrola viditeľnosti Finish v 1024 × 700 zlyhala po pridaní obrázka bannera. Dekoratívne scény sa zobrazujú len v širokom rozložení a obrázok bočného panela sa umiestni do mriežky, len keď sa jeho vážený riadok zmestí celý.
+- **Náklady na štart sú testované obmedzenie.** Rozloženia v čerstvom procese majú v CI limit 7 sekúnd. Dva ďalšie panely vytvárané pri štarte tento limit prekročili. Voliteľné panely, napríklad panely AI generovania, vytváraj až pri prvom použití.
+- **Test so skutočným modelom odhalí, čo fixtúry nezachytia.** Model so 4 miliardami parametrov označil zlé písmeno odpovede pri 3 z 22 otázok a riadil sa pokynmi vloženými do poznámok. Nikdy nenechaj model vyberať písmeno odpovede. Poznámky ohraničuj ako dáta a úlohu zopakuj až za nimi. Návrhy so slabou oporou zobraz nezaškrtnuté, neodmietaj ich. Po každej zmene promptu alebo schémy znova spusti `tools/evaluate_ai.py`.
+- **Behy v kontajneri potrebujú `--init`.** Bez neho sa `xvfb-run` zasekne skôr, než kontrola začne. Spustenie jedného skriptu ohraničuj pomocou `timeout`.
+- **Súbežné volania nástrojov.** Volania v jednom kroku bežia v nezaručenom poradí, preto nikdy nevykonávaj zostavenie a úpravu v jednom kroku a nespoliehaj sa na výsledok. Po vykonaní úpravy kontrolu zopakuj.

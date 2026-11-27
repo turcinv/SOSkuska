@@ -101,6 +101,10 @@ Flashcards nyní podporuje import UTF-8 CSV do existujícího balíčku: šablon
 
 AI Tutor nyní ukládá konverzace lokálně včetně původního serveru/modelu a stavu odpovědi. Historii lze otevřít bez sítě, výslovně se připojit pro pokračování nebo vybranou konverzaci po potvrzení smazat. Vydáno ve v0.12.0 se schématem 7, které transakčně migruje původní studijní data. [Uložené konverzace AI Tutor](TUTOR_HISTORY.md).
 
+## Návrhy AI z poznámek
+
+V balíčku kartiček nebo v bance otázek předmětu vlož poznámky a stiskni **Generovat pomocí AI**. Uložený model Ollama navrhne kartičky nebo otázky s výběrem z odpovědí; zaškrtni ty dobré a ulož je společně. Poznámky se odesílají jen po stisknutí Generovat a neukládají se. [Generování kartiček a otázek z poznámek](AI_NOTE_GENERATION.md).
+
 ## Jazyk rozhraní
 
 Výběr jazyka rozhraní je dostupný ve v0.13.0: angličtina, čeština, slovenština a ruština. Ukládá se zvlášť od jazyka AI a použije se po restartu. Aktuální schéma je 10. [Jazyk rozhraní](UI_LANGUAGES.md).

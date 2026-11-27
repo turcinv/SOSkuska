@@ -74,19 +74,10 @@ Syntax and unit tests without opening the application window:
 .venv-macos/bin/python -m unittest discover -s tests -v
 ```
 
-Native checks use disposable databases and open real windows:
+Native checks use disposable databases and open real windows. The full list of GUI scripts lives in `tools/run_checks.py` (26 at v0.30.1); prefer running them in the [test container](CONTAINER_TESTS.md) so no windows appear on your desktop. To run one script natively:
 
 ```sh
 .venv-macos/bin/python soskuska/check_dashboard.py
-.venv-macos/bin/python soskuska/check_question_bank.py
-.venv-macos/bin/python soskuska/check_review_fixes.py
-.venv-macos/bin/python soskuska/check_practice.py
-.venv-macos/bin/python soskuska/check_practice_history.py
-.venv-macos/bin/python soskuska/check_flashcards.py
-.venv-macos/bin/python soskuska/check_statistics.py
-.venv-macos/bin/python soskuska/check_state_fixes.py
-.venv-macos/bin/python soskuska/check_tutor.py
-.venv-macos/bin/python soskuska/check_settings.py
 ```
 
 Use the corresponding environment executable on Windows/Linux. For example:
@@ -97,7 +88,7 @@ Use the corresponding environment executable on Windows/Linux. For example:
 
 Checks print `PASS` and close their windows on success. They never use the normal user database. The Dashboard script has a 12-second Tk safeguard, not a hard process timeout if the event loop freezes; use Ctrl+C in that case. CI adds a 60-second external timeout per script.
 
-Backup/restore validation on this branch passed 244 unit tests and fifteen native checks locally. Do not present old results as validation of untested code changes. Coverage includes:
+Baseline at v0.30.1: 351 unit tests (two Linux platform skips) and all 26 GUI scripts passed in the Linux container, and all five CI jobs passed. Do not present old results as validation of untested code changes. Main coverage:
 
 | Check / tests | Main coverage |
 | --- | --- |
@@ -111,14 +102,18 @@ Backup/restore validation on this branch passed 244 unit tests and fifteen nativ
 | `check_state_fixes.py` | Question conflicts/reload, refreshed deck-subject choices, expired-discard preservation, missing-attempt recovery and transient errors |
 | `check_tutor.py`, `test_tutor.py` | Loopback fake Ollama, Unicode/stream errors, Stop/TLS cancellation, context bounds, navigation, clearing and close while generating |
 | `check_settings.py`, `test_preferences.py`, `test_settings_ui.py` | Atomic/stale preference writes, migration/rollback from frozen schema 5, kept drafts, active timer target, fresh-process persistence, no auto-connection, per-server model choice |
+| `check_note_generation.py`, `test_note_generation.py` | AI drafting from notes: no request before Generate, structured payload, parsing/validation, app-placed answers, unsupported-draft warnings, atomic save, duplicates, discard/rename/Stop/close, English and Russian |
+| `check_studio_layout.py`, `check_ui_languages.py` | Dashboard shell and cat-brand banner/scene, sidebar decoration fit, four languages at 100/150% startup scaling |
+
+Other scripts in `tools/run_checks.py` cover focus recovery, backups and schedules, CSV imports, Tutor history, question explanations and study modes, appearance and responsive layouts.
 
 After UI changes, manually check 1440 × 900 and 1024 × 700, access to lower content, actual scrolling gestures, sidebar, search, Ctrl+K / Cmd+K and Escape. For persistence changes, edit the checklist, finish a short session and restart to inspect saved data. There is no automatic code reload: restart the app.
 
 ## CI
 
-`.github/workflows/ci.yml` runs on PRs targeting main, pushes to main and manual dispatch. Python 3.12 syntax, dependencies and unit tests run on Ubuntu, Windows and macOS; fifteen GUI checks run under Xvfb on Ubuntu. Each process has a 60-second timeout, each job 10 minutes. Newer runs cancel superseded runs for the same ref. Actions are pinned and the token can only read contents. CI does not deploy, publish releases or configure branch protection.
+`.github/workflows/ci.yml` runs on PRs targeting main, pushes to main and manual dispatch. Python 3.12 syntax, dependencies and unit tests run on Ubuntu, Windows and macOS; the GUI scripts listed in `tools/run_checks.py` (26 at v0.30.1) run under Xvfb on Ubuntu, and a fifth job builds and checks the Windows portable ZIP. Each process has a 60-second timeout (fresh-process layout probes inside a script have their own shorter bounds), each job 10 minutes. Newer runs cancel superseded runs for the same ref. Actions are pinned and the token can only read contents. CI does not deploy, publish releases or configure branch protection.
 
-Read the first failing step in [Actions](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml), fix it and push to the same branch. Do not disable meaningful checks to get green results. Linux GUI checks do not establish native Aqua Quit or Tk 9 hardware trackpad behavior. Fake Ollama does not establish real-model quality or performance.
+Read the first failing step in [Actions](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml), fix it and push to the same branch. Do not disable meaningful checks to get green results. Linux GUI checks do not establish native Aqua Quit or Tk 9 hardware trackpad behavior. Fake Ollama does not establish real-model quality or performance; use `tools/evaluate_ai.py` (below) for that.
 
 ## Troubleshooting
 
@@ -219,9 +214,9 @@ python soskuska/check_practice_history.py
 
 ## Windows portable build and acceptance
 
-v0.15.0 adds an unsigned Windows x64 portable ZIP, built and checked by a fifth CI job. Bundled helper executables preserve isolated CSV/backup jobs; Python is not required on the target machine. Automated hosted Windows checks and the manual clean-machine checklist are separate; manual acceptance is not yet completed. Published version is v0.18.1, schema 10. [Windows portable build and acceptance](WINDOWS_PORTABLE.md) · [Checklist](WINDOWS_ACCEPTANCE.md).
+v0.15.0 adds an unsigned Windows x64 portable ZIP, built and checked by a fifth CI job. Bundled helper executables preserve isolated CSV/backup jobs; Python is not required on the target machine. Automated hosted Windows checks and the manual clean-machine checklist are separate; manual acceptance is not yet completed. Published version is v0.30.1, schema 10. [Windows portable build and acceptance](WINDOWS_PORTABLE.md) · [Checklist](WINDOWS_ACCEPTANCE.md).
 
-Current packaging work: 251 unit tests passed locally. The Linux container passed all 15 GUI scripts (250 unit tests at that source snapshot, two filesystem-specific skips). No native Mac GUI suite was run for this branch. Hosted Windows build evidence is recorded separately; manual acceptance remains NOT RUN.
+Each release attaches the ZIP, checksum and acceptance report built by the CI run on the exact tagged main commit. Manual clean-machine acceptance remains NOT RUN.
 
 ## Appearance settings
 
@@ -241,7 +236,7 @@ Scheduled local backups are available in **v0.18.0**. SQLite schema remains **10
 
 ## Main-branch review fixes
 
-Fixes released in v0.18.1 through PR #38, tracked in [Astra review findings](REVIEW_FINDINGS.md). Schema remains 10 and the published version is v0.18.1. Subject edits compare their original content under the write lock; a conflict keeps your draft. Copy any changes you need before reopening Edit to load the latest version. Question/topic deletions recheck their displayed snapshot and require a refreshed confirmation after changes. Returning to the same subject preserves the active question/topic editor, filters and original editing identity, including read retries; a removed selected topic stays unavailable until you explicitly choose a replacement or No topic. Opening a different subject still resets the editor. A newer successful daily-backup receipt clears the old failure notice without another backup write.
+Fixes released in v0.18.1 through PR #38, tracked in [Astra review findings](REVIEW_FINDINGS.md). Schema remains 10 and the published version is v0.30.1. Subject edits compare their original content under the write lock; a conflict keeps your draft. Copy any changes you need before reopening Edit to load the latest version. Question/topic deletions recheck their displayed snapshot and require a refreshed confirmation after changes. Returning to the same subject preserves the active question/topic editor, filters and original editing identity, including read retries; a removed selected topic stays unavailable until you explicitly choose a replacement or No topic. Opening a different subject still resets the editor. A newer successful daily-backup receipt clears the old failure notice without another backup write.
 
 
 ## Question explanations · v0.25.0
@@ -257,23 +252,45 @@ Implementation: `question_explanation.py` builds/validates the bounded snapshot 
 
 In a completed result, open **Explain this question**, then choose **Study mode** before **Prepare in Tutor**. **Explain answer** keeps the existing explanation; **Explain simply** requests short beginner-friendly steps and an example; **Give me a hint** requests one conceptual hint and omits your selected answer, stored key and explanation from the prompt; **Quiz me** asks one new follow-up at a time, waiting for your response before feedback. This is informal practice and never writes a scored attempt or changes source content.
 
-Changing mode regenerates the exact local preview and invalidates its previous Prepare action. Nothing connects, sends or creates a conversation until the existing explicit controls are used. The sent prompt is saved in ordinary local chat history, with the existing language, 4,000-character bound, clean-chat guard, Stop and save-retry rules. Hint mode still includes all four choices: a model may infer/reveal the answer, and text already visible in completed results remains visible. Mode following and explanation quality require later real-model testing, explicitly deferred by the user. Automated checks use loopback FakeOllama. Released version is v0.30.1 / schema 10.
+Changing mode regenerates the exact local preview and invalidates its previous Prepare action. Nothing connects, sends or creates a conversation until the existing explicit controls are used. The sent prompt is saved in ordinary local chat history, with the existing language, 4,000-character bound, clean-chat guard, Stop and save-retry rules. Hint mode still includes all four choices: a model may infer/reveal the answer, and text already visible in completed results remains visible. Mode following and explanation quality were first checked with a real model on 26 November 2026 (see the AI evaluation below); broader model testing remains manual. Automated checks use loopback FakeOllama. Released version is v0.30.1 / schema 10.
 
 
 ## Astra review fixes · v0.26.1
 
 Deck and topic editors now compare the original editable snapshot under the write lock. A conflict keeps the draft and shows a warning; copy needed changes before reopening Edit deck or Rename topic to load the current record. Deck warnings also appear beside Save. Once a deck save commits, a failed display refresh changes Save to Refresh deck and retries only the read, without repeating or overwriting the save.
 
-Flashcard due counts, ordered queues, rating and review checks compare timezone-aware instants, including restored offsets and microseconds. Statistics and history share local-day parsing for accepted ISO timestamps, including offsets with seconds. No stored timestamps are rewritten. Exact integer UTC keys cover the full accepted date range; if the host cannot convert an extreme date to local time, reports use its UTC day clamped to the supported calendar. Restore requires standalone schema 10; migration descriptions remain historical. Released version is v0.30.1 / schema 10. Real-model testing remains deferred.
+Flashcard due counts, ordered queues, rating and review checks compare timezone-aware instants, including restored offsets and microseconds. Statistics and history share local-day parsing for accepted ISO timestamps, including offsets with seconds. No stored timestamps are rewritten. Exact integer UTC keys cover the full accepted date range; if the host cannot convert an extreme date to local time, reports use its UTC day clamped to the supported calendar. Restore requires standalone schema 10; migration descriptions remain historical. Released version is v0.30.1 / schema 10.
 
 
 ## Study studio redesign · v0.27.0
 
 A new Dashboard composition replaces the earlier incremental bright UI layout: four summary tiles, a large focus room with a live circular clock, monogram-led subject cards and a saved-date month agenda. The persistent sidebar uses locally drawn icons and separate dark navigation colors; shared card surfaces and paired Dark/Light styling update across the app. This stage implements the Dashboard and shared shell; remaining page compositions follow visual feedback. [Design evidence and scope](agents/design/study-studio-dashboard/README.md).
 
-The clock uses actual remaining time and the active session's original target. Calendar marks use the complete subject snapshot, while the upcoming list keeps exact saved dates and its top-five limit. Keyboard search, focus-save retry and pending recovery reveal their controls in compact windows; deferred reveals cancel on navigation/search. Reflow performs no I/O. Schema remains 10 and the released version is v0.30.1. Container/synthetic scaling coverage is separate from native platform acceptance; real-model testing remains deferred.
+The clock uses actual remaining time and the active session's original target. Calendar marks use the complete subject snapshot, while the upcoming list keeps exact saved dates and its top-five limit. Keyboard search, focus-save retry and pending recovery reveal their controls in compact windows; deferred reveals cancel on navigation/search. Reflow performs no I/O. Schema remains 10 and the released version is v0.30.1. Container/synthetic scaling coverage is separate from native platform acceptance.
 
 
 ## Brand assets
 
 Run `python tools/build_brand_assets.py` with the project environment to rebuild the committed SVG, PNG, ICO and ICNS files in `soskuska/assets/brand/`. The generator needs only Pillow; restart the app afterward. Windows CI verifies bundled assets, executable icon presence and frozen startup. Native platform/DPI visual acceptance remains manual.
+
+## Cat brand · v0.29.0
+
+`theme.py` holds the Charcoal/Lavender/Violet/Cream palette with paired Light/Dark roles; `studio_widgets.py` draws the banner scene, avatar, paw marks, tile icons and sidebar decoration with Pillow. Contrast rules are enforced by `tests/test_appearance.py` and the live audit in `check_appearance.py`. Design handoff and captures: [cat brand](agents/design/cat-brand/README.md).
+
+## AI drafting from notes · v0.30.0 / v0.30.1
+
+**Generate with AI** in decks and question banks drafts items from pasted notes with the saved Ollama model; see the [user guide](AI_NOTE_GENERATION.md). `note_generation.py` holds the prompt, JSON schema, parsing and note-support check; `ai_generation_panel.py` the review panel. Checks:
+
+```sh
+.venv-macos/bin/python -m unittest discover -s tests -p test_note_generation.py
+.venv-macos/bin/python soskuska/check_note_generation.py   # opens windows; prefer the container
+```
+
+To evaluate prompts against a real local model without opening windows or touching any database:
+
+```sh
+ollama pull qwen3:4b-instruct-2507-q4_K_M
+.venv-macos/bin/python tools/evaluate_ai.py --model qwen3:4b-instruct-2507-q4_K_M --output .local-data/ai-eval
+```
+
+It writes `ai-evaluation.json` with raw replies, validity counts, timing and heuristic flags (support, language, hint leakage) for human review. Re-run it after any prompt or schema change and compare with the [26 November 2026 record](agents/design/ai-note-generation/EVALUATION.md). It is a manual tool, not part of CI.

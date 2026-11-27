@@ -59,3 +59,12 @@ Odlišuj chybu zápisu hodnocení od chyby následného čtení. Při chybě zá
 ## 2026-11-25 · Responzivní přehledy a Tutor
 
 Popisky ve stejně širokých sloupcích zalamuj podle stabilní šířky společného kontejneru. Šířka jednotlivých zaokrouhlených karet může při změně velikosti způsobit smyčku o jeden pixel. Rozložení měň jen při přepnutí počtu sloupců a varování zobraz u potvrzovacích tlačítek.
+
+## 2026-11-26 · Kočičí značka, AI generování a hodnocení se skutečným modelem (v0.29.0–v0.30.1)
+
+- **Paleta značky a kontrast.** Značková levandulová `#9884D6` dává bílému textu jen asi 3,2:1. Tlačítka používají tmavší `#6E5ABF`, značková barva zůstává pro obrysy. Každý dekorativní obrázkový štítek potřebuje čitelné `text_color`, protože živý audit kontroluje všechny namapované štítky.
+- **Kompaktní rozložení má málo svislé rezervy.** Kontrola viditelnosti Finish v 1024 × 700 selhala po přidání obrázku banneru. Dekorativní scény se zobrazují jen v širokém rozložení a obrázek postranního panelu se umístí do mřížky, jen když se jeho vážený řádek vejde celý.
+- **Náklady na start jsou testované omezení.** Rozložení ve čerstvém procesu mají v CI limit 7 sekund. Dva další panely vytvářené při startu tento limit překročily. Volitelné panely, například panely AI generování, vytvářej až při prvním použití.
+- **Test se skutečným modelem odhalí, co fixtury nezachytí.** Model s 4 miliardami parametrů označil špatné písmeno odpovědi u 3 z 22 otázek a řídil se pokyny vloženými do poznámek. Nikdy nenech model vybírat písmeno odpovědi. Poznámky ohraň jako data a úkol zopakuj až za nimi. Návrhy se slabou oporou zobraz nezaškrtnuté, neodmítej je. Po každé změně promptu nebo schématu znovu spusť `tools/evaluate_ai.py`.
+- **Běhy v kontejneru potřebují `--init`.** Bez něj se `xvfb-run` zasekne dřív, než kontrola začne. Spuštění jednoho skriptu ohraničuj pomocí `timeout`.
+- **Souběžná volání nástrojů.** Volání v jednom kroku běží v nezaručeném pořadí, proto nikdy neprováděj sestavení a úpravu v jednom kroku a nespoléhej na výsledek. Po provedení úpravy kontrolu zopakuj.

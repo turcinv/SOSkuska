@@ -25,18 +25,11 @@ Na macOS s připraveným prostředím:
 .venv-macos/bin/python -m unittest discover -s tests -v
 ```
 
-Běžné kontroly UI, časovače a posouvání spouštěj v kontejneru výše. Příkazy níže otevírají nativní okna a slouží jen k nutnému platformnímu/ručnímu ověření; viditelný běh nejprve domluv s uživatelem. Na Windows/Linux použij odpovídající Python:
+Běžné kontroly UI, časovače a posouvání spouštěj v kontejneru výše. Nativní GUI skripty otevírají skutečná okna a slouží jen k nutnému platformnímu/ručnímu ověření; viditelný běh nejprve domluv s uživatelem. Úplný seznam je `GUI_CHECKS` v `tools/run_checks.py`. Na Windows/Linux použij odpovídající Python, například:
 
 ```sh
 .venv-macos/bin/python soskuska/check_dashboard.py
-.venv-macos/bin/python soskuska/check_question_bank.py
-.venv-macos/bin/python soskuska/check_review_fixes.py
-.venv-macos/bin/python soskuska/check_practice.py
-.venv-macos/bin/python soskuska/check_flashcards.py
-.venv-macos/bin/python soskuska/check_statistics.py
-.venv-macos/bin/python soskuska/check_state_fixes.py
-.venv-macos/bin/python soskuska/check_tutor.py
-.venv-macos/bin/python soskuska/check_settings.py
+.venv-macos/bin/python soskuska/check_note_generation.py
 ```
 
 Kontrola GUI otevírá okno a potřebuje grafickou relaci. Změna samotné dokumentace obvykle vyžaduje kontrolu odkazů, příkazů a formátování; není nutné kvůli ní spouštět celé UI.
@@ -51,7 +44,7 @@ Chybu založ přes šablonu v Issues: postup opakování, očekávané/skutečn�
 
 ## Průběžná integrace (CI)
 
-CI: Python 3.12, jednotkové testy na třech systémech a patnáct GUI kontrol na Ubuntu/Xvfb. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml).
+CI: Python 3.12, jednotkové testy na Ubuntu, Windows a macOS, GUI skripty uvedené v `tools/run_checks.py` (26 ve v0.30.1) na Ubuntu/Xvfb a kontrola sestavení přenosné verze pro Windows. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml). Kontroly nenasazují ani nepublikují vydání. Při změně přehledů viz [pravidla statistik](STATISTICS.md); vlastní hodnocení se nesmí vydávat za změřené zvládnutí učiva. Změny promptů nebo schématu AI znovu ověř pomocí `tools/evaluate_ai.py` se skutečným místním modelem (viz [Vývoj](DEVELOPMENT.md)).
 
 ## Statistiky (v0.6.0)
 

@@ -79,3 +79,12 @@ Use a stable shared-container width to wrap labels inside equal-width columns. D
 - Tk's Aqua implementation consumes only the first `iconphoto` image; use a 512 px source rather than putting the 16 px Windows titlebar size first. Keep images root-owned and use public CustomTkinter icon methods.
 - A Windows executable already has PyInstaller's default icon. Verify branded artwork by comparing embedded RT_ICON payloads against the shipped ICO, rather than testing icon presence alone.
 - New runtime artwork must be included in the restrictive Docker context and frozen build datas. Keep sidebar image labels on the navigation palette so shared appearance checks remain valid.
+
+## 2026-11-26 — Cat brand, AI drafting and real-model evaluation (v0.29.0–v0.30.1)
+
+- **Brand palette and contrast.** The brand lavender `#9884D6` gives white text only about 3.2:1. Buttons use a deeper `#6E5ABF`, and the brand colour is kept for outlines. Every decorative image label needs a readable `text_color` because the live audit inspects all mapped labels.
+- **Compact layout has little vertical slack.** The 1024 × 700 Finish-visibility check failed when a banner image was added. Decorative scenes appear only in the wide layout, and sidebar art is gridded only when its weighted row can hold it whole.
+- **Startup cost is a tested constraint.** Fresh-process layout probes in CI have 7-second bounds. Two extra panels built at startup made them time out. Build optional panels such as the AI drafting panels on first use.
+- **Real-model testing finds what fixtures cannot.** A 4B model marked the wrong answer letter in 3 of 22 questions and followed instructions injected into notes. Never let the model choose the answer letter. Fence notes as data and repeat the task after them. Show weak-support drafts unticked rather than rejecting them. Re-run `tools/evaluate_ai.py` after any prompt or schema change.
+- **Container runs need `--init`.** Without it, `xvfb-run` hangs before the check starts. Bound single-script runs with `timeout`.
+- **Parallel tool calls.** Calls in one step run in no fixed order, so never build and edit in the same step and trust the result. Re-run after the edit has landed.
