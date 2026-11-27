@@ -22,7 +22,7 @@ Current release: **v0.31.1**, schema **10**.
    - Check Light/Dark, four languages, 1440 × 900 and 1024 × 700, sidebar collapse, the Dashboard banner, and Generate with AI in a deck and a question bank.
    - Record OS/build, scaling and findings in the [Windows checklist](WINDOWS_ACCEPTANCE.md). Fix problems through reviewed PRs.
 2. **Broader AI evaluation.** Re-run `tools/evaluate_ai.py` with at least one more model (for example `llama3.2:3b`) and with long notes and 20 items. Compare with the 26 November record. Tutor streaming/Stop/reconnect/history with a real model still needs a manual pass.
-3. **Teacher demo and semester report.**
+3. **Teacher demo and semester report.** Drafts of the demo script, report outline and 17 screenshots are in [semester](semester/README.md); rehearse natively and fill in the placeholders.
    - Script a short demo: create a subject, generate questions from notes, practise, review flashcards, open Statistics.
    - Refresh screenshots from disposable data.
    - Keep identity, course, language and deadline placeholders until supplied, and inspect final pagination.
