@@ -131,6 +131,11 @@ class McpServerTests(unittest.TestCase):
             with self.subTest(name=name, args=args):
                 self.assertIn(expected, self.error_text(self.call(name, args)))
 
+    def test_exact_question_lookup_checks_one_answer(self):
+        result = self.call("search_questions", {"subject_id": self.sid, "question_id": self.qid, "include_answers": True})
+        self.assertEqual([(i["id"], i["correct_option"]) for i in result.structured_content["items"]], [(self.qid, "A")])
+        self.assertIn("valid integer", self.error_text(self.call("search_questions", {"subject_id": self.sid, "question_id": "1"})))
+
     def test_limits_are_clamped(self):
         store = Store(self.path)
         try:

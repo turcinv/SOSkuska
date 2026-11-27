@@ -38,7 +38,7 @@ from studio_widgets import (FocusClock, MonthAgenda, MONTHS, nav_icon, paw_icon,
                             cat_avatar, study_scene, sidebar_decor)
 from panel_layout import wrap_labels
 from branding import sidebar_logo, install_window_icon
-from ai_generation_panel import generation_busy, shutdown_generators
+from ai_generation_panel import generation_busy, refresh_generator_destinations, shutdown_generators
 
 APP_VERSION = '0.31.1'
 
@@ -935,6 +935,7 @@ class Dashboard(ctk.CTk):
             self.focus_clock.set(self.focus_target,self.focus_target,tr(self,'Focus session'))
         self.update_goal()
         self.tutor_page.apply_preferences(saved, previous)
+        refresh_generator_destinations(self)
         if saved["appearance_mode"] != previous["appearance_mode"]:
             apply_appearance(saved["appearance_mode"])
 

@@ -117,18 +117,21 @@ def build_server(path, *, allow_answers=True):
     def search_questions(subject_id: StrictInt, query: StrictStr = "", topic_id: StrictInt | None = None,
                          without_topic: StrictBool = False,
                          difficulty: Literal["Easy", "Medium", "Hard"] | None = None,
-                         limit: StrictInt = 20, include_answers: StrictBool = False) -> dict[str, Any]:
+                         limit: StrictInt = 20, include_answers: StrictBool = False,
+                         question_id: StrictInt | None = None) -> dict[str, Any]:
         """Search a subject's multiple-choice questions (newest first, at most 50).
 
         `query` matches the prompt, options and topic name. Use `topic_id` for one topic or
-        `without_topic` for questions with no topic. The correct option and explanation are
+        `without_topic` for questions with no topic, or `question_id` for one exact question
+        (use it to check the student's answer; compare `version`, which changes when the question is
+        edited). The correct option and explanation are
         returned only with `include_answers=true`; leave it false while quizzing the student.
         """
         if topic_id is not None and without_topic:
             raise ToolError("Use either topic_id or without_topic, not both.")
         topic = None if without_topic else ("all" if topic_id is None else topic_id)
         return read(path, queries.find_questions, subject_id, query=query, topic_id=topic, difficulty=difficulty,
-                    limit=limit, include_answers=answers(include_answers))
+                    limit=limit, include_answers=answers(include_answers), question_id=question_id)
 
     @tool
     def list_decks() -> dict[str, Any]:
@@ -180,8 +183,10 @@ def build_server(path, *, allow_answers=True):
         count = max(1, min(int(count), 20))
         return (f"Quiz me on SOSkúška subject {subject_id} with {count} questions. Use search_questions with "
                 f"include_answers=false to pick questions. Ask exactly one question at a time with its four options "
-                f"and wait for my answer. Only after I answer, call search_questions with include_answers=true to "
-                f"check it, tell me whether I was right and explain briefly. At the end, give my score.")
+                f"and wait for my answer. Only after I answer, call search_questions with that question's id as "
+                f"question_id and include_answers=true to check it. If its version differs from the one you asked, "
+                f"say the question was changed in SOSkúška and do not score it; otherwise tell me whether I was right "
+                f"and explain briefly. At the end, give my score.")
 
     @server.prompt(title="Weak topics study plan")
     def weak_topics(period: Literal["Last 7 days", "Last 30 days", "All time"] = "Last 30 days") -> str:

@@ -802,5 +802,10 @@
   "Wait for or stop AI generation before restoring.": "Wait for or stop AI generation before restoring.",
   "Generating with {v0}… Your notes were sent to {v1}. You can Stop or use other pages; leaving this deck or subject discards the drafts.": "Generating with {v0}… Your notes were sent to {v1}. You can Stop or use other pages; leaving this deck or subject discards the drafts.",
   "AI generation was closed; its unsaved drafts were discarded. Your notes are kept.": "AI generation was closed; its unsaved drafts were discarded. Your notes are kept.",
-  "⚠ The answer was not clearly found in your notes, so this draft is unticked. Check it before saving.": "⚠ The answer was not clearly found in your notes, so this draft is unticked. Check it before saving."
+  "⚠ The answer was not clearly found in your notes, so this draft is unticked. Check it before saving.": "⚠ The answer was not clearly found in your notes, so this draft is unticked. Check it before saving.",
+  "The AI server or model changed since this panel was shown. Nothing was sent. Check the server below, then press Generate again.": "The AI server or model changed since this panel was shown. Nothing was sent. Check the server below, then press Generate again.",
+  "This test changed in another window. Its current answers are shown; confirm again to continue.": "This test changed in another window. Its current answers are shown; confirm again to continue.",
+  "Card saved. Refresh deck to load saved content; do not save it again.": "Card saved. Refresh deck to load saved content; do not save it again.",
+  "Expected correct_answer and three wrong_answers.": "Expected correct_answer and three wrong_answers.",
+  "This test changed in another window and could not be reloaded. Your test is kept; open Practice Tests again to continue.": "This test changed in another window and could not be reloaded. Your test is kept; open Practice Tests again to continue."
 }

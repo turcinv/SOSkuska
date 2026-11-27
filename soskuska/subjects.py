@@ -159,7 +159,7 @@ class SubjectPage(ctk.CTkFrame):
         self.hide_form()
         self.deleting_id = subject_id
         self.deleting_state = state
-        name, topics, questions = state
+        name, topics, questions = state[:3]
         content_warning = tr(self.app,' This permanently deletes {v0} topics and {v1} questions.',v0=topics,v1=questions) if topics or questions else ""
         self.delete_label.configure(text=tr(self.app, 'Delete “{v0}”?{v1} Saved study time and session history will be kept. Practice results, unfinished tests, flashcard decks and review history will also be kept.', v0=name, v1=content_warning))
         self.delete_panel.grid()

@@ -148,6 +148,27 @@ def check(path, language):
 
     def malformed():
         assert gen.preview is None and gen.status.cget('text')
+        destination_change()
+
+    def destination_change():
+        # S27-01: notes go only to the server and model the panel showed before the click.
+        sent = len(fixture.requests)
+        other_url = 'http://127.0.0.1:9'  # Never contacted: the guard stops the first click.
+        app.preferences = dict(app.preferences, ollama_endpoint=other_url)  # Changed without a panel refresh.
+        gen.generate_button.invoke()
+        assert not gen.busy and len(fixture.requests) == sent
+        assert '127.0.0.1:9' in gen.server_label.cget('text'), gen.server_label.cget('text')
+        assert gen.status.cget('text') == app.translator.text('The AI server or model changed since this panel was shown. Nothing was sent. Check the server below, then press Generate again.')
+        # Saving AI settings refreshes an open panel at once.
+        app.apply_preferences(dict(app.preferences, ollama_endpoint=fixture.url))
+        assert fixture.url in gen.server_label.cget('text')
+        # S27-07: a worker that cannot start leaves the panel usable and sends nothing.
+        fixture.mode = 'content'; fixture.content = json.dumps(CARDS)
+        with patch('ai_generation_panel.TutorTask.start', side_effect=RuntimeError('cannot start')):
+            gen.generate_button.invoke()
+        assert not gen.busy and gen.generate_button.cget('state') == 'normal' and len(fixture.requests) == sent
+        assert gen.status.cget('text') == app.translator.text('Could not start the request.')
+        app.validate_preferences_change(dict(app.preferences, ollama_model='other'))  # No longer blocked.
         questions()
 
     def questions():

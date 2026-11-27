@@ -66,7 +66,15 @@ def run_check(path, reopen=False):
         cid = app.store.flashcards(did)[0]["id"]
         page.card_form(cid)
         page.front_entry.insert("end", " Updated.")
+        # S27-04: a failed deck read after the save retries only the read, never a second update.
+        with patch.object(app.store, "deck", side_effect=sqlite3.OperationalError("locked")):
+            page.save_button.invoke()
+        saved = app.store.flashcard(cid)
+        assert page.view == "card_form" and saved["revision"] == 1 and saved["front"].endswith("Updated."), saved
+        assert page.save_button.cget("text") == app.translator.text("Refresh deck")
+        assert app.translator.text("Card saved. Refresh deck to load saved content; do not save it again.") in page.status.cget("text")
         page.save_button.invoke()
+        assert page.view == "deck" and app.store.flashcard(cid) == saved
         page.search.insert(0, "ВТОРОЙ НЕТ")
         page.search_cards()
         assert "No matching cards" in " ".join(texts(page.body))

@@ -16,7 +16,10 @@ Answer keys and flashcard backs are omitted unless the caller asks for them.
 Stored text is the student's data: callers must treat it as data, never as
 instructions.
 """
+import hashlib
+import hmac
 import json
+import os
 import unicodedata
 from contextlib import contextmanager
 from datetime import date
@@ -26,12 +29,17 @@ from study_statistics import PERIODS, RATINGS
 
 LETTERS = "ABCD"
 TEXT_BUDGET = 20_000
-TEXT_LIMIT = 1000
-OPTION_LIMIT = 300
+# Field limits equal the authoring maxima, so a question or card is never shown
+# partially (four options differing after a cut would look identical). Only the
+# per-result budget and free-text descriptions shorten output.
+TEXT_LIMIT = 2000
+OPTION_LIMIT = 500
+BACK_LIMIT = 4000
 DESCRIPTION_LIMIT = 400
 QUERY_LIMIT = 200
 RATING_NOTE = "Flashcard ratings are the student's own self-assessment, not measured mastery."
 ACCURACY_NOTE = "Accuracy is correct answers divided by all questions in completed tests; unanswered questions count as wrong."
+_VERSION_KEY = os.urandom(16)
 
 
 class _Clip:
@@ -146,17 +154,29 @@ def subject_detail(store, subject_id):
             "truncated": clip.truncated}
 
 
+def _version(question):
+    """Short content version that changes whenever the prompt, options or answer key change.
+
+    Keyed with a per-process secret so a host cannot test candidate answers against it;
+    it stays stable for the life of one MCP server process.
+    """
+    fields = [question[key] for key in ("prompt", "option_a", "option_b", "option_c", "option_d", "correct_option", "explanation")]
+    payload = json.dumps(fields, ensure_ascii=False).encode("utf-8")
+    return hmac.new(_VERSION_KEY, payload, hashlib.sha256).hexdigest()[:12]
+
+
 def _fold(text):
     return unicodedata.normalize("NFKC", text).casefold()
 
 
 def find_questions(store, subject_id, *, query="", topic_id="all", difficulty=None, limit=20,
-                   include_answers=False):
+                   include_answers=False, question_id=None):
     """Search a subject's question bank, newest first.
 
     `topic_id` is "all", None (questions without a topic) or a topic id of this
-    subject. The correct option and explanation are included only when
-    `include_answers` is true.
+    subject. `question_id` selects exactly one question, so a host can check an
+    answer to the very item it asked. The correct option and explanation are
+    included only when `include_answers` is true.
     """
     _record_id(subject_id, "subject")
     limit = _limit(limit, 20, 50)
@@ -167,6 +187,8 @@ def find_questions(store, subject_id, *, query="", topic_id="all", difficulty=No
         raise ValueError("Choose difficulty Easy, Medium or Hard, or leave it empty.")
     if topic_id not in ("all", None):
         _record_id(topic_id, "topic")
+    if question_id is not None:
+        _record_id(question_id, "question")
     key = _fold(query.strip())
     clip = _Clip()
     with _snapshot(store) as db:
@@ -176,8 +198,11 @@ def find_questions(store, subject_id, *, query="", topic_id="all", difficulty=No
                 "SELECT 1 FROM topics WHERE id=? AND subject_id=?", (topic_id, subject_id)).fetchone() is None:
             raise ValueError(f"Topic {topic_id} does not belong to subject {subject_id}.")
         rows = store.questions(subject_id)
+    if question_id is not None and not any(q["id"] == question_id for q in rows):
+        raise ValueError(f"Question {question_id} does not belong to subject {subject_id}.")
     matches = [q for q in rows
-               if (topic_id == "all" or q["topic_id"] == topic_id)
+               if (question_id is None or q["id"] == question_id)
+               and (topic_id == "all" or q["topic_id"] == topic_id)
                and (difficulty is None or q["difficulty"] == difficulty)
                and (not key or key in _fold("\n".join([q["prompt"], q["topic_name"] or "",
                                                          *(q["option_" + c] for c in "abcd")])))]
@@ -185,7 +210,8 @@ def find_questions(store, subject_id, *, query="", topic_id="all", difficulty=No
     for q in matches[:limit]:
         item = {"id": q["id"], "prompt": clip(q["prompt"]),
                 "options": {letter: clip(q["option_" + letter.lower()], OPTION_LIMIT) for letter in LETTERS},
-                "topic_id": q["topic_id"], "topic": q["topic_name"], "difficulty": q["difficulty"]}
+                "topic_id": q["topic_id"], "topic": q["topic_name"], "difficulty": q["difficulty"],
+                "version": _version(q)}
         if include_answers:
             item["correct_option"] = LETTERS[q["correct_option"]]
             item["explanation"] = clip(q["explanation"])
@@ -220,7 +246,7 @@ def due_cards(store, deck_id, *, limit=20, include_backs=False):
         item = {"id": card["id"], "front": clip(card["front"]), "due_at": card["due_at"],
                 "review_count": card["review_count"], "interval_days": card["interval_days"]}
         if include_backs:
-            item["back"] = clip(card["back"])
+            item["back"] = clip(card["back"], BACK_LIMIT)
         items.append(item)
     return _bounded(items, clip, total=total, deck={"id": deck["id"], "name": deck["name"]},
                     backs_included=include_backs)

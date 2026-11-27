@@ -8,7 +8,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'soskuska'))
 from csv_import import ImportValidationError
-from note_generation import (COUNTS, MAX_REPLY, OPTIONS, generation_messages, item_message,
+from note_generation import (COUNTS, MAX_REPLY, OPTIONS, answer_position, generation_messages, item_message,
                              parse_generated, response_schema)
 from ollama_client import OllamaClient
 from storage import Store
@@ -17,9 +17,8 @@ from ollama_fixture import FakeOllama
 
 CARDS = {'items': [{'front': 'What is FIFO?', 'back': 'First in, first out.'},
                    {'front': 'What is LIFO?', 'back': 'Last in, first out.'}]}
-QUESTION = {'question': 'Which structure is FIFO?', 'options': ['Queue', 'Stack', 'Tree', 'Graph'],
-            'correct': 'A', 'difficulty': 'Easy', 'explanation': 'Queues remove the oldest item first.',
-            'topic': 'Data structures'}
+QUESTION = {'question': 'Which structure is FIFO?', 'correct_answer': 'Queue', 'wrong_answers': ['Stack', 'Tree', 'Graph'],
+            'difficulty': 'Easy', 'explanation': 'Queues remove the oldest item first.', 'topic': 'Data structures'}
 
 
 def wait(task, timeout=5):
@@ -105,21 +104,32 @@ class ParseTests(unittest.TestCase):
         self.assertIn('Item 5:', joined)
 
     def test_questions_use_canonical_rules(self):
-        lower = dict(QUESTION, correct='c', difficulty='hard', topic='T' * 200)
+        lower = dict(QUESTION, question='Which structure is LIFO?', difficulty='hard', topic='  Data   structures ')
         preview = parse_generated('questions', json.dumps({'items': [QUESTION, lower]}), 5)
         self.assertEqual(preview['errors'], [])
         first, second = preview['rows']
         self.assertEqual(first['topic'], 'Data structures')
-        self.assertEqual(first['fields'], ['Which structure is FIFO?', 'Queue', 'Stack', 'Tree', 'Graph', 0, 'Easy',
+        position = answer_position(QUESTION['question'])
+        options = ['Stack', 'Tree', 'Graph']
+        options.insert(position, 'Queue')
+        self.assertEqual(first['fields'], ['Which structure is FIFO?', *options, position, 'Easy',
                                            'Queues remove the oldest item first.'])
-        self.assertEqual((second['fields'][5], second['fields'][6], len(second['topic'])), (2, 'Hard', 120))
-        bad = [dict(QUESTION, options=['a', 'a', 'b', 'c']), dict(QUESTION, options=['a', 'b']),
-               dict(QUESTION, correct='E'), dict(QUESTION, difficulty='Extreme'), dict(QUESTION, question=5),
-               dict(QUESTION, explanation=['x'])]
+        self.assertEqual((second['fields'][6], second['topic']), ('Hard', 'Data structures'))
+        bad = [dict(QUESTION, wrong_answers=['Stack', 'Stack', 'Tree']), dict(QUESTION, wrong_answers=['a', 'b']),
+               dict(QUESTION, difficulty='Extreme'), dict(QUESTION, question=5), dict(QUESTION, explanation=['x']),
+               dict(QUESTION, topic='T' * 121)]
         preview = parse_generated('questions', json.dumps(bad), 10)
         self.assertEqual(preview['rows'], [])
         self.assertEqual(len(preview['errors']), 6)
         self.assertTrue(all(line.startswith(f'Item {i}:') for i, line in enumerate(preview['errors'], 1)))
+        self.assertIn('topic name between 1 and 120', preview['errors'][5])
+
+    def test_legacy_model_chosen_answer_letter_is_rejected(self):
+        legacy = {'question': 'Which structure is FIFO?', 'options': ['Queue', 'Stack', 'Tree', 'Graph'],
+                  'correct': 'B', 'difficulty': 'Easy', 'explanation': 'x', 'topic': 'T'}
+        preview = parse_generated('questions', json.dumps([legacy]), 3)
+        self.assertEqual(preview['rows'], [])
+        self.assertEqual(preview['errors'], ['Item 1: Expected correct_answer and three wrong_answers.'])
 
     def test_correct_answer_text_is_placed_by_the_app(self):
         item = {'question': 'Which structure is FIFO?', 'correct_answer': 'Queue', 'wrong_answers': ['Stack', 'Tree', 'Graph'],
@@ -183,7 +193,7 @@ class StoreTests(unittest.TestCase):
         rows = parse_generated('questions', json.dumps([QUESTION]), 3)['rows']
         result = self.store.import_questions(self.subject, rows, expected_subject_name='Computer Science')
         self.assertEqual((result['questions'], result['topics']), (1, 1))
-        self.assertEqual(self.store.questions(self.subject)[0]['correct_option'], 0)
+        self.assertEqual(self.store.questions(self.subject)[0]['correct_option'], answer_position(QUESTION['question']))
 
 
 class LoopbackTests(unittest.TestCase):

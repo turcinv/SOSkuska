@@ -17,7 +17,7 @@ Current release: **v0.31.1**, schema **10**.
 
 ## Recommended order
 
-1. **Fix the 27 November review findings.** Seven open findings (three P2 stale-state/consent gaps, four P3) from the cross-model repository review are recorded in [Review findings](REVIEW_FINDINGS.md). Fix them on one branch with regression tests, starting with S27-01 to S27-03.
+1. **Release the 27 November review fixes.** All seven S27 findings are fixed on `fix/review-s27` with regression tests ([Review findings](REVIEW_FINDINGS.md)); merge and publish v0.31.2 when authorized.
 2. **Native visual acceptance of v0.29–v0.30.1.** The design and AI panels have only been checked in Linux/Xvfb captures.
    - On the Mac, and ideally a Windows PC at 100% and 150% scaling, use disposable data (`--data .local-data/acceptance.sqlite3`).
    - Check Light/Dark, four languages, 1440 × 900 and 1024 × 700, sidebar collapse, the Dashboard banner, and Generate with AI in a deck and a question bank.

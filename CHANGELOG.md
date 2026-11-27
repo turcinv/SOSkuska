@@ -2,6 +2,10 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
+## Unreleased
+
+- Fixes from the 27 November repository review (S27): AI drafting never sends notes to a server or model the panel did not show (S27-01) and recovers when its worker cannot start (S27-07); submitting or discarding a practice test whose answers another window changed keeps the test and asks again (S27-02); subject and deck deletion confirmations also detect same-count replacements and edits (S27-03); a card save whose deck refresh fails retries only the refresh (S27-04); the MCP server returns whole answer options and can look up one exact question (S27-05); AI drafts must use the current answer format and report overlong topics (S27-06). Schema remains 10.
+
 ## 0.31.1 — 2026-11-27
 
 - Fixed: an AI Tutor, explanation or AI-drafting request could stall for about 4 seconds when Python's garbage collector happened to run in the request thread and cleaned up interface objects there (which can also crash Tk on macOS). Collection now runs only on the interface thread. The flaky `check_question_explanation.py` Tutor wait was this stall; it now has a regression check and timing output.

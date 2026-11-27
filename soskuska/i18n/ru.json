@@ -802,5 +802,10 @@
   "Wait for or stop AI generation before restoring.": "Перед восстановлением дождитесь завершения создания или остановите его.",
   "Generating with {v0}… Your notes were sent to {v1}. You can Stop or use other pages; leaving this deck or subject discards the drafts.": "Создание с помощью {v0}… Конспект отправлен на {v1}. Можно остановить или перейти на другие страницы; если покинуть эту колоду или предмет, черновики будут отброшены.",
   "AI generation was closed; its unsaved drafts were discarded. Your notes are kept.": "Создание AI закрыто; несохранённые черновики отброшены. Конспект сохранён.",
-  "⚠ The answer was not clearly found in your notes, so this draft is unticked. Check it before saving.": "⚠ Ответ не удалось однозначно найти в конспекте, поэтому черновик не отмечен. Проверьте его перед сохранением."
+  "⚠ The answer was not clearly found in your notes, so this draft is unticked. Check it before saving.": "⚠ Ответ не удалось однозначно найти в конспекте, поэтому черновик не отмечен. Проверьте его перед сохранением.",
+  "The AI server or model changed since this panel was shown. Nothing was sent. Check the server below, then press Generate again.": "Сервер или модель AI изменились с момента показа этой панели. Ничего не отправлено. Проверьте сервер ниже и снова нажмите «Создать».",
+  "This test changed in another window. Its current answers are shown; confirm again to continue.": "Этот тест изменён в другом окне. Показаны его текущие ответы; подтвердите снова, чтобы продолжить.",
+  "Card saved. Refresh deck to load saved content; do not save it again.": "Карточка сохранена. Обновите колоду, чтобы загрузить сохранённое содержимое; не сохраняйте её повторно.",
+  "Expected correct_answer and three wrong_answers.": "Ожидались correct_answer и три wrong_answers.",
+  "This test changed in another window and could not be reloaded. Your test is kept; open Practice Tests again to continue.": "Этот тест изменён в другом окне, и его не удалось загрузить заново. Тест сохранён; чтобы продолжить, снова откройте «Пробные тесты»."
 }

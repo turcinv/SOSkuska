@@ -71,7 +71,7 @@ Add `"--data", "/path/to/file.sqlite3"` to `args` to use another database. Confi
 | --- | --- |
 | `list_subjects` | Subjects, exam dates, days left, topic/question counts, focus time |
 | `get_subject` | One subject's topics with question counts per difficulty |
-| `search_questions` | Questions of a subject, optionally by text, topic or difficulty; answers only with `include_answers` |
+| `search_questions` | Questions of a subject, optionally by text, topic, difficulty or one exact `question_id` (with a `version` for grading); answers only with `include_answers` |
 | `list_decks` / `due_flashcards` | Decks with due counts; due cards, backs only with `include_backs` |
 | `study_statistics` | Focus time, weighted practice accuracy and flashcard self-ratings for Last 7 days, Last 30 days or All time |
 | `practice_history` | Completed tests with per-topic scores, under the subject name they were taken with |
@@ -79,7 +79,7 @@ Add `"--data", "/path/to/file.sqlite3"` to `args` to use another database. Confi
 
 Prompts: **Quiz me** (one question at a time, answer revealed after you reply) and **Weak topics study plan**. The resource `soskuska://subjects` gives a short Markdown overview.
 
-Results are kept small for the model: lists stop at 50 items (exams at 20), long text is shortened and marked `truncated`.
+Results are kept small for the model: lists stop at 50 items (exams at 20) and at about 20 KB, and long descriptions are shortened; both are marked `truncated`. Questions and cards are always returned whole.
 
 ## Troubleshooting
 

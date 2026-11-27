@@ -141,24 +141,17 @@ def parse_generated(kind, text, count, notes=None):
                 rows.append(card_row(record, [item.get('front'), item.get('back')]))
             else:
                 question = item.get('question')
-                if 'correct_answer' in item or 'wrong_answers' in item:
-                    correct_text, wrong = item.get('correct_answer'), item.get('wrong_answers')
-                    if not isinstance(wrong, list) or len(wrong) != 3:
-                        raise ValueError('Provide exactly four answer options.')
-                    if not isinstance(question, str) or not isinstance(correct_text, str):
-                        raise ValueError('Expected text.')
-                    correct = answer_position(question)
-                    options = list(wrong)
-                    options.insert(correct, correct_text)
-                else:  # Older reply shape: four options plus a letter.
-                    options = item.get('options')
-                    if not isinstance(options, list) or len(options) != 4:
-                        raise ValueError('Provide exactly four answer options.')
-                    letter = item.get('correct')
-                    letter = letter.strip().upper() if isinstance(letter, str) else letter
-                    if letter not in ('A', 'B', 'C', 'D'):
-                        raise ValueError('Correct answer must be A, B, C or D.')
-                    correct = 'ABCD'.index(letter)
+                correct_text, wrong = item.get('correct_answer'), item.get('wrong_answers')
+                if correct_text is None and wrong is None:
+                    # The current schema only; never trust a model-chosen answer letter.
+                    raise ValueError('Expected correct_answer and three wrong_answers.')
+                if not isinstance(wrong, list) or len(wrong) != 3:
+                    raise ValueError('Provide exactly four answer options.')
+                if not isinstance(question, str) or not isinstance(correct_text, str):
+                    raise ValueError('Expected text.')
+                correct = answer_position(question)
+                options = list(wrong)
+                options.insert(correct, correct_text)
                 difficulty = item.get('difficulty')
                 difficulty = next((d for d in DIFFICULTIES if isinstance(difficulty, str)
                                    and d.casefold() == difficulty.strip().casefold()), difficulty)
@@ -167,7 +160,7 @@ def parse_generated(kind, text, count, notes=None):
                 fields = [question, *options, correct, difficulty, explanation]
                 if not all(isinstance(value, str) for value in (topic, explanation, fields[0], *options)):
                     raise ValueError('Expected text.')
-                rows.append(question_row(record, topic[:120], fields))
+                rows.append(question_row(record, topic, fields))  # Overlong topics are reported, never cut.
         except (ValueError, TypeError, UnicodeError, AttributeError) as exc:
             errors.append(f'Item {index}: {exc}')
     if rows:
