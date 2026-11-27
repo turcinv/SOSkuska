@@ -22,7 +22,7 @@ Aktuální vydání: **v0.31.1**, schéma **10**.
    - Zkontrolujte Light/Dark, čtyři jazyky, 1440 × 900 a 1024 × 700, sbalení postranního panelu, banner na Dashboardu a **Generovat pomocí AI** v sadě kartiček a v bance otázek.
    - Zapište OS/build, měřítko a zjištění do [seznamu pro Windows](WINDOWS_ACCEPTANCE.md). Problémy řešte přes revidovaná PR.
 2. **Širší hodnocení AI.** Znovu spusťte `tools/evaluate_ai.py` alespoň s jedním dalším modelem (například `llama3.2:3b`) a s dlouhými poznámkami a 20 položkami. Porovnejte se záznamem z 26. listopadu. Tutor se streamováním/Stop/opětovným připojením/historií se skutečným modelem stále potřebuje ruční průchod.
-3. **Ukázka vyučujícímu a pololetní zpráva.**
+3. **Ukázka vyučujícímu a pololetní zpráva.** Koncepty scénáře ukázky, osnovy zprávy a 17 snímků obrazovky jsou v [semester](../semester/README.md) (anglicky); nacvičte nativně a doplňte zástupné údaje.
    - Připravte krátký scénář ukázky: vytvořit předmět, vygenerovat otázky z poznámek, procvičovat, opakovat kartičky, otevřít Statistiky.
    - Obnovte snímky obrazovky z dočasných dat.
    - Údaje o identitě, kurzu, jazyku a termínu ponechte jako zástupná pole do dodání a zkontrolujte výsledné stránkování.
