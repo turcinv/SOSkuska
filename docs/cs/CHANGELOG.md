@@ -2,6 +2,10 @@
 
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
+## Nevydáno
+
+- Nápověda v aplikaci: tlačítko **?** vedle Nastavení na postranním panelu a F1 (na Macu Cmd+?) otevřou offline návody ke všem stránkám v angličtině, češtině, slovenštině nebo ruštině. Nápověda se otevře na tématu právě používané stránky, má hledání bez ohledu na diakritiku (Ctrl/Cmd+K, Esc) a odkaz na popisovanou stránku. Vytváří se při prvním použití, čte jen přibalené soubory a nikdy nezapisuje data. [Návod](IN_APP_HELP.md). Schéma zůstává 10.
+
 ## 0.31.2 — 2026-11-27
 
 - Opravy z revize repozitáře 27. listopadu (S27): AI generování nikdy neodešle poznámky na server nebo model, který panel neukázal (S27-01), a zotaví se, když se jeho pracovní vlákno nespustí (S27-07); odeslání nebo zahození testu, jehož odpovědi změnilo jiné okno, test ponechá a zeptá se znovu (S27-02); potvrzení smazání předmětu a balíčku odhalí i náhrady se stejným počtem a úpravy (S27-03); uložení kartičky, po kterém selže obnovení balíčku, opakuje jen obnovení (S27-04); server MCP vrací celé možnosti odpovědí a umí vyhledat jednu přesnou otázku (S27-05); návrhy AI musí používat aktuální formát odpovědí a hlásí příliš dlouhá témata (S27-06). Schéma zůstává 10.

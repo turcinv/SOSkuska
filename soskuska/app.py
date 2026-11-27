@@ -31,6 +31,7 @@ from flashcard_page import FlashcardPage
 from statistics_page import StatisticsPage
 from tutor_page import TutorPage
 from settings_page import SettingsPage
+from help_page import HelpPage
 from preferences import AI_KEYS
 from startup_errors import report_startup_error
 from appearance import apply_appearance
@@ -118,14 +119,19 @@ class Dashboard(ctk.CTk):
         self.settings_page = SettingsPage(self.scroll, self)
         self.settings_page.grid(row=0, column=0, sticky="ew", padx=28, pady=28)
         self.settings_page.grid_remove()
+        self.help_page = None  # Built on first use: startup time is budgeted in CI.
         self.bind("<Configure>", self.on_resize)
         self.bind("<Control-k>", self.focus_search)
         self.bind("<Command-k>", self.focus_search)
         self.bind("<Escape>", self.clear_search)
+        self.bind("<F1>", self.open_help)
         self.protocol("WM_DELETE_WINDOW", self.close)
         if self.tk.call("tk", "windowingsystem") == "aqua":
             # The native application-menu Quit does not send WM_DELETE_WINDOW.
             self.createcommand("::tk::mac::Quit", self.close)
+            # Cmd+? and the native Help menu item open the same in-app Help.
+            self.bind("<Command-question>", self.open_help)
+            self.createcommand("::tk::mac::ShowHelp", self.open_help)
         self.refresh_data()
         self.refresh_focus_recovery()
         self.after(100, self.reflow)
@@ -181,7 +187,7 @@ class Dashboard(ctk.CTk):
         nav=self.frame(self.sidebar)
         nav.grid(row=1,column=0,padx=12,sticky='ew')
         self.nav_buttons=[]
-        self.nav_icons={(name,active):nav_icon(name,active) for name,_ in [*NAV,('Settings','')] for active in (False,True)}
+        self.nav_icons={(name,active):nav_icon(name,active) for name,_ in [*NAV,('Settings',''),('Help','')] for active in (False,True)}
         for index,(name,_) in enumerate(NAV):
             button=ctk.CTkButton(nav,text=tr(self,name),image=self.nav_icons[name,index==0],compound='left',
                 anchor='w',height=44,corner_radius=14,font=self.font(13,index==0),border_width=0,
@@ -189,10 +195,18 @@ class Dashboard(ctk.CTk):
                 text_color=C['nav_accent'] if index==0 else C['nav_secondary'],command=lambda name=name:self.navigate(name))
             button.pack(fill='x',pady=4)
             self.nav_buttons.append(button)
-        self.settings_btn=ctk.CTkButton(self.sidebar,text=tr(self,'Settings'),image=self.nav_icons['Settings',False],
+        # Settings and an icon-only Help share one row: the 1024 x 700 sidebar has no spare height.
+        self.sidebar_tools=self.frame(self.sidebar)
+        self.sidebar_tools.grid(row=4,column=0,padx=12,pady=(12,20),sticky='ew')
+        self.sidebar_tools.grid_columnconfigure(0,weight=1)
+        self.settings_btn=ctk.CTkButton(self.sidebar_tools,text=tr(self,'Settings'),image=self.nav_icons['Settings',False],
             compound='left',anchor='w',height=44,corner_radius=14,font=self.font(13),
             fg_color='transparent',hover_color=C['nav_hover'],text_color=C['nav_secondary'],command=lambda:self.navigate('Settings'))
-        self.settings_btn.grid(row=4,column=0,padx=12,pady=(12,20),sticky='ew')
+        self.settings_btn.grid(row=0,column=0,sticky='ew')
+        self.help_btn=ctk.CTkButton(self.sidebar_tools,text='',image=self.nav_icons['Help',False],width=44,height=44,
+            corner_radius=14,fg_color='transparent',hover_color=C['nav_hover'],text_color=C['nav_secondary'],
+            command=lambda:self.navigate('Help'))
+        self.help_btn.grid(row=0,column=1,padx=(6,0))
         self.sidebar_art=sidebar_decor()
         self.sidebar_decor=ctk.CTkLabel(self.sidebar,text='',image=self.sidebar_art,fg_color='transparent',text_color=C['nav_text'])
         self.sidebar_decor.grid(row=3,column=0,sticky='s',padx=12,pady=(12,0))
@@ -474,8 +488,11 @@ class Dashboard(ctk.CTk):
         if self.current_page == "My Subjects" and not self.subject_page.form.winfo_manager():
             self.subject_page.show_form()
 
+    def sidebar_items(self):
+        return zip([*self.nav_buttons,self.settings_btn,self.help_btn],[*NAV,('Settings',''),('Help','')])
+
     def update_sidebar_selection(self,name):
-        for button,(item,_) in zip([*self.nav_buttons,self.settings_btn],[*NAV,('Settings','')]):
+        for button,(item,_) in self.sidebar_items():
             active=item==name
             button.configure(fg_color=C['nav_selected'] if active else 'transparent',
                 text_color=C['nav_accent'] if active else C['nav_secondary'],
@@ -501,8 +518,12 @@ class Dashboard(ctk.CTk):
         else:
             self.brand_tile.grid();self.brand.grid();self.collapse_btn.grid(column=2)
         self.collapse_btn.configure(text='›' if self.collapsed else '‹')
-        for button,(name,_) in zip([*self.nav_buttons,self.settings_btn],[*NAV,('Settings','')]):
+        for button,(name,_) in self.sidebar_items():
+            if button is self.help_btn:continue  # Icon-only in both widths.
             button.configure(text='' if self.collapsed else tr(self,name),anchor='center' if self.collapsed else 'w')
+        # Collapsed, the narrow rail stacks Help under Settings; the footer is hidden then.
+        self.help_btn.grid(row=1 if self.collapsed else 0,column=0 if self.collapsed else 1,
+                           padx=0 if self.collapsed else (6,0),pady=(6,0) if self.collapsed else 0)
         self.footer.grid_remove() if self.collapsed else self.footer.grid()
         self.fit_sidebar_decor()
         self.focus_alert.configure(text='!' if self.collapsed else tr(self,'Focus needs saving'))
@@ -514,7 +535,7 @@ class Dashboard(ctk.CTk):
             return
         self.question_bank.importer.cancel()
         self.flashcard_page.importer.cancel()
-        if name not in ("Dashboard", "My Subjects", "Practice Tests", "Flashcards", "Statistics", "AI Tutor", "Settings"):
+        if name not in ("Dashboard", "My Subjects", "Practice Tests", "Flashcards", "Statistics", "AI Tutor", "Settings", "Help"):
             self.show_notice(tr(self, '{v0} will be available in a later version.', v0=name))
             return
         self.practice_page.cancel_explanation()
@@ -522,6 +543,7 @@ class Dashboard(ctk.CTk):
         self.cancel_focus_discard()
         self.subject_page.cancel_delete()
         self.settings_page.backups.cancel_pending()
+        previous = self.current_page
         self.current_page = name
         self.question_bank.grid_remove()
         self.practice_page.grid_remove()
@@ -529,7 +551,18 @@ class Dashboard(ctk.CTk):
         self.statistics_page.grid_remove()
         self.tutor_page.grid_remove()
         self.settings_page.grid_remove()
-        if name == "Settings":
+        if self.help_page is not None:
+            self.help_page.grid_remove()
+        if name == "Help":
+            self.content.grid_remove()
+            self.subject_page.grid_remove()
+            if self.help_page is None:
+                self.help_page = HelpPage(self.scroll, self)
+                self.help_page.grid(row=0, column=0, sticky="ew", padx=28, pady=28)
+            self.help_page.grid()
+            # Opened from another page, Help shows that page's topic.
+            self.help_page.open(None if previous == "Help" else previous)
+        elif name == "Settings":
             self.content.grid_remove()
             self.subject_page.grid_remove()
             self.settings_page.load()
@@ -590,6 +623,8 @@ class Dashboard(ctk.CTk):
         self.statistics_page.grid_remove()
         self.tutor_page.grid_remove()
         self.settings_page.grid_remove()
+        if self.help_page is not None:
+            self.help_page.grid_remove()
         self.question_bank.load_subject(subject_id)
         self.question_bank.grid()
         self.current_page = "Question Bank"
@@ -684,8 +719,16 @@ class Dashboard(ctk.CTk):
         self.hero_subject.configure(text=tr(self, '{v0} · {v1}', v0=name, v1=tr(self, 'Focus session'))
                                     if name else tr(self, 'Pick a subject to begin.'))
 
+    def open_help(self, _event=None):
+        """F1, Cmd+? or the macOS Help menu: Help for the page in use."""
+        self.navigate("Help")
+        return "break"
+
     def focus_search(self, _event=None):
         self.cancel_focus_reveal()
+        if self.current_page == "Help":
+            self.help_page.search.focus_set()
+            return "break"
         if self.current_page in ("Practice Tests", "Flashcards", "Statistics", "AI Tutor", "Settings"):
             return "break"
         if self.current_page == "Question Bank":
@@ -700,6 +743,9 @@ class Dashboard(ctk.CTk):
         if self.pending_focus_discard:
             self.cancel_focus_discard()
             return "break"
+        if self.current_page == "Help":
+            self.help_page.query.set("")
+            return
         if self.current_page in ("Practice Tests", "Flashcards", "Statistics", "AI Tutor", "Settings"):
             return
         if self.current_page == "Question Bank":

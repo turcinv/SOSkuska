@@ -103,3 +103,7 @@ Keep studio_widgets.py drawing/layout free of I/O. The clock must use the origin
 ## Cat brand presentation
 
 Decorative images (banner scene, avatar, paws, tile icons, sidebar tail) are drawn by `studio_widgets.py` with Pillow and carry a readable `text_color` because the live contrast audit inspects every mapped label. Keep the scene out of the compact layout: the 1024 × 700 Finish-visibility check has little vertical slack. Decorations in the sidebar belong in its weighted row and are gridded only when that row can hold them whole (`fit_sidebar_decor`), so they never clip or push navigation/footer content. Shortcuts that open editors (Add subject) must not call `show_form` over an open draft.
+
+## In-app Help
+
+`help_page.py` is built on first `navigate('Help')`, never in `Dashboard.__init__` (startup is budgeted). Every page-hiding path (`navigate`, `open_question_bank`) must also `grid_remove` the Help page when it exists. The 1024 × 700 sidebar has about 17 px of spare height, so Help shares the Settings row as an icon-only button; do not add another full-height sidebar row. Grid `minsize` is not scaled by CTk: convert logical sizes with `DashboardScrollFrame.native_pixels`. Help content lives in `i18n/help-<code>.json` with identical structure in all four languages; `**Label**` markers must match that language's UI catalog (`tests/test_help.py`). When a UI label, page or feature changes, update the affected help topic in all four files.

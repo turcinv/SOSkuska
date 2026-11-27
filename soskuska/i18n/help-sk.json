@@ -1,0 +1,302 @@
+{
+  "topics": [
+    {
+      "id": "getting-started",
+      "title": "Začíname",
+      "summary": "SOSkúška vám pomáha pripraviť sa na skúšky na vlastnom počítači. Všetko funguje offline; funkcie AI sú voliteľné.",
+      "page": "My Subjects",
+      "blocks": [
+        {"heading": "Prvých desať minút"},
+        {"steps": [
+          "Otvorte **Moje predmety**, zvoľte **Nový predmet**, zadajte názov a prípadne dátum skúšky vo formáte RRRR-MM-DD a zvoľte **Uložiť predmet**.",
+          "Na karte predmetu zvoľte **Otázky** a napíšte otázky s výberom odpovede, alebo otvorte **Kartičky** a vytvorte pre predmet balíček.",
+          "Na stránke **Prehľad** vyberte predmet a zvoľte **Začať študovať**. Spustí sa sústredenie s časovačom.",
+          "Vyskúšajte sa na stránke **Cvičné testy** a svoj postup sledujte na stránke **Štatistiky**."
+        ]},
+        {"heading": "Dobré vedieť"},
+        {"bullets": [
+          "Nová inštalácia je prázdna. SOSkúška nikdy nepridáva ukážkové predmety ani vymyslené štatistiky.",
+          "Údaje sa ukladajú do súboru v tomto počítači, hneď ako uložíte formulár alebo dokončíte sústredenie.",
+          "Klávesom F1 (na Macu Cmd+?) otvoríte pomocníka k práve otvorenej stránke."
+        ]}
+      ],
+      "related": ["dashboard", "subjects", "privacy"]
+    },
+    {
+      "id": "dashboard",
+      "title": "Prehľad a sústredenie",
+      "summary": "Merajte si čas učenia časovačom a sledujte svoj deň, sériu dní a blížiace sa skúšky.",
+      "page": "Dashboard",
+      "blocks": [
+        {"heading": "Spustenie sústredenia"},
+        {"steps": [
+          "V Priestore na sústredenie vyberte predmet. Sústredenie vždy patrí k jednému predmetu.",
+          "Zvoľte **Začať študovať**. Časovač odpočítava dĺžku sústredenia (15 minút, ak ju nezmeníte v Nastaveniach).",
+          "Na prestávku použite **Pozastaviť** a **Pokračovať**.",
+          "Zvoľte **Dokončiť** a uloží sa čas, keď ste sa skutočne učili. Uloží sa aj po dosiahnutí cieľa a pri bežnom zatvorení okna."
+        ]},
+        {"heading": "Čo Prehľad ukazuje"},
+        {"bullets": [
+          "Celkový čas učenia, počet sústredení, aktuálnu sériu dní s učením a počet predmetov.",
+          "Plnenie cieľa **Denný cieľ**, krátky zoznam úloh (**Zopakovať predmet** zaškrtávate sami, **Dokončiť sústredenie** sa zaškrtne samo) a kalendár s dátumami skúšok.",
+          "Blížiace sa skúšky a nedávne sústredenia. Hľadanie predmetov filtruje len karty na tejto stránke."
+        ]},
+        {"heading": "Keď sa aplikácia počas sústredenia zatvorila"},
+        {"text": "Časovač ukladá stav približne každých päť sekúnd. Po páde ponúkne Prehľad **Obnoviť pozastavené** (pokračovať od uloženého stavu, pozastavene) alebo **Zahodiť uložený stav** (vyžaduje druhé kliknutie). Čas, keď bola aplikácia zatvorená, sa nikdy nepočíta."},
+        {"text": "Ak sa uloženie nepodarí, časovač sa pozastaví a na bočnom paneli sa zobrazí **Sústredenie treba uložiť**. Zvoľte znova **Dokončiť**; aplikáciu násilne neukončujte."}
+      ],
+      "related": ["subjects", "statistics", "troubleshooting"]
+    },
+    {
+      "id": "subjects",
+      "title": "Predmety a dátumy skúšok",
+      "summary": "Predmety spájajú všetko ostatné: čas sústredenia, otázky, balíčky a cvičné testy.",
+      "page": "My Subjects",
+      "blocks": [
+        {"steps": [
+          "Otvorte **Moje predmety** a zvoľte **Nový predmet**.",
+          "Zadajte jedinečný názov, prípadne popis a dátum skúšky (RRRR-MM-DD).",
+          "Zvoľte **Uložiť predmet**. Neskôr ho zmeníte cez **Upraviť**."
+        ]},
+        {"bullets": [
+          "Dátumy skúšok sa zobrazujú v kalendári na Prehľade a v blížiacich sa skúškach.",
+          "**Zmazať** sa najprv opýta na potvrdenie. Odstráni témy a otázky predmetu, ale uložený čas učenia, dokončené cvičné testy a balíčky kartičiek zostanú.",
+          "Keď predmet počas potvrdzovania zmení iné okno, varovanie sa obnoví a potvrdíte znova.",
+          "Predmet nemožno zmazať, kým je preň otvorené sústredenie."
+        ]}
+      ],
+      "related": ["questions", "flashcards", "dashboard"]
+    },
+    {
+      "id": "questions",
+      "title": "Banka otázok",
+      "summary": "Píšte vlastné otázky s výberom odpovede, voliteľne rozdelené do tém.",
+      "page": "My Subjects",
+      "blocks": [
+        {"text": "Na stránke **Moje predmety** zvoľte na predmete **Otázky** a otvorí sa jeho banka otázok."},
+        {"bullets": [
+          "**Nová téma** vytvorí tému. Po zmazaní témy sa jej otázky presunú do Bez témy.",
+          "**Nová otázka** potrebuje text otázky, štyri rôzne odpovede A–D, práve jednu správnu odpoveď a náročnosť (Ľahké, Stredné alebo Ťažké). Vysvetlenie je voliteľné.",
+          "Hľadanie prechádza text otázok; filtre zúžia výber podľa témy a náročnosti. Zoznam ukazuje 50 otázok na stránku.",
+          "Správne odpovede sú tu viditeľné, pretože práve tu ich píšete.",
+          "Neuložený text zostane zachovaný, keď sa uloženie nepodarí alebo rovnakú otázku zmenilo iné okno."
+        ]},
+        {"text": "Veľa otázok naraz pridáte aj cez **Importovať CSV** alebo ich navrhnete zo svojich poznámok cez **Generovať pomocou AI**."}
+      ],
+      "related": ["csv-import", "ai-drafts", "practice"]
+    },
+    {
+      "id": "practice",
+      "title": "Cvičné testy",
+      "summary": "Vyskúšajte sa na náhodných otázkach zo svojej banky otázok.",
+      "page": "Practice Tests",
+      "blocks": [
+        {"heading": "Spustenie testu"},
+        {"steps": [
+          "Vyberte predmet, tému (alebo všetky témy) a náročnosť.",
+          "Zvoľte počet otázok (1–100) a časový limit: **Bez limitu** alebo 5 až 60 minút.",
+          "Zvoľte **Spustiť test**. Otázky sa vyberú náhodne a neopakujú sa."
+        ]},
+        {"heading": "Počas testu"},
+        {"bullets": [
+          "Každá odpoveď sa ukladá hneď. Na pohyb použite **Predchádzajúce**, **Ďalej** a **Vymazať odpoveď**.",
+          "Nedokončený môže byť len jeden test. Keď odídete alebo aplikáciu zatvoríte, **Pokračovať v teste** vás k nemu vráti; test s limitom beží aj medzitým.",
+          "**Dokončiť test** sa opýta na potvrdenie. Nezodpovedané otázky sa počítajú ako nesprávne.",
+          "**Zahodiť test** po potvrdení zmaže nedokončený pokus."
+        ]},
+        {"heading": "Výsledky a história"},
+        {"text": "Po dokončení uvidíte skóre, správne odpovede a vysvetlenia. **Dokončené testy** ukazuje všetky dokončené testy po 20 na stránku s filtrami podľa predmetu a dátumu; **Zobraziť výsledok** jeden znova otvorí. Výsledky sa nezmenia, ani keď otázky neskôr upravíte alebo zmažete."},
+        {"text": "Pri výsledku vie **Vysvetliť túto otázku** pripraviť otázku pre AI Tutor v jednom zo štyroch študijných režimov: **Vysvetliť odpoveď**, **Vysvetliť jednoducho**, **Dať nápovedu** alebo **Precvičiť ma**."}
+      ],
+      "related": ["questions", "statistics", "ai-tutor"]
+    },
+    {
+      "id": "flashcards",
+      "title": "Kartičky a opakovanie",
+      "summary": "Zapamätajte si fakty pomocou balíčkov kartičiek, ktoré sa vracajú, keď je čas ich zopakovať.",
+      "page": "Flashcards",
+      "blocks": [
+        {"steps": [
+          "Otvorte **Kartičky** a zvoľte **Nový balíček**. Každý balíček patrí k jednému predmetu.",
+          "Zvoľte **Otvoriť balíček** a potom **Nová kartička**. Napíšte líce (otázku) a rub (odpoveď).",
+          "Zvoľte **Študovať splatné** a zopakujte kartičky, ktoré sú na rade. Skúste si odpoveď vybaviť a potom zvoľte **Odhaliť odpoveď**.",
+          "Ohodnoťte sa úprimne: **Znovu**, **Ťažké**, **Dobré** alebo **Ľahké**."
+        ]},
+        {"heading": "Kedy sa kartičky vrátia"},
+        {"bullets": [
+          "Znovu: o 10 minút. Ťažké: pri nových kartičkách o 1 hodinu, inak po o niečo dlhšom intervale.",
+          "Dobré: pri nových kartičkách o 1 deň, inak zhruba 2,5× posledný interval. Ľahké: o 4 dni, inak zhruba 3,5×. Najviac o jeden rok.",
+          "Úprava kartičky ju znova zaradí na opakovanie hneď. Skoršie hodnotenia zostanú v časti **História hodnotení**.",
+          "Hodnotenie je váš vlastný odhad, ako dobre ste si spomenuli, nie namerané skóre."
+        ]}
+      ],
+      "related": ["csv-import", "ai-drafts", "statistics"]
+    },
+    {
+      "id": "statistics",
+      "title": "Štatistiky",
+      "summary": "Pozrite sa, čo ste urobili za posledných 7 dní, 30 dní alebo za celé obdobie.",
+      "page": "Statistics",
+      "blocks": [
+        {"bullets": [
+          "Sústredenie: uložený čas učenia a počet sústredení podľa predmetu a dňa. Bežiaci ani neuložený čas sa nezapočítava.",
+          "Cvičné testy: úspešnosť v dokončených testoch; každá otázka má rovnakú váhu a nezodpovedané otázky sa počítajú ako nesprávne.",
+          "Kartičky: koľkokrát ste zvolili Znovu, Ťažké, Dobré a Ľahké.",
+          "Čísla aktualizujete cez **Obnoviť** alebo opätovným otvorením stránky."
+        ]},
+        {"text": "Čísla opisujú vašu uloženú činnosť; nemerajú, ako dobre predmet ovládate. Zmazanie predmetu, balíčka alebo kartičky neodstráni ich históriu zo Štatistík."}
+      ],
+      "related": ["dashboard", "practice", "flashcards"]
+    },
+    {
+      "id": "ai-tutor",
+      "title": "AI Tutor (voliteľný)",
+      "summary": "Rozprávajte sa s modelom, ktorý beží v Ollama na vašom počítači. Nič sa neodošle, kým to sami nezvolíte.",
+      "page": "AI Tutor",
+      "blocks": [
+        {"heading": "Prvé použitie"},
+        {"steps": [
+          "Nainštalujte Ollama z ollama.com a stiahnite model, napríklad príkazom: ollama pull llama3.2:3b",
+          "Otvorte **AI Tutor** a zvoľte **Pripojiť / obnoviť**. Predvolený server je http://127.0.0.1:11434 na vašom vlastnom počítači.",
+          "Vyberte model a jazyk odpovedí, napíšte otázku a zvoľte **Odoslať**. **Zastaviť** ukončí odpoveď skôr."
+        ]},
+        {"heading": "Súkromie a obmedzenia"},
+        {"bullets": [
+          "Server kontaktujú len **Pripojiť / obnoviť** a **Odoslať**. Vaše predmety, otázky a výsledky sa nikdy neprikladajú automaticky.",
+          "Chaty sa ukladajú v tomto počítači a sú súčasťou záloh. **Nový chat** začne novú konverzáciu.",
+          "Ak sa odpoveď nepodarilo uložiť, použite **Znova uložiť odpoveď** alebo **Zahodiť neuložené**.",
+          "Odpovede AI môžu byť chybné. Overte si ich vo svojich študijných materiáloch."
+        ]}
+      ],
+      "related": ["ai-drafts", "settings", "troubleshooting"]
+    },
+    {
+      "id": "ai-drafts",
+      "title": "Návrhy AI z poznámok",
+      "summary": "Z vložených poznámok vytvorte návrhy kartičiek alebo otázok a ponechajte si len tie dobré.",
+      "page": "Flashcards",
+      "blocks": [
+        {"steps": [
+          "Uložte server Ollama a preferovaný model na stránke **Nastavenia** (alebo tam použite **Použiť voľby Tutor** a uložte).",
+          "Otvorte balíček na stránke **Kartičky** alebo banku otázok predmetu a zvoľte **Generovať pomocou AI**.",
+          "Vložte poznámky (až 12 000 znakov), vyberte počet položiek a zvoľte **Generovať**. Až teraz sa poznámky odošlú na server uvedený v paneli.",
+          "Prečítajte si každý návrh. Odškrtnite všetko chybné a zvoľte **Uložiť vybrané**."
+        ]},
+        {"bullets": [
+          "Návrhy označené ⚠ sa vo vašich poznámkach jasne nenašli a začínajú nezaškrtnuté. Zaškrtnite ich až po kontrole.",
+          "Návrhy, ktoré porušujú bežné pravidlá, a opakované návrhy sa vypíšu a preskočia.",
+          "Všetko vybrané sa uloží naraz, alebo sa neuloží nič a problém sa vypíše.",
+          "Vaše poznámky sa neukladajú. Otvorenie iného balíčka alebo predmetu neuložené návrhy zahodí."
+        ]}
+      ],
+      "related": ["ai-tutor", "flashcards", "questions"]
+    },
+    {
+      "id": "csv-import",
+      "title": "Import z CSV",
+      "summary": "Pridajte naraz veľa otázok alebo kartičiek z tabuľky uloženej ako CSV.",
+      "page": null,
+      "blocks": [
+        {"steps": [
+          "Otvorte banku otázok predmetu alebo balíček kartičiek a zvoľte **Importovať CSV**.",
+          "Cez **Uložiť šablónu CSV** získate prázdny súbor so správnymi stĺpcami. Vyplňte ho v tabuľkovom editore a uložte ako CSV v UTF-8 oddelené čiarkami.",
+          "Zvoľte **Vybrať CSV…**. Náhľad prejdite cez **Predchádzajúce** a **Ďalej**; zatiaľ sa nič neukladá.",
+          "Opravte všetky vypísané problémy a zvoľte **Importovať všetko**. Všetky riadky sa uložia naraz, alebo žiadny."
+        ]},
+        {"bullets": [
+          "Stĺpce otázok: prompt, option_a, option_b, option_c, option_d, correct_option (A–D), difficulty a voliteľne topic a explanation.",
+          "Stĺpce kartičiek: front a back.",
+          "Súbor môže mať až 2 MiB a 500 záznamov. Presné duplikáty sa odmietnu a existujúce položky sa nikdy nemenia.",
+          "Keď súbor po zobrazení náhľadu upravíte, vyberte ho znova."
+        ]}
+      ],
+      "related": ["questions", "flashcards", "troubleshooting"]
+    },
+    {
+      "id": "settings",
+      "title": "Nastavenia a jazyk",
+      "summary": "Zmeňte dĺžku sústredenia, denný cieľ, jazyk rozhrania, vzhľad a voľby AI.",
+      "page": "Settings",
+      "blocks": [
+        {"bullets": [
+          "Dĺžka sústredenia (1–180 minút) platí pre ďalšie sústredenie; bežiace si zachová svoju dĺžku.",
+          "Denný cieľ (1–1 440 minút) sa na Prehľade prejaví hneď.",
+          "Jazyk rozhrania: angličtina, čeština, slovenčina alebo ruština. Prejaví sa po reštarte aplikácie.",
+          "Vzhľad: Svetlý, Tmavý alebo Podľa systému. Prejaví sa po uložení.",
+          "AI: server Ollama, preferovaný model a jazyk odpovedí. Uloženie sa k serveru nikdy nepripája."
+        ]},
+        {"text": "Nič sa nezmení, kým nezvolíte **Uložiť nastavenia**. Neuložené zmeny zostanú, aj keď navštívite iné stránky; **Načítať znova** po druhom kliknutí vráti uložené hodnoty."}
+      ],
+      "related": ["backups", "ai-tutor", "privacy"]
+    },
+    {
+      "id": "backups",
+      "title": "Zálohy a obnova",
+      "summary": "Uchovávajte si kópie študijných údajov a obnovte ich, keď sa niečo pokazí.",
+      "page": "Settings",
+      "blocks": [
+        {"heading": "Vytvorenie zálohy"},
+        {"bullets": [
+          "Na stránke **Nastavenia** zvoľte **Vytvoriť zálohu** a zadajte nový názov súboru. Existujúce súbory sa nikdy neprepisujú.",
+          "Pre automatické kópie otvorte **Denné miestne zálohy**, vyberte priečinok cez **Vybrať priečinok záloh…**, zaškrtnite **Zapnúť denné zálohy** a zvoľte **Uložiť plán záloh**. Aplikácia vytvorí jednu kópiu denne, keď je otvorená."
+        ]},
+        {"heading": "Obnova zálohy"},
+        {"steps": [
+          "Dokončite sústredenie aj cvičný test a uložte formuláre, ktoré chcete zachovať.",
+          "Zvoľte **Vybrať zálohu…** a vyberte súbor zálohy. Aplikácia ho skontroluje a ukáže, čo obsahuje.",
+          "Zvoľte **Potvrdiť obnovu a zatvoriť**. Najprv sa vytvorí bezpečnostná kópia súčasných údajov, potom sa aplikácia zatvorí. Na pokračovanie ju znova otvorte."
+        ]},
+        {"text": "Obnova nahradí všetky súčasné študijné údaje, nastavenia aj chaty s AI. Zálohy nie sú šifrované; uchovávajte ich na bezpečnom mieste."}
+      ],
+      "related": ["settings", "privacy", "troubleshooting"]
+    },
+    {
+      "id": "privacy",
+      "title": "Vaše údaje a súkromie",
+      "summary": "Študijné údaje zostávajú v tomto počítači, pokiaľ sa sami nerozhodnete niečo odoslať na server AI.",
+      "page": null,
+      "blocks": [
+        {"bullets": [
+          "Údaje sú uložené v jednom súbore SQLite. V macOS: ~/Library/Application Support/SOSkuska/dashboard.sqlite3. Vo Windows: %LOCALAPPDATA%\\SOSkuska\\dashboard.sqlite3. V Linuxe: ~/.local/share/SOSkuska/dashboard.sqlite3.",
+          "Nie je tu žiadny účet, synchronizácia s cloudom ani sledovanie. Učenie, štatistiky, zálohy aj tento pomocník fungujú offline.",
+          "AI Tutor a návrhy AI kontaktujú len server Ollama, ktorý nastavíte, a len keď zvolíte Pripojiť, Odoslať alebo Generovať.",
+          "Voliteľný server MCP len na čítanie môže vášmu vlastnému AI asistentovi sprístupniť študijné údaje na čítanie. Nastavuje sa mimo aplikácie; pozri MCP_SERVER.md v dokumentácii."
+        ]}
+      ],
+      "related": ["backups", "ai-tutor", "settings"]
+    },
+    {
+      "id": "shortcuts",
+      "title": "Klávesové skratky",
+      "summary": "Niekoľko klávesov zrýchli pohyb po aplikácii.",
+      "page": null,
+      "blocks": [
+        {"bullets": [
+          "F1, na Macu Cmd+?: otvorí pomocníka k aktuálnej stránke.",
+          "Ctrl+K, na Macu Cmd+K: prejde do poľa hľadania na Prehľade, v Mojich predmetoch, v banke otázok a v Pomocníkovi.",
+          "Esc: vymaže toto hľadanie, alebo zruší čakajúce zahodenie uloženého stavu sústredenia.",
+          "Enter v poli s dátumom v histórii testov: použije filtre.",
+          "Tlačidlo ‹ hore na bočnom paneli ho zbalí na ikony; › ho znova rozbalí."
+        ]}
+      ],
+      "related": ["getting-started", "dashboard"]
+    },
+    {
+      "id": "troubleshooting",
+      "title": "Riešenie problémov",
+      "summary": "Čo robiť, keď niečo nefunguje podľa očakávania.",
+      "page": null,
+      "blocks": [
+        {"bullets": [
+          "AI nie je pripojená: spustite Ollama, skontrolujte adresu servera v Nastaveniach a v AI Tutorovi zvoľte **Pripojiť / obnoviť**. Ak sa neobjavia žiadne modely, najprv nejaký stiahnite v Ollama.",
+          "Odpoveď hlási, že model nevrátil platný JSON: skúste to znova, alebo vyberte iný model.",
+          "**Sústredenie treba uložiť** na bočnom paneli: otvorte Prehľad a zvoľte **Dokončiť**. Nechajte aplikáciu otvorenú, kým sa to nepodarí.",
+          "Import CSV bol odmietnutý: opravte v súbore všetky vypísané problémy a vyberte ho znova. Nič sa neuloží, kým nie je platný celý súbor.",
+          "Niečo sa zmenilo v inom okne: SOSkúška ponechá váš rozpracovaný text a požiada o opätovné načítanie alebo potvrdenie, namiesto aby prepísala novšie údaje.",
+          "Správa hlási, že údaje nešlo uložiť alebo načítať: rozpracovaný text zostane zachovaný. Zopakujte rovnakú akciu. Ak sa to stále nedarí, skopírujte si potrebný text, reštartujte aplikáciu a vytvorte zálohu."
+        ]}
+      ],
+      "related": ["dashboard", "ai-tutor", "backups"]
+    }
+  ]
+}

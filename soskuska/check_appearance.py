@@ -105,7 +105,7 @@ def run(path, reopen=False, screenshots=None):
             assert settings.appearance_mode.get()=='Dark';resolved('Light')
             for mode in ('Dark','Light'):
                 save(mode);resolved(mode)
-                for screen in ('Dashboard','My Subjects','Flashcards','Practice Tests','AI Tutor','Statistics','Settings'):
+                for screen in ('Dashboard','My Subjects','Flashcards','Practice Tests','AI Tutor','Statistics','Settings','Help'):
                     app.navigate(screen);app.update_idletasks();resolved(mode);contrast_audit()
                 image(mode)
             app.open_question_bank(sid);assert bank.prompt_entry is original

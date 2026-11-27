@@ -807,5 +807,13 @@
   "This test changed in another window. Its current answers are shown; confirm again to continue.": "Tento test se změnil v jiném okně. Zobrazují se jeho aktuální odpovědi; pro pokračování potvrďte znovu.",
   "Card saved. Refresh deck to load saved content; do not save it again.": "Kartička je uložena. Obnovte balíček pro načtení uloženého obsahu; neukládejte ji znovu.",
   "Expected correct_answer and three wrong_answers.": "Očekáváno correct_answer a tři wrong_answers.",
-  "This test changed in another window and could not be reloaded. Your test is kept; open Practice Tests again to continue.": "Tento test se změnil v jiném okně a nepodařilo se ho znovu načíst. Test zůstává uložen; pro pokračování znovu otevřete Cvičné testy."
+  "This test changed in another window and could not be reloaded. Your test is kept; open Practice Tests again to continue.": "Tento test se změnil v jiném okně a nepodařilo se ho znovu načíst. Test zůstává uložen; pro pokračování znovu otevřete Cvičné testy.",
+  "Help": "Nápověda",
+  "Short guides to every part of SOSkúška. Help works offline and never changes your data.": "Krátké návody ke všem částem SOSkúšky. Nápověda funguje offline a nikdy nemění vaše data.",
+  "Search help…": "Hledat v nápovědě…",
+  "Help could not be loaded. Reinstall or update SOSkúška to restore it.": "Nápovědu se nepodařilo načíst. Obnovíte ji přeinstalováním nebo aktualizací SOSkúšky.",
+  "No help topics match your search. Try another word.": "Hledání neodpovídá žádné téma nápovědy. Zkuste jiné slovo.",
+  "{v0} of {v1} help topics match.": "Témata nápovědy odpovídající hledání: {v0} z {v1}.",
+  "Open {v0}": "Otevřít: {v0}",
+  "See also": "Viz také"
 }

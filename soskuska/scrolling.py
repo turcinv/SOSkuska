@@ -42,6 +42,10 @@ class DashboardScrollFrame(ctk.CTkScrollableFrame):
     def logical_pixels(self, pixels):
         return self._reverse_widget_scaling(pixels)
 
+    def native_pixels(self, logical):
+        """Native pixels for a logical size, e.g. for grid minsize, which CTk does not scale."""
+        return self._apply_widget_scaling(logical)
+
     def is_viewport(self, widget):
         return widget is self._parent_canvas
 

@@ -807,5 +807,13 @@
   "This test changed in another window. Its current answers are shown; confirm again to continue.": "Tento test sa zmenil v inom okne. Zobrazujú sa jeho aktuálne odpovede; na pokračovanie potvrďte znova.",
   "Card saved. Refresh deck to load saved content; do not save it again.": "Kartička je uložená. Obnovte balíček na načítanie uloženého obsahu; neukladajte ju znova.",
   "Expected correct_answer and three wrong_answers.": "Očakávané correct_answer a tri wrong_answers.",
-  "This test changed in another window and could not be reloaded. Your test is kept; open Practice Tests again to continue.": "Tento test sa zmenil v inom okne a nepodarilo sa ho znova načítať. Test zostáva uložený; na pokračovanie znova otvorte Cvičné testy."
+  "This test changed in another window and could not be reloaded. Your test is kept; open Practice Tests again to continue.": "Tento test sa zmenil v inom okne a nepodarilo sa ho znova načítať. Test zostáva uložený; na pokračovanie znova otvorte Cvičné testy.",
+  "Help": "Pomocník",
+  "Short guides to every part of SOSkúška. Help works offline and never changes your data.": "Krátke návody ku všetkým častiam SOSkúšky. Pomocník funguje offline a nikdy nemení vaše údaje.",
+  "Search help…": "Hľadať v pomocníkovi…",
+  "Help could not be loaded. Reinstall or update SOSkúška to restore it.": "Pomocníka sa nepodarilo načítať. Obnovíte ho preinštalovaním alebo aktualizáciou SOSkúšky.",
+  "No help topics match your search. Try another word.": "Hľadaniu nezodpovedá žiadna téma pomocníka. Skúste iné slovo.",
+  "{v0} of {v1} help topics match.": "Témy pomocníka zodpovedajúce hľadaniu: {v0} z {v1}.",
+  "Open {v0}": "Otvoriť: {v0}",
+  "See also": "Pozri aj"
 }
