@@ -124,6 +124,10 @@ Flashcards teraz podporuje import UTF-8 CSV do existujúceho balíčka: šablón
 
 AI Tutor teraz ukladá konverzácie lokálne vrátane pôvodného servera/modelu a stavu odpovede. Históriu možno otvoriť bez siete, výslovne sa pripojiť na pokračovanie alebo vybranú konverzáciu po potvrdení zmazať. Vydané vo v0.12.0 so schémou 7, ktorá transakčne migruje pôvodné študijné údaje. [Uložené konverzácie AI Tutor](TUTOR_HISTORY.md).
 
+## Server MCP len na čítanie
+
+Voliteľne dovoľte vlastnému AI asistentovi (Claude Desktop, VS Code, Kiro alebo inému hostiteľovi MCP) čítať vaše predmety, kartičky na rade a výsledky cez miestne spojenie stdio. Nemôže nič zmeniť, kľúče odpovedí skrýva, kým o ne nepožiada, a potrebuje samostatný `soskuska/requirements-mcp.txt`. Pozri [návod k serveru MCP](MCP_SERVER.md).
+
 ## Jazyk rozhrania
 
 Výber jazyka rozhrania je dostupný vo v0.13.0: angličtina, čeština, slovenčina a ruština. Ukladá sa osobitne od jazyka AI a použije sa po reštarte. Aktuálna schéma je 10. [Jazyk rozhrania](UI_LANGUAGES.md).

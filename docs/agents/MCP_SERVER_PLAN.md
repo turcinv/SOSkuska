@@ -1,6 +1,6 @@
 # Read-only MCP server · implementation plan
 
-Internal plan, 27 November 2026, written against v0.30.1 (schema 10). Phase 1 is merged into `main` (PR #76, `556ddab`) but not released; Phases 2 and 3 are not started. Start each phase on its own branch from current `main` and follow [WORKFLOW.md](WORKFLOW.md). Read [RUNTIME.md](RUNTIME.md), [STUDY.md](STUDY.md) and [DATA_TRANSFER.md](DATA_TRANSFER.md) before touching storage or leases.
+Internal plan, 27 November 2026, written against v0.30.1 (schema 10). Phase 1 is merged into `main` (PR #76, `556ddab`); Phase 2 (the stdio server) is implemented on `feature/mcp-server`; neither is released. Phase 2 manual acceptance with a real host and Phase 3 are not done. Start each phase on its own branch from current `main` and follow [WORKFLOW.md](WORKFLOW.md). Read [RUNTIME.md](RUNTIME.md), [STUDY.md](STUDY.md) and [DATA_TRANSFER.md](DATA_TRANSFER.md) before touching storage or leases.
 
 ## Goal
 

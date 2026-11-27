@@ -11,7 +11,7 @@ Aktuálne vydanie: **v0.30.1**, schéma **10**.
 - **v0.29.0:** redizajn s mačacou značkou ([odovzdanie](../agents/design/cat-brand/README.md)).
 - **v0.30.0:** AI generovanie kartičiek a otázok z poznámok ([sprievodca](AI_NOTE_GENERATION.md)).
 - **v0.30.1:** opravy z prvého hodnotenia so skutočným modelom ([záznam](../agents/design/ai-note-generation/EVALUATION.md)). Opravy sa týkajú odpovedí umiestňovaných aplikáciou, ochrany proti vloženiu pokynov do poznámok, upozornenia na návrhy, ktoré sa v poznámkach nenašli, a jazyka študijných režimov.
-- **Zlúčené, nevydané:** [plán](../agents/MCP_SERVER_PLAN.md) servera MCP len na čítanie a jeho fáza 1, bezokenná vrstva dopytov len na čítanie (`soskuska/study_queries.py`, PR #76). Server MCP zatiaľ neexistuje.
+- **Zlúčené, nevydané:** server MCP len na čítanie ([návod](MCP_SERVER.md), [plán](../agents/MCP_SERVER_PLAN.md)): vrstva dopytov z fázy 1 (PR #76) a server cez stdio z fázy 2.
 - Skoršie kroky 1–5 svetlého UI sú historické; ich vizuálny smer nahrádza mačacia značka.
 
 ## Odporúčané poradie
@@ -25,7 +25,7 @@ Aktuálne vydanie: **v0.30.1**, schéma **10**.
    - Pripravte krátky scenár ukážky: vytvoriť predmet, vygenerovať otázky z poznámok, precvičovať, opakovať kartičky, otvoriť Štatistiky.
    - Obnovte snímky obrazovky z dočasných dát.
    - Údaje o identite, kurze, jazyku a termíne ponechajte ako zástupné polia do dodania a skontrolujte výsledné stránkovanie.
-4. **Fáza 2 servera MCP.** Server cez stdio s voliteľnou pripnutou závislosťou `mcp`, testy, nastavenie CI/kontajnera, používateľský návod v štyroch jazykoch a zaznamenaný beh so skutočným hostiteľom MCP. Pozri [plán](../agents/MCP_SERVER_PLAN.md).
+4. **Akceptácia MCP so skutočným hostiteľom.** Pripojte Claude Desktop, VS Code alebo Kiro k dočasnej databáze, vypíšte predmety, spustite Quiz me so skrytými odpoveďami, pri nečinnom hostiteľovi obnovte v aplikácii zálohu a hostiteľa, verzie a výsledky zapíšte do [plánu](../agents/MCP_SERVER_PLAN.md).
 5. **Upratovanie.** Zlúčené vzdialené vetvy mažte len na výslovnú žiadosť; ponechajte `main` a značky vydania.
 
 Pred v1.0.0 vyriešte zistenia z akceptácie cez revidované PR a zopakujte príslušné kontroly. Nová práca, zlúčenie aj vydanie potrebujú vlastné schválenie. Táto aktualizácia stavu neoznačuje žiadny ručný výsledok ako úspešný.

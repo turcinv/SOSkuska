@@ -5,8 +5,9 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     && python -c "import tkinter; print('Tk', tkinter.TkVersion)"
 WORKDIR /workspace
-COPY soskuska/requirements.txt /workspace/soskuska/requirements.txt
-RUN python -m pip install --no-cache-dir -r soskuska/requirements.txt \
+COPY soskuska/requirements.txt soskuska/requirements-mcp.txt /workspace/soskuska/
+# The optional MCP SDK is installed so the container also runs tests/test_mcp_server.py.
+RUN python -m pip install --no-cache-dir -r soskuska/requirements.txt -r soskuska/requirements-mcp.txt \
     && useradd --create-home tester
 COPY --chown=tester:tester soskuska/ /workspace/soskuska/
 COPY --chown=tester:tester tests/ /workspace/tests/

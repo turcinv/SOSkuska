@@ -11,7 +11,7 @@ Aktuální vydání: **v0.30.1**, schéma **10**.
 - **v0.29.0:** redesign s kočičí značkou ([předání](../agents/design/cat-brand/README.md)).
 - **v0.30.0:** AI generování kartiček a otázek z poznámek ([průvodce](AI_NOTE_GENERATION.md)).
 - **v0.30.1:** opravy z prvního hodnocení se skutečným modelem ([záznam](../agents/design/ai-note-generation/EVALUATION.md)). Opravy se týkají odpovědí umísťovaných aplikací, ochrany proti vložení pokynů do poznámek, upozornění na návrhy, které se v poznámkách nenašly, a jazyka studijních režimů.
-- **Sloučeno, nevydáno:** [plán](../agents/MCP_SERVER_PLAN.md) serveru MCP jen pro čtení a jeho fáze 1, bezokenní vrstva dotazů jen pro čtení (`soskuska/study_queries.py`, PR #76). Server MCP zatím neexistuje.
+- **Sloučeno, nevydáno:** server MCP jen pro čtení ([návod](MCP_SERVER.md), [plán](../agents/MCP_SERVER_PLAN.md)): vrstva dotazů z fáze 1 (PR #76) a server přes stdio z fáze 2.
 - Dřívější kroky 1–5 světlého UI jsou historické; jejich vizuální směr nahrazuje kočičí značka.
 
 ## Doporučené pořadí
@@ -25,7 +25,7 @@ Aktuální vydání: **v0.30.1**, schéma **10**.
    - Připravte krátký scénář ukázky: vytvořit předmět, vygenerovat otázky z poznámek, procvičovat, opakovat kartičky, otevřít Statistiky.
    - Obnovte snímky obrazovky z dočasných dat.
    - Údaje o identitě, kurzu, jazyku a termínu ponechte jako zástupná pole do dodání a zkontrolujte výsledné stránkování.
-4. **Fáze 2 serveru MCP.** Server přes stdio s volitelnou připnutou závislostí `mcp`, testy, nastavení CI/kontejneru, uživatelský návod ve čtyřech jazycích a zaznamenaný běh se skutečným hostitelem MCP. Viz [plán](../agents/MCP_SERVER_PLAN.md).
+4. **Přejímka MCP se skutečným hostitelem.** Připojte Claude Desktop, VS Code nebo Kiro k dočasné databázi, vypište předměty, spusťte Quiz me se skrytými odpověďmi, při nečinném hostiteli obnovte v aplikaci zálohu a hostitele, verze a výsledky zapište do [plánu](../agents/MCP_SERVER_PLAN.md).
 5. **Úklid.** Sloučené vzdálené větve mažte jen na výslovnou žádost; ponechte `main` a značky vydání.
 
 Před v1.0.0 vyřešte zjištění z přejímky přes revidovaná PR a zopakujte příslušné kontroly. Nová práce, sloučení i vydání potřebují vlastní schválení. Tato aktualizace stavu neoznačuje žádný ruční výsledek jako úspěšný.

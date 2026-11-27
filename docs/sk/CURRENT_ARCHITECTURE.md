@@ -2,6 +2,10 @@
 
 [English](../CURRENT_ARCHITECTURE.md) · [Čeština](../cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](CURRENT_ARCHITECTURE.md) · [Русский](../ru/CURRENT_ARCHITECTURE.md)
 
+## Nevydané — server MCP len na čítanie
+
+`mcp_server.py` je samostatný vstupný bod cez stdio (GUI ho nikdy nespúšťa a nikdy neimportuje Tk) postavený na oficiálnom SDK (`MCPServer`, voliteľný `requirements-mcp.txt`). Jeho osem nástrojov obaľuje `study_queries.py` jedna k jednej s anotáciami len na čítanie a striktnými typmi argumentov. Každé volanie otvorí `Store.open_existing(readonly=True)`, vykoná dopyt a vo `finally` zatvorí, takže zdieľaný lease nikdy neprežije volanie; konflikty lease, nesúlad schémy, chýbajúci súbor a chyby SQLite sa stávajú chybami nástroja. `--no-answers` odmieta `include_answers`/`include_backs`. stdout nesie len protokol; diagnostika ide do stderr bez študijného obsahu. Spec PyInstalleru ho nezahŕňa. [Návod](MCP_SERVER.md). Schéma zostáva 10.
+
 ## v0.30.1
 
 Na základe vyhodnotenia so skutočným modelom (`tools/evaluate_ai.py`, záznam v `agents/design/ai-note-generation/EVALUATION.md`) pribudli tieto zmeny. Generované otázky teraz vracajú `correct_answer` a tri `wrong_answers` a správnu odpoveď umiestni `note_generation.answer_position`. Poznámky sú označené ako dáta a zadanie sa za nimi opakuje. `note_support` označí návrhy v rovnakom jazyku, ktorých odpoveď sa v poznámkach jasne nenašla; panel ich zobrazí nezačiarknuté s varovaním. Ostatné študijné režimy výslovne uvádzajú jazyk odpovede; prompt Explain answer sa nemení. Schéma zostáva 10.

@@ -103,7 +103,8 @@ Baseline at v0.30.1: 351 unit tests (two Linux platform skips) and all 26 GUI sc
 | `check_tutor.py`, `test_tutor.py` | Loopback fake Ollama, Unicode/stream errors, Stop/TLS cancellation, context bounds, navigation, clearing and close while generating |
 | `check_settings.py`, `test_preferences.py`, `test_settings_ui.py` | Atomic/stale preference writes, migration/rollback from frozen schema 5, kept drafts, active timer target, fresh-process persistence, no auto-connection, per-server model choice |
 | `check_note_generation.py`, `test_note_generation.py` | AI drafting from notes: no request before Generate, structured payload, parsing/validation, app-placed answers, unsupported-draft warnings, atomic save, duplicates, discard/rename/Stop/close, English and Russian |
-| `test_study_queries.py` | Headless read-only study queries for the planned MCP server: per-user database path without Tk, bounded limits/truncation, hidden answers and card backs, deleted-subject history, clear errors, unchanged file on a read-only store |
+| `test_mcp_server.py` | MCP server (skipped without `mcp`): tool list and read-only annotations in stateless and handshake modes, every tool, hidden answers and `--no-answers`, strict arguments, limits, per-call lease release, busy/schema/missing errors, prompts, no Tk import, stdio stdout purity, unchanged file |
+| `test_study_queries.py` | Headless read-only study queries for the MCP server: per-user database path without Tk, bounded limits/truncation, hidden answers and card backs, deleted-subject history, clear errors, unchanged file on a read-only store |
 | `check_studio_layout.py`, `check_ui_languages.py` | Dashboard shell and cat-brand banner/scene, sidebar decoration fit, four languages at 100/150% startup scaling |
 
 Other scripts in `tools/run_checks.py` cover focus recovery, backups and schedules, CSV imports, Tutor history, question explanations and study modes, appearance and responsive layouts.
@@ -292,6 +293,16 @@ To evaluate prompts against a real local model without opening windows or touchi
 ```sh
 ollama pull qwen3:4b-instruct-2507-q4_K_M
 .venv-macos/bin/python tools/evaluate_ai.py --model qwen3:4b-instruct-2507-q4_K_M --output .local-data/ai-eval
+```
+
+### MCP server tests
+
+`tests/test_mcp_server.py` is skipped unless the optional SDK is installed. CI installs it on the Ubuntu unit job and fails if those tests are skipped; the test container installs it too. Locally, use a separate environment so the app environment stays unchanged:
+
+```sh
+.venv-macos/bin/python -m venv .local-data/mcp-venv
+.local-data/mcp-venv/bin/python -m pip install -r soskuska/requirements-mcp.txt
+.local-data/mcp-venv/bin/python -m unittest tests.test_mcp_server -v
 ```
 
 It writes `ai-evaluation.json` with raw replies, validity counts, timing and heuristic flags (support, language, hint leakage) for human review. Re-run it after any prompt or schema change and compare with the [26 November 2026 record](agents/design/ai-note-generation/EVALUATION.md). It is a manual tool, not part of CI.

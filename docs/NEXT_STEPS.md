@@ -11,7 +11,7 @@ Current release: **v0.30.1**, schema **10**.
 - **v0.29.0:** cat brand redesign ([handoff](agents/design/cat-brand/README.md)).
 - **v0.30.0:** AI drafting of flashcards and questions from notes ([guide](AI_NOTE_GENERATION.md)).
 - **v0.30.1:** fixes from the first real-model evaluation ([record](agents/design/ai-note-generation/EVALUATION.md)). The fixes cover app-placed answers, prompt-injection hardening, a warning for drafts not found in the notes, and study-mode language.
-- **Merged, not released:** the read-only MCP server [plan](agents/MCP_SERVER_PLAN.md) and its Phase 1, a headless read-only query layer (`soskuska/study_queries.py`, PR #76). There is no MCP server yet.
+- **Merged, not released:** the read-only MCP server ([guide](MCP_SERVER.md), [plan](agents/MCP_SERVER_PLAN.md)): Phase 1 query layer (PR #76) and Phase 2 stdio server.
 - The earlier bright UI Steps 1–5 are historical; the cat brand supersedes their visual direction.
 
 ## Recommended order
@@ -25,7 +25,7 @@ Current release: **v0.30.1**, schema **10**.
    - Script a short demo: create a subject, generate questions from notes, practise, review flashcards, open Statistics.
    - Refresh screenshots from disposable data.
    - Keep identity, course, language and deadline placeholders until supplied, and inspect final pagination.
-4. **MCP Phase 2.** The stdio server with the optional pinned `mcp` dependency, tests, CI/container setup, a four-language user guide and a recorded run with a real MCP host. See the [plan](agents/MCP_SERVER_PLAN.md).
+4. **MCP acceptance with a real host.** Connect Claude Desktop, VS Code or Kiro to a disposable database, list subjects, run Quiz me with answers hidden, restore a backup in the app while the host is idle, and record host, versions and results in the [plan](agents/MCP_SERVER_PLAN.md).
 5. **Housekeeping.** Delete merged remote branches only on explicit request; keep `main` and release tags.
 
 Before v1.0.0, resolve acceptance findings through reviewed PRs and rerun the relevant checks. New work, merge and publication need their own authorization. No manual result is marked passed by this status update.

@@ -102,7 +102,8 @@ Základ vo v0.30.1: 351 jednotkových testov (dve preskočené kvôli platforme 
 | `check_tutor.py`, `test_tutor.py` | Fake Ollama na loopbacku, chyby Unicode/streamu, Stop/zrušenie TLS, medze kontextu, navigácia, vymazanie a zatvorenie pri generovaní |
 | `check_settings.py`, `test_preferences.py`, `test_settings_ui.py` | Atomické/zastarané zápisy predvolieb, migrácia/rollback zo zmrazenej schémy 5, zachované koncepty, cieľ aktívneho časovača, perzistencia v novom procese, žiadne automatické pripojenie, voľba modelu podľa servera |
 | `check_note_generation.py`, `test_note_generation.py` | AI generovanie z poznámok: žiadna požiadavka pred Generovať, štruktúrované dáta, parsovanie/validácia, odpovede umiestnené aplikáciou, upozornenia na nepodložené návrhy, atomické uloženie, duplicity, zahodenie/premenovanie/Stop/zatvorenie, angličtina a ruština |
-| `test_study_queries.py` | Bezokenné dopyty len na čítanie pre plánovaný MCP server: cesta k používateľskej databáze bez Tk, obmedzené limity/skracovanie, skryté odpovede a zadné strany kartičiek, história zmazaných predmetov, zrozumiteľné chyby, nezmenený súbor pri úložisku len na čítanie |
+| `test_mcp_server.py` | Server MCP (preskočený bez `mcp`): zoznam nástrojov a anotácie len na čítanie v bezstavovom režime aj s handshakom, každý nástroj, skryté odpovede a `--no-answers`, striktné argumenty, limity, uvoľnenie lease po každom volaní, chyby busy/schéma/chýbajúca, prompty, žiadny import Tk, čistota stdout cez stdio, nezmenený súbor |
+| `test_study_queries.py` | Bezokenné dopyty len na čítanie pre MCP server: cesta k používateľskej databáze bez Tk, obmedzené limity/skracovanie, skryté odpovede a zadné strany kartičiek, história zmazaných predmetov, zrozumiteľné chyby, nezmenený súbor pri úložisku len na čítanie |
 | `check_studio_layout.py`, `check_ui_languages.py` | Štruktúra Dashboardu a banner/scéna s mačacou značkou, prispôsobenie dekorácie bočného panela, štyri jazyky pri počiatočnej mierke 100/150 % |
 
 Ostatné skripty v `tools/run_checks.py` pokrývajú obnovu sústredenia, zálohy a plány, importy CSV, históriu Tutora, vysvetlenia otázok a študijné režimy, vzhľad a responzívne rozloženia.
@@ -400,6 +401,16 @@ Prompty možno vyhodnotiť so skutočným miestnym modelom bez otvárania okien 
 ```sh
 ollama pull qwen3:4b-instruct-2507-q4_K_M
 .venv-macos/bin/python tools/evaluate_ai.py --model qwen3:4b-instruct-2507-q4_K_M --output .local-data/ai-eval
+```
+
+### Testy servera MCP
+
+`tests/test_mcp_server.py` sa preskočí, ak nie je nainštalované voliteľné SDK. CI ho inštaluje v unit jobe na Ubuntu a zlyhá, ak sa tieto testy preskočia; testovací kontajner ho inštaluje tiež. Lokálne použite samostatné prostredie, aby prostredie aplikácie zostalo bez zmeny:
+
+```sh
+.venv-macos/bin/python -m venv .local-data/mcp-venv
+.local-data/mcp-venv/bin/python -m pip install -r soskuska/requirements-mcp.txt
+.local-data/mcp-venv/bin/python -m unittest tests.test_mcp_server -v
 ```
 
 Nástroj zapíše `ai-evaluation.json` so surovými odpoveďami, počtami platných výstupov, časovaním a heuristickými príznakmi (opora v poznámkach, jazyk, únik nápovedy) na ľudskú kontrolu. Po každej zmene promptu alebo schémy ho spustite znova a porovnajte so [záznamom z 26. novembra 2026](../agents/design/ai-note-generation/EVALUATION.md). Je to ručný nástroj, nie je súčasťou CI.

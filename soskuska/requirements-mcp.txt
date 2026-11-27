@@ -1,0 +1,3 @@
+# Optional: only for soskuska/mcp_server.py (read-only MCP server). The desktop app does not need it.
+# Transitive versions are resolved by pip, as with requirements.txt.
+mcp==2.3.0
