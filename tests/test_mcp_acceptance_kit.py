@@ -46,6 +46,16 @@ class AcceptanceKitTests(unittest.TestCase):
             kit.create(other)
         self.assertFalse(other.exists())
 
+    def test_refuses_both_normal_data_folders(self):
+        base = Path(self.temp.name) / "data"
+        legacy_only = base / "ExamPrep" / "dashboard.sqlite3"  # What the GUI opens when only the legacy file exists.
+        for target in (base / "SOSkuska" / "dashboard.sqlite3", base / "SOSkuska" / "other.sqlite3",
+                       base / "ExamPrep" / "sample.sqlite3"):
+            with self.subTest(target=target), patch.object(kit, "user_database_path", return_value=legacy_only), \
+                    self.assertRaises(SystemExit):
+                kit.create(target)
+            self.assertFalse(target.exists())
+
 
 if __name__ == "__main__":
     unittest.main()

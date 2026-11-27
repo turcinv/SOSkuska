@@ -57,6 +57,7 @@ class Dashboard(ctk.CTk):
         super().__init__()
         # Before any worker thread exists: Tk objects are finalized only on this thread.
         main_thread_gc.install(self)
+        self._gc_installed = True
         self.title(tr(self, 'SOSkúška'))
         install_window_icon(self)
         self.geometry("1440x900")
@@ -991,6 +992,14 @@ class Dashboard(ctk.CTk):
         shutdown_generators(self)
         self.store.close()
         self.destroy()
+
+    def destroy(self):
+        try:
+            super().destroy()
+        finally:
+            if getattr(self, '_gc_installed', False):
+                self._gc_installed = False
+                main_thread_gc.uninstall()
 
 
 if __name__ == "__main__":

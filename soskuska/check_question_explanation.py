@@ -53,7 +53,8 @@ def check_main_thread_gc(app):
         while not finalized_on_main and time.monotonic() < deadline:
             app.update()
             time.sleep(0.02)
-        assert finalized_on_main == [True], finalized_on_main
+        # Other unreachable app variables may be swept at the same time; none may be off-main.
+        assert True in finalized_on_main and False not in finalized_on_main, finalized_on_main
     assert not gc.isenabled()
 
 

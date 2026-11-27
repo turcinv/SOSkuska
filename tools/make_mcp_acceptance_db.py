@@ -40,8 +40,11 @@ CARDS = [('ATP', 'The cell\'s energy currency'), ('Glycolysis', 'Splits glucose 
 
 def create(path):
     path = Path(path).expanduser().resolve()
-    if path == user_database_path().expanduser().resolve():
-        raise SystemExit('Refusing to write samples into the normal SOSkúška database. Choose a disposable path.')
+    # The GUI may use either the current or the legacy folder; never write into either.
+    normal = user_database_path().expanduser().resolve()
+    base = normal.parent.parent
+    if path == normal or path.parent in {base / 'SOSkuska', base / 'ExamPrep'}:
+        raise SystemExit('Refusing to write samples into the normal SOSkúška data folder. Choose a disposable path.')
     if path.exists():
         raise SystemExit(f'{path} already exists. Choose a new path; this tool never changes an existing file.')
     store = Store(path)
