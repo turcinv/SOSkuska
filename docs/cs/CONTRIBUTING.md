@@ -44,7 +44,7 @@ Chybu založ přes šablonu v Issues: postup opakování, očekávané/skutečn�
 
 ## Průběžná integrace (CI)
 
-CI: Python 3.12, jednotkové testy na Ubuntu, Windows a macOS, GUI skripty uvedené v `tools/run_checks.py` (26 ve v0.31.0) na Ubuntu/Xvfb a kontrola sestavení přenosné verze pro Windows. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml). Kontroly nenasazují ani nepublikují vydání. Při změně přehledů viz [pravidla statistik](STATISTICS.md); vlastní hodnocení se nesmí vydávat za změřené zvládnutí učiva. Změny promptů nebo schématu AI znovu ověř pomocí `tools/evaluate_ai.py` se skutečným místním modelem (viz [Vývoj](DEVELOPMENT.md)).
+CI: Python 3.12, jednotkové testy na Ubuntu, Windows a macOS, GUI skripty uvedené v `tools/run_checks.py` (26 ve v0.31.1) na Ubuntu/Xvfb a kontrola sestavení přenosné verze pro Windows. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml). Kontroly nenasazují ani nepublikují vydání. Při změně přehledů viz [pravidla statistik](STATISTICS.md); vlastní hodnocení se nesmí vydávat za změřené zvládnutí učiva. Změny promptů nebo schématu AI znovu ověř pomocí `tools/evaluate_ai.py` se skutečným místním modelem (viz [Vývoj](DEVELOPMENT.md)).
 
 ## Statistiky (v0.6.0)
 

@@ -2,9 +2,9 @@
 
 [English](WINDOWS_PORTABLE.md) · [Čeština](cs/WINDOWS_PORTABLE.md) · [Slovenčina](sk/WINDOWS_PORTABLE.md) · [Русский](ru/WINDOWS_PORTABLE.md)
 
-v0.31.0 includes an **unsigned Windows x64 portable ZIP**, not an installer. End users do not need Python or administrator rights.
+v0.31.1 includes an **unsigned Windows x64 portable ZIP**, not an installer. End users do not need Python or administrator rights.
 
-1. Download `SOSkuska-windows-x64.zip` and its `.sha256` file from [v0.31.0](https://github.com/turcinv/SOSkuska/releases/tag/v0.31.0). GitHub sign-in and repository access are required for this private repository. Choose the named Windows ZIP, not GitHub’s source-code archive.
+1. Download `SOSkuska-windows-x64.zip` and its `.sha256` file from [v0.31.1](https://github.com/turcinv/SOSkuska/releases/tag/v0.31.1). GitHub sign-in and repository access are required for this private repository. Choose the named Windows ZIP, not GitHub’s source-code archive.
 2. Extract the ZIP fully into a writable folder. Keep the entire `SOSkuska` folder together, including `_internal` and `SOSkuska-worker.exe`.
 3. Open `SOSkuska.exe`. Do not run it inside the ZIP, move just the EXE, or launch the helper directly. Existing study data remains in `%LOCALAPPDATA%\SOSkuska\dashboard.sqlite3` (legacy ExamPrep fallback still applies), independently of the portable app folder.
 4. An unsigned build may be blocked by Windows security or organization policy. Verify its source/commit and SHA-256; do not disable protection. Ask your administrator if policy prevents it.
