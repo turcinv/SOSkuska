@@ -1,5 +1,6 @@
 """In-app Help on a virtual display: context topics, search, layout, sidebar fit and isolation."""
 import argparse
+import sqlite3
 import subprocess
 import sys
 import tempfile
@@ -46,7 +47,7 @@ def topic_buttons_fit(app, page):
 
 
 def overlay_checks(app, page, viewport):
-    """Help is an overlay: staged work survives, Back restores the page, reading position is kept."""
+    """Search order, keyboard reveal and reading position, staged-work notices, Back, restore and sidebar."""
     # Search results are listed in rank order (title matches first).
     page.query.set(page.by_id['backups']['title'].split()[0])
     shown = sorted((int(b.grid_info()['row']), topic_id) for topic_id, b in page.topic_buttons.items() if b.winfo_manager())
@@ -66,33 +67,48 @@ def overlay_checks(app, page, viewport):
     app.open_help(); app.update()
     assert page.selected == 'dashboard' and viewport.yview() == position
     app.geometry('1440x900'); app.update()
-    # Opening Help from a page and going Back keeps staged imports and backup selections.
-    for origin, importer in (('Flashcards', app.flashcard_page.importer), ('Settings', None)):
-        app.navigate(origin); app.update(); viewport.yview_moveto(0.5); app.update(); before = viewport.yview()
-        with patch.object(app.flashcard_page.importer, 'cancel') as cards, \
-                patch.object(app.question_bank.importer, 'cancel') as questions, \
-                patch.object(app.settings_page.backups, 'cancel_pending') as backups, \
-                patch.object(app.flashcard_page, 'load') as reload_cards, \
-                patch.object(app.settings_page, 'load') as reload_settings:
-            app.open_help(); app.update()
-            assert page.back_button.winfo_ismapped()
-            assert app.translator.text(origin) in page.back_button.cget('text')
-            page.back_button.invoke(); app.update()
-            assert app.current_page == origin
-            cards.assert_not_called(); questions.assert_not_called(); backups.assert_not_called()
-            reload_cards.assert_not_called(); reload_settings.assert_not_called()
-        if before[1] < 1:  # The page is taller than the viewport, so the position is meaningful.
-            assert viewport.yview() == before, (origin, before, viewport.yview())
-        # Leaving Help for a different page still cancels staged work as before.
-        with patch.object(app.flashcard_page.importer, 'cancel') as cards, \
-                patch.object(app.settings_page.backups, 'cancel_pending') as backups:
-            app.open_help(); app.navigate('Statistics')
-            cards.assert_called_once_with(); backups.assert_called_once_with()
-    # From the question bank, Back returns to the same bank.
-    bank_subject = app.question_bank.subject_id
-    app.open_question_bank(bank_subject); app.open_help(); page.back_button.invoke(); app.update()
-    assert app.current_page == 'Question Bank' and app.question_bank.winfo_manager()
-    assert app.question_bank.subject_id == bank_subject
+    # Help is an ordinary page: entering it cancels staged work like any navigation and says so.
+    notice = app.translator.text('Opening Help closed the CSV import preview. Nothing was imported; choose the file again when you go back.')
+    app.navigate('Flashcards'); app.update()
+    app.flashcard_page.importer.preview = {'rows': [], 'errors': []}
+    with patch.object(app.settings_page.backups, 'cancel_pending', wraps=app.settings_page.backups.cancel_pending) as backups:
+        app.open_help(); app.update()
+        backups.assert_called_once_with()
+    assert app.flashcard_page.importer.preview is None
+    assert page.status.cget('text') == notice and page.status.cget('text_color') == C['warning']
+    # Back returns through the normal, reloading path.
+    assert page.back_button.winfo_ismapped() and app.translator.text('Flashcards') in page.back_button.cget('text')
+    with patch.object(app.flashcard_page, 'load', wraps=app.flashcard_page.load) as reload_cards:
+        page.back_button.invoke(); app.update()
+        reload_cards.assert_called_once_with()
+    assert app.current_page == 'Flashcards'
+    app.open_help(); app.update()
+    assert page.status.cget('text') == page.intro and page.status.cget('text_color') == C['secondary']
+    # From a question bank whose subject another window deleted, Back lands safely on My Subjects.
+    with closing(Store(app.store.path)) as other:
+        doomed = other.create_subject('Deleted elsewhere')
+    app.open_question_bank(doomed); app.open_help(); app.update()
+    assert app.translator.text('Question Bank') in page.back_button.cget('text')
+    with closing(Store(app.store.path)) as other:
+        other.delete_subject(doomed)
+    page.back_button.invoke(); app.update()
+    assert app.current_page == 'My Subjects', app.current_page
+    # During a restore, Help neither opens nor navigates back.
+    app.open_help(); app.data_restoring = True
+    try:
+        app.back_from_help(); assert app.current_page == 'Help'
+        app.navigate('Dashboard'); app.data_restoring = True
+        app.open_help(); assert app.current_page == 'Dashboard'
+    finally:
+        app.data_restoring = False
+    # A failed Dashboard refresh after Help still moves the sidebar selection off Help.
+    app.open_help()
+    with patch.object(app, 'refresh_data', side_effect=sqlite3.OperationalError('locked')), \
+            patch.object(app, 'defer_refresh') as deferred:
+        app.show_focus_retry(); deferred.assert_called_once_with()
+    assert app.help_btn.cget('fg_color') == 'transparent'
+    assert app.nav_buttons[0].cget('fg_color') == C['nav_selected']
+    app.navigate('Statistics')
 
 
 def verify(app, language, subject_id):

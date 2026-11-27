@@ -816,5 +816,8 @@
   "{v0} of {v1} help topics match.": "Найдено разделов справки: {v0} из {v1}.",
   "Open {v0}": "Открыть: {v0}",
   "See also": "См. также",
-  "← Back to {v0}": "← Назад: {v0}"
+  "← Back to {v0}": "← Назад: {v0}",
+  "Opening Help closed the CSV import preview and the chosen backup. Nothing was imported or restored; choose the files again when you go back.": "При открытии справки закрылись предпросмотр импорта CSV и выбранная резервная копия. Ничего не импортировано и не восстановлено; после возврата выберите файлы снова.",
+  "Opening Help closed the CSV import preview. Nothing was imported; choose the file again when you go back.": "При открытии справки закрылся предпросмотр импорта CSV. Ничего не импортировано; после возврата выберите файл снова.",
+  "Opening Help cancelled the chosen backup. Nothing was restored; choose it again in Settings.": "При открытии справки выбор резервной копии отменён. Ничего не восстановлено; выберите её снова в настройках."
 }

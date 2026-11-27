@@ -816,5 +816,8 @@
   "{v0} of {v1} help topics match.": "Témy pomocníka zodpovedajúce hľadaniu: {v0} z {v1}.",
   "Open {v0}": "Otvoriť: {v0}",
   "See also": "Pozri aj",
-  "← Back to {v0}": "← Späť: {v0}"
+  "← Back to {v0}": "← Späť: {v0}",
+  "Opening Help closed the CSV import preview and the chosen backup. Nothing was imported or restored; choose the files again when you go back.": "Otvorením Pomocníka sa zatvoril náhľad importu CSV aj vybraná záloha. Nič sa neimportovalo ani neobnovilo; po návrate súbory vyberte znova.",
+  "Opening Help closed the CSV import preview. Nothing was imported; choose the file again when you go back.": "Otvorením Pomocníka sa zatvoril náhľad importu CSV. Nič sa neimportovalo; po návrate súbor vyberte znova.",
+  "Opening Help cancelled the chosen backup. Nothing was restored; choose it again in Settings.": "Otvorením Pomocníka sa zrušila vybraná záloha. Nič sa neobnovilo; vyberte ju znova v Nastaveniach."
 }

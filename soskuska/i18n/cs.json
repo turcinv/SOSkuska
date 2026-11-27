@@ -816,5 +816,8 @@
   "{v0} of {v1} help topics match.": "Témata nápovědy odpovídající hledání: {v0} z {v1}.",
   "Open {v0}": "Otevřít: {v0}",
   "See also": "Viz také",
-  "← Back to {v0}": "← Zpět: {v0}"
+  "← Back to {v0}": "← Zpět: {v0}",
+  "Opening Help closed the CSV import preview and the chosen backup. Nothing was imported or restored; choose the files again when you go back.": "Otevřením Nápovědy se zavřel náhled importu CSV i vybraná záloha. Nic se neimportovalo ani neobnovilo; po návratu soubory vyberte znovu.",
+  "Opening Help closed the CSV import preview. Nothing was imported; choose the file again when you go back.": "Otevřením Nápovědy se zavřel náhled importu CSV. Nic se neimportovalo; po návratu soubor vyberte znovu.",
+  "Opening Help cancelled the chosen backup. Nothing was restored; choose it again in Settings.": "Otevřením Nápovědy se zrušila vybraná záloha. Nic se neobnovilo; vyberte ji znovu v Nastavení."
 }

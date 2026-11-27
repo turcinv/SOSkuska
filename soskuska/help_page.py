@@ -28,12 +28,12 @@ class HelpPage(ctk.CTkFrame):
         header.grid(row=0, column=0, sticky='ew', pady=(0, 16))
         header.grid_columnconfigure(0, weight=1)
         app.label(header, tr(app, 'Help'), 28, bold=True).grid(row=0, column=0, sticky='w', padx=18, pady=(16, 6))
-        # Returns to the page Help was opened from, exactly as it was left.
-        self.back_button = app.button(header, '', app.return_from_help)
+        # Returns to the page Help was opened from (reloaded through normal navigation).
+        self.back_button = app.button(header, '', app.back_from_help)
         self.back_button.grid(row=0, column=1, sticky='e', padx=18, pady=(16, 6))
         self.back_button.grid_remove()
-        self.status = app.label(header, tr(app, 'Short guides to every part of SOSkúška. Help works offline and never changes your data.'),
-                                13, 'secondary', wraplength=600, justify='left')
+        self.intro = tr(app, 'Short guides to every part of SOSkúška. Help works offline and never changes your data.')
+        self.status = app.label(header, self.intro, 13, 'secondary', wraplength=600, justify='left')
         self.status.grid(row=1, column=0, columnspan=2, sticky='ew', padx=18, pady=(0, 12))
         self.query = ctk.StringVar()
         # CTkEntry hides placeholder text when a textvariable is set, so label the field (as on the Dashboard).
@@ -129,11 +129,15 @@ class HelpPage(ctk.CTkFrame):
                              text_color=C['hover'] if active else C['text'], font=self.app.font(13, active))
 
     # ----- navigation entry points -------------------------------------------
-    def open(self, context=None):
-        """Show Help; a page name selects that page's topic and clears an old search."""
+    def open(self, context=None, notice=None):
+        """Show Help; a page name selects that page's topic and clears an old search.
+
+        `notice` explains staged work that leaving the page cancelled."""
         if not self.ensure_loaded():
             return
-        if self.app.page_widget(context) is not None:
+        self.status.configure(text=notice or self.intro,
+                              text_color=C['warning'] if notice else C['secondary'])
+        if context in PAGE_TOPICS:
             self.back_button.configure(text=tr(self.app, '← Back to {v0}', v0=tr(self.app, context)))
             self.back_button.grid()
         else:

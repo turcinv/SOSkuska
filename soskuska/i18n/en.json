@@ -816,5 +816,8 @@
   "{v0} of {v1} help topics match.": "{v0} of {v1} help topics match.",
   "Open {v0}": "Open {v0}",
   "See also": "See also",
-  "← Back to {v0}": "← Back to {v0}"
+  "← Back to {v0}": "← Back to {v0}",
+  "Opening Help closed the CSV import preview and the chosen backup. Nothing was imported or restored; choose the files again when you go back.": "Opening Help closed the CSV import preview and the chosen backup. Nothing was imported or restored; choose the files again when you go back.",
+  "Opening Help closed the CSV import preview. Nothing was imported; choose the file again when you go back.": "Opening Help closed the CSV import preview. Nothing was imported; choose the file again when you go back.",
+  "Opening Help cancelled the chosen backup. Nothing was restored; choose it again in Settings.": "Opening Help cancelled the chosen backup. Nothing was restored; choose it again in Settings."
 }
