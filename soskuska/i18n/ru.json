@@ -815,5 +815,6 @@
   "No help topics match your search. Try another word.": "По вашему запросу ничего не найдено. Попробуйте другое слово.",
   "{v0} of {v1} help topics match.": "Найдено разделов справки: {v0} из {v1}.",
   "Open {v0}": "Открыть: {v0}",
-  "See also": "См. также"
+  "See also": "См. также",
+  "← Back to {v0}": "← Назад: {v0}"
 }

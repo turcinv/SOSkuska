@@ -28,19 +28,23 @@ class HelpPage(ctk.CTkFrame):
         header.grid(row=0, column=0, sticky='ew', pady=(0, 16))
         header.grid_columnconfigure(0, weight=1)
         app.label(header, tr(app, 'Help'), 28, bold=True).grid(row=0, column=0, sticky='w', padx=18, pady=(16, 6))
+        # Returns to the page Help was opened from, exactly as it was left.
+        self.back_button = app.button(header, '', app.return_from_help)
+        self.back_button.grid(row=0, column=1, sticky='e', padx=18, pady=(16, 6))
+        self.back_button.grid_remove()
         self.status = app.label(header, tr(app, 'Short guides to every part of SOSkúška. Help works offline and never changes your data.'),
                                 13, 'secondary', wraplength=600, justify='left')
-        self.status.grid(row=1, column=0, sticky='ew', padx=18, pady=(0, 12))
+        self.status.grid(row=1, column=0, columnspan=2, sticky='ew', padx=18, pady=(0, 12))
         self.query = ctk.StringVar()
         # CTkEntry hides placeholder text when a textvariable is set, so label the field (as on the Dashboard).
         self.search_label = app.label(header, tr(app, 'Search help…'), 11, 'secondary')
-        self.search_label.grid(row=2, column=0, sticky='w', padx=18, pady=(0, 4))
+        self.search_label.grid(row=2, column=0, columnspan=2, sticky='w', padx=18, pady=(0, 4))
         self.search = ctk.CTkEntry(header, height=38, corner_radius=18,
                                    textvariable=self.query, fg_color=C['card'], border_width=1, border_color=C['outline'],
                                    text_color=C['text'], font=app.font(13))
-        self.search.grid(row=3, column=0, sticky='ew', padx=18, pady=(0, 16))
+        self.search.grid(row=3, column=0, columnspan=2, sticky='ew', padx=18, pady=(0, 16))
         self.matches = app.label(header, '', 11, 'secondary', wraplength=600, justify='left')
-        self.matches.grid(row=4, column=0, sticky='ew', padx=18, pady=(0, 14))
+        self.matches.grid(row=4, column=0, columnspan=2, sticky='ew', padx=18, pady=(0, 14))
         self.matches.grid_remove()  # Shown only while a search is active.
         self.query.trace_add('write', lambda *_: self.filter())
         self.body = app.frame(self)
@@ -108,16 +112,14 @@ class HelpPage(ctk.CTkFrame):
     def place_topics(self):
         columns = 1 if self.side else 2
         self.topic_list.grid_columnconfigure(1, weight=0 if columns == 1 else 1, uniform='' if columns == 1 else 'help-topics')
-        visible = {topic['id'] for topic in self.visible}
-        index = 0
+        # Grid matches in search rank (title hits first); hide the rest.
+        visible = [topic['id'] for topic in self.visible]
         for topic in self.topics:
-            button = self.topic_buttons[topic['id']]
             if topic['id'] not in visible:
-                button.grid_remove()
-                continue
+                self.topic_buttons[topic['id']].grid_remove()
+        for index, topic_id in enumerate(visible):
             row, col = divmod(index, columns)
-            button.grid(row=row, column=col, sticky='ew', padx=2, pady=2)
-            index += 1
+            self.topic_buttons[topic_id].grid(row=row, column=col, sticky='ew', padx=2, pady=2)
         self.mark_selected()
 
     def mark_selected(self):
@@ -131,6 +133,11 @@ class HelpPage(ctk.CTkFrame):
         """Show Help; a page name selects that page's topic and clears an old search."""
         if not self.ensure_loaded():
             return
+        if self.app.page_widget(context) is not None:
+            self.back_button.configure(text=tr(self.app, '← Back to {v0}', v0=tr(self.app, context)))
+            self.back_button.grid()
+        else:
+            self.back_button.grid_remove()
         topic_id = PAGE_TOPICS.get(context)
         if topic_id is not None:
             if self.query.get():

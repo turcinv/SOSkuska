@@ -257,7 +257,7 @@
       "page": null,
       "blocks": [
         {"bullets": [
-          "Данные хранятся в одном файле SQLite. В macOS: ~/Library/Application Support/SOSkuska/dashboard.sqlite3. В Windows: %LOCALAPPDATA%\\SOSkuska\\dashboard.sqlite3. В Linux: ~/.local/share/SOSkuska/dashboard.sqlite3.",
+          "По умолчанию данные хранятся в одном файле SQLite: в macOS ~/Library/Application Support/SOSkuska/dashboard.sqlite3, в Windows %LOCALAPPDATA%\\SOSkuska\\dashboard.sqlite3, в Linux $XDG_DATA_HOME/SOSkuska/dashboard.sqlite3 (обычно ~/.local/share). Если данные есть только в старой папке ExamPrep, используется этот файл, а параметр --data выбирает другой файл.",
           "Нет ни учётной записи, ни облачной синхронизации, ни отслеживания. Учёба, статистика, резервные копии и эта справка работают офлайн.",
           "AI-репетитор и черновики AI обращаются только к заданному вами серверу Ollama и только когда вы выбираете Подключить, Отправить или Создать.",
           "Необязательный MCP-сервер только для чтения может дать вашему собственному AI-ассистенту доступ к учебным данным на чтение. Он настраивается вне приложения; см. MCP_SERVER.md в документации."

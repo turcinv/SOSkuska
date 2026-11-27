@@ -815,5 +815,6 @@
   "No help topics match your search. Try another word.": "No help topics match your search. Try another word.",
   "{v0} of {v1} help topics match.": "{v0} of {v1} help topics match.",
   "Open {v0}": "Open {v0}",
-  "See also": "See also"
+  "See also": "See also",
+  "← Back to {v0}": "← Back to {v0}"
 }

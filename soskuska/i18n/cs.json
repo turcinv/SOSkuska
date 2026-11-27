@@ -815,5 +815,6 @@
   "No help topics match your search. Try another word.": "Hledání neodpovídá žádné téma nápovědy. Zkuste jiné slovo.",
   "{v0} of {v1} help topics match.": "Témata nápovědy odpovídající hledání: {v0} z {v1}.",
   "Open {v0}": "Otevřít: {v0}",
-  "See also": "Viz také"
+  "See also": "Viz také",
+  "← Back to {v0}": "← Zpět: {v0}"
 }

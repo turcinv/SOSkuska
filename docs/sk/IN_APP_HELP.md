@@ -18,7 +18,7 @@ Pomocník sa otvorí na téme stránky, ktorú ste práve používali: napríkla
 - Názvy tlačidiel a polí sú v úvodzovkách presne tak, ako sa volajú vo zvolenom jazyku rozhrania.
 - **Otvoriť: …** na konci témy prejde na opisovanú stránku; **Pozri aj** odkazuje na súvisiace témy.
 
-Neuložené rozpracované texty na iných stránkach zostanú zachované, keď navštívite Pomocníka, rovnako ako pri každej inej stránke.
+**← Späť: …** hore vás vráti na stránku, odkiaľ ste prišli, presne tak, ako ste ju opustili, na rovnakom mieste posúvača. Neuložené rozpracované texty zostanú zachované a pri návrate touto cestou aj náhľad importu CSV a vybraná záloha; prechod z Pomocníka na inú stránku ich ako zvyčajne zruší.
 
 ## Témy
 

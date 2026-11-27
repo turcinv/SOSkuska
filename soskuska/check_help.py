@@ -45,6 +45,56 @@ def topic_buttons_fit(app, page):
             assert needed <= app.scroll.logical_pixels(button.winfo_width()), (topic_id, button.cget('text'))
 
 
+def overlay_checks(app, page, viewport):
+    """Help is an overlay: staged work survives, Back restores the page, reading position is kept."""
+    # Search results are listed in rank order (title matches first).
+    page.query.set(page.by_id['backups']['title'].split()[0])
+    shown = sorted((int(b.grid_info()['row']), topic_id) for topic_id, b in page.topic_buttons.items() if b.winfo_manager())
+    from help_content import search
+    assert [topic_id for _, topic_id in shown] == [t['id'] for t in search(page.topics, page.query.get())]
+    page.query.set('')
+    # Ctrl/Cmd+K reveals the search field from a scrolled article (a short window makes the header scroll away).
+    app.geometry('1440x700'); app.update()
+    page.show('dashboard'); app.update(); viewport.yview_moveto(1); app.update()
+    top = page.search.winfo_rooty() + page.search.winfo_height()
+    assert top <= viewport.winfo_rooty(), 'Precondition: the search field must be scrolled out of view.'
+    app.focus_search(); app.update()
+    inside(page.search, viewport)
+    # F1 while reading Help keeps the topic and the scroll position.
+    viewport.yview_moveto(1); app.update(); position = viewport.yview()
+    assert position[0] > 0
+    app.open_help(); app.update()
+    assert page.selected == 'dashboard' and viewport.yview() == position
+    app.geometry('1440x900'); app.update()
+    # Opening Help from a page and going Back keeps staged imports and backup selections.
+    for origin, importer in (('Flashcards', app.flashcard_page.importer), ('Settings', None)):
+        app.navigate(origin); app.update(); viewport.yview_moveto(0.5); app.update(); before = viewport.yview()
+        with patch.object(app.flashcard_page.importer, 'cancel') as cards, \
+                patch.object(app.question_bank.importer, 'cancel') as questions, \
+                patch.object(app.settings_page.backups, 'cancel_pending') as backups, \
+                patch.object(app.flashcard_page, 'load') as reload_cards, \
+                patch.object(app.settings_page, 'load') as reload_settings:
+            app.open_help(); app.update()
+            assert page.back_button.winfo_ismapped()
+            assert app.translator.text(origin) in page.back_button.cget('text')
+            page.back_button.invoke(); app.update()
+            assert app.current_page == origin
+            cards.assert_not_called(); questions.assert_not_called(); backups.assert_not_called()
+            reload_cards.assert_not_called(); reload_settings.assert_not_called()
+        if before[1] < 1:  # The page is taller than the viewport, so the position is meaningful.
+            assert viewport.yview() == before, (origin, before, viewport.yview())
+        # Leaving Help for a different page still cancels staged work as before.
+        with patch.object(app.flashcard_page.importer, 'cancel') as cards, \
+                patch.object(app.settings_page.backups, 'cancel_pending') as backups:
+            app.open_help(); app.navigate('Statistics')
+            cards.assert_called_once_with(); backups.assert_called_once_with()
+    # From the question bank, Back returns to the same bank.
+    bank_subject = app.question_bank.subject_id
+    app.open_question_bank(bank_subject); app.open_help(); page.back_button.invoke(); app.update()
+    assert app.current_page == 'Question Bank' and app.question_bank.winfo_manager()
+    assert app.question_bank.subject_id == bank_subject
+
+
 def verify(app, language, subject_id):
     assert app.help_page is None, 'Help must be built on first use, not at startup.'
     viewport = app.scroll._parent_canvas
@@ -129,6 +179,7 @@ def verify(app, language, subject_id):
     assert {int(b.grid_info()['column']) for b in page.topic_buttons.values()} == {0}
     topic_buttons_fit(app, page); labels_fit(page)
     inside(page.topic_buttons['getting-started'], viewport)
+    overlay_checks(app, page, viewport)
     # Collapsed sidebar stacks Help below Settings and keeps both reachable.
     app.toggle_sidebar(); app.update()
     inside(app.help_btn, sidebar)

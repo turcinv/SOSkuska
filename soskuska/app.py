@@ -120,6 +120,8 @@ class Dashboard(ctk.CTk):
         self.settings_page.grid(row=0, column=0, sticky="ew", padx=28, pady=28)
         self.settings_page.grid_remove()
         self.help_page = None  # Built on first use: startup time is budgeted in CI.
+        self.help_origin = None
+        self.help_return_y = 0.0
         self.bind("<Configure>", self.on_resize)
         self.bind("<Control-k>", self.focus_search)
         self.bind("<Command-k>", self.focus_search)
@@ -533,8 +535,17 @@ class Dashboard(ctk.CTk):
         if self.question_bank.importer.saving or self.flashcard_page.importer.saving:
             (self.flashcard_page.importer if self.flashcard_page.importer.saving else self.question_bank.importer).status.configure(text=tr(self, 'Wait for the CSV import to finish before navigating.'))
             return
-        self.question_bank.importer.cancel()
-        self.flashcard_page.importer.cancel()
+        if name == "Help" and self.current_page == "Help":
+            return  # Already reading Help: keep the topic and the scroll position.
+        if self.current_page == "Help" and name == self.help_origin:
+            self.return_from_help()
+            return
+        # Help behaves like an overlay: opening it keeps staged CSV previews and a validated
+        # backup selection, and returning to the same page shows it exactly as it was left.
+        keep_staged = name == "Help"
+        if not keep_staged:
+            self.question_bank.importer.cancel()
+            self.flashcard_page.importer.cancel()
         if name not in ("Dashboard", "My Subjects", "Practice Tests", "Flashcards", "Statistics", "AI Tutor", "Settings", "Help"):
             self.show_notice(tr(self, '{v0} will be available in a later version.', v0=name))
             return
@@ -542,8 +553,12 @@ class Dashboard(ctk.CTk):
         self.cancel_focus_reveal()
         self.cancel_focus_discard()
         self.subject_page.cancel_delete()
-        self.settings_page.backups.cancel_pending()
+        if not keep_staged:
+            self.settings_page.backups.cancel_pending()
         previous = self.current_page
+        if name == "Help":
+            self.help_origin = previous
+            self.help_return_y = self.scroll._parent_canvas.yview()[0]
         self.current_page = name
         self.question_bank.grid_remove()
         self.practice_page.grid_remove()
@@ -560,8 +575,8 @@ class Dashboard(ctk.CTk):
                 self.help_page = HelpPage(self.scroll, self)
                 self.help_page.grid(row=0, column=0, sticky="ew", padx=28, pady=28)
             self.help_page.grid()
-            # Opened from another page, Help shows that page's topic.
-            self.help_page.open(None if previous == "Help" else previous)
+            # Help opens on the topic of the page it was opened from.
+            self.help_page.open(previous)
         elif name == "Settings":
             self.content.grid_remove()
             self.subject_page.grid_remove()
@@ -719,6 +734,27 @@ class Dashboard(ctk.CTk):
         self.hero_subject.configure(text=tr(self, '{v0} · {v1}', v0=name, v1=tr(self, 'Focus session'))
                                     if name else tr(self, 'Pick a subject to begin.'))
 
+    def page_widget(self, name):
+        return {"Dashboard": self.content, "My Subjects": self.subject_page, "Question Bank": self.question_bank,
+                "Practice Tests": self.practice_page, "Flashcards": self.flashcard_page,
+                "Statistics": self.statistics_page, "AI Tutor": self.tutor_page,
+                "Settings": self.settings_page}.get(name)
+
+    def return_from_help(self):
+        """Show the page Help was opened from exactly as it was left: no reload, same scroll."""
+        origin = self.help_origin
+        widget = self.page_widget(origin)
+        if self.current_page != "Help" or widget is None:
+            return
+        self.help_page.grid_remove()
+        self.current_page = origin
+        widget.grid()
+        if origin == "Dashboard":
+            self.refresh_data()
+        self.update_sidebar_selection("My Subjects" if origin == "Question Bank" else origin)
+        self.update_idletasks()
+        self.scroll._parent_canvas.yview_moveto(self.help_return_y)
+
     def open_help(self, _event=None):
         """F1, Cmd+? or the macOS Help menu: Help for the page in use."""
         self.navigate("Help")
@@ -728,6 +764,7 @@ class Dashboard(ctk.CTk):
         self.cancel_focus_reveal()
         if self.current_page == "Help":
             self.help_page.search.focus_set()
+            self.scroll.reveal_if_outside(self.help_page.search)
             return "break"
         if self.current_page in ("Practice Tests", "Flashcards", "Statistics", "AI Tutor", "Settings"):
             return "break"

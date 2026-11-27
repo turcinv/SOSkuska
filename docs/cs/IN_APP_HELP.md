@@ -18,7 +18,7 @@ Nápověda se otevře na tématu stránky, kterou jste právě používali: nap�
 - Názvy tlačítek a polí jsou v uvozovkách přesně tak, jak se jmenují ve zvoleném jazyce rozhraní.
 - **Otevřít: …** na konci tématu přejde na popisovanou stránku; **Viz také** odkazuje na související témata.
 
-Neuložené rozpracované texty na jiných stránkách zůstanou zachovány, když navštívíte Nápovědu, stejně jako u každé jiné stránky.
+**← Zpět: …** nahoře vás vrátí na stránku, odkud jste přišli, přesně tak, jak jste ji opustili, na stejném místě posuvníku. Neuložené rozpracované texty zůstanou zachovány a při návratu touto cestou také náhled importu CSV a vybraná záloha; přechod z Nápovědy na jinou stránku je jako obvykle zruší.
 
 ## Témata
 

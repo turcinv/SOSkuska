@@ -18,7 +18,7 @@ Help opens on the topic for the page you were using: for example, opening it fro
 - Names of buttons and fields appear in quotation marks, exactly as they are labelled in your interface language.
 - **Open …** at the end of a topic goes to the page it describes; **See also** links to related topics.
 
-Unsaved drafts on other pages are kept when you visit Help, just as with any other page.
+**← Back to …** at the top returns to the page you came from exactly as you left it, at the same scroll position. Unsaved drafts are kept, and so are a CSV import preview and a chosen backup when you come back this way; switching to a different page from Help cancels those as usual.
 
 ## Topics
 

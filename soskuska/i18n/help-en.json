@@ -257,7 +257,7 @@
       "page": null,
       "blocks": [
         {"bullets": [
-          "Data is stored in one SQLite file. On macOS: ~/Library/Application Support/SOSkuska/dashboard.sqlite3. On Windows: %LOCALAPPDATA%\\SOSkuska\\dashboard.sqlite3. On Linux: ~/.local/share/SOSkuska/dashboard.sqlite3.",
+          "By default, data is stored in one SQLite file: on macOS ~/Library/Application Support/SOSkuska/dashboard.sqlite3, on Windows %LOCALAPPDATA%\\SOSkuska\\dashboard.sqlite3, on Linux $XDG_DATA_HOME/SOSkuska/dashboard.sqlite3 (usually ~/.local/share). If only an older ExamPrep folder holds your data, that file is used instead, and the --data option chooses another file.",
           "There is no account, cloud sync or tracking. Studying, statistics, backups and this help all work offline.",
           "The AI Tutor and AI drafts contact only the Ollama server you set, and only when you choose Connect, Send or Generate.",
           "An optional read-only MCP server can let your own AI assistant read your study data. It is set up outside the app; see MCP_SERVER.md in the documentation."

@@ -257,7 +257,7 @@
       "page": null,
       "blocks": [
         {"bullets": [
-          "Data jsou uložena v jednom souboru SQLite. V macOS: ~/Library/Application Support/SOSkuska/dashboard.sqlite3. Ve Windows: %LOCALAPPDATA%\\SOSkuska\\dashboard.sqlite3. V Linuxu: ~/.local/share/SOSkuska/dashboard.sqlite3.",
+          "Ve výchozím stavu jsou data v jednom souboru SQLite: v macOS ~/Library/Application Support/SOSkuska/dashboard.sqlite3, ve Windows %LOCALAPPDATA%\\SOSkuska\\dashboard.sqlite3, v Linuxu $XDG_DATA_HOME/SOSkuska/dashboard.sqlite3 (obvykle ~/.local/share). Pokud data obsahuje jen starší složka ExamPrep, použije se tento soubor, a volba --data vybere jiný soubor.",
           "Není tu žádný účet, synchronizace s cloudem ani sledování. Učení, statistiky, zálohy i tato nápověda fungují offline.",
           "AI Tutor a návrhy AI kontaktují jen server Ollama, který nastavíte, a jen když zvolíte Připojit, Odeslat nebo Generovat.",
           "Volitelný server MCP jen pro čtení může vašemu vlastnímu AI asistentovi zpřístupnit studijní data ke čtení. Nastavuje se mimo aplikaci; viz MCP_SERVER.md v dokumentaci."
