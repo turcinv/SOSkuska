@@ -1,10 +1,13 @@
 """Disposable explanation flow; loopback fixture only, suitable for container/Xvfb."""
 import argparse
+import gc
 import sqlite3
 import subprocess
 import sys
 import tempfile
+import threading
 import time
+import tkinter
 from pathlib import Path
 from unittest.mock import patch
 
@@ -15,6 +18,43 @@ from question_explanation import MODES
 from localization import tr
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tests'))
 from ollama_fixture import FakeOllama
+
+# Hang guard for each wait on the loopback fixture, not a speed requirement;
+# a normal wait takes about 0.1 s. The old 6 s bound failed intermittently
+# because cyclic garbage collection in the Tutor worker thread finalized Tk
+# objects there and stalled it for about 4 s (fixed by main_thread_gc). The
+# timeout message records the Tutor task state so a real hang can be told from
+# a slow machine, and the summary line prints every wait time.
+WAIT_TIMEOUT = 30
+
+
+def check_main_thread_gc(app):
+    """A worker thread's allocations must not finalize Tk objects; the Tk timer must."""
+    finalized_on_main = []
+    original = tkinter.Variable.__del__
+
+    def tracking(variable):
+        finalized_on_main.append(threading.current_thread() is threading.main_thread())
+        original(variable)
+
+    class Holder:
+        pass
+    with patch.object(tkinter.Variable, '__del__', tracking):
+        holder = Holder()
+        holder.variable, holder.cycle = ctk.StringVar(master=app), holder
+        del holder
+        kept = []
+        # Enough tracked allocations for CPython to collect in this thread if allowed.
+        worker = threading.Thread(target=lambda: kept.append([[] for _ in range(5000)]))
+        worker.start()
+        worker.join()
+        assert finalized_on_main == [], 'a Tk object was finalized on a worker thread'
+        deadline = time.monotonic() + WAIT_TIMEOUT
+        while not finalized_on_main and time.monotonic() < deadline:
+            app.update()
+            time.sleep(0.02)
+        assert finalized_on_main == [True], finalized_on_main
+    assert not gc.isenabled()
 
 
 def run(path, language='English', scale=1, layout=False):
@@ -36,13 +76,15 @@ def run(path, language='English', scale=1, layout=False):
     app.geometry('1024x700')
     page, tutor = app.practice_page, app.tutor_page
     callback_errors = []
+    waits = []
     app.report_callback_exception = lambda kind, value, tb: callback_errors.append(value)
 
     def wait(predicate):
         if predicate():
             return
         done = ctk.BooleanVar(value=False)
-        deadline = time.monotonic()+6
+        started = time.monotonic()
+        deadline = started + WAIT_TIMEOUT
         def poll():
             if predicate() or time.monotonic() > deadline:
                 done.set(True)
@@ -50,7 +92,14 @@ def run(path, language='English', scale=1, layout=False):
                 app.after(20, poll)
         app.after(20, poll)
         app.wait_variable(done)
-        assert predicate(), 'Timed out waiting for Tutor'
+        waits.append((time.monotonic() - started, sys._getframe(1).f_lineno))
+        task = tutor.task
+        assert predicate(), ('Timed out waiting for Tutor', {
+            'task_kind': getattr(task, 'kind', None),
+            'thread_alive': task.thread.is_alive() if task else None,
+            'queued_events': task.events.qsize() if task else None,
+            'requests': len(fixture.requests), 'status': tutor.status.cget('text') if hasattr(tutor, 'status') else None,
+            'errors': callback_errors})
         assert not callback_errors, callback_errors
 
     def preview():
@@ -68,6 +117,8 @@ def run(path, language='English', scale=1, layout=False):
 
     try:
         app.update()
+        if not layout:
+            check_main_thread_gc(app)
         identity = preview()
         prompt = identity[2]
         assert prompt.startswith('Question:\nKtorá')
@@ -184,6 +235,10 @@ def run(path, language='English', scale=1, layout=False):
         assert app.store.practice_attempt(aid)['correct'] == 0
         assert app.store.practice_items(aid)[0]['selected_option'] == 0
         assert not callback_errors, callback_errors
+        if waits:
+            slowest = max(waits)
+            print(f'Tutor waits: {len(waits)}, slowest {slowest[0]:.2f} s at line {slowest[1]} '
+                  f'(timeout {WAIT_TIMEOUT} s); all: ' + ', '.join(f'{s:.2f}' for s, _ in waits), flush=True)
     finally:
         tutor.shutdown()
         app.destroy()

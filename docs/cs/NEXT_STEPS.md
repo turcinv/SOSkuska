@@ -25,7 +25,7 @@ Aktuální vydání: **v0.31.0**, schéma **10**.
    - Připravte krátký scénář ukázky: vytvořit předmět, vygenerovat otázky z poznámek, procvičovat, opakovat kartičky, otevřít Statistiky.
    - Obnovte snímky obrazovky z dočasných dat.
    - Údaje o identitě, kurzu, jazyku a termínu ponechte jako zástupná pole do dodání a zkontrolujte výsledné stránkování.
-4. **Přejímka MCP se skutečným hostitelem.** Připojte Claude Desktop, VS Code nebo Kiro k dočasné databázi, vypište předměty, spusťte Quiz me se skrytými odpověďmi, při nečinném hostiteli obnovte v aplikaci zálohu a hostitele, verze a výsledky zapište do [plánu](../agents/MCP_SERVER_PLAN.md).
+4. **Přejímka MCP se skutečným hostitelem.** Ukázková data vytvořte pomocí `tools/make_mcp_acceptance_db.py` (viz [pravidla MCP](../agents/MCP.md)). Připojte Claude Desktop, VS Code nebo Kiro k dočasné databázi, vypište předměty, spusťte Quiz me se skrytými odpověďmi, při nečinném hostiteli obnovte v aplikaci zálohu a hostitele, verze a výsledky zapište do [plánu](../agents/MCP_SERVER_PLAN.md).
 5. **Úklid.** Sloučené vzdálené větve mažte jen na výslovnou žádost; ponechte `main` a značky vydání.
 
 Před v1.0.0 vyřešte zjištění z přejímky přes revidovaná PR a zopakujte příslušné kontroly. Nová práce, sloučení i vydání potřebují vlastní schválení. Tato aktualizace stavu neoznačuje žádný ruční výsledek jako úspěšný.

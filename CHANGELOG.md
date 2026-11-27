@@ -2,6 +2,11 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
+## Unreleased
+
+- Fixed: an AI Tutor, explanation or AI-drafting request could stall for about 4 seconds when Python's garbage collector happened to run in the request thread and cleaned up interface objects there (which can also crash Tk on macOS). Collection now runs only on the interface thread. The flaky `check_question_explanation.py` Tutor wait was this stall; it now has a regression check and timing output.
+- New `tools/make_mcp_acceptance_db.py` creates a disposable sample database for testing the MCP server with a real assistant.
+
 ## 0.31.0 — 2026-11-27
 
 - Read-only MCP server `soskuska/mcp_server.py` (stdio only, optional pinned `mcp==2.3.0` in `soskuska/requirements-mcp.txt`): eight read-only tools, two prompts and a subjects resource over the Phase 1 queries; answers hidden by default, `--no-answers`, per-call read-only database access. Not in the Windows ZIP. [Guide](docs/MCP_SERVER.md).

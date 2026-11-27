@@ -37,6 +37,7 @@ Commands below are relative to the project root:
 - Fresh installations use a `SOSkuska` data folder. If it does not contain a database but the legacy `ExamPrep` database exists, continue using the legacy file without copying, moving or overwriting it. Document this compatibility behavior.
 - Preserve user data. Version migrations through `PRAGMA user_version` and keep changes transactional. Deleting a subject must retain historical session time and its stored name snapshot. Legacy sessions remain unassigned; never infer a subject for them.
 - Operate Tk widgets only on the main thread. Future network and long-running work must not block the UI event loop. Do not share SQLite connections between threads without an explicit design.
+- `main_thread_gc.install` (called first in `Dashboard.__init__`) disables automatic garbage collection and runs CPython's generation thresholds from a 200 ms Tk timer. Automatic collection in a Tutor/AI worker thread finalized Tk fonts and variables there and stalled the worker for about 4 s in the container ("main thread is not in main loop"). Never call `gc.enable()` or `gc.collect()` from a worker thread; keep the regression in `check_question_explanation.py`.
 
 ## UI and compatibility
 

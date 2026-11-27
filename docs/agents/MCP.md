@@ -25,3 +25,7 @@ English instructions for development agents, referenced by [AGENTS.md](../../AGE
 
 - Run `tests/test_mcp_server.py` in an environment with `requirements-mcp.txt` (see Development). It covers both protocol modes (`mode="legacy"` handshake and the stateless default) and a real stdio subprocess. In raw stdio tests keep stdin open until the last reply: the SDK stops on EOF without finishing in-flight requests. Use a file for the child's stderr, never an undrained pipe.
 - Automated tests are not a host acceptance pass. Record real host runs (host, versions, steps, results) in the plan before calling it verified.
+
+## Manual host acceptance
+
+`tools/make_mcp_acceptance_db.py <new path>` creates a disposable database with labelled sample data (two subjects with exams, seven questions, four due cards, focus time, one 2-of-4 practice test). It refuses existing files and the normal user database. Give the user absolute host-configuration paths to a Python environment with `requirements-mcp.txt` and that database, and check: tool list; subjects and exams; due cards without backs; Quiz me hides the answer until the student replies; practice results; a write request is refused; a restore in the app succeeds while the host is idle and the host still answers afterwards; `--no-answers` refuses answers. Record host, version, model and per-step results in the plan.

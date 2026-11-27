@@ -2,6 +2,11 @@
 
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
+## Nevydáno
+
+- Opraveno: požadavek AI Tutora, vysvětlení nebo AI generování se mohl asi na 4 sekundy zaseknout, když se garbage collector Pythonu náhodou spustil ve vlákně požadavku a uklízel tam objekty rozhraní (což na macOS může i shodit Tk). Úklid nyní běží jen ve vlákně rozhraní. Nestabilní čekání na Tutora v `check_question_explanation.py` bylo právě toto zaseknutí; nyní má regresní kontrolu a výpis časů.
+- Nový `tools/make_mcp_acceptance_db.py` vytvoří dočasnou ukázkovou databázi pro test serveru MCP se skutečným asistentem.
+
 ## 0.31.0 — 2026-11-27
 
 - Server MCP jen pro čtení `soskuska/mcp_server.py` (jen stdio, volitelná připnutá závislost `mcp==2.3.0` v `soskuska/requirements-mcp.txt`): osm nástrojů jen pro čtení, dva prompty a prostředek s předměty nad dotazy z fáze 1; odpovědi ve výchozím stavu skryté, `--no-answers`, přístup k databázi jen pro čtení při každém volání. Není v ZIPu pro Windows. [Návod](MCP_SERVER.md).

@@ -25,7 +25,7 @@ Current release: **v0.31.0**, schema **10**.
    - Script a short demo: create a subject, generate questions from notes, practise, review flashcards, open Statistics.
    - Refresh screenshots from disposable data.
    - Keep identity, course, language and deadline placeholders until supplied, and inspect final pagination.
-4. **MCP acceptance with a real host.** Connect Claude Desktop, VS Code or Kiro to a disposable database, list subjects, run Quiz me with answers hidden, restore a backup in the app while the host is idle, and record host, versions and results in the [plan](agents/MCP_SERVER_PLAN.md).
+4. **MCP acceptance with a real host.** Create sample data with `tools/make_mcp_acceptance_db.py` (see [MCP safeguards](agents/MCP.md)). Connect Claude Desktop, VS Code or Kiro to a disposable database, list subjects, run Quiz me with answers hidden, restore a backup in the app while the host is idle, and record host, versions and results in the [plan](agents/MCP_SERVER_PLAN.md).
 5. **Housekeeping.** Delete merged remote branches only on explicit request; keep `main` and release tags.
 
 Before v1.0.0, resolve acceptance findings through reviewed PRs and rerun the relevant checks. New work, merge and publication need their own authorization. No manual result is marked passed by this status update.

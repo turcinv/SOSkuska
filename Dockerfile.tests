@@ -11,7 +11,7 @@ RUN python -m pip install --no-cache-dir -r soskuska/requirements.txt -r soskusk
     && useradd --create-home tester
 COPY --chown=tester:tester soskuska/ /workspace/soskuska/
 COPY --chown=tester:tester tests/ /workspace/tests/
-COPY --chown=tester:tester tools/run_checks.py /workspace/tools/run_checks.py
+COPY --chown=tester:tester tools/run_checks.py tools/make_mcp_acceptance_db.py /workspace/tools/
 COPY --chown=tester:tester docs/examples/questions-template.csv docs/examples/flashcards-template.csv /workspace/docs/examples/
 RUN chown -R tester:tester /workspace
 USER tester

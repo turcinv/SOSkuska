@@ -22,6 +22,7 @@ if sys.platform == "darwin" and tkinter.TkVersion < 8.6:
 
 import customtkinter as ctk
 from storage import Store, user_database_path
+import main_thread_gc
 from scrolling import DashboardScrollFrame
 from subjects import SubjectPage
 from question_bank import QuestionBankPage
@@ -54,6 +55,8 @@ class Dashboard(ctk.CTk):
     def __init__(self, database=None):
         ctk.set_appearance_mode("Dark")  # Disable implicit OS polling before constructing Tk.
         super().__init__()
+        # Before any worker thread exists: Tk objects are finalized only on this thread.
+        main_thread_gc.install(self)
         self.title(tr(self, 'SOSkúška'))
         install_window_icon(self)
         self.geometry("1440x900")
