@@ -123,7 +123,8 @@ def build_server(path, *, allow_answers=True):
 
         `query` matches the prompt, options and topic name. Use `topic_id` for one topic or
         `without_topic` for questions with no topic, or `question_id` for one exact question
-        (use it to check the student's answer). The correct option and explanation are
+        (use it to check the student's answer; compare `version`, which changes when the question is
+        edited). The correct option and explanation are
         returned only with `include_answers=true`; leave it false while quizzing the student.
         """
         if topic_id is not None and without_topic:
@@ -183,8 +184,9 @@ def build_server(path, *, allow_answers=True):
         return (f"Quiz me on SOSkúška subject {subject_id} with {count} questions. Use search_questions with "
                 f"include_answers=false to pick questions. Ask exactly one question at a time with its four options "
                 f"and wait for my answer. Only after I answer, call search_questions with that question's id as "
-                f"question_id and include_answers=true to check it, tell me whether I was right and explain "
-                f"briefly. At the end, give my score.")
+                f"question_id and include_answers=true to check it. If its version differs from the one you asked, "
+                f"say the question was changed in SOSkúška and do not score it; otherwise tell me whether I was right "
+                f"and explain briefly. At the end, give my score.")
 
     @server.prompt(title="Weak topics study plan")
     def weak_topics(period: Literal["Last 7 days", "Last 30 days", "All time"] = "Last 30 days") -> str:

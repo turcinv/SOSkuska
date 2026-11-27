@@ -99,6 +99,19 @@ def run_check(path, resume=False):
         assert app.store.practice_attempt(aid)["status"] == "in_progress" and page.active_id == aid
         assert page.status.cget("text") == app.translator.text("This test changed in another window. Its current answers are shown; confirm again to continue.")
         assert page.pending_action is None and page.choice.get() == wrong
+        # A conflict whose reload fails keeps the stale screen locked until a read succeeds.
+        page.ask_action("discard")
+        other = Store(path)
+        try:
+            other.save_practice_answer(aid, 0, correct)
+        finally:
+            other.close()
+        with patch.object(app.store, "active_practice", side_effect=sqlite3.OperationalError("locked")):
+            page.confirm_button.invoke()
+        assert app.store.practice_attempt(aid)["status"] == "in_progress"
+        assert page.status.cget("text") == app.translator.text("This test changed in another window and could not be reloaded. Your test is kept; open Practice Tests again to continue.")
+        assert page.radios[0].cget("state") == "disabled"
+        assert page.load() and page.radios[0].cget("state") == "normal" and page.choice.get() == correct
         page.radios[correct].invoke()
         assert app.store.practice_answers(aid)[0] == correct
         page.finish_button.invoke()

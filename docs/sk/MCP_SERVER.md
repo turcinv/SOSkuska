@@ -71,7 +71,7 @@ Pre inú databázu pridajte do `args` hodnoty `"--data", "/path/to/file.sqlite3"
 | --- | --- |
 | `list_subjects` | Predmety, termíny skúšok, zostávajúce dni, počty tém/otázok, čas sústredenia |
 | `get_subject` | Témy jedného predmetu s počtami otázok podľa náročnosti |
-| `search_questions` | Otázky predmetu, voliteľne podľa textu, témy, náročnosti alebo jedného presného `question_id`; odpovede len s `include_answers` |
+| `search_questions` | Otázky predmetu, voliteľne podľa textu, témy, náročnosti alebo jedného presného `question_id` (s `version` na hodnotenie); odpovede len s `include_answers` |
 | `list_decks` / `due_flashcards` | Balíčky s počtom kariet na rade; karty na rade, zadné strany len s `include_backs` |
 | `study_statistics` | Čas sústredenia, vážená úspešnosť testov a vlastné hodnotenie kartičiek za Last 7 days, Last 30 days alebo All time |
 | `practice_history` | Dokončené testy so skóre podľa tém, pod názvom predmetu, s ktorým boli písané |

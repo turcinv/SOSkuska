@@ -207,9 +207,10 @@ class PracticePage(ctk.CTkFrame):
         self.status.configure(text=tr(self.app,tr(self.app, str(exc)) if isinstance(exc, ValueError) else tr(self.app, 'Could not access practice data. Please try again.')))
 
     def load(self):
+        """Show the active test or setup; return False when the read failed."""
         if self.finishing and self.active_id is not None:
             self.finish()
-            return
+            return True
         try:
             attempt = self.app.store.active_practice()
             if attempt:
@@ -218,8 +219,10 @@ class PracticePage(ctk.CTkFrame):
                 self.active_id = None
                 self.finishing = False
                 self.show_config()
+            return True
         except (ValueError, sqlite3.Error) as exc:
             self.error(exc)
+            return False
 
     def show_config(self):
         self.cancel_explanation()
@@ -506,8 +509,12 @@ class PracticePage(ctk.CTkFrame):
         self.finishing = False
         self.finish_expected = None
         self.cancel_action()
-        self.load()
-        self.status.configure(text=tr(self.app, str(exc)))
+        if self.load():
+            self.status.configure(text=tr(self.app, str(exc)))
+        else:
+            # Cached answers are stale: keep the controls off until a reload succeeds.
+            self.set_controls(False)
+            self.status.configure(text=tr(self.app, 'This test changed in another window and could not be reloaded. Your test is kept; open Practice Tests again to continue.'))
 
     def recover_missing_attempt(self):
         # Missing data is terminal, unlike a locked/failed read. Stop timer

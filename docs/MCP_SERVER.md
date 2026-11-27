@@ -71,7 +71,7 @@ Add `"--data", "/path/to/file.sqlite3"` to `args` to use another database. Confi
 | --- | --- |
 | `list_subjects` | Subjects, exam dates, days left, topic/question counts, focus time |
 | `get_subject` | One subject's topics with question counts per difficulty |
-| `search_questions` | Questions of a subject, optionally by text, topic, difficulty or one exact `question_id`; answers only with `include_answers` |
+| `search_questions` | Questions of a subject, optionally by text, topic, difficulty or one exact `question_id` (with a `version` for grading); answers only with `include_answers` |
 | `list_decks` / `due_flashcards` | Decks with due counts; due cards, backs only with `include_backs` |
 | `study_statistics` | Focus time, weighted practice accuracy and flashcard self-ratings for Last 7 days, Last 30 days or All time |
 | `practice_history` | Completed tests with per-topic scores, under the subject name they were taken with |

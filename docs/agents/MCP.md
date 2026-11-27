@@ -13,7 +13,7 @@ English instructions for development agents, referenced by [AGENTS.md](../../AGE
 
 - Open `Store.open_existing(path, readonly=True)` per call and close it in `finally`. Never cache a Store, connection or lease between calls: restore needs the exclusive lease. `test_busy_schema_and_missing_database_errors` tracks every opened store.
 - Map expected failures to `ToolError` (busy lease or lock, schema mismatch, missing file, unreadable database, `ValueError` from queries). Never retry in a loop.
-- New tools wrap a pure function in `study_queries.py` with limits, truncation and the `truncated` flag. Question and card fields use the authoring maxima, so items are never shown partially (S27-05); only the response budget and descriptions shorten output. `search_questions(question_id=…)` returns one exact question for grading. Keep answer keys, explanations and card backs behind an explicit flag that `--no-answers` rejects, and keep them out of search matching.
+- New tools wrap a pure function in `study_queries.py` with limits, truncation and the `truncated` flag. Question and card fields use the authoring maxima, so items are never shown partially (S27-05); only the response budget and descriptions shorten output. `search_questions(question_id=…)` returns one exact question for grading, with a per-process keyed `version`; never expose an unkeyed hash that includes the answer key. Keep answer keys, explanations and card backs behind an explicit flag that `--no-answers` rejects, and keep them out of search matching.
 - Use `StrictInt`/`StrictBool`/`StrictStr` tool parameters; lax validation turns `true` into `1`. Prompt arguments arrive as strings, so prompts use plain `int`.
 
 ## Output and logging

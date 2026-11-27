@@ -107,6 +107,18 @@ class McpQueryTests(unittest.TestCase):
         self.assertFalse(queries.find_questions(self.store, self.sid)['truncated'])
         self.assertEqual(item['id'], qid)
 
+    def test_question_version_changes_with_edits_and_does_not_reveal_the_key(self):
+        import hashlib
+        import json
+        qid = self.store.create_question(self.sid, 'Which?', ['a', 'b', 'c', 'd'], 2)
+        version = queries.find_questions(self.store, self.sid, question_id=qid)['items'][0]['version']
+        self.assertEqual(queries.find_questions(self.store, self.sid, question_id=qid)['items'][0]['version'], version)
+        plain = {hashlib.sha256(json.dumps(['Which?', 'a', 'b', 'c', 'd', key, ''], ensure_ascii=False).encode()).hexdigest()[:12]
+                 for key in range(4)}
+        self.assertNotIn(version, plain, 'a host must not be able to test candidate answers')
+        self.store.update_question(qid, 'Which?', ['a', 'b', 'c', 'd'], 3)
+        self.assertNotEqual(queries.find_questions(self.store, self.sid, question_id=qid)['items'][0]['version'], version)
+
     def test_exact_question_lookup_for_grading(self):
         first = self.store.create_question(self.sid, 'First?', ['a', 'b', 'c', 'd'], 3)
         for n in range(60):
