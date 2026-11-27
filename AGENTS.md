@@ -15,6 +15,7 @@ The `@path` references are repository-relative reading instructions. Open the li
 | AI Tutor, AI drafting from notes, Ollama or Settings/preferences | [@docs/agents/AI_SETTINGS.md](docs/agents/AI_SETTINGS.md) **and** Runtime |
 | Backup, restore or CSV imports, including shared panel/worker changes | [@docs/agents/DATA_TRANSFER.md](docs/agents/DATA_TRANSFER.md) **and** Runtime; also the affected Study or AI/Settings rules |
 | Branches, PRs, reviews, CI, documentation or releases | [@docs/agents/WORKFLOW.md](docs/agents/WORKFLOW.md) |
+| Read-only MCP server (planned) | [@docs/agents/MCP_SERVER_PLAN.md](docs/agents/MCP_SERVER_PLAN.md) **and** Runtime, Study, Data transfer |
 
 ## Essential rules
 
