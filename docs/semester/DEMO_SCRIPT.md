@@ -1,6 +1,6 @@
 # Teacher demo script (about 6 minutes)
 
-Working draft for the author's semester presentation, written against v0.31.1. It uses only disposable sample data; your real database is never opened.
+Working draft for the author's semester presentation, written against v0.31.2. It uses only disposable sample data; your real database is never opened.
 
 ## Prepare (10 minutes, the day before)
 

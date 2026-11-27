@@ -53,17 +53,17 @@ A62-05–A62-09 boli zlúčené cez PR #62 a vydané vo v0.26.1. Nezávislá rev
 
 ## Revízia repozitára · 27. novembra 2026 · Sol (backend codex)
 
-Revízia `main` len na čítanie na `b1591d7` (v0.31.1) vyžiadaná od inej rodiny modelov. Bežala na backende `codex` v Kiro Crew, ale potvrdenie spustenia uvádzalo `claude-sonnet-5.5`, takže rodina modelu nie je potvrdená. Správa bola odseknutá po zistení 7. Každé zistenie nižšie bolo overené čítaním kódu; vlastné reprodukcie recenzenta s dvoma Store neboli znova spustené. Stav sa mení až po overenej oprave.
+Revízia `main` len na čítanie na `b1591d7` (v0.31.2) vyžiadaná od inej rodiny modelov. Bežala na backende `codex` v Kiro Crew, ale potvrdenie spustenia uvádzalo `claude-sonnet-5.5`, takže rodina modelu nie je potvrdená. Správa bola odseknutá po zistení 7. Každé zistenie nižšie bolo overené čítaním kódu; vlastné reprodukcie recenzenta s dvoma Store neboli znova spustené. Stav sa mení až po overenej oprave.
 
 | ID | Priorita | Stav | Zistenie | Požadované správanie |
 | --- | --- | --- | --- | --- |
-| S27-01 | P2 | Opravené, nevydané | Otvorený panel AI generovania po zmene Nastavení ďalej ukazuje starý server/model; Generovať obnoví popis a odošle poznámky v tom istom kliknutí. | Pri zmene nastavení AI otvorené panely obnoviť; ak sa cieľ líši od zobrazeného, vyžadovať ďalšie kliknutie. |
-| S27-02 | P2 | Opravené, nevydané | Zahodenie (a dokončenie) testu ignoruje odpovede, ktoré iné okno uložilo po otvorení potvrdenia. | Porovnať revíziu odpovedí pod `BEGIN IMMEDIATE`; pri konflikte test ponechať a opýtať sa znova. |
-| S27-03 | P2 | Opravené, nevydané | Potvrdenia zmazania predmetu a balíčka porovnávajú len názvy a počty; nahradenie kartičky počet nezmení a staré potvrdenie zmaže náhradu. | Pri oboch kaskádach potvrdzovať podľa identít/revízií podriadených záznamov (alebo revízie obsahu). |
-| S27-04 | P3 | Opravené, nevydané | Uloženie kartičky sa zapíše pred obnovením balíčka; keď obnovenie zlyhá, Uložiť zostane aktívne a druhé kliknutie kartičku znova upraví a znova vynuluje plán. | Použiť vzor opakovania len čítania po zápise. |
-| S27-05 | P3 | Opravené, nevydané | MCP skracuje možnosti odpovedí na 300 znakov, hoci zadávanie povoľuje 500, takže rôzne možnosti môžu vyzerať rovnako. | Vracať celé možnosti v rámci rozpočtu odpovede; zvážiť vyhľadanie otázky podľa ID. |
-| S27-06 | P3 | Opravené, nevydané | Parser poznámok stále prijíma staršie písmeno odpovede zvolené modelom a potichu skracuje príliš dlhé témy. | Vyžadovať aktuálny tvar; príliš dlhé témy hlásiť ako chyby validácie. |
-| S27-07 | P3 | Opravené, nevydané | Keď sa pracovné vlákno generovania nespustí, panel zostane zaneprázdnený a blokuje zmeny nastavení AI aj obnovu. | Zachytiť zlyhanie spustenia, vyčistiť úlohu a zobraziť chybu. |
+| S27-01 | P2 | Vydané vo v0.31.2 | Otvorený panel AI generovania po zmene Nastavení ďalej ukazuje starý server/model; Generovať obnoví popis a odošle poznámky v tom istom kliknutí. | Pri zmene nastavení AI otvorené panely obnoviť; ak sa cieľ líši od zobrazeného, vyžadovať ďalšie kliknutie. |
+| S27-02 | P2 | Vydané vo v0.31.2 | Zahodenie (a dokončenie) testu ignoruje odpovede, ktoré iné okno uložilo po otvorení potvrdenia. | Porovnať revíziu odpovedí pod `BEGIN IMMEDIATE`; pri konflikte test ponechať a opýtať sa znova. |
+| S27-03 | P2 | Vydané vo v0.31.2 | Potvrdenia zmazania predmetu a balíčka porovnávajú len názvy a počty; nahradenie kartičky počet nezmení a staré potvrdenie zmaže náhradu. | Pri oboch kaskádach potvrdzovať podľa identít/revízií podriadených záznamov (alebo revízie obsahu). |
+| S27-04 | P3 | Vydané vo v0.31.2 | Uloženie kartičky sa zapíše pred obnovením balíčka; keď obnovenie zlyhá, Uložiť zostane aktívne a druhé kliknutie kartičku znova upraví a znova vynuluje plán. | Použiť vzor opakovania len čítania po zápise. |
+| S27-05 | P3 | Vydané vo v0.31.2 | MCP skracuje možnosti odpovedí na 300 znakov, hoci zadávanie povoľuje 500, takže rôzne možnosti môžu vyzerať rovnako. | Vracať celé možnosti v rámci rozpočtu odpovede; zvážiť vyhľadanie otázky podľa ID. |
+| S27-06 | P3 | Vydané vo v0.31.2 | Parser poznámok stále prijíma staršie písmeno odpovede zvolené modelom a potichu skracuje príliš dlhé témy. | Vyžadovať aktuálny tvar; príliš dlhé témy hlásiť ako chyby validácie. |
+| S27-07 | P3 | Vydané vo v0.31.2 | Keď sa pracovné vlákno generovania nespustí, panel zostane zaneprázdnený a blokuje zmeny nastavení AI aj obnovu. | Zachytiť zlyhanie spustenia, vyčistiť úlohu a zobraziť chybu. |
 
 ### Riešenie · vetva `fix/review-s27`
 

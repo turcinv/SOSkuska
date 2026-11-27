@@ -1,6 +1,6 @@
 # Semester report outline
 
-Working draft, written against v0.31.1 (27 November 2026). Placeholders in `[[double brackets]]` must be filled in by the author; nothing here invents personal, course or grading details. Facts below were checked against the repository on that date; re-check numbers before submitting.
+Working draft, written against v0.31.2 (27 November 2026). Placeholders in `[[double brackets]]` must be filled in by the author; nothing here invents personal, course or grading details. Facts below were checked against the repository on that date; re-check numbers before submitting.
 
 **Title page:** SOSkúška — an offline study planner with optional local AI · [[author name]] · [[course / subject code]] · [[school / class]] · [[teacher]] · [[submission date]] · report language: [[language]].
 
@@ -24,7 +24,7 @@ Working draft, written against v0.31.1 (27 November 2026). Placeholders in `[[do
 - Key decisions worth explaining:
   - Immutable practice and review snapshots, so history survives edits and deletions.
   - Stale-state checks under `BEGIN IMMEDIATE` so two windows cannot silently overwrite each other.
-  - Database jobs in isolated processes, and garbage collection only on the Tk thread (v0.31.1), because Tk is not thread-safe.
+  - Database jobs in isolated processes, and garbage collection only on the Tk thread (v0.31.2), because Tk is not thread-safe.
 - Screenshots: `screenshots/01-dashboard-light.png`, `02-dashboard-dark.png`, `03-dashboard-czech.png`.
 
 ## 4. Implementation highlights (2–3 pages)
@@ -44,7 +44,7 @@ Working draft, written against v0.31.1 (27 November 2026). Placeholders in `[[do
 
 ## 6. Process (½ page)
 
-- Git with feature branches and pull requests, squash merges, tagged releases with a Windows ZIP and checksum. As of 27 November 2026: 77 merged pull requests and 41 release tags (v0.31.1 latest).
+- Git with feature branches and pull requests, squash merges, tagged releases with a Windows ZIP and checksum. As of 27 November 2026: 77 merged pull requests and 41 release tags (v0.31.2 latest).
 - AI-assisted development: [[describe honestly how you used AI coding assistants, what you decided and reviewed yourself, and what you learned]].
 
 ## 7. Conclusion and future work (½ page)

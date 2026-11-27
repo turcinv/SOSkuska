@@ -1,6 +1,6 @@
 # Semester presentation materials
 
-Working drafts for the author's semester demo and report, written against v0.31.1 on 27 November 2026. They are English-only on purpose: the report language is still a placeholder, and the final text will be written in that language. These files describe the project; they are not user documentation and have no translations.
+Working drafts for the author's semester demo and report, written against v0.31.2 on 27 November 2026. They are English-only on purpose: the report language is still a placeholder, and the final text will be written in that language. These files describe the project; they are not user documentation and have no translations.
 
 - [Demo script](DEMO_SCRIPT.md): preparation, a 6-minute walkthrough with talking points, fallbacks and likely questions.
 - [Report outline](REPORT_OUTLINE.md): section-by-section outline with checked facts, sources and `[[placeholders]]`.
