@@ -5,6 +5,7 @@
 soskuska/**
 !soskuska/*.py
 !soskuska/requirements.txt
+!soskuska/requirements-mcp.txt
 !soskuska/assets/
 !soskuska/assets/brand/
 !soskuska/assets/brand/*

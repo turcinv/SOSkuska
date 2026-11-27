@@ -4,6 +4,7 @@
 
 ## Unreleased
 
+- Read-only MCP server `soskuska/mcp_server.py` (stdio only, optional pinned `mcp==2.3.0` in `soskuska/requirements-mcp.txt`): eight read-only tools, two prompts and a subjects resource over the Phase 1 queries; answers hidden by default, `--no-answers`, per-call read-only database access. Not in the Windows ZIP. [Guide](docs/MCP_SERVER.md).
 - CI: the Dashboard layout check budgets fresh-process startup by CPU and wall time instead of timing the whole probe, which failed on loaded hosted runners.
 - Groundwork for a read-only MCP server (no new dependency, no GUI change): the per-user database location moved from `app.py` to `storage.user_database_path()`, and the new `soskuska/study_queries.py` gives bounded, read-only study queries with answer keys and card backs hidden by default. Schema remains 10.
 

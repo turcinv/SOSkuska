@@ -2,6 +2,10 @@
 
 [English](CURRENT_ARCHITECTURE.md) · [Čeština](cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](sk/CURRENT_ARCHITECTURE.md) · [Русский](ru/CURRENT_ARCHITECTURE.md)
 
+## Unreleased — read-only MCP server
+
+`mcp_server.py` is a separate stdio entry point (never started by the GUI, never imports Tk) built on the official SDK (`MCPServer`, optional `requirements-mcp.txt`). Its eight tools wrap `study_queries.py` one-to-one with read-only annotations and strict argument types. Each call opens `Store.open_existing(readonly=True)`, queries and closes in `finally`, so the shared lease never outlives a call; lease conflicts, schema mismatches, a missing file and SQLite errors become tool errors. `--no-answers` rejects `include_answers`/`include_backs`. stdout is protocol only; diagnostics go to stderr without study content. The PyInstaller spec does not include it. [Guide](MCP_SERVER.md). Schema remains 10.
+
 ## v0.30.1
 
 A real-model evaluation (`tools/evaluate_ai.py`, record in `agents/design/ai-note-generation/EVALUATION.md`) led to these changes. Generated questions now return `correct_answer` plus three `wrong_answers`, and `note_generation.answer_position` places the correct one. Notes are declared data, and the task is repeated after them. `note_support` flags same-language drafts whose answer is not clearly found in the notes; the panel shows them unticked with a warning. Non-default study modes name the reply language; the Explain answer prompt is unchanged. Schema remains 10.
