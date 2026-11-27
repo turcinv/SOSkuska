@@ -4,6 +4,7 @@
 
 ## Nevydané
 
+- CI: kontrola rozloženia Dashboardu stráži štart čerstvého procesu podľa času CPU a reálneho času namiesto merania celej sondy, ktorá zlyhávala na zaťažených hostovaných strojoch.
 - Príprava servera MCP len na čítanie (žiadna nová závislosť, žiadna zmena GUI): umiestnenie používateľskej databázy sa presunulo z `app.py` do `storage.user_database_path()` a nový `soskuska/study_queries.py` poskytuje obmedzené študijné dopyty len na čítanie, predvolene bez kľúčov odpovedí a zadných strán kartičiek. Schéma zostáva 10.
 
 ## 0.30.1 — 2026-11-26

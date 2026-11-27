@@ -1,4 +1,8 @@
 """Check the native Dashboard with a disposable database and a virtual display."""
+import time
+
+STARTED = time.perf_counter()  # Before the heavy GUI imports below.
+
 import argparse
 from contextlib import closing
 from datetime import date
@@ -15,6 +19,16 @@ from app import Dashboard
 from localization import LANGUAGE_CODES
 from preferences import DEFAULTS
 from storage import Store
+
+# Startup (imports plus Dashboard construction) is checked on its own, not
+# together with the functional steps, whose wall time varies most on loaded
+# hosted runners. CPU time catches extra startup work regardless of load; the
+# wall bound catches blocking waits such as a synchronous connection attempt.
+# Measured in the Linux test container on 27 November 2026: about 0.7-0.8 s CPU
+# and under 1 s wall per probe.
+STARTUP_CPU_BUDGET = 2.0
+STARTUP_WALL_BUDGET = 6.0
+PROBE_TIMEOUT = 30  # Hang guard for the whole probe only.
 
 
 def assert_visible(widget, viewport):
@@ -171,6 +185,9 @@ def check(language, scale):
         with patch('app.date', wraps=date) as app_date, patch('storage.date', wraps=date) as storage_date:
             app_date.today.return_value = storage_date.today.return_value = date(2026, 11, 10)
             app = Dashboard(path)
+            app.update()
+            # This fresh process so far: interpreter, imports and the first Dashboard layout.
+            startup_cpu, startup_wall = time.process_time(), time.perf_counter() - STARTED
             errors = []
             app.report_callback_exception = lambda _kind, error, _traceback: errors.append(error)
             try:
@@ -179,6 +196,12 @@ def check(language, scale):
             finally:
                 app.destroy()
                 app.store.close()
+    print(f'{language} {scale:g}x: startup {startup_cpu:.2f} s CPU (budget {STARTUP_CPU_BUDGET:g}), '
+          f'{startup_wall:.2f} s wall (budget {STARTUP_WALL_BUDGET:g})', flush=True)
+    assert startup_cpu <= STARTUP_CPU_BUDGET, (
+        f'Startup used {startup_cpu:.2f} s of CPU; build optional panels on first use instead of at startup.')
+    assert startup_wall <= STARTUP_WALL_BUDGET, (
+        f'Startup took {startup_wall:.2f} s; avoid blocking work (connections, file scans) before the window appears.')
 
 
 def main():
@@ -191,10 +214,11 @@ def main():
         return
     for language in LANGUAGE_CODES:
         for scale in (1.0, 1.5):
+            # Hang guard only: wall time also grows with hosted-runner load.
             subprocess.run(
                 [sys.executable, '-X', 'faulthandler', __file__, '--language', language, '--scale', str(scale)],
                 check=True,
-                timeout=7,
+                timeout=PROBE_TIMEOUT,
             )
     print('PASS: Dashboard at 100/150% in four languages, compact search, exam marks and rollover, '
           'focus clock, preference changes and guarded retry reveal', flush=True)
