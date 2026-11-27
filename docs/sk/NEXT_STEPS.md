@@ -11,6 +11,7 @@ Aktuálne vydanie: **v0.30.1**, schéma **10**.
 - **v0.29.0:** redizajn s mačacou značkou ([odovzdanie](../agents/design/cat-brand/README.md)).
 - **v0.30.0:** AI generovanie kartičiek a otázok z poznámok ([sprievodca](AI_NOTE_GENERATION.md)).
 - **v0.30.1:** opravy z prvého hodnotenia so skutočným modelom ([záznam](../agents/design/ai-note-generation/EVALUATION.md)). Opravy sa týkajú odpovedí umiestňovaných aplikáciou, ochrany proti vloženiu pokynov do poznámok, upozornenia na návrhy, ktoré sa v poznámkach nenašli, a jazyka študijných režimov.
+- **Zlúčené, nevydané:** [plán](../agents/MCP_SERVER_PLAN.md) servera MCP len na čítanie a jeho fáza 1, bezokenná vrstva dopytov len na čítanie (`soskuska/study_queries.py`, PR #76). Server MCP zatiaľ neexistuje.
 - Skoršie kroky 1–5 svetlého UI sú historické; ich vizuálny smer nahrádza mačacia značka.
 
 ## Odporúčané poradie
@@ -24,6 +25,8 @@ Aktuálne vydanie: **v0.30.1**, schéma **10**.
    - Pripravte krátky scenár ukážky: vytvoriť predmet, vygenerovať otázky z poznámok, precvičovať, opakovať kartičky, otvoriť Štatistiky.
    - Obnovte snímky obrazovky z dočasných dát.
    - Údaje o identite, kurze, jazyku a termíne ponechajte ako zástupné polia do dodania a skontrolujte výsledné stránkovanie.
-4. **Upratovanie.** Zlúčené vzdialené vetvy mažte len na výslovnú žiadosť; ponechajte `main` a značky vydania.
+4. **Stabilizovať štartovaciu sondu GUI v hostovanom CI.** 27. novembra `check_studio_layout.py` na strojoch GitHubu prekročil sedemsekundový limit čerstvého procesu, a to aj pri commite na `main`, ktorý menil len dokumentáciu; po zopakovaní prešiel. Obmedzte prácu pri štarte alebo ho merajte spôsobom, ktorý zaťaženie hostovaných strojov nerozbije. Limit len nezvyšujte.
+5. **Fáza 2 servera MCP.** Server cez stdio s voliteľnou pripnutou závislosťou `mcp`, testy, nastavenie CI/kontajnera, používateľský návod v štyroch jazykoch a zaznamenaný beh so skutočným hostiteľom MCP. Pozri [plán](../agents/MCP_SERVER_PLAN.md).
+6. **Upratovanie.** Zlúčené vzdialené vetvy mažte len na výslovnú žiadosť; ponechajte `main` a značky vydania.
 
 Pred v1.0.0 vyriešte zistenia z akceptácie cez revidované PR a zopakujte príslušné kontroly. Nová práca, zlúčenie aj vydanie potrebujú vlastné schválenie. Táto aktualizácia stavu neoznačuje žiadny ručný výsledok ako úspešný.

@@ -11,6 +11,7 @@ Current release: **v0.30.1**, schema **10**.
 - **v0.29.0:** cat brand redesign ([handoff](agents/design/cat-brand/README.md)).
 - **v0.30.0:** AI drafting of flashcards and questions from notes ([guide](AI_NOTE_GENERATION.md)).
 - **v0.30.1:** fixes from the first real-model evaluation ([record](agents/design/ai-note-generation/EVALUATION.md)). The fixes cover app-placed answers, prompt-injection hardening, a warning for drafts not found in the notes, and study-mode language.
+- **Merged, not released:** the read-only MCP server [plan](agents/MCP_SERVER_PLAN.md) and its Phase 1, a headless read-only query layer (`soskuska/study_queries.py`, PR #76). There is no MCP server yet.
 - The earlier bright UI Steps 1–5 are historical; the cat brand supersedes their visual direction.
 
 ## Recommended order
@@ -24,6 +25,8 @@ Current release: **v0.30.1**, schema **10**.
    - Script a short demo: create a subject, generate questions from notes, practise, review flashcards, open Statistics.
    - Refresh screenshots from disposable data.
    - Keep identity, course, language and deadline placeholders until supplied, and inspect final pagination.
-4. **Housekeeping.** Delete merged remote branches only on explicit request; keep `main` and release tags.
+4. **Stabilise the hosted GUI startup probe.** On 27 November `check_studio_layout.py` exceeded its 7-second fresh-process bound on GitHub runners, also on a docs-only `main` commit, and passed on rerun. Reduce startup work or measure it in a way that hosted-runner load does not break. Do not simply raise the bound.
+5. **MCP Phase 2.** The stdio server with the optional pinned `mcp` dependency, tests, CI/container setup, a four-language user guide and a recorded run with a real MCP host. See the [plan](agents/MCP_SERVER_PLAN.md).
+6. **Housekeeping.** Delete merged remote branches only on explicit request; keep `main` and release tags.
 
 Before v1.0.0, resolve acceptance findings through reviewed PRs and rerun the relevant checks. New work, merge and publication need their own authorization. No manual result is marked passed by this status update.
