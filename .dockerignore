@@ -21,6 +21,7 @@ tests/fixtures/**
 !tools/
 tools/**
 !tools/run_checks.py
+!tools/make_mcp_acceptance_db.py
 !docs/
 docs/**
 !docs/examples/
