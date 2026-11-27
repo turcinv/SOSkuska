@@ -53,17 +53,17 @@ A62-05–A62-09 were merged through PR #62 and released in v0.26.1. Independent 
 
 ## Repository review · 27 November 2026 · Sol (codex backend)
 
-Read-only review of `main` at `b1591d7` (v0.31.1) requested from a different model family. It ran on the Kiro Crew `codex` backend, but the spawn receipt named `claude-sonnet-5.5`, so the model family is not confirmed. The report was cut off after finding 7. Each finding below was checked against the code by reading it; the reviewer's own two-Store reproductions were not re-run. Status changes only after a fix is verified.
+Read-only review of `main` at `b1591d7` (v0.31.2) requested from a different model family. It ran on the Kiro Crew `codex` backend, but the spawn receipt named `claude-sonnet-5.5`, so the model family is not confirmed. The report was cut off after finding 7. Each finding below was checked against the code by reading it; the reviewer's own two-Store reproductions were not re-run. Status changes only after a fix is verified.
 
 | ID | Priority | Status | Finding | Required behavior |
 | --- | --- | --- | --- | --- |
-| S27-01 | P2 | Fixed, unreleased | An open AI-drafting panel keeps showing the old server/model after Settings change; Generate refreshes the label and sends the notes in the same click. | Refresh open panels when AI settings change; if the destination differs from the one shown, require another click. |
-| S27-02 | P2 | Fixed, unreleased | Discarding (and finishing) a practice test ignores answers saved by another window after the confirmation opened. | Compare an answer revision under `BEGIN IMMEDIATE`; on conflict keep the test and ask again. |
-| S27-03 | P2 | Fixed, unreleased | Subject and deck deletion confirmations compare names and counts only; replacing a card keeps the count and the old confirmation deletes the replacement. | Confirm against child identities/revisions (or a content revision) for both cascades. |
-| S27-04 | P3 | Fixed, unreleased | Saving a card commits before the deck refresh; if the refresh fails, Save stays enabled and a second click updates again and resets the schedule twice. | Use the post-commit refresh-only retry pattern. |
-| S27-05 | P3 | Fixed, unreleased | MCP clips answer options to 300 characters although authoring allows 500, so distinct options can look identical. | Return whole options within the response budget; consider an exact-ID question lookup. |
-| S27-06 | P3 | Fixed, unreleased | The note parser still accepts the legacy model-chosen answer letter and silently truncates overlong topics. | Require the current shape; report overlong topics as validation errors. |
-| S27-07 | P3 | Fixed, unreleased | If the drafting worker thread fails to start, the panel stays busy and blocks AI settings changes and restore. | Catch the start failure, clear the task and show an error. |
+| S27-01 | P2 | Released in v0.31.2 | An open AI-drafting panel keeps showing the old server/model after Settings change; Generate refreshes the label and sends the notes in the same click. | Refresh open panels when AI settings change; if the destination differs from the one shown, require another click. |
+| S27-02 | P2 | Released in v0.31.2 | Discarding (and finishing) a practice test ignores answers saved by another window after the confirmation opened. | Compare an answer revision under `BEGIN IMMEDIATE`; on conflict keep the test and ask again. |
+| S27-03 | P2 | Released in v0.31.2 | Subject and deck deletion confirmations compare names and counts only; replacing a card keeps the count and the old confirmation deletes the replacement. | Confirm against child identities/revisions (or a content revision) for both cascades. |
+| S27-04 | P3 | Released in v0.31.2 | Saving a card commits before the deck refresh; if the refresh fails, Save stays enabled and a second click updates again and resets the schedule twice. | Use the post-commit refresh-only retry pattern. |
+| S27-05 | P3 | Released in v0.31.2 | MCP clips answer options to 300 characters although authoring allows 500, so distinct options can look identical. | Return whole options within the response budget; consider an exact-ID question lookup. |
+| S27-06 | P3 | Released in v0.31.2 | The note parser still accepts the legacy model-chosen answer letter and silently truncates overlong topics. | Require the current shape; report overlong topics as validation errors. |
+| S27-07 | P3 | Released in v0.31.2 | If the drafting worker thread fails to start, the panel stays busy and blocks AI settings changes and restore. | Catch the start failure, clear the task and show an error. |
 
 ### Resolution · branch `fix/review-s27`
 

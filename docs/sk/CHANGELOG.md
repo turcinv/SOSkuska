@@ -2,7 +2,7 @@
 
 [English](../../CHANGELOG.md) · [Čeština](../cs/CHANGELOG.md) · [Slovenčina](CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
-## Nevydané
+## 0.31.2 — 2026-11-27
 
 - Opravy z revízie repozitára 27. novembra (S27): AI generovanie nikdy neodošle poznámky na server alebo model, ktorý panel neukázal (S27-01), a zotaví sa, keď sa jeho pracovné vlákno nespustí (S27-07); odoslanie alebo zahodenie testu, ktorého odpovede zmenilo iné okno, test ponechá a opýta sa znova (S27-02); potvrdenia zmazania predmetu a balíčka odhalia aj náhrady s rovnakým počtom a úpravy (S27-03); uloženie kartičky, po ktorom zlyhá obnovenie balíčka, opakuje len obnovenie (S27-04); server MCP vracia celé možnosti odpovedí a vie vyhľadať jednu presnú otázku (S27-05); návrhy AI musia používať aktuálny formát odpovedí a hlásia príliš dlhé témy (S27-06). Schéma zostáva 10.
 
