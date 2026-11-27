@@ -2,7 +2,7 @@
 
 [English](../../CHANGELOG.md) · [Čeština](../cs/CHANGELOG.md) · [Slovenčina](CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
-## Nevydané
+## 0.32.0 — 2026-11-27
 
 - Pomocník v aplikácii: tlačidlo **?** vedľa Nastavení na bočnom paneli a F1 (na Macu Cmd+?) otvoria offline návody ku všetkým stránkam v angličtine, češtine, slovenčine alebo ruštine. Pomocník sa otvorí na téme práve používanej stránky, má hľadanie bez ohľadu na diakritiku (Ctrl/Cmd+K, Esc) a odkaz na opisovanú stránku. Vytvára sa pri prvom použití, číta len pribalené súbory a nikdy nezapisuje údaje. [Návod](IN_APP_HELP.md). Schéma zostáva 10.
 

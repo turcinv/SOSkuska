@@ -2,7 +2,7 @@
 
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
-## Nevydáno
+## 0.32.0 — 2026-11-27
 
 - Nápověda v aplikaci: tlačítko **?** vedle Nastavení na postranním panelu a F1 (na Macu Cmd+?) otevřou offline návody ke všem stránkám v angličtině, češtině, slovenštině nebo ruštině. Nápověda se otevře na tématu právě používané stránky, má hledání bez ohledu na diakritiku (Ctrl/Cmd+K, Esc) a odkaz na popisovanou stránku. Vytváří se při prvním použití, čte jen přibalené soubory a nikdy nezapisuje data. [Návod](IN_APP_HELP.md). Schéma zůstává 10.
 

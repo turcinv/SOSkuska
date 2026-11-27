@@ -43,6 +43,6 @@ Use the issue templates to report reproduction steps, expected/actual behavior, 
 
 ## Continuous integration
 
-CI runs Python 3.12 unit tests on Ubuntu, Windows and macOS, the GUI scripts listed in `tools/run_checks.py` (26 at v0.31.2) on Ubuntu/Xvfb, and a Windows portable build check. [Workflow results](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml). Checks do not deploy or publish releases. See [Statistics rules](docs/STATISTICS.md) when changing reports; self-ratings must not be presented as measured mastery. AI prompt or schema changes should also be re-run with `tools/evaluate_ai.py` against a real local model (see [Development](docs/DEVELOPMENT.md)).
+CI runs Python 3.12 unit tests on Ubuntu, Windows and macOS, the GUI scripts listed in `tools/run_checks.py` (27 at v0.32.0) on Ubuntu/Xvfb, and a Windows portable build check. [Workflow results](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml). Checks do not deploy or publish releases. See [Statistics rules](docs/STATISTICS.md) when changing reports; self-ratings must not be presented as measured mastery. AI prompt or schema changes should also be re-run with `tools/evaluate_ai.py` against a real local model (see [Development](docs/DEVELOPMENT.md)).
 
 `tests/test_flashcard_csv_import.py`, `soskuska/check_flashcard_import.py`.

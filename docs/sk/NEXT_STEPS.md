@@ -2,7 +2,7 @@
 
 [English](../NEXT_STEPS.md) · [Čeština](../cs/NEXT_STEPS.md) · [Slovenčina](NEXT_STEPS.md) · [Русский](../ru/NEXT_STEPS.md)
 
-Aktuálne vydanie: **v0.31.2**, schéma **10**.
+Aktuálne vydanie: **v0.32.0**, schéma **10**.
 
 ## Od 26. novembra 2026
 
@@ -14,13 +14,14 @@ Aktuálne vydanie: **v0.31.2**, schéma **10**.
 - **v0.31.0:** server MCP len na čítanie ([návod](MCP_SERVER.md), [plán](../agents/MCP_SERVER_PLAN.md)): vrstva dopytov z fázy 1 (PR #76) a server cez stdio z fázy 2.
 - **v0.31.1:** požiadavky AI sa už nezdržia, keď by sa garbage collector spustil v ich pracovnom vlákne; nástroj s ukážkovými dátami na akceptáciu MCP.
 - **v0.31.2:** opravy siedmich zistení z revízie 27. novembra ([záznam](REVIEW_FINDINGS.md)).
+- **v0.32.0:** pomocník v aplikácii ([sprievodca](IN_APP_HELP.md)).
 - Skoršie kroky 1–5 svetlého UI sú historické; ich vizuálny smer nahrádza mačacia značka.
 
 ## Odporúčané poradie
 
-1. **Natívna vizuálna akceptácia v0.29–v0.30.1.** Dizajn a AI panely boli zatiaľ overené len na snímkach z Linuxu/Xvfb.
+1. **Natívna vizuálna akceptácia v0.29–v0.32.0.** Dizajn a AI panely boli zatiaľ overené len na snímkach z Linuxu/Xvfb.
    - Na Macu a ideálne na počítači s Windows pri mierke 100 % a 150 % použite dočasné dáta (`--data .local-data/acceptance.sqlite3`).
-   - Skontrolujte Light/Dark, štyri jazyky, 1440 × 900 a 1024 × 700, zbalenie bočného panela, banner na Dashboarde a **Generovať pomocou AI** v sade kartičiek a v banke otázok.
+   - Skontrolujte Light/Dark, štyri jazyky, 1440 × 900 a 1024 × 700, zbalenie bočného panela, banner na Dashboarde a **Generovať pomocou AI** v sade kartičiek a v banke otázok a pomocníka (tlačidlo **?**, F1 a Cmd+? na Macu).
    - Zapíšte OS/build, mierku a zistenia do [zoznamu pre Windows](WINDOWS_ACCEPTANCE.md). Problémy riešte cez revidované PR.
 2. **Širšie hodnotenie AI.** Znova spustite `tools/evaluate_ai.py` aspoň s jedným ďalším modelom (napríklad `llama3.2:3b`) a s dlhými poznámkami a 20 položkami. Porovnajte so záznamom z 26. novembra. Tutor so streamovaním/Stop/opätovným pripojením/históriou so skutočným modelom stále potrebuje ručný prechod.
 3. **Ukážka vyučujúcemu a polročná správa.** Koncepty scenára ukážky, osnovy správy a 17 snímok obrazovky sú v [semester](../semester/README.md) (anglicky); nacvičte natívne a doplňte zástupné údaje.

@@ -53,7 +53,7 @@ A62-05–A62-09 byly sloučeny přes PR #62 a vydány ve v0.26.1. Nezávislá re
 
 ## Revize repozitáře · 27. listopadu 2026 · Sol (backend codex)
 
-Revize `main` jen pro čtení na `b1591d7` (v0.31.2) vyžádaná od jiné rodiny modelů. Běžela na backendu `codex` v Kiro Crew, ale potvrzení spuštění uvádělo `claude-sonnet-5.5`, takže rodina modelu není potvrzena. Zpráva byla useknuta po zjištění 7. Každé zjištění níže bylo ověřeno čtením kódu; vlastní reprodukce recenzenta se dvěma Store nebyly znovu spuštěny. Stav se mění až po ověřené opravě.
+Revize `main` jen pro čtení na `b1591d7` (v0.31.1) vyžádaná od jiné rodiny modelů. Běžela na backendu `codex` v Kiro Crew, ale potvrzení spuštění uvádělo `claude-sonnet-5.5`, takže rodina modelu není potvrzena. Zpráva byla useknuta po zjištění 7. Každé zjištění níže bylo ověřeno čtením kódu; vlastní reprodukce recenzenta se dvěma Store nebyly znovu spuštěny. Stav se mění až po ověřené opravě.
 
 | ID | Priorita | Stav | Zjištění | Požadované chování |
 | --- | --- | --- | --- | --- |

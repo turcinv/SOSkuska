@@ -41,7 +41,7 @@ from panel_layout import wrap_labels
 from branding import sidebar_logo, install_window_icon
 from ai_generation_panel import generation_busy, refresh_generator_destinations, shutdown_generators
 
-APP_VERSION = '0.31.2'
+APP_VERSION = '0.32.0'
 
 from theme import COLORS as C
 

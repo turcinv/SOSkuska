@@ -2,7 +2,7 @@
 
 [English](../NEXT_STEPS.md) · [Čeština](NEXT_STEPS.md) · [Slovenčina](../sk/NEXT_STEPS.md) · [Русский](../ru/NEXT_STEPS.md)
 
-Aktuální vydání: **v0.31.2**, schéma **10**.
+Aktuální vydání: **v0.32.0**, schéma **10**.
 
 ## Od 26. listopadu 2026
 
@@ -14,13 +14,14 @@ Aktuální vydání: **v0.31.2**, schéma **10**.
 - **v0.31.0:** server MCP jen pro čtení ([návod](MCP_SERVER.md), [plán](../agents/MCP_SERVER_PLAN.md)): vrstva dotazů z fáze 1 (PR #76) a server přes stdio z fáze 2.
 - **v0.31.1:** požadavky AI se už nezdrží, když by se garbage collector spustil v jejich pracovním vlákně; nástroj s ukázkovými daty pro přejímku MCP.
 - **v0.31.2:** opravy sedmi zjištění z revize 27. listopadu ([záznam](REVIEW_FINDINGS.md)).
+- **v0.32.0:** nápověda v aplikaci ([průvodce](IN_APP_HELP.md)).
 - Dřívější kroky 1–5 světlého UI jsou historické; jejich vizuální směr nahrazuje kočičí značka.
 
 ## Doporučené pořadí
 
-1. **Nativní vizuální přejímka v0.29–v0.30.1.** Design a AI panely byly zatím ověřeny jen na snímcích z Linuxu/Xvfb.
+1. **Nativní vizuální přejímka v0.29–v0.32.0.** Design a AI panely byly zatím ověřeny jen na snímcích z Linuxu/Xvfb.
    - Na Macu a ideálně na počítači s Windows při měřítku 100 % a 150 % použijte dočasná data (`--data .local-data/acceptance.sqlite3`).
-   - Zkontrolujte Light/Dark, čtyři jazyky, 1440 × 900 a 1024 × 700, sbalení postranního panelu, banner na Dashboardu a **Generovat pomocí AI** v sadě kartiček a v bance otázek.
+   - Zkontrolujte Light/Dark, čtyři jazyky, 1440 × 900 a 1024 × 700, sbalení postranního panelu, banner na Dashboardu a **Generovat pomocí AI** v sadě kartiček a v bance otázek a nápovědu (tlačítko **?**, F1 a Cmd+? na Macu).
    - Zapište OS/build, měřítko a zjištění do [seznamu pro Windows](WINDOWS_ACCEPTANCE.md). Problémy řešte přes revidovaná PR.
 2. **Širší hodnocení AI.** Znovu spusťte `tools/evaluate_ai.py` alespoň s jedním dalším modelem (například `llama3.2:3b`) a s dlouhými poznámkami a 20 položkami. Porovnejte se záznamem z 26. listopadu. Tutor se streamováním/Stop/opětovným připojením/historií se skutečným modelem stále potřebuje ruční průchod.
 3. **Ukázka vyučujícímu a pololetní zpráva.** Koncepty scénáře ukázky, osnovy zprávy a 17 snímků obrazovky jsou v [semester](../semester/README.md) (anglicky); nacvičte nativně a doplňte zástupné údaje.
