@@ -88,7 +88,7 @@ class SubjectTests(unittest.TestCase):
         self.assertIsNotNone(self.store.subject(sid))
         self.assertIsNotNone(self.store.question(qid))
         updated = self.store.subject_deletion_state(sid)
-        self.assertEqual(updated, ("Calculus", 1, 1))
+        self.assertEqual(updated[:3], ("Calculus", 1, 1))
         self.assertTrue(self.store.delete_subject(sid, updated))
         self.assertIsNone(self.store.question(qid))
 

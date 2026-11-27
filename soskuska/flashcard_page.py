@@ -26,6 +26,8 @@ def safe(method):
                 message += ' ' + tr(self.app,'Review saved. Refresh card to continue; do not rate it again.')
             if self.deck_refresh_pending is not None:
                 message += ' ' + tr(self.app, 'Deck saved. Refresh deck to load saved content; do not save it again.')
+            if self.card_refresh_pending:
+                message += ' ' + tr(self.app, 'Card saved. Refresh deck to load saved content; do not save it again.')
             self.status.configure(text=message)
             form_notice = getattr(self, 'deck_form_notice', None)
             if self.view == 'deck_form' and form_notice is not None and form_notice.winfo_exists():
@@ -47,6 +49,7 @@ class FlashcardPage(ctk.CTkFrame):
         self.editing_deck = None
         self.editing_deck_snapshot = None
         self.deck_refresh_pending = None
+        self.card_refresh_pending = False
         self.editing_card = None
         self.editing_revision = None
         self.pending_delete = None
@@ -99,6 +102,8 @@ class FlashcardPage(ctk.CTkFrame):
         self.view = view
         if view != 'deck_form':
             self.deck_refresh_pending = None
+        # card_form() opens a new form; any other view means the saved card's deck loaded.
+        self.card_refresh_pending = False
         self.pending_delete = None
         if view != "review":
             self.review_refresh_pending = False
@@ -125,6 +130,9 @@ class FlashcardPage(ctk.CTkFrame):
         if self.deck_refresh_pending is not None:
             self.retry_deck_refresh()
             return
+        if self.card_refresh_pending:
+            self.show_deck(self.deck_id)
+            return
         if self.view in ("deck_form", "card_form"):
             if self.view == "deck_form" and self.editing_deck is None:
                 self.refresh_deck_subjects()
@@ -142,6 +150,9 @@ class FlashcardPage(ctk.CTkFrame):
     def refresh(self):
         if self.deck_refresh_pending is not None:
             self.retry_deck_refresh()
+            return
+        if self.card_refresh_pending:
+            self.show_deck(self.deck_id)
             return
         if self.view == "deck_form" and self.editing_deck is None:
             self.refresh_deck_subjects()
@@ -377,6 +388,11 @@ class FlashcardPage(ctk.CTkFrame):
 
     @safe
     def save_card(self):
+        if self.card_refresh_pending:
+            # The card is already saved: retry only the deck read, never a second update.
+            self.status.configure(text=tr(self.app, 'Card saved on this device.'))
+            self.show_deck(self.deck_id)
+            return
         front, back = self.front_entry.get("1.0", "end-1c"), self.back_entry.get("1.0", "end-1c")
         if self.editing_card is None:
             self.editing_card = self.app.store.create_flashcard(self.deck_id, front, back)
@@ -384,6 +400,10 @@ class FlashcardPage(ctk.CTkFrame):
         else:
             self.app.store.update_flashcard(self.editing_card, front, back, self.editing_revision)
             self.editing_revision += 1
+        self.card_refresh_pending = True
+        self.save_button.configure(text=tr(self.app, 'Refresh deck'))
+        self.front_entry.configure(state='disabled')
+        self.back_entry.configure(state='disabled')
         self.status.configure(text=tr(self.app, 'Card saved on this device.'))
         self.show_deck(self.deck_id)
 

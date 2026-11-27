@@ -802,5 +802,9 @@
   "Wait for or stop AI generation before restoring.": "Před obnovením počkejte na dokončení generování nebo ho zastavte.",
   "Generating with {v0}… Your notes were sent to {v1}. You can Stop or use other pages; leaving this deck or subject discards the drafts.": "Generuje se pomocí {v0}… Poznámky byly odeslány na {v1}. Můžete zastavit nebo přejít na jiné stránky; opuštění tohoto balíčku či předmětu návrhy zahodí.",
   "AI generation was closed; its unsaved drafts were discarded. Your notes are kept.": "Generování AI bylo zavřeno; neuložené návrhy byly zahozeny. Poznámky zůstávají.",
-  "⚠ The answer was not clearly found in your notes, so this draft is unticked. Check it before saving.": "⚠ Odpověď nebyla v poznámkách jasně nalezena, proto návrh není zaškrtnutý. Před uložením ho zkontrolujte."
+  "⚠ The answer was not clearly found in your notes, so this draft is unticked. Check it before saving.": "⚠ Odpověď nebyla v poznámkách jasně nalezena, proto návrh není zaškrtnutý. Před uložením ho zkontrolujte.",
+  "The AI server or model changed since this panel was shown. Nothing was sent. Check the server below, then press Generate again.": "Server nebo model AI se od zobrazení tohoto panelu změnil. Nic nebylo odesláno. Zkontrolujte server níže a stiskněte Generovat znovu.",
+  "This test changed in another window. Its current answers are shown; confirm again to continue.": "Tento test se změnil v jiném okně. Zobrazují se jeho aktuální odpovědi; pro pokračování potvrďte znovu.",
+  "Card saved. Refresh deck to load saved content; do not save it again.": "Kartička je uložena. Obnovte balíček pro načtení uloženého obsahu; neukládejte ji znovu.",
+  "Expected correct_answer and three wrong_answers.": "Očekáváno correct_answer a tři wrong_answers."
 }

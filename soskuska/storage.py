@@ -1,4 +1,6 @@
 """Versioned local storage for subjects, topics, questions, focus sessions and daily tasks."""
+import hashlib
+import json
 import os
 import random
 import sqlite3
@@ -7,7 +9,7 @@ import unicodedata
 from datetime import date, datetime, timedelta
 from pathlib import Path
 from content import question_fields, topic_fields
-from practice import MissingPracticeError, expired, practice_settings, utc_now
+from practice import MissingPracticeError, PracticeChangedError, expired, practice_settings, utc_now
 from repetition import card_fields, deck_fields, next_review
 from study_statistics import statistics_report
 from study_time import register_sql_functions, utc_key
@@ -16,6 +18,11 @@ from database_lock import DatabaseLease
 from csv_import import ImportValidationError, validate_rows, signature
 
 SCHEMA_VERSION = 10
+
+
+def _fingerprint(rows):
+    """Short digest of child rows; compared under the write lock, never stored."""
+    return hashlib.sha256(json.dumps(rows, ensure_ascii=False).encode('utf-8')).hexdigest()[:24]
 
 
 def default_database(base):
@@ -381,12 +388,22 @@ class Store(FocusStoreMixin):
             raise ValueError("A subject with this name already exists.") from None
 
     def subject_deletion_state(self, subject_id):
-        """The name and content counts shown in the destructive-action warning."""
+        """Name and counts for the warning plus a fingerprint of the content it deletes.
+
+        The fingerprint covers topic and question identities and editable fields, so a
+        same-count replacement or edit in another window invalidates the confirmation.
+        """
         row = self.db.execute("""SELECT name,
             (SELECT COUNT(*) FROM topics WHERE subject_id=subjects.id),
             (SELECT COUNT(*) FROM questions WHERE subject_id=subjects.id)
             FROM subjects WHERE id=?""", (subject_id,)).fetchone()
-        return tuple(row) if row else None
+        if row is None:
+            return None
+        content = [tuple(r) for r in self.db.execute(
+            "SELECT 't',id,name,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL FROM topics WHERE subject_id=? "
+            "UNION ALL SELECT 'q',id,prompt,topic_id,option_a,option_b,option_c,option_d,correct_option,difficulty,explanation "
+            "FROM questions WHERE subject_id=? ORDER BY 1,2", (subject_id, subject_id))]
+        return (*tuple(row), _fingerprint(content))
 
     def delete_subject(self, subject_id, expected_state=None):
         """Return False when the confirmation is stale; delete atomically otherwise."""
@@ -681,7 +698,18 @@ class Store(FocusStoreMixin):
                 raise ValueError("Choose an existing question.")
             self.db.execute("UPDATE practice_attempts SET current_index=? WHERE id=?", (position, attempt_id))
 
-    def complete_practice(self, attempt_id):
+    def practice_answers(self, attempt_id):
+        """The saved selections in position order, as shown on a confirmation."""
+        return tuple(row[0] for row in self.db.execute(
+            "SELECT selected_option FROM practice_items WHERE attempt_id=? ORDER BY position", (attempt_id,)))
+
+    def _check_practice_answers(self, attempt_id, expected_answers):
+        if expected_answers is not None and self.practice_answers(attempt_id) != tuple(expected_answers):
+            raise PracticeChangedError("This test changed in another window. Its current answers are shown; confirm again to continue.")
+
+    def complete_practice(self, attempt_id, *, expected_answers=None):
+        """Submit an attempt. With `expected_answers` (from a confirmation), refuse if
+        another window changed an answer since; an expired attempt is saved anyway."""
         with self.db:
             self.db.execute("BEGIN IMMEDIATE")
             attempt = self.practice_attempt(attempt_id)
@@ -689,11 +717,15 @@ class Store(FocusStoreMixin):
                 raise MissingPracticeError("This test no longer exists.")
             if attempt["status"] == "in_progress":
                 now = utc_now()
-                finished = attempt["deadline_at"] if expired(attempt["deadline_at"], now) else now.isoformat()
+                if expired(attempt["deadline_at"], now):
+                    finished = attempt["deadline_at"]
+                else:
+                    self._check_practice_answers(attempt_id, expected_answers)
+                    finished = now.isoformat()
                 self.db.execute("UPDATE practice_attempts SET status='completed',completed_at=? WHERE id=?", (finished, attempt_id))
         return self.practice_attempt(attempt_id)
 
-    def discard_practice(self, attempt_id):
+    def discard_practice(self, attempt_id, *, expected_answers=None):
         """Return True if discarded, False if expiry saved the result instead."""
         with self.db:
             self.db.execute("BEGIN IMMEDIATE")
@@ -708,6 +740,8 @@ class Store(FocusStoreMixin):
                 self.db.execute("UPDATE practice_attempts SET status='completed',completed_at=? WHERE id=?",
                                 (attempt["deadline_at"], attempt_id))
                 return False
+            # Never delete answers another window saved after this confirmation opened.
+            self._check_practice_answers(attempt_id, expected_answers)
             self.db.execute("DELETE FROM practice_attempts WHERE id=?", (attempt_id,))
         return True
 
@@ -754,9 +788,14 @@ class Store(FocusStoreMixin):
                 raise ValueError("This deck no longer exists.")
 
     def deck_deletion_state(self, deck_id):
+        """Name and card count for the warning plus a fingerprint of the cards it deletes."""
         row = self.db.execute("""SELECT name,(SELECT COUNT(*) FROM flashcards WHERE deck_id=decks.id)
             FROM decks WHERE id=?""", (deck_id,)).fetchone()
-        return tuple(row) if row else None
+        if row is None:
+            return None
+        cards = [tuple(r) for r in self.db.execute(
+            "SELECT id,front,back FROM flashcards WHERE deck_id=? ORDER BY id", (deck_id,))]
+        return (*tuple(row), _fingerprint(cards))
 
     def delete_deck(self, deck_id, expected_state=None):
         with self.db:

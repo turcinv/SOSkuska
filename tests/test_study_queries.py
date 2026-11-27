@@ -161,18 +161,23 @@ class StudyQueryTests(unittest.TestCase):
                 call()
 
     def test_limits_are_clamped_and_long_text_is_truncated(self):
-        sid = self.store.create_subject("Long")
+        sid = self.store.create_subject("Long", "d" * 900)
         for n in range(60):
             self.store.create_question(sid, f"{n} " + "p" * 1990, [f"a{n}", f"b{n}", f"c{n}", f"d{n}"], 0,
                                        explanation="e" * 2000)
         result = q.find_questions(self.store, sid, limit=500, include_answers=True)
         self.assertEqual(result["total"], 60)
-        self.assertTrue(result["truncated"])
-        self.assertLessEqual(result["returned"], 50)
-        self.assertLessEqual(len(json.dumps(result, ensure_ascii=False)), q.TEXT_BUDGET + 2000)
+        self.assertTrue(result["truncated"], "the response budget leaves rows out")
+        self.assertLess(result["returned"], 50)
+        self.assertLessEqual(len(json.dumps(result, ensure_ascii=False)), q.TEXT_BUDGET + 5000)
         first = result["items"][0]
-        self.assertEqual(len(first["prompt"]), q.TEXT_LIMIT)
-        self.assertTrue(first["prompt"].endswith("…"))
+        # Questions are never shown partially (S27-05); only the budget cuts the list.
+        self.assertEqual(first["prompt"], "59 " + "p" * 1990)
+        self.assertEqual(len(first["explanation"]), 2000)
+        described = q.subjects_overview(self.store)
+        self.assertTrue(described["truncated"])
+        self.assertEqual(len(described["items"][0]["description"]), q.DESCRIPTION_LIMIT)
+        self.assertTrue(described["items"][0]["description"].endswith("…"))
         short = q.find_questions(self.store, sid, query="59 ", limit=1)
         self.assertEqual(short["returned"], 1)
 

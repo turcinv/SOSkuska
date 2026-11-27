@@ -7,6 +7,10 @@ class MissingPracticeError(ValueError):
     """An attempt was removed; retrying completion cannot recover it."""
 
 
+class PracticeChangedError(ValueError):
+    """Another window changed answers after a submit/discard confirmation opened."""
+
+
 def utc_now():
     return datetime.now(timezone.utc)
 

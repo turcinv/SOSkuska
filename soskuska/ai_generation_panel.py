@@ -40,6 +40,14 @@ def shutdown_generators(app):
             panel.shutdown()
 
 
+def refresh_generator_destinations(app):
+    """After AI settings change, show existing panels' new server/model at once."""
+    for page in (getattr(app, 'flashcard_page', None), getattr(app, 'question_bank', None)):
+        panel = getattr(page, '_generator', None)
+        if panel is not None and not panel.closed:
+            panel.describe_server()
+
+
 class NoteGenerationPanel(ctk.CTkFrame):
     def __init__(self, parent, app, host, *, cards=False, client_factory=generation_client):
         super().__init__(parent, fg_color=C['card'], corner_radius=16, border_width=1, border_color=C['outline'])
@@ -49,6 +57,7 @@ class NoteGenerationPanel(ctk.CTkFrame):
         self.task = None; self.buffer = []; self.received = 0
         self.preview = None; self.choices = []; self.target = None; self.request = None
         self.poll_id = None; self.closed = False
+        self.shown_destination = None  # (address, model) the server label last displayed.
         self.grid_columnconfigure(0, weight=1)
         body = app.frame(self); body.grid(row=0, column=0, sticky='ew', padx=18, pady=16)
         body.grid_columnconfigure(0, weight=1)
@@ -134,12 +143,17 @@ class NoteGenerationPanel(ctk.CTkFrame):
             detail = tr(self.app, detail)
         return tr(self.app, 'Item {v0}: {v1}', v0=match[1], v1=detail)
 
-    def describe_server(self):
+    def destination(self):
+        """(address, model) exactly as a request would use and the label shows them."""
         endpoint, model, _ = self.settings()
         try:
             endpoint = endpoint_url(endpoint)  # Show exactly the address a request would use.
         except OllamaError:
             pass
+        return endpoint, model
+
+    def describe_server(self):
+        endpoint, model = self.shown_destination = self.destination()
         if not model:
             self.server_label.configure(text=tr(self.app, 'No preferred AI model is saved. Choose one in Settings (or AI Tutor → Use Tutor choices, then Save).'))
         else:
@@ -171,8 +185,12 @@ class NoteGenerationPanel(ctk.CTkFrame):
             self.status.configure(text=tr(self.app, 'Reopen the deck before generating.' if self.cards else 'Reload the question bank before generating.'))
             return
         self.target = {'id': snapshot['id'], 'name': snapshot['name']}
+        if self.destination() != self.shown_destination:
+            # Notes may only go to the server and model the panel displayed before this click.
+            self.describe_server()
+            self.status.configure(text=tr(self.app, 'The AI server or model changed since this panel was shown. Nothing was sent. Check the server below, then press Generate again.'))
+            return
         endpoint, model, language = self.settings()
-        self.describe_server()
         if not model:
             self.status.configure(text=tr(self.app, 'Save a preferred AI model in Settings before generating.'))
             return
@@ -192,7 +210,15 @@ class NoteGenerationPanel(ctk.CTkFrame):
         self.request = {'count': count, 'target': dict(self.target), 'endpoint': endpoint, 'model': model,
                         'notes': self.notes.get('1.0', 'end-1c'), 'language': language}
         self.task = task
-        task.start()
+        try:
+            task.start()
+        except RuntimeError:
+            # No worker exists, so nothing was sent: leave the busy state at once.
+            self.task = None
+            self.request = None
+            self.status.configure(text=tr(self.app, 'Could not start the request.'))
+            self.controls()
+            return
         self.status.configure(text=tr(self.app, 'Generating with {v0}… Your notes were sent to {v1}. You can Stop or use other pages; leaving this deck or subject discards the drafts.', v0=model, v1=endpoint))
         self.controls()
         self.schedule_poll()

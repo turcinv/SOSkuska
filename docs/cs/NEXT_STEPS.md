@@ -17,7 +17,7 @@ Aktuální vydání: **v0.31.1**, schéma **10**.
 
 ## Doporučené pořadí
 
-1. **Opravit zjištění z revize 27. listopadu.** Sedm otevřených zjištění (tři P2 mezery v zastaralém stavu/souhlasu, čtyři P3) z revize repozitáře jiným modelem je zapsáno v [Zjištěních revize](REVIEW_FINDINGS.md). Opravte je na jedné větvi s regresními testy, počínaje S27-01 až S27-03.
+1. **Vydat opravy z revize 27. listopadu.** Všech sedm zjištění S27 je opraveno na `fix/review-s27` s regresními testy ([Zjištění revize](REVIEW_FINDINGS.md)); po schválení sloučit a vydat v0.31.2.
 2. **Nativní vizuální přejímka v0.29–v0.30.1.** Design a AI panely byly zatím ověřeny jen na snímcích z Linuxu/Xvfb.
    - Na Macu a ideálně na počítači s Windows při měřítku 100 % a 150 % použijte dočasná data (`--data .local-data/acceptance.sqlite3`).
    - Zkontrolujte Light/Dark, čtyři jazyky, 1440 × 900 a 1024 × 700, sbalení postranního panelu, banner na Dashboardu a **Generovat pomocí AI** v sadě kartiček a v bance otázek.

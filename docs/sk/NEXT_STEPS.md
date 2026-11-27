@@ -17,7 +17,7 @@ Aktuálne vydanie: **v0.31.1**, schéma **10**.
 
 ## Odporúčané poradie
 
-1. **Opraviť zistenia z revízie 27. novembra.** Sedem otvorených zistení (tri P2 medzery v zastaranom stave/súhlase, štyri P3) z revízie repozitára iným modelom je zapísaných v [Zisteniach revízie](REVIEW_FINDINGS.md). Opravte ich na jednej vetve s regresnými testami, počnúc S27-01 až S27-03.
+1. **Vydať opravy z revízie 27. novembra.** Všetkých sedem zistení S27 je opravených na `fix/review-s27` s regresnými testami ([Zistenia revízie](REVIEW_FINDINGS.md)); po schválení zlúčiť a vydať v0.31.2.
 2. **Natívna vizuálna akceptácia v0.29–v0.30.1.** Dizajn a AI panely boli zatiaľ overené len na snímkach z Linuxu/Xvfb.
    - Na Macu a ideálne na počítači s Windows pri mierke 100 % a 150 % použite dočasné dáta (`--data .local-data/acceptance.sqlite3`).
    - Skontrolujte Light/Dark, štyri jazyky, 1440 × 900 a 1024 × 700, zbalenie bočného panela, banner na Dashboarde a **Generovať pomocou AI** v sade kartičiek a v banke otázok.

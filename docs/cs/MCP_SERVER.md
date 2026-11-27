@@ -71,7 +71,7 @@ Pro jinou databázi přidejte do `args` hodnoty `"--data", "/path/to/file.sqlite
 | --- | --- |
 | `list_subjects` | Předměty, termíny zkoušek, zbývající dny, počty témat/otázek, čas soustředění |
 | `get_subject` | Témata jednoho předmětu s počty otázek podle obtížnosti |
-| `search_questions` | Otázky předmětu, volitelně podle textu, tématu nebo obtížnosti; odpovědi jen s `include_answers` |
+| `search_questions` | Otázky předmětu, volitelně podle textu, tématu, obtížnosti nebo jednoho přesného `question_id`; odpovědi jen s `include_answers` |
 | `list_decks` / `due_flashcards` | Balíčky s počtem karet na řadě; karty na řadě, rubové strany jen s `include_backs` |
 | `study_statistics` | Čas soustředění, vážená úspěšnost testů a vlastní hodnocení kartiček za Last 7 days, Last 30 days nebo All time |
 | `practice_history` | Dokončené testy se skóre podle témat, pod názvem předmětu, se kterým byly psány |
@@ -79,7 +79,7 @@ Pro jinou databázi přidejte do `args` hodnoty `"--data", "/path/to/file.sqlite
 
 Prompty: **Quiz me** (jedna otázka po druhé, odpověď až po vaší odpovědi) a **Weak topics study plan**. Prostředek `soskuska://subjects` dává krátký přehled v Markdownu.
 
-Výsledky jsou pro model malé: seznamy končí na 50 položkách (zkoušky na 20), dlouhý text se zkrátí a označí jako `truncated`.
+Výsledky jsou pro model malé: seznamy končí na 50 položkách (zkoušky na 20) a zhruba na 20 KB a dlouhé popisy se zkrátí; obojí se označí jako `truncated`. Otázky a kartičky se vždy vracejí celé.
 
 ## Řešení problémů
 

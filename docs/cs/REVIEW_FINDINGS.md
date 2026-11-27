@@ -57,10 +57,14 @@ Revize `main` jen pro čtení na `b1591d7` (v0.31.1) vyžádaná od jiné rodiny
 
 | ID | Priorita | Stav | Zjištění | Požadované chování |
 | --- | --- | --- | --- | --- |
-| S27-01 | P2 | Otevřené | Otevřený panel AI generování po změně Nastavení dál ukazuje starý server/model; Generovat obnoví popisek a odešle poznámky v témže kliknutí. | Při změně nastavení AI otevřené panely obnovit; pokud se cíl liší od zobrazeného, vyžadovat další kliknutí. |
-| S27-02 | P2 | Otevřené | Zahození (a dokončení) testu ignoruje odpovědi, které jiné okno uložilo po otevření potvrzení. | Porovnat revizi odpovědí pod `BEGIN IMMEDIATE`; při konfliktu test ponechat a zeptat se znovu. |
-| S27-03 | P2 | Otevřené | Potvrzení smazání předmětu a balíčku porovnávají jen názvy a počty; nahrazení kartičky počet nezmění a staré potvrzení smaže náhradu. | U obou kaskád potvrzovat podle identit/revizí podřízených záznamů (nebo revize obsahu). |
-| S27-04 | P3 | Otevřené | Uložení kartičky se zapíše před obnovením balíčku; když obnovení selže, Uložit zůstane aktivní a druhé kliknutí kartičku znovu upraví a znovu vynuluje plán. | Použít vzor opakování jen čtení po zápisu. |
-| S27-05 | P3 | Otevřené | MCP zkracuje možnosti odpovědí na 300 znaků, ačkoli zadávání povoluje 500, takže různé možnosti mohou vypadat stejně. | Vracet celé možnosti v rámci rozpočtu odpovědi; zvážit vyhledání otázky podle ID. |
-| S27-06 | P3 | Otevřené | Parser poznámek stále přijímá starší písmeno odpovědi zvolené modelem a potichu zkracuje příliš dlouhá témata. | Vyžadovat aktuální tvar; příliš dlouhá témata hlásit jako chyby validace. |
-| S27-07 | P3 | Otevřené | Když se pracovní vlákno generování nespustí, panel zůstane zaneprázdněný a blokuje změny nastavení AI i obnovu. | Zachytit selhání spuštění, vyčistit úlohu a zobrazit chybu. |
+| S27-01 | P2 | Opraveno, nevydáno | Otevřený panel AI generování po změně Nastavení dál ukazuje starý server/model; Generovat obnoví popisek a odešle poznámky v témže kliknutí. | Při změně nastavení AI otevřené panely obnovit; pokud se cíl liší od zobrazeného, vyžadovat další kliknutí. |
+| S27-02 | P2 | Opraveno, nevydáno | Zahození (a dokončení) testu ignoruje odpovědi, které jiné okno uložilo po otevření potvrzení. | Porovnat revizi odpovědí pod `BEGIN IMMEDIATE`; při konfliktu test ponechat a zeptat se znovu. |
+| S27-03 | P2 | Opraveno, nevydáno | Potvrzení smazání předmětu a balíčku porovnávají jen názvy a počty; nahrazení kartičky počet nezmění a staré potvrzení smaže náhradu. | U obou kaskád potvrzovat podle identit/revizí podřízených záznamů (nebo revize obsahu). |
+| S27-04 | P3 | Opraveno, nevydáno | Uložení kartičky se zapíše před obnovením balíčku; když obnovení selže, Uložit zůstane aktivní a druhé kliknutí kartičku znovu upraví a znovu vynuluje plán. | Použít vzor opakování jen čtení po zápisu. |
+| S27-05 | P3 | Opraveno, nevydáno | MCP zkracuje možnosti odpovědí na 300 znaků, ačkoli zadávání povoluje 500, takže různé možnosti mohou vypadat stejně. | Vracet celé možnosti v rámci rozpočtu odpovědi; zvážit vyhledání otázky podle ID. |
+| S27-06 | P3 | Opraveno, nevydáno | Parser poznámek stále přijímá starší písmeno odpovědi zvolené modelem a potichu zkracuje příliš dlouhá témata. | Vyžadovat aktuální tvar; příliš dlouhá témata hlásit jako chyby validace. |
+| S27-07 | P3 | Opraveno, nevydáno | Když se pracovní vlákno generování nespustí, panel zůstane zaneprázdněný a blokuje změny nastavení AI i obnovu. | Zachytit selhání spuštění, vyčistit úlohu a zobrazit chybu. |
+
+### Řešení · větev `fix/review-s27`
+
+Všech sedm bylo opraveno s regresním pokrytím: `tests/test_review_s27.py` (S27-02, S27-03, S27-05), `tests/test_note_generation.py` (S27-06), `tests/test_mcp_server.py` (přesné vyhledání) a GUI kontroly v `check_note_generation.py` (S27-01, S27-07), `check_flashcards.py` (S27-04) a `check_practice.py` (S27-02 v UI). Vrácení každé opravy způsobilo selhání jejího testu (11 z 11 mutantů zachyceno). Linuxový kontejner: 392 jednotkových testů (dvě přeskočené kvůli platformě) a všech 26 GUI skriptů prošlo.

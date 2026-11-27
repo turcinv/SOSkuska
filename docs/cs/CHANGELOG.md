@@ -2,6 +2,10 @@
 
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
+## Nevydáno
+
+- Opravy z revize repozitáře 27. listopadu (S27): AI generování nikdy neodešle poznámky na server nebo model, který panel neukázal (S27-01), a zotaví se, když se jeho pracovní vlákno nespustí (S27-07); odeslání nebo zahození testu, jehož odpovědi změnilo jiné okno, test ponechá a zeptá se znovu (S27-02); potvrzení smazání předmětu a balíčku odhalí i náhrady se stejným počtem a úpravy (S27-03); uložení kartičky, po kterém selže obnovení balíčku, opakuje jen obnovení (S27-04); server MCP vrací celé možnosti odpovědí a umí vyhledat jednu přesnou otázku (S27-05); návrhy AI musí používat aktuální formát odpovědí a hlásí příliš dlouhá témata (S27-06). Schéma zůstává 10.
+
 ## 0.31.1 — 2026-11-27
 
 - Opraveno: požadavek AI Tutora, vysvětlení nebo AI generování se mohl asi na 4 sekundy zaseknout, když se garbage collector Pythonu náhodou spustil ve vlákně požadavku a uklízel tam objekty rozhraní (což na macOS může i shodit Tk). Úklid nyní běží jen ve vlákně rozhraní. Nestabilní čekání na Tutora v `check_question_explanation.py` bylo právě toto zaseknutí; nyní má regresní kontrolu a výpis časů.

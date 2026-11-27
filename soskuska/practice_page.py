@@ -8,7 +8,7 @@ import customtkinter as ctk
 from content import DIFFICULTIES
 from question_explanation import MODES, read_prompt
 from study_time import display_time
-from practice import MissingPracticeError, expired, seconds_left, utc_now
+from practice import MissingPracticeError, PracticeChangedError, expired, seconds_left, utc_now
 
 
 class PracticePage(ctk.CTkFrame):
@@ -22,6 +22,8 @@ class PracticePage(ctk.CTkFrame):
         self.subject_ids = {}
         self.topic_ids = {"All topics": "all", "No topic": None}
         self.pending_action = None
+        self.pending_answers = None
+        self.finish_expected = None
         self.result_id = None
         self.explanation_identity = None
         self.explanation_panel = None
@@ -371,6 +373,7 @@ class PracticePage(ctk.CTkFrame):
         self.items = items
         self.active_id = attempt["id"]
         self.finishing = False
+        self.finish_expected = None
         self.setup.grid_remove()
         self.results.grid_remove()
         self.cancel_action()
@@ -466,6 +469,8 @@ class PracticePage(ctk.CTkFrame):
         if self.active_id is None or self.finishing:
             return
         self.pending_action = action
+        # The answers this confirmation describes; storage refuses if they change.
+        self.pending_answers = tuple(q["selected_option"] for q in self.items)
         unanswered = len(self.items) - sum(q["selected_option"] is not None for q in self.items)
         text = "Discard the unfinished test and its answers? This cannot be undone." if action == "discard" else f"Submit this test? {unanswered} questions are unanswered and will count as incorrect. Answers cannot be changed after submission."
         self.confirm_text.configure(text=tr(self.app,text))
@@ -474,14 +479,15 @@ class PracticePage(ctk.CTkFrame):
 
     def cancel_action(self):
         self.pending_action = None
+        self.pending_answers = None
         self.confirm.grid_remove()
 
     def confirm_action(self):
         if self.pending_action == "finish":
-            self.finish()
+            self.finish(expected_answers=self.pending_answers)
         elif self.pending_action == "discard":
             try:
-                if not self.app.store.discard_practice(self.active_id):
+                if not self.app.store.discard_practice(self.active_id, expected_answers=self.pending_answers):
                     self.finish()  # The deadline saved this attempt instead.
                     return
                 self.active_id = None
@@ -490,8 +496,18 @@ class PracticePage(ctk.CTkFrame):
                 self.show_config()
             except MissingPracticeError:
                 self.recover_missing_attempt()
+            except PracticeChangedError as exc:
+                self.reload_changed_attempt(exc)
             except (ValueError, sqlite3.Error) as exc:
                 self.error(exc)
+
+    def reload_changed_attempt(self, exc):
+        """Keep the test, show its current answers and require a new confirmation."""
+        self.finishing = False
+        self.finish_expected = None
+        self.cancel_action()
+        self.load()
+        self.status.configure(text=tr(self.app, str(exc)))
 
     def recover_missing_attempt(self):
         # Missing data is terminal, unlike a locked/failed read. Stop timer
@@ -509,16 +525,22 @@ class PracticePage(ctk.CTkFrame):
         if self.show_config():
             self.status.configure(text=tr(self.app, 'This test was discarded in another window. Practice setup refreshed.'))
 
-    def finish(self):
+    def finish(self, expected_answers=None):
         if self.active_id is None:
             return
+        if expected_answers is not None:
+            # Automatic retries of a confirmed submit keep checking the confirmed answers.
+            self.finish_expected = expected_answers
         self.finishing = True
         self.set_controls(False)
         try:
-            self.app.store.complete_practice(self.active_id)
+            self.app.store.complete_practice(self.active_id, expected_answers=self.finish_expected)
+            self.finish_expected = None
             self.render_result(self.active_id)
         except MissingPracticeError:
             self.recover_missing_attempt()
+        except PracticeChangedError as exc:
+            self.reload_changed_attempt(exc)
         except (ValueError, sqlite3.Error) as exc:
             self.status.configure(text=tr(self.app,tr(self.app, str(exc)) if isinstance(exc, ValueError) else tr(self.app, 'Could not finish or load the result. Saved answers are kept; retrying automatically.')))
 
