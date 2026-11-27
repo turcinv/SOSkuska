@@ -554,7 +554,7 @@ class Dashboard(ctk.CTk):
             self.help_origin = previous
         self.current_page = name
         # Before any fallible page read, so a failed refresh never leaves the old page selected.
-        self.update_sidebar_selection("My Subjects" if name == "Question Bank" else name)
+        self.update_sidebar_selection(name)
         self.question_bank.grid_remove()
         self.practice_page.grid_remove()
         self.flashcard_page.grid_remove()
@@ -606,7 +606,6 @@ class Dashboard(ctk.CTk):
             self.content.grid()
             self.refresh_data()
         self.scroll._parent_canvas.yview_moveto(0)
-        self.update_sidebar_selection(name)
 
     def open_question_bank(self, subject_id):
         if self.question_bank.importer.saving or self.flashcard_page.importer.saving:
@@ -731,10 +730,12 @@ class Dashboard(ctk.CTk):
 
     def staged_work_notice(self):
         """Describe staged work that opening Help will cancel, or None."""
-        importing = any(panel.preview is not None or panel.process is not None
+        # Only a preview (or a file still being read for one); template exports are not previews.
+        importing = any(panel.preview is not None or (panel.process is not None and panel.kind == 'parse')
                         for panel in (self.question_bank.importer, self.flashcard_page.importer))
         backups = self.settings_page.backups
-        choosing = backups.pending is not None or backups.kind == 'validate'
+        # A validator already cancelled by earlier navigation is only draining; do not warn again.
+        choosing = backups.pending is not None or (backups.kind == 'validate' and not backups.validation_cancelled)
         if importing and choosing:
             return tr(self, 'Opening Help closed the CSV import preview and the chosen backup. Nothing was imported or restored; choose the files again when you go back.')
         if importing:
@@ -747,8 +748,11 @@ class Dashboard(ctk.CTk):
         """Return to the page Help was opened from through the normal, reloading path."""
         if self.current_page != "Help" or self.data_restoring:
             return
-        if self.help_origin == "Question Bank" and self.question_bank.subject_id is not None:
-            self.open_question_bank(self.question_bank.subject_id)  # Rechecks that the subject still exists.
+        if self.help_origin == "Question Bank":
+            if self.question_bank.subject_id is not None:
+                self.open_question_bank(self.question_bank.subject_id)  # Rechecks that the subject still exists.
+            else:
+                self.navigate("My Subjects")
         elif self.help_origin in ("Dashboard", "My Subjects", "Practice Tests", "Flashcards", "Statistics", "AI Tutor", "Settings"):
             self.navigate(self.help_origin)
 

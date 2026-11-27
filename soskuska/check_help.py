@@ -84,6 +84,28 @@ def overlay_checks(app, page, viewport):
     assert app.current_page == 'Flashcards'
     app.open_help(); app.update()
     assert page.status.cget('text') == page.intro and page.status.cget('text_color') == C['secondary']
+    # Notices name only real staged work: not a template export, not an already-cancelled validator.
+    importer, backups = app.flashcard_page.importer, app.settings_page.backups
+    saved = (importer.process, importer.kind, backups.kind, backups.validation_cancelled)
+    try:
+        importer.process, importer.kind = object(), 'template'
+        assert app.staged_work_notice() is None
+        importer.kind = 'parse'
+        assert app.staged_work_notice() == notice
+        importer.process, importer.kind = None, None
+        backups.kind, backups.validation_cancelled = 'validate', True
+        assert app.staged_work_notice() is None
+        backups.validation_cancelled = False
+        assert app.staged_work_notice() == app.translator.text(
+            'Opening Help cancelled the chosen backup. Nothing was restored; choose it again in Settings.')
+    finally:
+        importer.process, importer.kind, backups.kind, backups.validation_cancelled = saved
+    # A question bank that had already lost its subject goes Back to My Subjects.
+    app.open_question_bank(app.store.subjects()[0]['id']); app.open_help()
+    kept = app.question_bank.subject_id; app.question_bank.subject_id = None
+    page.back_button.invoke(); app.update()
+    assert app.current_page == 'My Subjects', app.current_page
+    app.question_bank.subject_id = kept
     # From a question bank whose subject another window deleted, Back lands safely on My Subjects.
     with closing(Store(app.store.path)) as other:
         doomed = other.create_subject('Deleted elsewhere')
