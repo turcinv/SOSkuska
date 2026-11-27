@@ -2,6 +2,10 @@
 
 [English](../CURRENT_ARCHITECTURE.md) · [Čeština](CURRENT_ARCHITECTURE.md) · [Slovenčina](../sk/CURRENT_ARCHITECTURE.md) · [Русский](../ru/CURRENT_ARCHITECTURE.md)
 
+## Nevydáno — nápověda v aplikaci
+
+`help_content.py` (bez Tk, bez sítě) načítá a ověřuje `i18n/help-<kód>.json`, přiřazuje stránkám témata (`PAGE_TOPICS`, včetně Question Bank) a hledá všechna slova bez ohledu na velikost písmen a diakritiku. `help_page.py` vykresluje tlačítka témat a článek; `Dashboard.navigate('Help')` jej vytvoří při prvním použití (start má v CI rozpočet) a předá předchozí stránku jako kontext. Postranní panel má Nastavení a tlačítko Nápovědy jen s ikonou v jednom řádku, protože při 1024 × 700 nemá volnou výšku; ve sbaleném stavu je Nápověda pod Nastavením. F1, Aqua `<Command-question>` a `::tk::mac::ShowHelp` volají `open_help`. `DashboardScrollFrame.native_pixels` převádí logické velikosti pro `minsize` mřížky, které CTk neškáluje. Nápověda nečte databázi a nic nezapisuje. [Návod](IN_APP_HELP.md). Schéma zůstává 10.
+
 ## v0.31.2
 
 Opravy z revize 27. listopadu (S27, [záznam](REVIEW_FINDINGS.md)). `Store.complete_practice`/`discard_practice` přijímají `expected_answers` a pod `BEGIN IMMEDIATE` vyvolají `PracticeChangedError`, když jiné okno změnilo potvrzené odpovědi; stavy smazání předmětu a balíčku končí otiskem podřízených záznamů. AI generování odmítne cíl, který panel neukázal, a přežije selhání spuštění pracovního vlákna; uložení kartičky opakuje jen načtení balíčku. Server MCP vrací celé otázky a kartičky, přijímá `question_id` a vrací `version` s klíčem pro každý proces. Parser poznámek vyžaduje `correct_answer` + `wrong_answers`. Schéma zůstává 10.

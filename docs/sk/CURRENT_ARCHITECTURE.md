@@ -2,6 +2,10 @@
 
 [English](../CURRENT_ARCHITECTURE.md) · [Čeština](../cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](CURRENT_ARCHITECTURE.md) · [Русский](../ru/CURRENT_ARCHITECTURE.md)
 
+## Nevydané — pomocník v aplikácii
+
+`help_content.py` (bez Tk, bez siete) načítava a overuje `i18n/help-<kód>.json`, priraďuje stránkam témy (`PAGE_TOPICS`, vrátane Question Bank) a hľadá všetky slová bez ohľadu na veľkosť písmen a diakritiku. `help_page.py` vykresľuje tlačidlá tém a článok; `Dashboard.navigate('Help')` ho vytvorí pri prvom použití (štart má v CI rozpočet) a odovzdá predchádzajúcu stránku ako kontext. Bočný panel má Nastavenia a tlačidlo Pomocníka len s ikonou v jednom riadku, pretože pri 1024 × 700 nemá voľnú výšku; v zbalenom stave je Pomocník pod Nastaveniami. F1, Aqua `<Command-question>` a `::tk::mac::ShowHelp` volajú `open_help`. `DashboardScrollFrame.native_pixels` prevádza logické veľkosti pre `minsize` mriežky, ktoré CTk neškáluje. Pomocník nečíta databázu a nič nezapisuje. [Návod](IN_APP_HELP.md). Schéma zostáva 10.
+
 ## v0.31.2
 
 Opravy z revízie 27. novembra (S27, [záznam](REVIEW_FINDINGS.md)). `Store.complete_practice`/`discard_practice` prijímajú `expected_answers` a pod `BEGIN IMMEDIATE` vyvolajú `PracticeChangedError`, keď iné okno zmenilo potvrdené odpovede; stavy zmazania predmetu a balíčka končia odtlačkom podriadených záznamov. AI generovanie odmietne cieľ, ktorý panel neukázal, a prežije zlyhanie spustenia pracovného vlákna; uloženie kartičky opakuje len načítanie balíčka. Server MCP vracia celé otázky a kartičky, prijíma `question_id` a vracia `version` s kľúčom pre každý proces. Parser poznámok vyžaduje `correct_answer` + `wrong_answers`. Schéma zostáva 10.

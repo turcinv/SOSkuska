@@ -53,7 +53,7 @@ Open **My Subjects → Questions** to author questions. Questions require four d
 
 For **Practice Tests**, create a subject and questions first. Choose a topic, difficulty and 1–100 questions. Time limits are 5, 10, 15, 30 or 60 minutes, or Untimed. Answers and position save as you go. Only one attempt may be unfinished. Resume survives restart; deadlines keep running while away. Finish confirms submission; unanswered questions count incorrect. Correct answers appear only after completion. Discard confirms removal of an unfinished attempt. History provides all completed results in pages of 20, with saved subject-name and local-date filters. Content is snapshotted at start, so later edits/deletions do not change results. Practice does not add invented focus time.
 
-Feature guides: [Flashcards](docs/FLASHCARDS.md) · [Statistics](docs/STATISTICS.md) · [AI Tutor](docs/AI_TUTOR.md) · [AI drafts from notes](docs/AI_NOTE_GENERATION.md) · [Read-only MCP server](docs/MCP_SERVER.md) · [Settings](docs/SETTINGS.md).
+Feature guides: [Flashcards](docs/FLASHCARDS.md) · [Statistics](docs/STATISTICS.md) · [AI Tutor](docs/AI_TUTOR.md) · [AI drafts from notes](docs/AI_NOTE_GENERATION.md) · [In-app Help](docs/IN_APP_HELP.md) · [Read-only MCP server](docs/MCP_SERVER.md) · [Settings](docs/SETTINGS.md).
 
 ## Documentation
 
@@ -102,6 +102,10 @@ AI Tutor now saves conversations locally, including the original server/model an
 ## AI drafts from notes
 
 In a flashcard deck or a subject's question bank, choose **Generate with AI**, paste your notes and press Generate. The saved Ollama model drafts flashcards or multiple-choice questions; review them, untick anything wrong and save the selection in one step. Notes are sent only when you press Generate and are not stored. Released in v0.30.0; schema remains 10. [Generate flashcards and questions from notes](docs/AI_NOTE_GENERATION.md).
+
+## In-app Help
+
+Select the **?** button beside Settings in the sidebar, or press F1 (Cmd+? on a Mac), for short offline guides to every page in your interface language. Help opens on the topic for the page you were using and has its own search. [In-app Help](docs/IN_APP_HELP.md).
 
 ## Read-only MCP server
 

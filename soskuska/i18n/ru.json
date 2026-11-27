@@ -807,5 +807,17 @@
   "This test changed in another window. Its current answers are shown; confirm again to continue.": "Этот тест изменён в другом окне. Показаны его текущие ответы; подтвердите снова, чтобы продолжить.",
   "Card saved. Refresh deck to load saved content; do not save it again.": "Карточка сохранена. Обновите колоду, чтобы загрузить сохранённое содержимое; не сохраняйте её повторно.",
   "Expected correct_answer and three wrong_answers.": "Ожидались correct_answer и три wrong_answers.",
-  "This test changed in another window and could not be reloaded. Your test is kept; open Practice Tests again to continue.": "Этот тест изменён в другом окне, и его не удалось загрузить заново. Тест сохранён; чтобы продолжить, снова откройте «Пробные тесты»."
+  "This test changed in another window and could not be reloaded. Your test is kept; open Practice Tests again to continue.": "Этот тест изменён в другом окне, и его не удалось загрузить заново. Тест сохранён; чтобы продолжить, снова откройте «Пробные тесты».",
+  "Help": "Справка",
+  "Short guides to every part of SOSkúška. Help works offline and never changes your data.": "Короткие руководства по всем разделам SOSkúška. Справка работает офлайн и никогда не изменяет ваши данные.",
+  "Search help…": "Поиск по справке…",
+  "Help could not be loaded. Reinstall or update SOSkúška to restore it.": "Не удалось загрузить справку. Переустановите или обновите SOSkúška, чтобы восстановить её.",
+  "No help topics match your search. Try another word.": "По вашему запросу ничего не найдено. Попробуйте другое слово.",
+  "{v0} of {v1} help topics match.": "Найдено разделов справки: {v0} из {v1}.",
+  "Open {v0}": "Открыть: {v0}",
+  "See also": "См. также",
+  "← Back to {v0}": "← Назад: {v0}",
+  "Opening Help closed the CSV import preview and the chosen backup. Nothing was imported or restored; choose the files again when you go back.": "При открытии справки закрылись предпросмотр импорта CSV и выбранная резервная копия. Ничего не импортировано и не восстановлено; после возврата выберите файлы снова.",
+  "Opening Help closed the CSV import preview. Nothing was imported; choose the file again when you go back.": "При открытии справки закрылся предпросмотр импорта CSV. Ничего не импортировано; после возврата выберите файл снова.",
+  "Opening Help cancelled the chosen backup. Nothing was restored; choose it again in Settings.": "При открытии справки выбор резервной копии отменён. Ничего не восстановлено; выберите её снова в настройках."
 }

@@ -30,6 +30,11 @@ def nav_icon(name, active=False):
         line([(12,2),(14,9),(21,12),(14,15),(12,22),(10,15),(3,12),(10,9),(12,2)])
     elif name=='Statistics':
         line([(4,20),(4,13)]);line([(12,20),(12,5)]);line([(20,20),(20,9)])
+    elif name=='Help':
+        draw.ellipse((9,9,63,63),outline=color,width=4)
+        draw.arc((27,18,45,36),start=180,end=450,fill=color,width=4)
+        line([(12,12),(12,14.5)])
+        draw.ellipse((33,46,39,52),fill=color)
     else:
         draw.ellipse((23,23,49,49),outline=color,width=4)
         for angle in range(0,360,45):

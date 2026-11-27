@@ -2,6 +2,10 @@
 
 [English](CURRENT_ARCHITECTURE.md) · [Čeština](cs/CURRENT_ARCHITECTURE.md) · [Slovenčina](sk/CURRENT_ARCHITECTURE.md) · [Русский](ru/CURRENT_ARCHITECTURE.md)
 
+## Unreleased — in-app Help
+
+`help_content.py` (no Tk, no network) loads and validates `i18n/help-<code>.json`, maps pages to topics (`PAGE_TOPICS`, including Question Bank) and implements accent/case-folded all-words search. `help_page.py` renders topic buttons and the article; `Dashboard.navigate('Help')` builds it on first use (startup is budgeted in CI) and passes the previous page as context. The sidebar places Settings and an icon-only Help button in one row because the 1024 × 700 sidebar has no spare height; collapsed, Help stacks below Settings. F1, Aqua `<Command-question>` and `::tk::mac::ShowHelp` call `open_help`. `DashboardScrollFrame.native_pixels` converts logical sizes for grid `minsize`, which CTk does not scale. Help reads no database and writes nothing. [Guide](IN_APP_HELP.md). Schema remains 10.
+
 ## v0.31.2
 
 Fixes for the 27 November review (S27, [record](REVIEW_FINDINGS.md)). `Store.complete_practice`/`discard_practice` accept `expected_answers` and raise `PracticeChangedError` under `BEGIN IMMEDIATE` when another window changed the confirmed answers; subject and deck deletion states end with a fingerprint of the child rows. AI drafting refuses a destination the panel did not show and survives a worker start failure; card saves retry only the deck read. The MCP server returns whole questions and cards, accepts `question_id` and returns a per-process keyed `version`. The notes parser requires `correct_answer` + `wrong_answers`. Schema remains 10.

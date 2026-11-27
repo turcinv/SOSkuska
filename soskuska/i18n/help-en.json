@@ -1,0 +1,302 @@
+{
+  "topics": [
+    {
+      "id": "getting-started",
+      "title": "Getting started",
+      "summary": "SOSkúška helps you prepare for exams on your own computer. Everything works offline; AI features are optional.",
+      "page": "My Subjects",
+      "blocks": [
+        {"heading": "Your first ten minutes"},
+        {"steps": [
+          "Open **My Subjects**, choose **New subject**, enter a name and, optionally, an exam date in YYYY-MM-DD format, then choose **Save subject**.",
+          "Choose **Questions** on the subject to write multiple-choice questions, or open **Flashcards** and create a deck for it.",
+          "On the **Dashboard**, pick the subject and choose **Start Studying** to run a focus session.",
+          "Check yourself in **Practice Tests**, then see your progress in **Statistics**."
+        ]},
+        {"heading": "Good to know"},
+        {"bullets": [
+          "A new installation is empty. SOSkúška never adds sample subjects or invented statistics.",
+          "Your data is saved in a file on this computer as soon as you save a form or finish a session.",
+          "Press F1 on any page (Cmd+? on a Mac) to open help for that page."
+        ]}
+      ],
+      "related": ["dashboard", "subjects", "privacy"]
+    },
+    {
+      "id": "dashboard",
+      "title": "Dashboard and focus sessions",
+      "summary": "Time your study with a focus timer and keep an eye on your day, streak and upcoming exams.",
+      "page": "Dashboard",
+      "blocks": [
+        {"heading": "Run a focus session"},
+        {"steps": [
+          "Choose a subject in the Focus room. A session always belongs to one subject.",
+          "Choose **Start Studying**. The timer counts down from your focus duration (15 minutes unless you change it in Settings).",
+          "Use **Pause** and **Resume** for breaks.",
+          "Choose **Finish** to save the time you actually studied. Reaching the target and closing the window normally also save it."
+        ]},
+        {"heading": "What the Dashboard shows"},
+        {"bullets": [
+          "Total study time, study sessions, your current streak of study days and the number of subjects.",
+          "Your **Daily goal** progress, a small checklist (**Review a subject** is ticked by you; **Complete a focus session** ticks itself) and a calendar with exam dates.",
+          "Upcoming exams and recent study sessions. The subject search filters only the cards on this page."
+        ]},
+        {"heading": "If the app closed during a session"},
+        {"text": "The timer saves a checkpoint about every five seconds. After a crash, the Dashboard offers **Recover paused** (continue from the checkpoint, paused) or **Discard checkpoint** (needs a second click). Time while the app was closed is never counted."},
+        {"text": "If saving fails, the timer pauses and the sidebar shows **Focus needs saving**. Choose **Finish** again to retry; do not force-quit the app."}
+      ],
+      "related": ["subjects", "statistics", "troubleshooting"]
+    },
+    {
+      "id": "subjects",
+      "title": "Subjects and exam dates",
+      "summary": "Subjects organise everything else: focus time, questions, decks and practice tests.",
+      "page": "My Subjects",
+      "blocks": [
+        {"steps": [
+          "Open **My Subjects** and choose **New subject**.",
+          "Enter a unique name, an optional description and an optional exam date (YYYY-MM-DD).",
+          "Choose **Save subject**. Use **Edit** later to change it."
+        ]},
+        {"bullets": [
+          "Exam dates appear in the Dashboard calendar and in Upcoming exams.",
+          "**Delete** asks for confirmation first. It removes the subject's topics and questions, but saved study time, completed practice tests and flashcard decks are kept.",
+          "If another window changes the subject while you confirm, the warning is refreshed and you confirm again.",
+          "A subject cannot be deleted while a focus session for it is open."
+        ]}
+      ],
+      "related": ["questions", "flashcards", "dashboard"]
+    },
+    {
+      "id": "questions",
+      "title": "Question bank",
+      "summary": "Write your own multiple-choice questions, grouped by optional topics.",
+      "page": "My Subjects",
+      "blocks": [
+        {"text": "In **My Subjects**, choose **Questions** on a subject to open its question bank."},
+        {"bullets": [
+          "**New topic** creates a topic. Deleting a topic moves its questions to No topic.",
+          "**New question** needs a question text, four different answers A–D, exactly one correct answer and a difficulty (Easy, Medium or Hard). An explanation is optional.",
+          "Search looks through question text; filters narrow by topic and difficulty. The list shows 50 questions per page.",
+          "Correct answers are visible here because this is where you write them.",
+          "Your unsaved text is kept if saving fails or another window changed the same question."
+        ]},
+        {"text": "You can also add many questions at once with **Import CSV** or draft them from your notes with **Generate with AI**."}
+      ],
+      "related": ["csv-import", "ai-drafts", "practice"]
+    },
+    {
+      "id": "practice",
+      "title": "Practice tests",
+      "summary": "Test yourself with random questions from your question bank.",
+      "page": "Practice Tests",
+      "blocks": [
+        {"heading": "Start a test"},
+        {"steps": [
+          "Choose a subject, a topic (or all topics) and a difficulty.",
+          "Choose how many questions (1–100) and a time limit: **Untimed** or 5 to 60 minutes.",
+          "Choose **Start test**. Questions are picked at random without repeats."
+        ]},
+        {"heading": "During the test"},
+        {"bullets": [
+          "Every answer is saved immediately. Use **Previous**, **Next** and **Clear answer** to move around.",
+          "Only one test can be unfinished. If you leave or close the app, **Resume test** brings it back; a timed test keeps running while you are away.",
+          "**Finish test** asks for confirmation. Unanswered questions count as incorrect.",
+          "**Discard test** deletes the unfinished attempt after confirmation."
+        ]},
+        {"heading": "Results and history"},
+        {"text": "After finishing, you see your score, the correct answers and explanations. **Completed tests** lists all finished tests, 20 per page, with filters by subject and date; **View result** reopens one. Results never change when you later edit or delete questions."},
+        {"text": "On a result, **Explain this question** can prepare a question for the AI Tutor in one of four study modes: **Explain answer**, **Explain simply**, **Give me a hint** or **Quiz me**."}
+      ],
+      "related": ["questions", "statistics", "ai-tutor"]
+    },
+    {
+      "id": "flashcards",
+      "title": "Flashcards and review",
+      "summary": "Remember facts with decks of cards that come back when they are due.",
+      "page": "Flashcards",
+      "blocks": [
+        {"steps": [
+          "Open **Flashcards** and choose **New deck**. Each deck belongs to one subject.",
+          "Choose **Open deck**, then **New card**. Write the front (question) and the back (answer).",
+          "Choose **Study due** to review cards that are due. Try to recall the answer, then choose **Reveal answer**.",
+          "Rate yourself honestly: **Again**, **Hard**, **Good** or **Easy**."
+        ]},
+        {"heading": "When cards come back"},
+        {"bullets": [
+          "Again: in 10 minutes. Hard: in 1 hour for new cards, otherwise a slightly longer interval.",
+          "Good: in 1 day for new cards, otherwise about 2.5 times the last interval. Easy: in 4 days, otherwise about 3.5 times. The maximum is one year.",
+          "Editing a card makes it due again now. Your earlier ratings are kept in **Review history**.",
+          "Ratings are your own judgement of how well you remembered, not a measured score."
+        ]}
+      ],
+      "related": ["csv-import", "ai-drafts", "statistics"]
+    },
+    {
+      "id": "statistics",
+      "title": "Statistics",
+      "summary": "See what you have done in the last 7 days, the last 30 days or all time.",
+      "page": "Statistics",
+      "blocks": [
+        {"bullets": [
+          "Focus: saved study time and sessions, per subject and per day. Running or unsaved time is not included.",
+          "Practice tests: accuracy over completed tests, where every question counts the same and unanswered questions count as incorrect.",
+          "Flashcards: how many times you chose Again, Hard, Good and Easy.",
+          "Choose **Refresh** or reopen the page to update the numbers."
+        ]},
+        {"text": "These numbers describe your saved activity; they do not measure how well you know a subject. Deleting a subject, deck or card does not remove its history from Statistics."}
+      ],
+      "related": ["dashboard", "practice", "flashcards"]
+    },
+    {
+      "id": "ai-tutor",
+      "title": "AI Tutor (optional)",
+      "summary": "Chat with a model running in Ollama on your computer. Nothing is sent until you choose to.",
+      "page": "AI Tutor",
+      "blocks": [
+        {"heading": "First use"},
+        {"steps": [
+          "Install Ollama from ollama.com and download a model, for example by running: ollama pull llama3.2:3b",
+          "Open **AI Tutor** and choose **Connect / refresh**. The default server is http://127.0.0.1:11434 on your own computer.",
+          "Choose a model and an answer language, type your question and choose **Send**. **Stop** ends a reply early."
+        ]},
+        {"heading": "Privacy and limits"},
+        {"bullets": [
+          "Only **Connect / refresh** and **Send** contact the server. Your subjects, questions and results are never attached automatically.",
+          "Chats are saved on this computer and included in backups. **New chat** starts a fresh conversation.",
+          "If a reply could not be saved, use **Retry save reply** or **Discard unsaved**.",
+          "AI answers can be wrong. Check them against your study materials."
+        ]}
+      ],
+      "related": ["ai-drafts", "settings", "troubleshooting"]
+    },
+    {
+      "id": "ai-drafts",
+      "title": "AI drafts from notes",
+      "summary": "Turn pasted notes into draft flashcards or questions, then keep only the good ones.",
+      "page": "Flashcards",
+      "blocks": [
+        {"steps": [
+          "Save your Ollama server and preferred model in **Settings** (or use **Use Tutor choices** there and save).",
+          "Open a deck in **Flashcards**, or a subject's question bank, and choose **Generate with AI**.",
+          "Paste your notes (up to 12,000 characters), choose how many items you want and choose **Generate**. Only now are the notes sent to the server shown in the panel.",
+          "Read every draft. Untick anything wrong, then choose **Save selected**."
+        ]},
+        {"bullets": [
+          "Drafts marked ⚠ were not clearly found in your notes and start unticked. Tick them only after checking.",
+          "Drafts that break the usual rules, and repeated drafts, are listed and skipped.",
+          "Everything you selected is saved together, or nothing is saved and the problem is listed.",
+          "Your notes are not stored. Opening another deck or subject discards unsaved drafts."
+        ]}
+      ],
+      "related": ["ai-tutor", "flashcards", "questions"]
+    },
+    {
+      "id": "csv-import",
+      "title": "Importing from CSV",
+      "summary": "Add many questions or flashcards at once from a spreadsheet saved as CSV.",
+      "page": null,
+      "blocks": [
+        {"steps": [
+          "Open a subject's question bank or a flashcard deck and choose **Import CSV**.",
+          "Choose **Save CSV template** to get an empty file with the right columns. Fill it in a spreadsheet and save it as comma-separated UTF-8 CSV.",
+          "Choose **Choose CSV…**. Check the preview with **Previous** and **Next**; nothing is saved yet.",
+          "Fix every listed problem, then choose **Import all**. All rows are saved together, or none are."
+        ]},
+        {"bullets": [
+          "Question columns: prompt, option_a, option_b, option_c, option_d, correct_option (A–D), difficulty, and optionally topic and explanation.",
+          "Flashcard columns: front and back.",
+          "Files can be up to 2 MiB and 500 records. Exact duplicates are rejected, and existing items are never changed.",
+          "If you edit the file after previewing it, choose it again."
+        ]}
+      ],
+      "related": ["questions", "flashcards", "troubleshooting"]
+    },
+    {
+      "id": "settings",
+      "title": "Settings and language",
+      "summary": "Change your focus duration, daily goal, interface language, appearance and AI choices.",
+      "page": "Settings",
+      "blocks": [
+        {"bullets": [
+          "Focus duration (1–180 minutes) applies to your next session; a running session keeps its length.",
+          "Daily goal (1–1,440 minutes) updates the Dashboard straight away.",
+          "Interface language: English, Czech, Slovak or Russian. It applies after you restart the app.",
+          "Appearance: Light, Dark or System. It applies when you save.",
+          "AI: the Ollama server, preferred model and answer language. Saving never connects to the server."
+        ]},
+        {"text": "Nothing changes until you choose **Save settings**. Unsaved changes stay while you visit other pages; **Reload** brings back the saved values after a second click."}
+      ],
+      "related": ["backups", "ai-tutor", "privacy"]
+    },
+    {
+      "id": "backups",
+      "title": "Backups and restore",
+      "summary": "Keep copies of your study data and bring them back if something goes wrong.",
+      "page": "Settings",
+      "blocks": [
+        {"heading": "Make a backup"},
+        {"bullets": [
+          "In **Settings**, choose **Create backup** and pick a new file name. Existing files are never overwritten.",
+          "For automatic copies, open **Daily local backups**, choose a folder with **Choose backup folder…**, tick **Enable daily backups** and choose **Save backup schedule**. The app makes one copy per day while it is open."
+        ]},
+        {"heading": "Restore a backup"},
+        {"steps": [
+          "Finish any focus session and practice test, and save forms you want to keep.",
+          "Choose **Choose backup…** and select a backup file. The app checks it and shows what it contains.",
+          "Choose **Confirm restore and close**. A safety copy of your current data is made first, then the app closes. Open it again to continue."
+        ]},
+        {"text": "Restoring replaces all current study data, settings and AI chats. Backups are not encrypted; keep them somewhere safe."}
+      ],
+      "related": ["settings", "privacy", "troubleshooting"]
+    },
+    {
+      "id": "privacy",
+      "title": "Your data and privacy",
+      "summary": "Your study data stays on this computer unless you choose to send something to an AI server.",
+      "page": null,
+      "blocks": [
+        {"bullets": [
+          "By default, data is stored in one SQLite file: on macOS ~/Library/Application Support/SOSkuska/dashboard.sqlite3, on Windows %LOCALAPPDATA%\\SOSkuska\\dashboard.sqlite3, on Linux $XDG_DATA_HOME/SOSkuska/dashboard.sqlite3 (usually ~/.local/share). If only an older ExamPrep folder holds your data, that file is used instead, and the --data option chooses another file.",
+          "There is no account, cloud sync or tracking. Studying, statistics, backups and this help all work offline.",
+          "The AI Tutor and AI drafts contact only the Ollama server you set, and only when you choose Connect, Send or Generate.",
+          "An optional read-only MCP server can let your own AI assistant read your study data. It is set up outside the app; see MCP_SERVER.md in the documentation."
+        ]}
+      ],
+      "related": ["backups", "ai-tutor", "settings"]
+    },
+    {
+      "id": "shortcuts",
+      "title": "Keyboard shortcuts",
+      "summary": "A few keys make moving around faster.",
+      "page": null,
+      "blocks": [
+        {"bullets": [
+          "F1, or Cmd+? on a Mac: open help for the current page.",
+          "Ctrl+K, or Cmd+K on a Mac: jump to the search field on the Dashboard, My Subjects, the question bank and Help.",
+          "Esc: clear that search, or cancel a pending discard of a saved focus checkpoint.",
+          "Enter in a practice-history date field: apply the filters.",
+          "The ‹ button at the top of the sidebar collapses it to icons; › expands it again."
+        ]}
+      ],
+      "related": ["getting-started", "dashboard"]
+    },
+    {
+      "id": "troubleshooting",
+      "title": "Troubleshooting",
+      "summary": "What to do when something does not work as expected.",
+      "page": null,
+      "blocks": [
+        {"bullets": [
+          "AI not connected: start Ollama, check the server address in Settings and choose **Connect / refresh** in the AI Tutor. If no models appear, download one in Ollama first.",
+          "A reply says the model did not return valid JSON: try again, or choose a different model.",
+          "**Focus needs saving** in the sidebar: open the Dashboard and choose **Finish** to retry. Keep the app open until it succeeds.",
+          "A CSV import is rejected: fix every listed problem in the file and choose it again. Nothing is saved until the whole file is valid.",
+          "Something changed in another window: SOSkúška keeps your draft and asks you to reload or confirm again instead of overwriting newer data.",
+          "A message says data could not be saved or loaded: your draft is kept. Retry the same action. If it keeps failing, copy any text you need, restart the app and create a backup."
+        ]}
+      ],
+      "related": ["dashboard", "ai-tutor", "backups"]
+    }
+  ]
+}

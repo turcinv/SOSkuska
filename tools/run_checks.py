@@ -32,6 +32,7 @@ GUI_CHECKS = (
     'check_report_layout.py',
     'check_data_layout.py',
     'check_note_generation.py',
+    'check_help.py',
 )
 
 
