@@ -68,3 +68,11 @@ Popisy v rovnako širokých stĺpcoch zalamuj podľa stabilnej šírky spoločn�
 - **Test so skutočným modelom odhalí, čo fixtúry nezachytia.** Model so 4 miliardami parametrov označil zlé písmeno odpovede pri 3 z 22 otázok a riadil sa pokynmi vloženými do poznámok. Nikdy nenechaj model vyberať písmeno odpovede. Poznámky ohraničuj ako dáta a úlohu zopakuj až za nimi. Návrhy so slabou oporou zobraz nezaškrtnuté, neodmietaj ich. Po každej zmene promptu alebo schémy znova spusti `tools/evaluate_ai.py`.
 - **Behy v kontajneri potrebujú `--init`.** Bez neho sa `xvfb-run` zasekne skôr, než kontrola začne. Spustenie jedného skriptu ohraničuj pomocou `timeout`.
 - **Súbežné volania nástrojov.** Volania v jednom kroku bežia v nezaručenom poradí, preto nikdy nevykonávaj zostavenie a úpravu v jednom kroku a nespoliehaj sa na výsledok. Po vykonaní úpravy kontrolu zopakuj.
+
+## 2026-11-27 · Vrstva dopytov MCP, fáza 1
+
+- **Bezokenný kód nesmie závisieť od aktuálneho priečinka.** Prázdna alebo relatívna `LOCALAPPDATA`/`XDG_DATA_HOME` predtým umiestnila databázu tam, kde proces práve začal. Hostitelia MCP spúšťajú servery odkiaľkoľvek, preto `user_database_path()` také hodnoty považuje za nenastavené.
+- **Kľúče odpovedí sa týkajú aj vyhľadávania.** Skryť `correct_option` a vysvetlenia nestačí, ak vyhľadávanie prehľadáva text vysvetlenia; zhoda by napovedala odpoveď. Vysvetlenia nechajte mimo hľadaného textu a ponechajte negatívny test.
+- **Nevnárajte čítacie transakcie.** `practice_history_page` a `statistics_report` otvárajú vlastný `BEGIN`; volajte ich mimo `_snapshot` a zdokumentujte, prečo nadväzujúce čítanie stále súhlasí.
+- **Štartovacie limity v hostovanom CI sú pod záťažou nestabilné.** Sedemsekundová sonda čerstvého procesu zlyhala v PR aj pri commite na `main` len s dokumentáciou a po zopakovaní prešla. Hláste ju ako nestabilnú s dôkazmi; netvrďte, že ju spôsobilo PR, a nezvyšujte limit kvôli zelenému výsledku.
+- **Výstup recenzenta držte krátky.** Dlhá recenzia subagenta bola odseknutá po prvom zistení; žiadajte obmedzenú záverečnú správu a pred uzavretím recenzie prečítajte celý výsledok.

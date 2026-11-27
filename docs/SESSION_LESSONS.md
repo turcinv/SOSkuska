@@ -88,3 +88,11 @@ Use a stable shared-container width to wrap labels inside equal-width columns. D
 - **Real-model testing finds what fixtures cannot.** A 4B model marked the wrong answer letter in 3 of 22 questions and followed instructions injected into notes. Never let the model choose the answer letter. Fence notes as data and repeat the task after them. Show weak-support drafts unticked rather than rejecting them. Re-run `tools/evaluate_ai.py` after any prompt or schema change.
 - **Container runs need `--init`.** Without it, `xvfb-run` hangs before the check starts. Bound single-script runs with `timeout`.
 - **Parallel tool calls.** Calls in one step run in no fixed order, so never build and edit in the same step and trust the result. Re-run after the edit has landed.
+
+## 2026-11-27 — MCP Phase 1 query layer
+
+- **Headless code must not depend on the current directory.** An empty or relative `LOCALAPPDATA`/`XDG_DATA_HOME` used to resolve the database next to wherever the process started. MCP hosts start servers anywhere, so `user_database_path()` treats such values as unset.
+- **Answer keys include search.** Hiding `correct_option` and explanations is not enough if search matches explanation text; a match would hint at the answer. Keep explanations out of the match string and keep the negative test.
+- **Do not nest read transactions.** `practice_history_page` and `statistics_report` open their own `BEGIN`; call them outside `_snapshot` and document why the follow-up read still agrees.
+- **Hosted CI startup bounds are flaky under load.** The 7-second fresh-process probe failed on PR and docs-only `main` runs and passed on rerun. Report it as flaky with evidence; never claim the PR caused it or raise the bound to get green.
+- **Keep reviewer output short.** A long subagent review was cut off after its first finding; ask reviewers for a bounded final message and read the whole result before treating a review as complete.

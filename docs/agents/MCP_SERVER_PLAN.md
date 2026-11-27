@@ -1,6 +1,6 @@
 # Read-only MCP server · implementation plan
 
-Internal plan, 27 November 2026, written against v0.30.1 (schema 10). Phase 1 (headless data path and `soskuska/study_queries.py`) is implemented and tested in `tests/test_study_queries.py`; Phases 2 and 3 are not started. Start each phase on its own branch from current `main` and follow [WORKFLOW.md](WORKFLOW.md). Read [RUNTIME.md](RUNTIME.md), [STUDY.md](STUDY.md) and [DATA_TRANSFER.md](DATA_TRANSFER.md) before touching storage or leases.
+Internal plan, 27 November 2026, written against v0.30.1 (schema 10). Phase 1 is merged into `main` (PR #76, `556ddab`) but not released; Phases 2 and 3 are not started. Start each phase on its own branch from current `main` and follow [WORKFLOW.md](WORKFLOW.md). Read [RUNTIME.md](RUNTIME.md), [STUDY.md](STUDY.md) and [DATA_TRANSFER.md](DATA_TRANSFER.md) before touching storage or leases.
 
 ## Goal
 
@@ -49,6 +49,19 @@ One PR, reviewable on its own.
    - Invalid IDs give a clear `ValueError`, not tracebacks.
    - Every function works on a `readonly=True` store and leaves the file's bytes and mtime unchanged.
 4. Docs: a short note in `CURRENT_ARCHITECTURE.md` (four languages) only if the data-path move changes documented behaviour; otherwise a code comment is enough.
+
+### Phase 1 as built (PR #76)
+
+Phase 2 should wrap these contracts rather than re-derive them:
+
+- `storage.user_database_path()` treats an empty or relative `LOCALAPPDATA`/`XDG_DATA_HOME` as unset, so the path never depends on the host's working directory.
+- Function names match the list above. Every list result has `items`, `returned`, `total` (where countable) and `truncated`; `truncated` means text was shortened or rows were left out by the ~20 KB JSON budget, while `total > returned` means the limit cut rows. Limits are clamped (`find_questions`/`due_cards`/`practice_results` ≤ 50, `upcoming` ≤ 20).
+- Invalid arguments, unknown ids and bool-as-int raise `ValueError` with a message suitable for a tool error.
+- `find_questions` search never matches explanation text, so hidden answers cannot leak through search.
+- `practice_results` reads per-topic scores just after `practice_history_page` (which opens its own transaction); the docstring explains why they agree.
+- `tests/test_study_queries.py` proves a full sweep on `Store.open_existing(readonly=True)` leaves the file's hash and mtime unchanged.
+
+Before Phase 2, deal with the hosted-CI startup flake recorded in [NEXT_STEPS](../NEXT_STEPS.md) so new CI steps do not hide behind reruns.
 
 ## Phase 2 — MCP server (optional dependency)
 

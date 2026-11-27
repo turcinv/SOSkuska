@@ -11,6 +11,7 @@ Aktuální vydání: **v0.30.1**, schéma **10**.
 - **v0.29.0:** redesign s kočičí značkou ([předání](../agents/design/cat-brand/README.md)).
 - **v0.30.0:** AI generování kartiček a otázek z poznámek ([průvodce](AI_NOTE_GENERATION.md)).
 - **v0.30.1:** opravy z prvního hodnocení se skutečným modelem ([záznam](../agents/design/ai-note-generation/EVALUATION.md)). Opravy se týkají odpovědí umísťovaných aplikací, ochrany proti vložení pokynů do poznámek, upozornění na návrhy, které se v poznámkách nenašly, a jazyka studijních režimů.
+- **Sloučeno, nevydáno:** [plán](../agents/MCP_SERVER_PLAN.md) serveru MCP jen pro čtení a jeho fáze 1, bezokenní vrstva dotazů jen pro čtení (`soskuska/study_queries.py`, PR #76). Server MCP zatím neexistuje.
 - Dřívější kroky 1–5 světlého UI jsou historické; jejich vizuální směr nahrazuje kočičí značka.
 
 ## Doporučené pořadí
@@ -24,6 +25,8 @@ Aktuální vydání: **v0.30.1**, schéma **10**.
    - Připravte krátký scénář ukázky: vytvořit předmět, vygenerovat otázky z poznámek, procvičovat, opakovat kartičky, otevřít Statistiky.
    - Obnovte snímky obrazovky z dočasných dat.
    - Údaje o identitě, kurzu, jazyku a termínu ponechte jako zástupná pole do dodání a zkontrolujte výsledné stránkování.
-4. **Úklid.** Sloučené vzdálené větve mažte jen na výslovnou žádost; ponechte `main` a značky vydání.
+4. **Stabilizovat startovní sondu GUI v hostovaném CI.** 27. listopadu `check_studio_layout.py` na strojích GitHubu překročil sedmisekundový limit čerstvého procesu, a to i u commitu na `main`, který měnil jen dokumentaci; po opakování prošel. Omezte práci při startu, nebo ho měřte způsobem, který zatížení hostovaných strojů nerozbije. Limit jen nezvyšujte.
+5. **Fáze 2 serveru MCP.** Server přes stdio s volitelnou připnutou závislostí `mcp`, testy, nastavení CI/kontejneru, uživatelský návod ve čtyřech jazycích a zaznamenaný běh se skutečným hostitelem MCP. Viz [plán](../agents/MCP_SERVER_PLAN.md).
+6. **Úklid.** Sloučené vzdálené větve mažte jen na výslovnou žádost; ponechte `main` a značky vydání.
 
 Před v1.0.0 vyřešte zjištění z přejímky přes revidovaná PR a zopakujte příslušné kontroly. Nová práce, sloučení i vydání potřebují vlastní schválení. Tato aktualizace stavu neoznačuje žádný ruční výsledek jako úspěšný.

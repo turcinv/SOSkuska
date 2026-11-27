@@ -68,3 +68,11 @@ Popisky ve stejně širokých sloupcích zalamuj podle stabilní šířky spole�
 - **Test se skutečným modelem odhalí, co fixtury nezachytí.** Model s 4 miliardami parametrů označil špatné písmeno odpovědi u 3 z 22 otázek a řídil se pokyny vloženými do poznámek. Nikdy nenech model vybírat písmeno odpovědi. Poznámky ohraň jako data a úkol zopakuj až za nimi. Návrhy se slabou oporou zobraz nezaškrtnuté, neodmítej je. Po každé změně promptu nebo schématu znovu spusť `tools/evaluate_ai.py`.
 - **Běhy v kontejneru potřebují `--init`.** Bez něj se `xvfb-run` zasekne dřív, než kontrola začne. Spuštění jednoho skriptu ohraničuj pomocí `timeout`.
 - **Souběžná volání nástrojů.** Volání v jednom kroku běží v nezaručeném pořadí, proto nikdy neprováděj sestavení a úpravu v jednom kroku a nespoléhej na výsledek. Po provedení úpravy kontrolu zopakuj.
+
+## 2026-11-27 · Vrstva dotazů MCP, fáze 1
+
+- **Bezokenní kód nesmí záviset na aktuální složce.** Prázdná nebo relativní `LOCALAPPDATA`/`XDG_DATA_HOME` dříve umístila databázi tam, kde proces zrovna začal. Hostitelé MCP spouštějí servery odkudkoli, proto `user_database_path()` takové hodnoty považuje za nenastavené.
+- **Klíče odpovědí se týkají i hledání.** Skrýt `correct_option` a vysvětlení nestačí, pokud hledání prohledává text vysvětlení; shoda by napověděla odpověď. Vysvětlení nechte mimo hledaný text a ponechte negativní test.
+- **Nevnořujte čtecí transakce.** `practice_history_page` a `statistics_report` otevírají vlastní `BEGIN`; volejte je mimo `_snapshot` a zdokumentujte, proč navazující čtení stále souhlasí.
+- **Startovní limity v hostovaném CI jsou pod zátěží nestabilní.** Sedmisekundová sonda čerstvého procesu selhala v PR i u commitu na `main` jen s dokumentací a po opakování prošla. Hlaste ji jako nestabilní s důkazy; netvrďte, že ji způsobilo PR, a nezvyšujte limit kvůli zelenému výsledku.
+- **Výstup recenzenta držte krátký.** Dlouhá recenze subagenta byla useknuta po prvním zjištění; žádejte omezenou závěrečnou zprávu a před uzavřením recenze přečtěte celý výsledek.
