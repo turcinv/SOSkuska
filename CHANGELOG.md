@@ -2,7 +2,7 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
-## Unreleased
+## 0.32.0 — 2026-11-27
 
 - In-app Help: a **?** button beside Settings in the sidebar and F1 (Cmd+? on a Mac) open offline guides to every page in English, Czech, Slovak or Russian. Help opens on the topic for the page in use, has accent-insensitive search (Ctrl/Cmd+K, Esc) and links to the page it describes. It is built on first use, reads only bundled files and never writes data. [Guide](docs/IN_APP_HELP.md). Schema remains 10.
 

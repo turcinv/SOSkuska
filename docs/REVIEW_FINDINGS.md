@@ -53,7 +53,7 @@ A62-05–A62-09 were merged through PR #62 and released in v0.26.1. Independent 
 
 ## Repository review · 27 November 2026 · Sol (codex backend)
 
-Read-only review of `main` at `b1591d7` (v0.31.2) requested from a different model family. It ran on the Kiro Crew `codex` backend, but the spawn receipt named `claude-sonnet-5.5`, so the model family is not confirmed. The report was cut off after finding 7. Each finding below was checked against the code by reading it; the reviewer's own two-Store reproductions were not re-run. Status changes only after a fix is verified.
+Read-only review of `main` at `b1591d7` (v0.31.1) requested from a different model family. It ran on the Kiro Crew `codex` backend, but the spawn receipt named `claude-sonnet-5.5`, so the model family is not confirmed. The report was cut off after finding 7. Each finding below was checked against the code by reading it; the reviewer's own two-Store reproductions were not re-run. Status changes only after a fix is verified.
 
 | ID | Priority | Status | Finding | Required behavior |
 | --- | --- | --- | --- | --- |
