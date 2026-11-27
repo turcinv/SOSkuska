@@ -1,6 +1,6 @@
 # Read-only MCP server · implementation plan
 
-Internal plan, 27 November 2026, written against v0.30.1 (schema 10). Nothing here is implemented yet. Start each phase on its own branch from current `main` and follow [WORKFLOW.md](WORKFLOW.md). Read [RUNTIME.md](RUNTIME.md), [STUDY.md](STUDY.md) and [DATA_TRANSFER.md](DATA_TRANSFER.md) before touching storage or leases.
+Internal plan, 27 November 2026, written against v0.30.1 (schema 10). Phase 1 (headless data path and `soskuska/study_queries.py`) is implemented and tested in `tests/test_study_queries.py`; Phases 2 and 3 are not started. Start each phase on its own branch from current `main` and follow [WORKFLOW.md](WORKFLOW.md). Read [RUNTIME.md](RUNTIME.md), [STUDY.md](STUDY.md) and [DATA_TRANSFER.md](DATA_TRANSFER.md) before touching storage or leases.
 
 ## Goal
 

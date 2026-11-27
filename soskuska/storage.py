@@ -1,6 +1,8 @@
 """Versioned local storage for subjects, topics, questions, focus sessions and daily tasks."""
+import os
 import random
 import sqlite3
+import sys
 import unicodedata
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -21,6 +23,20 @@ def default_database(base):
     current = base / "SOSkuska" / "dashboard.sqlite3"
     legacy = base / "ExamPrep" / "dashboard.sqlite3"
     return legacy if not current.exists() and legacy.is_file() else current
+
+
+def user_database_path():
+    """The normal per-user database the GUI opens without --data.
+
+    Lives here, not in app.py, so headless tools can find it without importing Tk.
+    """
+    if sys.platform == "win32":
+        base = Path(os.getenv("LOCALAPPDATA", Path.home() / "AppData/Local"))
+    elif sys.platform == "darwin":
+        base = Path.home() / "Library/Application Support"
+    else:
+        base = Path(os.getenv("XDG_DATA_HOME", Path.home() / ".local/share"))
+    return default_database(base)
 
 
 def subject_fields(name, description="", exam_date=""):

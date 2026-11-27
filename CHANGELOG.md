@@ -2,6 +2,10 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
+## Unreleased
+
+- Groundwork for a read-only MCP server (no new dependency, no GUI change): the per-user database location moved from `app.py` to `storage.user_database_path()`, and the new `soskuska/study_queries.py` gives bounded, read-only study queries with answer keys and card backs hidden by default. Schema remains 10.
+
 ## 0.30.1 — 2026-11-26
 
 - AI quality fixes from a real-model evaluation: questions get their correct answer placed by the app (no mismatched letters), notes are guarded against embedded instructions, drafts not clearly found in the notes start unticked with a warning, and study modes reply in the question language. Adds `tools/evaluate_ai.py`. Schema remains 10.

@@ -103,6 +103,7 @@ Baseline at v0.30.1: 351 unit tests (two Linux platform skips) and all 26 GUI sc
 | `check_tutor.py`, `test_tutor.py` | Loopback fake Ollama, Unicode/stream errors, Stop/TLS cancellation, context bounds, navigation, clearing and close while generating |
 | `check_settings.py`, `test_preferences.py`, `test_settings_ui.py` | Atomic/stale preference writes, migration/rollback from frozen schema 5, kept drafts, active timer target, fresh-process persistence, no auto-connection, per-server model choice |
 | `check_note_generation.py`, `test_note_generation.py` | AI drafting from notes: no request before Generate, structured payload, parsing/validation, app-placed answers, unsupported-draft warnings, atomic save, duplicates, discard/rename/Stop/close, English and Russian |
+| `test_study_queries.py` | Headless read-only study queries for the planned MCP server: per-user database path without Tk, bounded limits/truncation, hidden answers and card backs, deleted-subject history, clear errors, unchanged file on a read-only store |
 | `check_studio_layout.py`, `check_ui_languages.py` | Dashboard shell and cat-brand banner/scene, sidebar decoration fit, four languages at 100/150% startup scaling |
 
 Other scripts in `tools/run_checks.py` cover focus recovery, backups and schedules, CSV imports, Tutor history, question explanations and study modes, appearance and responsive layouts.

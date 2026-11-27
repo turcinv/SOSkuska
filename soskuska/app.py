@@ -2,7 +2,6 @@
 from localization_widgets import LocalizedOptionMenu
 from localization import tr, Translator
 import argparse
-import os
 import platform
 import sqlite3
 import sys
@@ -22,7 +21,7 @@ if sys.platform == "darwin" and tkinter.TkVersion < 8.6:
     )
 
 import customtkinter as ctk
-from storage import Store, default_database
+from storage import Store, user_database_path
 from scrolling import DashboardScrollFrame
 from subjects import SubjectPage
 from question_bank import QuestionBankPage
@@ -51,16 +50,6 @@ NAV = [("Dashboard", "▦"), ("My Subjects", "▤"), ("Flashcards", "▱"),
        ("Practice Tests", "☑"), ("AI Tutor", "◇"), ("Statistics", "▥")]
 
 
-def data_path():
-    if sys.platform == "win32":
-        base = Path(os.getenv("LOCALAPPDATA", Path.home() / "AppData/Local"))
-    elif sys.platform == "darwin":
-        base = Path.home() / "Library/Application Support"
-    else:
-        base = Path(os.getenv("XDG_DATA_HOME", Path.home() / ".local/share"))
-    return default_database(base)
-
-
 class Dashboard(ctk.CTk):
     def __init__(self, database=None):
         ctk.set_appearance_mode("Dark")  # Disable implicit OS polling before constructing Tk.
@@ -73,7 +62,7 @@ class Dashboard(ctk.CTk):
         self.family = "Segoe UI" if platform.system() == "Windows" else "Helvetica" if sys.platform == "darwin" else "Noto Sans"
         # Editorial serif for the wordmark only; Tk falls back if it is missing.
         self.serif_family = "Georgia" if sys.platform in ("darwin", "win32") else "DejaVu Serif"
-        self.store = Store(database or data_path())
+        self.store = Store(database or user_database_path())
         self.preferences = self.store.preferences()
         apply_appearance(self.preferences["appearance_mode"])
         self.translator = Translator(self.preferences["ui_language"])
