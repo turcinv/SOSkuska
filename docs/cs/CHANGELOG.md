@@ -2,7 +2,7 @@
 
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
-## Nevydáno
+## 0.31.0 — 2026-11-27
 
 - Server MCP jen pro čtení `soskuska/mcp_server.py` (jen stdio, volitelná připnutá závislost `mcp==2.3.0` v `soskuska/requirements-mcp.txt`): osm nástrojů jen pro čtení, dva prompty a prostředek s předměty nad dotazy z fáze 1; odpovědi ve výchozím stavu skryté, `--no-answers`, přístup k databázi jen pro čtení při každém volání. Není v ZIPu pro Windows. [Návod](MCP_SERVER.md).
 - CI: kontrola rozložení Dashboardu hlídá start čerstvého procesu podle času CPU a reálného času místo měření celé sondy, která selhávala na zatížených hostovaných strojích.
