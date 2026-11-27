@@ -102,6 +102,7 @@ Základ ve v0.30.1: 351 jednotkových testů (dvě přeskočené kvůli platform
 | `check_tutor.py`, `test_tutor.py` | Fake Ollama na loopbacku, chyby Unicode/streamu, Stop/zrušení TLS, meze kontextu, navigace, vymazání a zavření při generování |
 | `check_settings.py`, `test_preferences.py`, `test_settings_ui.py` | Atomické/zastaralé zápisy předvoleb, migrace/rollback ze zmrazeného schématu 5, zachované koncepty, cíl aktivního časovače, perzistence v novém procesu, žádné automatické připojení, volba modelu podle serveru |
 | `check_note_generation.py`, `test_note_generation.py` | AI generování z poznámek: žádný požadavek před Generovat, strukturovaná data, parsování/validace, odpovědi umístěné aplikací, upozornění na nepodložené návrhy, atomické uložení, duplicity, zahození/přejmenování/Stop/zavření, angličtina a ruština |
+| `test_study_queries.py` | Bezokenní dotazy jen pro čtení pro plánovaný MCP server: cesta k uživatelské databázi bez Tk, omezené limity/zkracování, skryté odpovědi a rubové strany kartiček, historie smazaných předmětů, srozumitelné chyby, nezměněný soubor u úložiště jen pro čtení |
 | `check_studio_layout.py`, `check_ui_languages.py` | Struktura Dashboardu a banner/scéna s kočičí značkou, přizpůsobení dekorace postranního panelu, čtyři jazyky při počátečním měřítku 100/150 % |
 
 Ostatní skripty v `tools/run_checks.py` pokrývají obnovu soustředění, zálohy a plány, importy CSV, historii Tutora, vysvětlení otázek a studijní režimy, vzhled a responzivní rozložení.

@@ -2,6 +2,10 @@
 
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
+## Nevydáno
+
+- Příprava serveru MCP jen pro čtení (žádná nová závislost, žádná změna GUI): umístění uživatelské databáze se přesunulo z `app.py` do `storage.user_database_path()` a nový `soskuska/study_queries.py` poskytuje omezené studijní dotazy jen pro čtení, ve výchozím stavu bez klíčů odpovědí a rubových stran kartiček. Schéma zůstává 10.
+
 ## 0.30.1 — 2026-11-26
 
 - Opravy kvality AI podle vyhodnocení se skutečným modelem: správnou odpověď otázky umisťuje aplikace (žádná nesouhlasná písmena), poznámky jsou chráněny před vloženými pokyny, návrhy jasně nenalezené v poznámkách začínají nezaškrtnuté s varováním a studijní režimy odpovídají v jazyce otázky. Přidává `tools/evaluate_ai.py`. Schéma zůstává 10.
