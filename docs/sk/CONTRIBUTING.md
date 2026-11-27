@@ -44,7 +44,7 @@ Chybu nahlás cez šablónu v Issues: postup opakovania, očakávané/skutočné
 
 ## Priebežná integrácia (CI)
 
-CI: Python 3.12, jednotkové testy na Ubuntu, Windows a macOS, GUI skripty uvedené v `tools/run_checks.py` (26 vo v0.31.0) na Ubuntu/Xvfb a kontrola zostavenia prenosnej verzie pre Windows. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml). Kontroly nenasadzujú ani nepublikujú vydania. Pri zmene prehľadov pozri [pravidlá štatistík](STATISTICS.md); vlastné hodnotenia sa nesmú vydávať za zmerané zvládnutie učiva. Zmeny promptov alebo schémy AI znova over pomocou `tools/evaluate_ai.py` so skutočným miestnym modelom (pozri [Vývoj](DEVELOPMENT.md)).
+CI: Python 3.12, jednotkové testy na Ubuntu, Windows a macOS, GUI skripty uvedené v `tools/run_checks.py` (26 vo v0.31.1) na Ubuntu/Xvfb a kontrola zostavenia prenosnej verzie pre Windows. [Výsledky](https://github.com/turcinv/SOSkuska/actions/workflows/ci.yml). Kontroly nenasadzujú ani nepublikujú vydania. Pri zmene prehľadov pozri [pravidlá štatistík](STATISTICS.md); vlastné hodnotenia sa nesmú vydávať za zmerané zvládnutie učiva. Zmeny promptov alebo schémy AI znova over pomocou `tools/evaluate_ai.py` so skutočným miestnym modelom (pozri [Vývoj](DEVELOPMENT.md)).
 
 ## Štatistiky (v0.6.0)
 

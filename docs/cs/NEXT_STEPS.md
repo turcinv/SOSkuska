@@ -2,7 +2,7 @@
 
 [English](../NEXT_STEPS.md) · [Čeština](NEXT_STEPS.md) · [Slovenčina](../sk/NEXT_STEPS.md) · [Русский](../ru/NEXT_STEPS.md)
 
-Aktuální vydání: **v0.31.0**, schéma **10**.
+Aktuální vydání: **v0.31.1**, schéma **10**.
 
 ## Od 26. listopadu 2026
 
@@ -12,6 +12,7 @@ Aktuální vydání: **v0.31.0**, schéma **10**.
 - **v0.30.0:** AI generování kartiček a otázek z poznámek ([průvodce](AI_NOTE_GENERATION.md)).
 - **v0.30.1:** opravy z prvního hodnocení se skutečným modelem ([záznam](../agents/design/ai-note-generation/EVALUATION.md)). Opravy se týkají odpovědí umísťovaných aplikací, ochrany proti vložení pokynů do poznámek, upozornění na návrhy, které se v poznámkách nenašly, a jazyka studijních režimů.
 - **v0.31.0:** server MCP jen pro čtení ([návod](MCP_SERVER.md), [plán](../agents/MCP_SERVER_PLAN.md)): vrstva dotazů z fáze 1 (PR #76) a server přes stdio z fáze 2.
+- **v0.31.1:** požadavky AI se už nezdrží, když by se garbage collector spustil v jejich pracovním vlákně; nástroj s ukázkovými daty pro přejímku MCP.
 - Dřívější kroky 1–5 světlého UI jsou historické; jejich vizuální směr nahrazuje kočičí značka.
 
 ## Doporučené pořadí

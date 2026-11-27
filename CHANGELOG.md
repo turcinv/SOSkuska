@@ -2,7 +2,7 @@
 
 [English](CHANGELOG.md) · [Čeština](docs/cs/CHANGELOG.md) · [Slovenčina](docs/sk/CHANGELOG.md) · [Русский](docs/ru/CHANGELOG.md)
 
-## Unreleased
+## 0.31.1 — 2026-11-27
 
 - Fixed: an AI Tutor, explanation or AI-drafting request could stall for about 4 seconds when Python's garbage collector happened to run in the request thread and cleaned up interface objects there (which can also crash Tk on macOS). Collection now runs only on the interface thread. The flaky `check_question_explanation.py` Tutor wait was this stall; it now has a regression check and timing output.
 - New `tools/make_mcp_acceptance_db.py` creates a disposable sample database for testing the MCP server with a real assistant.

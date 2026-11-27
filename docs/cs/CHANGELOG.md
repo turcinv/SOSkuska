@@ -2,7 +2,7 @@
 
 [English](../../CHANGELOG.md) · [Čeština](CHANGELOG.md) · [Slovenčina](../sk/CHANGELOG.md) · [Русский](../ru/CHANGELOG.md)
 
-## Nevydáno
+## 0.31.1 — 2026-11-27
 
 - Opraveno: požadavek AI Tutora, vysvětlení nebo AI generování se mohl asi na 4 sekundy zaseknout, když se garbage collector Pythonu náhodou spustil ve vlákně požadavku a uklízel tam objekty rozhraní (což na macOS může i shodit Tk). Úklid nyní běží jen ve vlákně rozhraní. Nestabilní čekání na Tutora v `check_question_explanation.py` bylo právě toto zaseknutí; nyní má regresní kontrolu a výpis časů.
 - Nový `tools/make_mcp_acceptance_db.py` vytvoří dočasnou ukázkovou databázi pro test serveru MCP se skutečným asistentem.

@@ -2,7 +2,7 @@
 
 [English](NEXT_STEPS.md) · [Čeština](cs/NEXT_STEPS.md) · [Slovenčina](sk/NEXT_STEPS.md) · [Русский](ru/NEXT_STEPS.md)
 
-Current release: **v0.31.0**, schema **10**.
+Current release: **v0.31.1**, schema **10**.
 
 ## Since 26 November 2026
 
@@ -12,6 +12,7 @@ Current release: **v0.31.0**, schema **10**.
 - **v0.30.0:** AI drafting of flashcards and questions from notes ([guide](AI_NOTE_GENERATION.md)).
 - **v0.30.1:** fixes from the first real-model evaluation ([record](agents/design/ai-note-generation/EVALUATION.md)). The fixes cover app-placed answers, prompt-injection hardening, a warning for drafts not found in the notes, and study-mode language.
 - **v0.31.0:** the read-only MCP server ([guide](MCP_SERVER.md), [plan](agents/MCP_SERVER_PLAN.md)): Phase 1 query layer (PR #76) and Phase 2 stdio server.
+- **v0.31.1:** AI requests no longer stall when garbage collection would have run in their worker thread; MCP acceptance sample-data tool.
 - The earlier bright UI Steps 1–5 are historical; the cat brand supersedes their visual direction.
 
 ## Recommended order
