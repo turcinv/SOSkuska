@@ -4,7 +4,7 @@
 
 **Budoucí návrh, nikoli dnešní implementace.** Zde uvedené moduly a tabulky zatím neexistují, pokud je nepotvrzuje [současná architektura](CURRENT_ARCHITECTURE.md). Tento plán sám neznamená zahájení implementace všech funkcí.
 
-Vydaná základní verze je v0.30.1 s jazyky rozhraní, uloženými konverzacemi AI a schématem 10. Průvodci níže popisují implementované funkce. Uložení nastavení nespouští síťové připojení.
+Vydaná základní verze je v0.31.0 s jazyky rozhraní, uloženými konverzacemi AI a schématem 10. Průvodci níže popisují implementované funkce. Uložení nastavení nespouští síťové připojení.
 
 Nastavení se ukládá do stejné databáze jako studijní data. [Settings](SETTINGS.md). Nastavení se ukládá transakčně ve schématu 6 s ochranou před přepsáním změn jiného okna. Migrace z verze 5 zachová všechny předchozí tabulky i data; starší aplikace novější schéma odmítne otevřít.
 ## Směr
@@ -92,7 +92,7 @@ AI stavy: nedostupná služba, žádný model, načítání, připraveno, genero
 
 **AI generování:** generování kartiček/otázek z poznámek s kontrolou a atomickým uložením je implementované (v0.30.0–v0.30.1) včetně ručního nástroje pro hodnocení se skutečným modelem. Možná budoucí práce zahrnuje použití materiálů vybraného předmětu jako kontextu Tutora s náhledem, „Vysvětlit tuto kartičku“ v Kartičkách a studijní plán podle slabých témat ze Statistik. Každá varianta musí zachovat výslovný souhlas dříve, než se cokoli odešle.
 
-**Integrace:** volitelné místní rozhraní jen pro čtení pro externí asistenty, například server MCP přes stdio, by mohlo zpřístupnit předměty, kartičky k opakování a statistiky. Vyžadovalo by výslovné zapnutí, žádný síťový posluchač ve výchozím stavu, zápisy jen přes zkontrolované návrhy a stávající pravidla zámků/lease. Server jen pro čtení přes stdio (`soskuska/mcp_server.py`) je implementován, ale nevydán; viz [návod](MCP_SERVER.md). Zbývá: zaznamenaný běh se skutečným hostitelem MCP, volitelný pomocník pro Windows a jakákoli cesta k zápisu, která by musela vést přes zkontrolované návrhy.
+**Integrace:** volitelné místní rozhraní jen pro čtení pro externí asistenty, například server MCP přes stdio, by mohlo zpřístupnit předměty, kartičky k opakování a statistiky. Vyžadovalo by výslovné zapnutí, žádný síťový posluchač ve výchozím stavu, zápisy jen přes zkontrolované návrhy a stávající pravidla zámků/lease. Server jen pro čtení přes stdio (`soskuska/mcp_server.py`) je vydán ve v0.31.0; viz [návod](MCP_SERVER.md). Zbývá: zaznamenaný běh se skutečným hostitelem MCP, volitelný pomocník pro Windows a jakákoli cesta k zápisu, která by musela vést přes zkontrolované návrhy.
 
 Dlouhé operace běží mimo hlavní UI vlákno. Výsledky přicházejí přes frontu a `after`; pracovní vlákno nesmí volat widgety. SQLite připojení bez návrhu nesdílet mezi vlákny. První řešení může ponechat krátké zápisy v hlavním vlákně; případné pracovní úlohy dostanou vlastní připojení.
 
@@ -168,4 +168,4 @@ Plánované místní zálohy jsou dostupné ve **v0.18.0**. Schéma SQLite zůst
 
 Nová kompozice Dashboardu nahrazuje předchozí postupné úpravy: čtyři souhrnné dlaždice, výrazná část soustředění s živými kruhovými hodinami, karty předmětů s monogramy a měsíční přehled uložených termínů. Postranní panel používá místně kreslené ikony a vlastní tmavé barvy; sdílené plochy a párový Dark/Light vzhled se mění v celé aplikaci. Tato fáze zavádí Dashboard a společný rámec; ostatní stránky navážou po vizuální zpětné vazbě. [Ukázky a rozsah](../agents/design/study-studio-dashboard/README.md).
 
-Hodiny ukazují skutečný zbývající čas a původní cíl aktivního sezení. Kalendář používá úplný snímek předmětů; nejbližší zkoušky zachovají přesná data a limit pěti položek. Klávesové hledání, chyba uložení a obnova soustředění posunou ovládání do viditelné části kompaktního okna; čekající posun zruší navigace či hledání. Změna rozložení nečte data. Schéma zůstává 10, vydaná verze v0.30.1. Kontejnerové a simulované měřítko neověřují nativní platformu; test skutečného modelu zůstává odložený.
+Hodiny ukazují skutečný zbývající čas a původní cíl aktivního sezení. Kalendář používá úplný snímek předmětů; nejbližší zkoušky zachovají přesná data a limit pěti položek. Klávesové hledání, chyba uložení a obnova soustředění posunou ovládání do viditelné části kompaktního okna; čekající posun zruší navigace či hledání. Změna rozložení nečte data. Schéma zůstává 10, vydaná verze v0.31.0. Kontejnerové a simulované měřítko neověřují nativní platformu; test skutečného modelu zůstává odložený.

@@ -13,7 +13,7 @@ Zachovej `--init`: zajistí správné doručení startovacího signálu virtuál
 
 Sestavení stahuje Python, systémové knihovny a závislosti, proto vyžaduje internet. Po změně zdrojů obraz znovu sestav; soubory se kopírují do obrazu, nejsou připojené živě. Další sestavení využije mezipaměť závislostí. Testy potřebují jen místní smyčku pro falešnou Ollamu, takže vnější síť je vypnutá. Limity CPU/paměti omezují rušení ostatní práce; případně je uprav. Nepřipojuje se displej ani datová složka hostitele a neotevírají se porty. `.dockerignore` povoluje pouze testované zdroje; prostředí, databáze, tajné údaje a historie Gitu zůstávají mimo kontext sestavení. Kontejner se potom odstraní, obraz a mezipaměť zůstanou.
 
-Obraz běží jako běžný uživatel bez práv root. Xvfb vytvoří vnitřní virtuální obrazovku pro každý GUI skript; na hostiteli se neotevřou okna aplikace. Společný `tools/run_checks.py` spustí kontrolu závislostí, syntaxe, jednotkové testy a GUI skripty (351 jednotkových testů a 26 GUI skriptů ve v0.30.1) s časovým limitem pro každý proces. Celek trvá zhruba pět minut; chyba vrací nenulový kód. CI používá stejný seznam GUI přes `--gui-only` po samostatných jednotkových kontrolách.
+Obraz běží jako běžný uživatel bez práv root. Xvfb vytvoří vnitřní virtuální obrazovku pro každý GUI skript; na hostiteli se neotevřou okna aplikace. Společný `tools/run_checks.py` spustí kontrolu závislostí, syntaxe, jednotkové testy a GUI skripty (373 jednotkových testů a 26 GUI skriptů ve v0.31.0) s časovým limitem pro každý proces. Celek trvá zhruba pět minut; chyba vrací nenulový kód. CI používá stejný seznam GUI přes `--gui-only` po samostatných jednotkových kontrolách.
 
 Chceš-li spustit jediný skript, přepiš příkaz; ponech `--init` a pevný časový limit:
 
