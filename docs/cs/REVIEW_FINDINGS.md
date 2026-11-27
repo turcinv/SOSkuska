@@ -50,3 +50,17 @@ Cílené ověření: osm případů v `tests/test_astra026_fixes.py` (také ve t
 ## Záznam vydání · v0.26.1
 
 A62-05–A62-09 byly sloučeny přes PR #62 a vydány ve v0.26.1. Nezávislá revize Sol medium prošla; uspělo 330 jednotkových testů (dvě platformní výjimky Linuxu), všech 24 kontejnerových kontrol rozhraní a všech pět CI úloh opravy. Původní kontrolovaný commit i důkazy výše zůstávají historické. Skutečný model a ruční přejímka platforem zůstávají odložené.
+
+## Revize repozitáře · 27. listopadu 2026 · Sol (backend codex)
+
+Revize `main` jen pro čtení na `b1591d7` (v0.31.1) vyžádaná od jiné rodiny modelů. Běžela na backendu `codex` v Kiro Crew, ale potvrzení spuštění uvádělo `claude-sonnet-5.5`, takže rodina modelu není potvrzena. Zpráva byla useknuta po zjištění 7. Každé zjištění níže bylo ověřeno čtením kódu; vlastní reprodukce recenzenta se dvěma Store nebyly znovu spuštěny. Stav se mění až po ověřené opravě.
+
+| ID | Priorita | Stav | Zjištění | Požadované chování |
+| --- | --- | --- | --- | --- |
+| S27-01 | P2 | Otevřené | Otevřený panel AI generování po změně Nastavení dál ukazuje starý server/model; Generovat obnoví popisek a odešle poznámky v témže kliknutí. | Při změně nastavení AI otevřené panely obnovit; pokud se cíl liší od zobrazeného, vyžadovat další kliknutí. |
+| S27-02 | P2 | Otevřené | Zahození (a dokončení) testu ignoruje odpovědi, které jiné okno uložilo po otevření potvrzení. | Porovnat revizi odpovědí pod `BEGIN IMMEDIATE`; při konfliktu test ponechat a zeptat se znovu. |
+| S27-03 | P2 | Otevřené | Potvrzení smazání předmětu a balíčku porovnávají jen názvy a počty; nahrazení kartičky počet nezmění a staré potvrzení smaže náhradu. | U obou kaskád potvrzovat podle identit/revizí podřízených záznamů (nebo revize obsahu). |
+| S27-04 | P3 | Otevřené | Uložení kartičky se zapíše před obnovením balíčku; když obnovení selže, Uložit zůstane aktivní a druhé kliknutí kartičku znovu upraví a znovu vynuluje plán. | Použít vzor opakování jen čtení po zápisu. |
+| S27-05 | P3 | Otevřené | MCP zkracuje možnosti odpovědí na 300 znaků, ačkoli zadávání povoluje 500, takže různé možnosti mohou vypadat stejně. | Vracet celé možnosti v rámci rozpočtu odpovědi; zvážit vyhledání otázky podle ID. |
+| S27-06 | P3 | Otevřené | Parser poznámek stále přijímá starší písmeno odpovědi zvolené modelem a potichu zkracuje příliš dlouhá témata. | Vyžadovat aktuální tvar; příliš dlouhá témata hlásit jako chyby validace. |
+| S27-07 | P3 | Otevřené | Když se pracovní vlákno generování nespustí, panel zůstane zaneprázdněný a blokuje změny nastavení AI i obnovu. | Zachytit selhání spuštění, vyčistit úlohu a zobrazit chybu. |
