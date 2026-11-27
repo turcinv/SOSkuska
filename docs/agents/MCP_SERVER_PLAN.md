@@ -61,7 +61,7 @@ Phase 2 should wrap these contracts rather than re-derive them:
 - `practice_results` reads per-topic scores just after `practice_history_page` (which opens its own transaction); the docstring explains why they agree.
 - `tests/test_study_queries.py` proves a full sweep on `Store.open_existing(readonly=True)` leaves the file's hash and mtime unchanged.
 
-Before Phase 2, deal with the hosted-CI startup flake recorded in [NEXT_STEPS](../NEXT_STEPS.md) so new CI steps do not hide behind reruns.
+The hosted-CI startup flake seen while merging Phase 1 is fixed: `check_studio_layout.py` now budgets startup CPU and wall time separately from its functional steps (see [WORKFLOW.md](WORKFLOW.md)).
 
 ## Phase 2 — MCP server (optional dependency)
 

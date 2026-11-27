@@ -25,8 +25,7 @@ Aktuální vydání: **v0.30.1**, schéma **10**.
    - Připravte krátký scénář ukázky: vytvořit předmět, vygenerovat otázky z poznámek, procvičovat, opakovat kartičky, otevřít Statistiky.
    - Obnovte snímky obrazovky z dočasných dat.
    - Údaje o identitě, kurzu, jazyku a termínu ponechte jako zástupná pole do dodání a zkontrolujte výsledné stránkování.
-4. **Stabilizovat startovní sondu GUI v hostovaném CI.** 27. listopadu `check_studio_layout.py` na strojích GitHubu překročil sedmisekundový limit čerstvého procesu, a to i u commitu na `main`, který měnil jen dokumentaci; po opakování prošel. Omezte práci při startu, nebo ho měřte způsobem, který zatížení hostovaných strojů nerozbije. Limit jen nezvyšujte.
-5. **Fáze 2 serveru MCP.** Server přes stdio s volitelnou připnutou závislostí `mcp`, testy, nastavení CI/kontejneru, uživatelský návod ve čtyřech jazycích a zaznamenaný běh se skutečným hostitelem MCP. Viz [plán](../agents/MCP_SERVER_PLAN.md).
-6. **Úklid.** Sloučené vzdálené větve mažte jen na výslovnou žádost; ponechte `main` a značky vydání.
+4. **Fáze 2 serveru MCP.** Server přes stdio s volitelnou připnutou závislostí `mcp`, testy, nastavení CI/kontejneru, uživatelský návod ve čtyřech jazycích a zaznamenaný běh se skutečným hostitelem MCP. Viz [plán](../agents/MCP_SERVER_PLAN.md).
+5. **Úklid.** Sloučené vzdálené větve mažte jen na výslovnou žádost; ponechte `main` a značky vydání.
 
 Před v1.0.0 vyřešte zjištění z přejímky přes revidovaná PR a zopakujte příslušné kontroly. Nová práce, sloučení i vydání potřebují vlastní schválení. Tato aktualizace stavu neoznačuje žádný ruční výsledek jako úspěšný.
