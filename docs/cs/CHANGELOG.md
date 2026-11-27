@@ -4,6 +4,7 @@
 
 ## Nevydáno
 
+- Server MCP jen pro čtení `soskuska/mcp_server.py` (jen stdio, volitelná připnutá závislost `mcp==2.3.0` v `soskuska/requirements-mcp.txt`): osm nástrojů jen pro čtení, dva prompty a prostředek s předměty nad dotazy z fáze 1; odpovědi ve výchozím stavu skryté, `--no-answers`, přístup k databázi jen pro čtení při každém volání. Není v ZIPu pro Windows. [Návod](MCP_SERVER.md).
 - CI: kontrola rozložení Dashboardu hlídá start čerstvého procesu podle času CPU a reálného času místo měření celé sondy, která selhávala na zatížených hostovaných strojích.
 - Příprava serveru MCP jen pro čtení (žádná nová závislost, žádná změna GUI): umístění uživatelské databáze se přesunulo z `app.py` do `storage.user_database_path()` a nový `soskuska/study_queries.py` poskytuje omezené studijní dotazy jen pro čtení, ve výchozím stavu bez klíčů odpovědí a rubových stran kartiček. Schéma zůstává 10.
 

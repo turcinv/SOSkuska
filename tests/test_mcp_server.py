@@ -163,6 +163,14 @@ class McpServerTests(unittest.TestCase):
         self.assertIn("no longer exists", self.error_text(self.call("list_subjects")))
         self.assertFalse(self.path.exists(), "the server must never create a database")
 
+    def test_unexpected_errors_hide_their_message(self):
+        secret = "Mitochondria make ATP."
+        with patch.object(mcp_server.queries, "subjects_overview", side_effect=KeyError(secret)), \
+             self.assertLogs("soskuska.mcp", "ERROR") as logs:
+            text = self.error_text(self.call("list_subjects"))
+        self.assertIn("internal error", text)
+        self.assertNotIn(secret, text + " ".join(logs.output))
+
     def test_prompts_guide_without_revealing_answers(self):
         async def prompts(client):
             names = {prompt.name for prompt in (await client.list_prompts()).prompts}

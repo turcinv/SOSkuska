@@ -28,15 +28,17 @@ try:
     from mcp.types import ToolAnnotations
     # Strict types: lax validation would turn true into 1 or "yes" into true.
     from pydantic import StrictBool, StrictInt, StrictStr
-except ImportError:  # Optional dependency; main() explains how to install it.
+except ImportError as error:  # Optional dependency; main() explains how to install it.
     MCPServer = None
+    IMPORT_ERROR = f"{type(error).__name__}: {error}"
 
-INSTALL_HINT = ("The MCP server needs the optional 'mcp' package. Install it into this environment with:\n"
+INSTALL_HINT = ("The MCP server needs the optional 'mcp' package (mcp==2.3.0). Install it into this environment with:\n"
                 "  python -m pip install -r soskuska/requirements-mcp.txt")
 BUSY = "The SOSkúška database is busy (for example a restore is running). Retry shortly."
 SCHEMA = "This database needs a different SOSkúška version. Open SOSkúška once to update it, then retry."
 MISSING = "The SOSkúška database file no longer exists at the configured path."
 UNREADABLE = "The SOSkúška database could not be read."
+UNEXPECTED = "SOSkúška could not answer this request because of an internal error. Details are in the server log."
 NO_ANSWERS = "Answer keys and card backs are disabled for this server (--no-answers)."
 INSTRUCTIONS = (
     "Read-only access to one student's own SOSkúška study data: subjects, topics, multiple-choice "
@@ -75,6 +77,11 @@ def read(path, function, *args, **kwargs):
     except sqlite3.DatabaseError:
         log.warning("database read failed")
         raise ToolError(UNREADABLE) from None
+    except ToolError:
+        raise
+    except Exception as error:  # Never let an unexpected message (possibly study text) reach the host.
+        log.error("unexpected %s in %s", type(error).__name__, getattr(function, "__name__", "query"))
+        raise ToolError(UNEXPECTED) from None
     finally:
         store.close()
 
@@ -194,7 +201,7 @@ def main(argv=None):
     args = parser.parse_args(argv)
     logging.basicConfig(stream=sys.stderr, level=logging.WARNING, format="soskuska-mcp: %(message)s")
     if MCPServer is None:
-        print(INSTALL_HINT, file=sys.stderr)
+        print(f"{INSTALL_HINT}\n(import failed: {IMPORT_ERROR})", file=sys.stderr)
         return 2
     path = (args.data or user_database_path()).expanduser().resolve()
     if not path.is_file():
