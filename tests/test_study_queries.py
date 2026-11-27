@@ -37,6 +37,9 @@ class UserDatabasePathTests(unittest.TestCase):
             ("win32", {"LOCALAPPDATA": str(self.home / "Local")}, self.home / "Local"),
             ("linux", {}, self.home / ".local/share"),
             ("linux", {"XDG_DATA_HOME": str(self.home / "xdg")}, self.home / "xdg"),
+            ("linux", {"XDG_DATA_HOME": ""}, self.home / ".local/share"),
+            ("linux", {"XDG_DATA_HOME": "relative/xdg"}, self.home / ".local/share"),
+            ("win32", {"LOCALAPPDATA": ""}, self.home / "AppData/Local"),
         ]
         for platform, env, base in cases:
             with self.subTest(platform=platform, env=env):
